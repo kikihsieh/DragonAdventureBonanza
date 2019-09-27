@@ -3,6 +3,7 @@
 // internal
 #include "common.hpp"
 #include "player.hpp"
+#include "background.hpp"
 
 // stlib
 #include <vector>
@@ -49,7 +50,10 @@ private:
 	// The draw loop first renders to this texture, then it is used for the water shader
 	GLuint m_frame_buffer;
 	Texture m_screen_tex;
-
+	
+	Player m_player;
+	Background m_background;
+	
 	// C++ rng
 	std::default_random_engine m_rng;
 	std::uniform_real_distribution<float> m_dist; // default 0..1

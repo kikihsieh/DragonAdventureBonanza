@@ -83,7 +83,7 @@ bool World::init(vec2 screen)
 	// Initialize the screen texture
 	m_screen_tex.create_from_screen(m_window);
 	
-	return true;
+	return m_player.init() && m_background.init();
 }
 
 // Releases all the associated resources
@@ -99,6 +99,9 @@ bool World::update(float elapsed_ms)
 	int w, h;
 	glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
+	
+	m_player.update(elapsed_ms);
+	
 	return true;
 }
 
@@ -137,6 +140,8 @@ void World::draw()
 	float tx = -(right + left) / (right - left);
 	float ty = -(top + bottom) / (top - bottom);
 	mat3 projection_2D{ { sx, 0.f, 0.f },{ 0.f, sy, 0.f },{ tx, ty, 1.f } };
+	
+	m_player.draw(projection_2D);
 
 	/////////////////////
 	// Truely render to the screen
@@ -152,6 +157,8 @@ void World::draw()
 	// Bind our texture in Texture Unit 0
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_screen_tex.id);
+
+	m_background.draw(projection_2D);
 
 	//////////////////
 	// Presenting
