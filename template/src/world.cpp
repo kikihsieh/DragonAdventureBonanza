@@ -83,7 +83,7 @@ bool World::init(vec2 screen)
 	// Initialize the screen texture
 	m_screen_tex.create_from_screen(m_window);
 	
-	return m_player.init() && m_background.init();
+	return m_player.init() && m_background.init() && m_ground.init();
 }
 
 // Releases all the associated resources
@@ -140,7 +140,7 @@ void World::draw()
 	float tx = -(right + left) / (right - left);
 	float ty = -(top + bottom) / (top - bottom);
 	mat3 projection_2D{ { sx, 0.f, 0.f },{ 0.f, sy, 0.f },{ tx, ty, 1.f } };
-	
+
 	/////////////////////
 	// Truely render to the screen
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -156,7 +156,8 @@ void World::draw()
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_screen_tex.id);
 
-	m_background.draw(projection_2D);
+	// m_background.draw(projection_2D);
+	m_ground.draw(projection_2D);
 	m_player.draw(projection_2D);
 
 	//////////////////

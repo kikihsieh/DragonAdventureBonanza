@@ -4,6 +4,7 @@
 #include "common.hpp"
 #include "player.hpp"
 #include "background.hpp"
+#include "ground.hpp"
 
 // stlib
 #include <vector>
@@ -53,6 +54,7 @@ private:
 	
 	Player m_player;
 	Background m_background;
+	Ground m_ground;
 	
 	// C++ rng
 	std::default_random_engine m_rng;
