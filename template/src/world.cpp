@@ -156,7 +156,7 @@ void World::draw()
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_screen_tex.id);
 
-	// m_background.draw(projection_2D);
+	m_background.draw(projection_2D);
 	m_ground.draw(projection_2D);
 	m_player.draw(projection_2D);
 
