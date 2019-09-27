@@ -34,11 +34,13 @@ set(SOURCE_FILES
 	src/main.cpp
 	src/common.cpp
 	src/player.cpp
+  src/background.cpp
 	src/world.cpp
 
   src/project_path.hpp
 	src/common.hpp
 	src/player.hpp
+  src/background.hpp
 	src/world.hpp
 	)
 

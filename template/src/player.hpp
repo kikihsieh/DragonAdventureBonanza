@@ -39,4 +39,5 @@ public:
 
 private:
 	bool m_is_alive; // True if the player is alive
+	Texture player_texture;
 };
