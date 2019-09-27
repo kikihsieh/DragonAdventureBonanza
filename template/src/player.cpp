@@ -57,10 +57,10 @@ bool Player::init()
 		return false;
 		
 	// Setting initial values
-	motion.position = { 1.f, 1.f };
+	motion.position = { 100.f, 700.f };
 //	motion.speed = 200.f;
 
-	physics.scale = { 10.f, 10.f };
+	physics.scale = { 0.25f, 0.25f };
 
 	m_is_alive = true;
 

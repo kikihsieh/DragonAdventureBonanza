@@ -1,13 +1,16 @@
 #version 330
 
-uniform sampler2D screen_texture;
+// From vertex shader
+in vec2 texcoord;
 
-in vec2 uv;
+// Application data
+uniform sampler2D sampler0;
+uniform vec3 fcolor;
 
-layout(location = 0) out vec4 color;
+// Output color
+layout(location = 0) out  vec4 color;
 
 void main()
 {
-    //color = texture(screen_texture, uv);
-    color = vec4(1.0, 0.0, 0.0, 1.0);
+    color = vec4(fcolor, 1.0) * texture(sampler0, vec2(texcoord.x, texcoord.y));
 }

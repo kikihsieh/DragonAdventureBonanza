@@ -141,8 +141,6 @@ void World::draw()
 	float ty = -(top + bottom) / (top - bottom);
 	mat3 projection_2D{ { sx, 0.f, 0.f },{ 0.f, sy, 0.f },{ tx, ty, 1.f } };
 	
-	m_player.draw(projection_2D);
-
 	/////////////////////
 	// Truely render to the screen
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -159,6 +157,7 @@ void World::draw()
 	glBindTexture(GL_TEXTURE_2D, m_screen_tex.id);
 
 	m_background.draw(projection_2D);
+	m_player.draw(projection_2D);
 
 	//////////////////
 	// Presenting
