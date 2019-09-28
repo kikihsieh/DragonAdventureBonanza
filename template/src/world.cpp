@@ -100,6 +100,8 @@ bool World::update(float elapsed_ms)
 	glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
 	
+	// check if player is on the ground
+	m_player.land(m_ground);
 	m_player.update(elapsed_ms);
 	
 	return true;
@@ -174,8 +176,9 @@ bool World::is_over() const
 // On key callback
 void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 {
-    //UP
-    if (m_player.m_on_ground && (key == GLFW_KEY_UP || key == GLFW_KEY_W)) {
+    //UP: TODO: change condition for jump and double jump
+    //if (m_player.m_on_ground && (key == GLFW_KEY_UP || key == GLFW_KEY_W)) {
+	if (key == GLFW_KEY_UP || key == GLFW_KEY_W) {
         if (action == GLFW_PRESS) {
             //m_player.m_is_jumping = true;
             //m_player.set_direction({0,-5});
