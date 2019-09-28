@@ -174,7 +174,37 @@ bool World::is_over() const
 // On key callback
 void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 {
-	
+    // UP
+    if (m_player.m_on_ground && (key == GLFW_KEY_UP || key == GLFW_KEY_W)) {
+        if (action == GLFW_PRESS) {
+            m_player.m_is_jumping = true;
+            m_player.set_direction({0,-5});
+        } else if (action == GLFW_RELEASE) {
+            m_player.m_is_jumping = false;
+            m_player.set_direction({0, 0});
+        }
+    }
+    //LEFT
+    if (key == GLFW_KEY_LEFT || key == GLFW_KEY_A) {
+        if (action == GLFW_PRESS) {
+            m_player.set_direction({-1, 0});
+        } else if (action == GLFW_RELEASE) {
+            m_player.set_direction({0, 0});
+        }
+    }
+    // RIGHT
+    if (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D) {
+        if (action == GLFW_PRESS) {
+            m_player.set_direction({1, 0});
+        } else if (action == GLFW_RELEASE) {
+            m_player.set_direction({0, 0});
+        }
+    }
+    
+    //GRAVITY
+    if (m_player.m_is_jumping == false && m_player.get_position().y < 400.f) {
+        m_player.set_direction({0,1});
+    }
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
