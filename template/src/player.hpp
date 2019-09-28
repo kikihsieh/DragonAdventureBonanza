@@ -36,6 +36,14 @@ public:
 
 	// Kills the player, changing its alive state and triggering on death events
 	void kill();
+    
+    // Set player direction
+    void set_direction(vec2 dir);
+    
+    vec2 m_direction;
+    
+    bool m_on_ground; // True if player is on ground/platform
+    bool m_is_jumping; // True if player is on ground/platform
 
 private:
 	bool m_is_alive; // True if the player is alive
