@@ -1,9 +1,11 @@
 // Header
 #include "player.hpp"
+#include "ground.hpp"
 
 // stlib
 #include <string>
 #include <algorithm>
+#include <iostream>
 
 extern float accGravity;
 extern float maxGravity;
@@ -24,7 +26,6 @@ bool Player::init()
 	float wr = player_texture.width * 0.5f;
 	float hr = player_texture.height * 0.5f;
 
-	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.02f };
 	vertices[0].texcoord = { 0.f, 1.f };
 	vertices[1].position = { +wr, +hr, -0.02f };
@@ -68,7 +69,7 @@ bool Player::init()
 	m_is_alive = true;
     m_direction = {0,0};
     m_is_jumping = false;
-    m_on_ground = true;
+    m_on_ground = false;
 
 	return true;
 }
@@ -184,6 +185,35 @@ void Player::move(vec2 off)
 
 void Player::set_direction(vec2 dir) {
     m_direction = dir;
+}
+
+void Player::land(Ground ground)
+{
+	compute_world_coordinate();
+	for (vec2 pwc : player_world_coord) {
+		if (pwc.y >= ground.surface_y) {
+			set_direction({ m_direction.x, 0 });
+			m_on_ground = true;
+			break;
+		}
+	}
+	m_on_ground = false;
+}
+
+void Player::compute_world_coordinate()
+{
+	player_world_coord.clear();
+	transform.begin();
+	transform.translate(motion.position);
+	transform.rotate(motion.radians);
+	transform.scale(physics.scale);
+	transform.end();
+
+	float bottom = 0.f;
+	for (auto& v : vertices) {
+		vec3 transformed_vertex = mul(transform.out, vec3{ v.position.x, v.position.y, 1.f });
+		player_world_coord.push_back({ transformed_vertex.x, transformed_vertex.y });
+	}
 }
 
 bool Player::is_alive() const
