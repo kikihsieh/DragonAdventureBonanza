@@ -59,7 +59,7 @@ bool Spider::init()
 	//motion.radians = 0.f;
 	//motion.speed = 200.f;
     // Setting initial values
-    motion.position = { 500.f, 700.f };
+    motion.position = { 500.f, 400.f };
 
 	// Setting initial values, scale is negative to make it face the opposite way
 	// 1.0 would be as big as the original texture.
@@ -71,8 +71,16 @@ bool Spider::init()
     min_position = motion.position.x - distance;
     inital_pos = motion.position.x;
     direction = true; // true = walking to right, false= left
-    
+    jumpNow = false;
 
+    
+    randomBoo = false;
+    
+    distance_y = 50;
+    direction_y = true;
+    max_position_y = motion.position.y + distance_y;
+    min_position_y = motion.position.y;
+    
 	return true;
 }
 
@@ -95,6 +103,15 @@ void Spider::update(float ms)
 	
     float step = -1.0 * motion.speed * (ms / 1000);
 	motion.position.x += step;
+    
+    /*if((((int)jumpT%(int)currTime)==0)){
+        jumpNow = true;
+    }*/
+    if(randomBoo == false){jumpNow = true;
+        randomBoo =true;
+    };
+
+    jump_Now(motion.position,step);
     boundary(motion.position);
 }
 
@@ -155,25 +172,60 @@ vec2 Spider::get_position()const
 void Spider::boundary(vec2 position)
 {
     // move towards the positive x-axis
-    if (direction == true){
-        if (position.x < max_position){
-            motion.position.x += 1;
-        } else {
-            direction = false;
-            motion.position.x -= 1;
-        }
-    };
+    if(jumpNow==false){
+        if (direction == true){
+            if (position.x < max_position){
+                motion.position.x += 1;
+            } else {
+                direction = false;
+                motion.position.x -= 1;
+                
+            }
+            
+        };
     // move towards negative x-axis
-    if (direction == false){
-        if (min_position < position.x){
-            motion.position.x -= 1;
-        } else {
-            direction = true;
-            motion.position.x += 1;
+        if (direction == false){
+            if (min_position < position.x){
+                motion.position.x -= 1;
+            } else {
+                direction = true;
+                motion.position.x += 1;
+            }
         }
     }
 }
 
+int Spider::jump_Time(float step){
+    int min_waitTime = 5;
+    int max_waitTime = 100;
+    int num = (rand()%(max_waitTime - min_waitTime + 1) + min_waitTime);
+    jumpT = num + step;
+    currTime = step;
+    return jumpT;
+}
+
+void Spider::jump_Now (vec2 position, float step){
+    // move towards the positive x-axis
+    if (jumpNow == true){
+        if (direction_y == true){
+            if(position.y < max_position_y){
+                motion.position.y += 1;
+            } else {
+                direction_y = false;
+                motion.position.y -=1;
+            }};
+        if (direction_y == false){
+            if (min_position_y < position.y){
+                motion.position.y -= 1;
+            }
+            if (min_position_y == position.y){
+                direction_y = true;
+                jumpNow = false;
+                
+            }
+        }
+    }
+}
 
 void Spider::set_position(vec2 position)
 {

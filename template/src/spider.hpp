@@ -19,6 +19,12 @@ public:
     
     //walking boundary 
     void boundary(vec2 position);
+    
+    //spider jumping @ random time
+    void jump_Now(vec2, float);
+    
+    //generate random time 
+    int jump_Time(float step);
 
 	// Update spider due to current
 	// ms represents the number of milliseconds elapsed from the previous update() call
@@ -40,7 +46,18 @@ public:
     int distance;
     int min_position;
     int max_position;
+    int distance_y;
+    int min_position_y;
+    int max_position_y;
+    
     int inital_pos;
     bool direction;
+    bool direction_y;
+    bool jumpNow;
+    int jumpT;
+    float currTime;
+    
+    bool randomBoo;
+    
 };
 
