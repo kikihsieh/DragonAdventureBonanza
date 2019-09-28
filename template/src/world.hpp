@@ -3,6 +3,7 @@
 // internal
 #include "common.hpp"
 #include "player.hpp"
+#include "enemy.hpp"
 #include "background.hpp"
 
 // stlib
@@ -52,6 +53,7 @@ private:
 	Texture m_screen_tex;
 	
 	Player m_player;
+    Enemy m_enemy;
 	Background m_background;
 	
 	// C++ rng

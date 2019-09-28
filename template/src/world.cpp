@@ -83,7 +83,7 @@ bool World::init(vec2 screen)
 	// Initialize the screen texture
 	m_screen_tex.create_from_screen(m_window);
 	
-	return m_player.init() && m_background.init();
+	return m_player.init() && m_background.init()&&  m_enemy.init();
 }
 
 // Releases all the associated resources
@@ -101,7 +101,7 @@ bool World::update(float elapsed_ms)
 	vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
 	
 	m_player.update(elapsed_ms);
-	
+	m_enemy.update(elapsed_ms);
 	return true;
 }
 
@@ -158,6 +158,7 @@ void World::draw()
 
 	m_background.draw(projection_2D);
 	m_player.draw(projection_2D);
+    m_enemy.draw(projection_2D);
 
 	//////////////////
 	// Presenting
