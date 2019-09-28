@@ -1,16 +1,16 @@
 // Header
-#include "enemy.hpp"
+#include "spider.hpp"
 
 #include <cmath>
 
-Texture Enemy::enemy_texture;
+Texture Spider::spider_texture;
 
-bool Enemy::init()
+bool Spider::init()
 {
 	// Load shared texture
-	if (!enemy_texture.is_valid())
+	if (!spider_texture.is_valid())
 	{
-		if (!enemy_texture.load_from_file(textures_path("spider.png")))
+		if (!spider_texture.load_from_file(textures_path("spider.png")))
 		{
 			fprintf(stderr, "Failed to load spider texture!");
 			return false;
@@ -18,8 +18,8 @@ bool Enemy::init()
 	}
 
 	// The position corresponds to the center of the texture
-	float wr = enemy_texture.width * 0.5f;
-	float hr = enemy_texture.height * 0.5f;
+	float wr = spider_texture.width * 0.5f;
+	float hr = spider_texture.height * 0.5f;
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.02f };
@@ -53,23 +53,31 @@ bool Enemy::init()
 		return false;
 
 	// Loading shaders
-	if (!effect.load_from_file(shader_path("enemy.vs.glsl"), shader_path("enemy.fs.glsl")))
+	if (!effect.load_from_file(shader_path("spider.vs.glsl"), shader_path("spider.fs.glsl")))
 		return false;
 
-	motion.radians = 0.f;
+	//motion.radians = 0.f;
 	//motion.speed = 200.f;
     // Setting initial values
     motion.position = { 500.f, 700.f };
 
 	// Setting initial values, scale is negative to make it face the opposite way
 	// 1.0 would be as big as the original texture.
-	physics.scale = { -0.4f, 0.4f };
+	
+    physics.scale = { -0.4f, 0.4f };
+    
+    distance = 20;
+    max_position = motion.position.x + distance;
+    min_position = motion.position.x - distance;
+    inital_pos = motion.position.x;
+    direction = true; // true = walking to right, false= left
+    
 
 	return true;
 }
 
 // Releases all graphics resources
-void Enemy::destroy()
+void Spider::destroy()
 {
 	glDeleteBuffers(1, &mesh.vbo);
 	glDeleteBuffers(1, &mesh.ibo);
@@ -80,16 +88,17 @@ void Enemy::destroy()
 	glDeleteShader(effect.program);
 }
 
-void Enemy::update(float ms)
+void Spider::update(float ms)
 {
 	// Move fish along -X based on how much time has passed, this is to (partially) avoid
 	// having entities move at different speed based on the machine.
 	
-    //float step = -1.0 * motion.speed * (ms / 1000);
-	//motion.position.x += step;
+    float step = -1.0 * motion.speed * (ms / 1000);
+	motion.position.x += step;
+    boundary(motion.position);
 }
 
-void Enemy::draw(const mat3& projection)
+void Spider::draw(const mat3& projection)
 {
 	// Transformation code, see Rendering and Transformation in the template specification for more info
 	// Incrementally updates transformation matrix, thus ORDER IS IMPORTANT
@@ -126,7 +135,7 @@ void Enemy::draw(const mat3& projection)
 
 	// Enabling and binding texture to slot 0
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, enemy_texture.id);
+	glBindTexture(GL_TEXTURE_2D, spider_texture.id);
 
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform.out);
@@ -138,19 +147,42 @@ void Enemy::draw(const mat3& projection)
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
 
-vec2 Enemy::get_position()const
+vec2 Spider::get_position()const
 {
 	return motion.position;
 }
 
-void Enemy::set_position(vec2 position)
+void Spider::boundary(vec2 position)
+{
+    // move towards the positive x-axis
+    if (direction == true){
+        if (position.x < max_position){
+            motion.position.x += 1;
+        } else {
+            direction = false;
+            motion.position.x -= 1;
+        }
+    };
+    // move towards negative x-axis
+    if (direction == false){
+        if (min_position < position.x){
+            motion.position.x -= 1;
+        } else {
+            direction = true;
+            motion.position.x += 1;
+        }
+    }
+}
+
+
+void Spider::set_position(vec2 position)
 {
 	motion.position = position;
 }
 
-vec2 Enemy::get_bounding_box() const
+vec2 Spider::get_bounding_box() const
 {
-	// Returns the local bounding coordinates scaled by the current size of the enemy
+	// Returns the local bounding coordinates scaled by the current size of the spider
 	// fabs is to avoid negative scale due to the facing direction.
-	return { std::fabs(physics.scale.x) * enemy_texture.width, std::fabs(physics.scale.y) * enemy_texture.height };
+	return { std::fabs(physics.scale.x) * spider_texture.width, std::fabs(physics.scale.y) * spider_texture.height };
 }
