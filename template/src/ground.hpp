@@ -17,10 +17,12 @@ public:
     // Renders the background
     void draw(const mat3& projection)override;
 
+	void set_surface_y();
+
 	// The y coordinate of the ground landing surface
 	float surface_y;
 
 private:
     Texture ground_texture;
-	//TexturedVertex vertices[4];
+	TexturedVertex vertices[4];
 };

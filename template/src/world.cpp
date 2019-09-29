@@ -101,6 +101,7 @@ bool World::update(float elapsed_ms)
 	vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
 	
 	// check if player is on the ground
+	m_ground.set_surface_y();
 	m_player.land(m_ground);
 	m_player.update(elapsed_ms);
 	

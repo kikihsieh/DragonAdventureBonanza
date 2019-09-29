@@ -43,7 +43,7 @@ public:
     void set_direction(vec2 dir);
 
 	// Check if player is landed
-	void land(Ground ground);
+	void land(const Ground& ground);
     
     vec2 m_direction;
 
