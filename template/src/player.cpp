@@ -1,6 +1,7 @@
 // Header
 #include "player.hpp"
 #include "ground.hpp"
+#include "platform.hpp"
 
 // stlib
 #include <algorithm>
@@ -67,6 +68,12 @@ bool Player::init()
 	motion.acc.y = gravity;
 
 	physics.scale = { 0.25f, 0.25f };
+    
+    //sides of player for collisions
+    topSide = get_position().y;
+    bottomSide = get_position().y + (player_texture.height * 0.25);
+    leftSide = get_position().x;
+    rightSide = get_position().x + (player_texture.width * 0.25);
 
 	m_is_alive = true;
     m_on_ground = false;
@@ -95,6 +102,12 @@ void Player::update(float ms)
 	if (m_is_alive) {
         move({x_step, y_step});
     }
+    
+    //sides of player for collisions
+    topSide = get_position().y;
+    bottomSide = get_position().y + (player_texture.height * 0.25);
+    leftSide = get_position().x;
+    rightSide = get_position().x + (player_texture.width * 0.25);
 }
 
 void Player::draw(const mat3& projection)
@@ -171,6 +184,11 @@ vec2 Player::get_position() const
 	return motion.position;
 }
 
+void Player::set_position(vec2 pos)
+{
+    motion.position = pos;
+}
+
 void Player::move(vec2 off)
 {
 	motion.position.x += off.x; 
@@ -222,6 +240,14 @@ void Player::compute_world_coordinate()
 		vec3 transformed_vertex = mul(transform.out, vec3{ v.position.x, v.position.y, 1.f });
 		player_world_coord.push_back({ transformed_vertex.x, transformed_vertex.y });
 	}
+}
+
+void Player::platformCollision(const Platform& platform)
+{
+    // TODO make these global, make scale 0.25 a constant
+    if (rightSide > platform.leftSide && leftSide < platform.rightSide) {
+        set_position({static_cast<float>(platform.leftSide - player_texture.width * 0.25), motion.position.y});
+    }
 }
 
 bool Player::is_alive() const

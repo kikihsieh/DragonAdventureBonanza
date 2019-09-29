@@ -86,7 +86,7 @@ bool World::init(vec2 screen)
 	// Initialize the screen texture
 	m_screen_tex.create_from_screen(m_window);
 	
-	return m_player.init() && m_background.init() && m_ground.init() &&  m_spider.init();
+	return m_player.init() && m_background.init() && m_ground.init() &&  m_spider.init() && m_platform.init();
 }
 
 // Releases all the associated resources
@@ -110,6 +110,8 @@ bool World::update(float elapsed_ms)
 	m_ground.set_surface_y();
     m_player.land(m_ground);
 
+    m_player.platformCollision(m_platform);
+	
 	return true;
 }
 
@@ -166,8 +168,9 @@ void World::draw()
 
 	m_background.draw(projection_2D);
 	m_ground.draw(projection_2D);
-	m_player.draw(projection_2D);
 	m_spider.draw(projection_2D);
+    m_platform.draw(projection_2D);
+    m_player.draw(projection_2D);
 
 	//////////////////
 	// Presenting
