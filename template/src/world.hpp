@@ -43,6 +43,7 @@ public:
 private:
     // Generates a new spider
     bool init_enemies(float& scale, int& w, int& h);
+    bool spawn_spider();
     
 	// !!! INPUT CALLBACK FUNCTIONS
 	void on_key(GLFWwindow*, int key, int, int action, int mod);

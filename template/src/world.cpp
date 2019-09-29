@@ -85,10 +85,9 @@ bool World::init(vec2 screen)
 
 	// Initialize the screen texture
 	m_screen_tex.create_from_screen(m_window);
-
 	m_camera.init(screen);
 
-	return m_player.init() && m_background.init() && m_ground.init() && m_platform.init() && init_enemies(m_screen_scale, fb_width, fb_height);
+	return m_player.init() && m_background.init() && m_ground.init() && m_platform.init() && m_platform.init() && init_enemies(m_screen_scale, fb_width, fb_height);
 }
 
 // Releases all the associated resources
@@ -115,6 +114,7 @@ bool World::update(float elapsed_ms)
 	for(auto& spider : m_spiders)
 		spider.update(elapsed_ms);
     m_player.platformCollision(m_platform);
+    
 	return true;
 }
 
