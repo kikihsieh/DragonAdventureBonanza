@@ -86,7 +86,7 @@ bool World::init(vec2 screen)
 	// Initialize the screen texture
 	m_screen_tex.create_from_screen(m_window);
 	
-	return m_player.init() && m_background.init() && m_ground.init();
+	return m_player.init() && m_background.init() && m_ground.init() &&  m_spider.init();
 }
 
 // Releases all the associated resources
@@ -166,6 +166,7 @@ void World::draw()
 	m_background.draw(projection_2D);
 	m_ground.draw(projection_2D);
 	m_player.draw(projection_2D);
+	m_spider.draw(projection_2D);
 
 	//////////////////
 	// Presenting
