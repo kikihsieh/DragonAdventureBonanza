@@ -5,8 +5,8 @@
 #include "player.hpp"
 #include "spider.hpp"
 #include "background.hpp"
-
 #include "ground.hpp"
+#include "platform.hpp"
 
 // stlib
 #include <vector>
@@ -58,17 +58,17 @@ private:
 	GLuint m_frame_buffer;
 	Texture m_screen_tex;
 
-	
-  // Game entities
-  std::vector<Spider> m_spiders;
-    
-  float m_current_speed;
-  float m_next_spider_spawn;
-    
-	Player m_player;
-  Spider m_spider;
-	Background m_background;
-  Ground m_ground;
+    // Game entities
+    std::vector<Spider> m_spiders;
+
+    float m_current_speed;
+    float m_next_spider_spawn;
+
+    Player m_player;
+    Spider m_spider;
+    Background m_background;
+    Ground m_ground;
+    Platform m_platform;
     
 	// C++ rng
 	std::default_random_engine m_rng;

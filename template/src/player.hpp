@@ -4,6 +4,7 @@
 #include <vector>
 
 class Ground;
+class Platform;
 
 class Player : public Entity
 {
@@ -29,6 +30,8 @@ public:
 
 	// Returns the current player position
 	vec2 get_position() const;
+    
+    void set_position(vec2 pos);
 
 	// Moves the player's position by the specified offset
 	void move(vec2 off);
@@ -45,6 +48,9 @@ public:
 	// Check if player is landed
 	void land(const Ground& ground);
     
+    // Check if player is landed
+    void platformCollision(const Platform& platform);
+    
     vec2 m_direction;
 
 	// TODO: use vector when we change to use mesh file
@@ -52,6 +58,11 @@ public:
     
     bool m_on_ground; // True if player is on ground/platform
     bool m_is_jumping; // True if player is on ground/platform
+    
+    float topSide;
+    float bottomSide;
+    float rightSide;
+    float leftSide;
 
 private:
 	bool m_is_alive; // True if the player is alive
