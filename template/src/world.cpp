@@ -88,7 +88,7 @@ bool World::init(vec2 screen)
 
 	m_camera.init(screen);
 
-	return m_player.init() && m_background.init() && m_ground.init() && init_enemies(m_screen_scale, fb_width, fb_height);
+	return m_player.init() && m_background.init() && m_ground.init() && m_platform.init() && init_enemies(m_screen_scale, fb_width, fb_height);
 }
 
 // Releases all the associated resources
@@ -106,15 +106,15 @@ bool World::update(float elapsed_ms)
 	vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
 	
 	// check if player is on the ground
-	m_player.update(elapsed_ms);
+	m_player.update(elapsed_ms, m_platform);
 
 	m_camera.update(m_player.get_position(), m_player.is_facing_forwards());
 
 	m_ground.set_surface_y();
-    m_player.land(m_ground);
+    m_player.land(m_ground, m_platform);
 	for(auto& spider : m_spiders)
 		spider.update(elapsed_ms);
-
+    m_player.platformCollision(m_platform);
 	return true;
 }
 
@@ -174,6 +174,7 @@ void World::draw()
 	m_player.draw(projection_2D);
 	for (auto& spider : m_spiders)
 		spider.draw(projection_2D);
+    m_platform.draw(projection_2D);
 
 	//////////////////
 	// Presenting
