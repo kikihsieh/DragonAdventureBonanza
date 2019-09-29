@@ -9,9 +9,8 @@
 // Same as static in c, local to compilation unit
 namespace
 {
-    const size_t MAX_SPIDERS = 15;
-    const size_t SPIDER_DELAY_MS = 2000;
-    
+	const size_t MAX_SPIDER = 5;
+	const size_t SPIDER_DELAY_MS = 2000;
 	namespace
 	{
 		void glfw_err_cb(int error, const char* desc)
@@ -21,7 +20,7 @@ namespace
 	}
 }
 
-World::World():
+World::World() :
 m_next_spider_spawn(0.f)
 {
 	// Seeding rng with random device
@@ -87,9 +86,7 @@ bool World::init(vec2 screen)
 	// Initialize the screen texture
 	m_screen_tex.create_from_screen(m_window);
 	
-
-	return m_player.init() && m_background.init() && m_ground.init()&&  m_spider.init();;
-
+	return m_player.init() && m_background.init() && m_ground.init() &&  m_spider.init();
 }
 
 // Releases all the associated resources
@@ -97,10 +94,6 @@ void World::destroy()
 {
 	glDeleteFramebuffers(1, &m_frame_buffer);
 	glfwDestroyWindow(m_window);
-    
-   /*for (auto& spider : m_spiders)
-        spider.destroy();
-    m_spiders.clear();*/
 }
 
 // Update our game world
@@ -110,87 +103,14 @@ bool World::update(float elapsed_ms)
 	glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
 	
+	// check if player is on the ground
+	m_ground.set_surface_y();
+	m_player.land(m_ground);
 	m_player.update(elapsed_ms);
-    m_spider.update(elapsed_ms);
+	m_spider.update(elapsed_ms);
 	
-    // Checking Player - Spider collisions
-   /*
-    for (const auto& spider : m_spiders)
-    {
-        if (m_player.collides_with(spider))
-        {
-            if (m_player.is_alive()) {
-                //Mix_PlayChannel(-1, m_player_dead_sound, 0);
-                //m_water.set_salmon_dead();
-                
-            }
-            m_player.kill();
-            
-            break;
-        }
-    }*/
-    
-    // Updating all entities, making the spider
-    // faster based on current.
-    // In a pure ECS engine we would classify entities by their bitmap tags during the update loop
-    // rather than by their class.
-/*
-    for (auto& spider : m_spiders)
-        spider.update(elapsed_ms * m_current_speed);
- 
-    // Removing out of screen spiders
-    auto spider_it = m_spiders.begin();
-    while (spider_it != m_spiders.end())
-    {
-        float w = spider_it->get_bounding_box().x / 2;
-        if (spider_it->get_position().x + w < 0.f)
-        {
-            spider_it = m_spiders.erase(spider_it);
-            continue;
-        }
-        
-        ++spider_it;
-    }
-    
-    
-    // Spawning new spiders
-    m_next_spider_spawn -= elapsed_ms * m_current_speed;
-    if (m_spiders.size() <= MAX_SPIDERS && m_next_spider_spawn < 0.f)
-    {
-        if (!spawn_spider())
-            return false;
-        
-        Spider& new_spider = m_spiders.back();
-        
-        // Setting random initial position
-        new_spider.set_position({ screen.x + 150, 50 + m_dist(m_rng) * (screen.y - 100) });
-        
-        // Next spawn
-        m_next_spider_spawn = (SPIDER_DELAY_MS / 2) + m_dist(m_rng) * (SPIDER_DELAY_MS/2);
-    }
-
-    // if player is dead, restart game
-    if (!m_player.is_alive()){
-        m_spiders.clear();
-    }*/
 	return true;
 }
-
-// Creates a new spider and if successfull adds it to the list of spiders
-/*
- bool World::spawn_spider()
-{
-    Spider spider;
-    if (spider.init())
-    {
-        m_spiders.emplace_back(spider);
-        return true;
-    }
-    fprintf(stderr, "Failed to spawn spider");
-    return false;
-}
- */
-
 
 // Render our game world
 // http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
@@ -243,39 +163,28 @@ void World::draw()
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_screen_tex.id);
 
-
 	m_background.draw(projection_2D);
-  m_player.draw(projection_2D);
-  m_ground.draw(projection_2D);
-  m_spider.draw(projection_2D);
-    
-    /*
-    //Drawing entities
-    for (auto& spider : m_spiders)
-        spider.draw(projection_2D);
-     */
+	m_ground.draw(projection_2D);
+	m_player.draw(projection_2D);
+	m_spider.draw(projection_2D);
 
 	//////////////////
 	// Presenting
 	glfwSwapBuffers(m_window);
 }
 
-
-
-
 // Should the game be over ?
 bool World::is_over() const
 {
-    
 	return glfwWindowShouldClose(m_window);
 }
-
 
 // On key callback
 void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 {
-    //UP
-    if (m_player.m_on_ground && (key == GLFW_KEY_UP || key == GLFW_KEY_W)) {
+    //UP: TODO: change condition for jump and double jump
+    //if (m_player.m_on_ground && (key == GLFW_KEY_UP || key == GLFW_KEY_W)) {
+	if (key == GLFW_KEY_UP || key == GLFW_KEY_W) {
         if (action == GLFW_PRESS) {
             //m_player.m_is_jumping = true;
             //m_player.set_direction({0,-5});

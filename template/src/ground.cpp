@@ -2,6 +2,9 @@
 
 #include <iostream>
 #include <math.h>
+#include <algorithm>
+using namespace std;
+
 bool Ground::init() {
 
     // Load shared texture
@@ -17,8 +20,8 @@ bool Ground::init() {
     // The position corresponds to the center of the texture
     float wr = ground_texture.width * 0.5f;
     float hr = ground_texture.height * 0.5f;
-
-    TexturedVertex vertices[4];
+	
+	//TexturedVertex vertices[4];
     vertices[0].position = { -wr, +hr, -0.02f };
     vertices[0].texcoord = { 0.f, 1.f };
     vertices[1].position = { +wr, +hr, -0.02f };
@@ -115,13 +118,15 @@ void Ground::draw(const mat3& projection) {
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
 
+void Ground::set_surface_y()
+{
+	transform.begin();
+	transform.translate(motion.position);
+	transform.scale(physics.scale);
+	transform.end();
 
-
-
-
-
-
-
-
-
-
+	surface_y = mul(transform.out, vec3{ vertices[0].position.x, vertices[0].position.y, 1.f }).y;
+	surface_y = min(surface_y, mul(transform.out, vec3{ vertices[1].position.x, vertices[1].position.y, 1.f }).y);
+	surface_y = min(surface_y, mul(transform.out, vec3{ vertices[2].position.x, vertices[2].position.y, 1.f }).y);
+	surface_y = min(surface_y, mul(transform.out, vec3{ vertices[3].position.x, vertices[3].position.y, 1.f }).y);
+}

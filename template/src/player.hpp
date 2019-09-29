@@ -3,6 +3,8 @@
 #include "common.hpp"
 #include <vector>
 
+class Ground;
+
 class Player : public Entity
 {
 public:
@@ -39,8 +41,14 @@ public:
     
     // Set player direction
     void set_direction(vec2 dir);
+
+	// Check if player is landed
+	void land(const Ground& ground);
     
     vec2 m_direction;
+
+	// TODO: use vector when we change to use mesh file
+	void compute_world_coordinate();
     
     bool m_on_ground; // True if player is on ground/platform
     bool m_is_jumping; // True if player is on ground/platform
@@ -48,4 +56,6 @@ public:
 private:
 	bool m_is_alive; // True if the player is alive
 	Texture player_texture;
+	std::vector<vec2> player_world_coord;
+	TexturedVertex vertices[4];
 };
