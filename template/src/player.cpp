@@ -187,7 +187,7 @@ void Player::set_direction(vec2 dir) {
     m_direction = dir;
 }
 
-void Player::land(Ground ground)
+void Player::land(const Ground& ground)
 {
 	compute_world_coordinate();
 	for (vec2 pwc : player_world_coord) {
