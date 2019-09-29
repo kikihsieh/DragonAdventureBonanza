@@ -91,7 +91,9 @@ void Player::update(float ms)
 	float step = motion.speed * (ms / 1000);
 	if (m_is_alive)
 	{
+
         move({m_direction.x * step, m_direction.y * step});
+
 	}
 	else
 	{
