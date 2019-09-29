@@ -31,18 +31,20 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/project_path.hpp.in" "${CMAKE_CU
 # file(GLOB SOURCE_FILES src/*.cpp src/*.hpp)
 
 set(SOURCE_FILES
-	src/main.cpp
-	src/common.cpp
-	src/player.cpp
-  src/background.cpp
-	src/world.cpp
+        src/main.cpp
+        src/common.cpp
+        src/player.cpp
+        src/background.cpp
+        src/world.cpp
 
-  src/project_path.hpp
-	src/common.hpp
-	src/player.hpp
-  src/background.hpp
-	src/world.hpp
-        src/ground.cpp)
+        src/project_path.hpp
+	    src/common.hpp
+        src/player.hpp
+        src/background.hpp
+        src/world.hpp
+        src/ground.cpp
+        src/camera.cpp
+        src/camera.hpp)
 
 if (IS_OS_MAC)
   include_directories(/usr/local/include)
