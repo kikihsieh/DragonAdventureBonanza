@@ -5,6 +5,9 @@
 #include <string>
 #include <algorithm>
 
+extern float accGravity;
+extern float maxGravity;
+
 bool Player::init()
 {
 	// Load shared texture
@@ -57,12 +60,15 @@ bool Player::init()
 		return false;
 		
 	// Setting initial values
-	motion.position = { 100.f, 700.f };
-//	motion.speed = 200.f;
+	motion.position = { 100.f, 400.f };
+	motion.speed = 250.f;
 
 	physics.scale = { 0.25f, 0.25f };
 
 	m_is_alive = true;
+    m_direction = {0,0};
+    m_is_jumping = false;
+    m_on_ground = true;
 
 	return true;
 }
@@ -85,7 +91,9 @@ void Player::update(float ms)
 	float step = motion.speed * (ms / 1000);
 	if (m_is_alive)
 	{
-        
+
+        move({m_direction.x * step, m_direction.y * step});
+
 	}
 	else
 	{
@@ -172,6 +180,10 @@ void Player::move(vec2 off)
 {
 	motion.position.x += off.x; 
 	motion.position.y += off.y; 
+}
+
+void Player::set_direction(vec2 dir) {
+    m_direction = dir;
 }
 
 bool Player::is_alive() const

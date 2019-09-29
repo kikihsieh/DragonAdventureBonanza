@@ -87,7 +87,9 @@ bool World::init(vec2 screen)
 	// Initialize the screen texture
 	m_screen_tex.create_from_screen(m_window);
 	
-    return m_player.init() && m_background.init() &&  m_spider.init();
+
+	return m_player.init() && m_background.init() && m_ground.init()&&  m_spider.init();;
+
 }
 
 // Releases all the associated resources
@@ -225,7 +227,7 @@ void World::draw()
 	float tx = -(right + left) / (right - left);
 	float ty = -(top + bottom) / (top - bottom);
 	mat3 projection_2D{ { sx, 0.f, 0.f },{ 0.f, sy, 0.f },{ tx, ty, 1.f } };
-	
+
 	/////////////////////
 	// Truely render to the screen
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -241,9 +243,11 @@ void World::draw()
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_screen_tex.id);
 
+
 	m_background.draw(projection_2D);
-    m_player.draw(projection_2D);
-    m_spider.draw(projection_2D);
+  m_player.draw(projection_2D);
+  m_ground.draw(projection_2D);
+  m_spider.draw(projection_2D);
     
     /*
     //Drawing entities
@@ -270,7 +274,48 @@ bool World::is_over() const
 // On key callback
 void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 {
-	
+    //UP
+    if (m_player.m_on_ground && (key == GLFW_KEY_UP || key == GLFW_KEY_W)) {
+        if (action == GLFW_PRESS) {
+            //m_player.m_is_jumping = true;
+            //m_player.set_direction({0,-5});
+            m_player.set_direction({0,-1});
+        } else if (action == GLFW_RELEASE) {
+            //m_player.m_is_jumping = false;
+            m_player.set_direction({0, 0});
+        }
+    }
+    //DOWN: TODO REMOVE FOR JUMPING
+    if (key == GLFW_KEY_DOWN || key == GLFW_KEY_S) {
+        if (action == GLFW_PRESS) {
+            m_player.set_direction({0, 1});
+        } else if (action == GLFW_RELEASE) {
+            m_player.set_direction({0, 0});
+        }
+    }
+    //LEFT
+    if (key == GLFW_KEY_LEFT || key == GLFW_KEY_A) {
+        if (action == GLFW_PRESS) {
+            m_player.set_direction({-1, 0});
+        } else if (action == GLFW_RELEASE) {
+            m_player.set_direction({0, 0});
+        }
+    }
+    // RIGHT
+    if (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D) {
+        if (action == GLFW_PRESS) {
+            m_player.set_direction({1, 0});
+        } else if (action == GLFW_RELEASE) {
+            m_player.set_direction({0, 0});
+        }
+    }
+    
+    //TODO GRAVITY
+    /*
+    if (m_player.m_is_jumping == false && m_player.get_position().y < 400.f) {
+        m_player.set_direction({0,1});
+    }
+    */
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)

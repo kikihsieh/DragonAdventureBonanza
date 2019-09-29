@@ -44,7 +44,7 @@ set(SOURCE_FILES
 	src/spider.hpp
   src/background.hpp
 	src/world.hpp
-	)
+        src/ground.cpp)
 
 if (IS_OS_MAC)
   include_directories(/usr/local/include)

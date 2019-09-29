@@ -16,6 +16,10 @@ World world;
 const int width = 1200;
 const int height = 800;
 
+// Gravity
+float accGravity = 0.5f;
+float maxGravity = 5.f;
+
 // Entry point
 int main(int argc, char* argv[])
 {
