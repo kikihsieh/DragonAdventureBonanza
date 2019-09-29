@@ -86,7 +86,7 @@ bool World::init(vec2 screen)
 	// Initialize the screen texture
 	m_screen_tex.create_from_screen(m_window);
 	
-	return m_player.init() && m_background.init() && m_ground.init() &&  m_spider.init();
+	return m_player.init() && m_background.init() && m_ground.init() &&  m_spider.init() && m_camera.init(screen);
 }
 
 // Releases all the associated resources
@@ -109,6 +109,8 @@ bool World::update(float elapsed_ms)
 
 	m_ground.set_surface_y();
     m_player.land(m_ground);
+
+    m_camera.update(m_player.get_position());
 
 	return true;
 }
@@ -145,7 +147,7 @@ void World::draw()
 
 	float sx = 2.f / (right - left);
 	float sy = 2.f / (top - bottom);
-	float tx = -(right + left) / (right - left);
+    float tx = m_camera.compute_translation_x();
 	float ty = -(top + bottom) / (top - bottom);
 	mat3 projection_2D{ { sx, 0.f, 0.f },{ 0.f, sy, 0.f },{ tx, ty, 1.f } };
 
@@ -211,3 +213,4 @@ void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
 
 }
+
