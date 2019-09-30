@@ -54,7 +54,8 @@ public:
 private:
 	bool m_is_alive; // True if the player is alive
     bool m_on_ground; // True if player is on ground/platform
-
+	int m_jump_count;
+	
     float walking_speed;
     float jumping_speed;
     float gravity;
