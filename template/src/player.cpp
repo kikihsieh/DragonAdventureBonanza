@@ -3,12 +3,7 @@
 #include "ground.hpp"
 
 // stlib
-#include <string>
 #include <algorithm>
-#include <iostream>
-
-extern float accGravity;
-extern float maxGravity;
 
 bool Player::init()
 {
@@ -59,16 +54,21 @@ bool Player::init()
 	// Loading shaders
 	if (!effect.load_from_file(shader_path("player.vs.glsl"), shader_path("player.fs.glsl")))
 		return false;
-		
+
+    walking_speed = 250.f;
+    jumping_speed = -500.f;
+    gravity = 10.f;
+
 	// Setting initial values
 	motion.position = { 100.f, 400.f };
-	motion.speed = 250.f;
+	motion.speed.x = 0.f;
+	motion.speed.y = 0.f;
+	motion.acc.x = 0.f;
+	motion.acc.y = gravity;
 
 	physics.scale = { 0.25f, 0.25f };
 
 	m_is_alive = true;
-    m_direction = {0,0};
-    m_is_jumping = false;
     m_on_ground = false;
 
 	return true;
@@ -89,16 +89,12 @@ void Player::destroy()
 // Called on each frame by World::update()
 void Player::update(float ms)
 {
-	float step = motion.speed * (ms / 1000);
-	if (m_is_alive)
-	{
-
-        move({m_direction.x * step, m_direction.y * step});
-
-	}
-	else
-	{
-	}
+	float x_step = motion.speed.x * (ms / 1000);
+	float y_step = motion.speed.y * (ms/ 1000);
+	motion.speed.y += motion.acc.y;
+	if (m_is_alive) {
+        move({x_step, y_step});
+    }
 }
 
 void Player::draw(const mat3& projection)
@@ -170,8 +166,6 @@ void Player::draw(const mat3& projection)
 //	return false;
 //}
 
-
-
 vec2 Player::get_position() const
 {
 	return motion.position;
@@ -183,8 +177,21 @@ void Player::move(vec2 off)
 	motion.position.y += off.y; 
 }
 
-void Player::set_direction(vec2 dir) {
-    m_direction = dir;
+void Player::walk(bool forward) {
+    motion.speed.x = forward ? walking_speed : -walking_speed;
+}
+
+void Player::stop() {
+    motion.speed.x = 0;
+}
+
+void Player::jump() {
+    motion.speed.y = jumping_speed;
+}
+
+bool Player::can_jump() {
+    // TODO double jump can be added here
+    return m_on_ground;
 }
 
 void Player::land(const Ground& ground)
@@ -192,11 +199,13 @@ void Player::land(const Ground& ground)
 	compute_world_coordinate();
 	for (vec2 pwc : player_world_coord) {
 		if (pwc.y >= ground.surface_y) {
-			set_direction({ m_direction.x, 0 });
 			m_on_ground = true;
-			break;
+		    motion.speed.y = 0;
+		    motion.acc.y = 0;
+			return;
 		}
 	}
+	motion.acc.y = gravity;
 	m_on_ground = false;
 }
 
@@ -209,7 +218,6 @@ void Player::compute_world_coordinate()
 	transform.scale(physics.scale);
 	transform.end();
 
-	float bottom = 0.f;
 	for (auto& v : vertices) {
 		vec3 transformed_vertex = mul(transform.out, vec3{ v.position.x, v.position.y, 1.f });
 		player_world_coord.push_back({ transformed_vertex.x, transformed_vertex.y });
