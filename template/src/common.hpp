@@ -105,11 +105,12 @@ protected:
 		void release(); // release shaders and program
 	} effect;
 
-	// All data relevant to the motion of the salmon.
+	// All data relevant to the motion of the main player.
 	struct Motion {
 		vec2 position;
 		float radians;
-		float speed;
+		vec2 speed;
+		vec2 acc;
 	} motion;
 
 	// Scale is used in the bounding box calculations, 

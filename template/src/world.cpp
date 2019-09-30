@@ -104,11 +104,12 @@ bool World::update(float elapsed_ms)
 	vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
 	
 	// check if player is on the ground
-	m_ground.set_surface_y();
-	m_player.land(m_ground);
 	m_player.update(elapsed_ms);
 	m_spider.update(elapsed_ms);
-	
+
+	m_ground.set_surface_y();
+    m_player.land(m_ground);
+
 	return true;
 }
 
@@ -182,49 +183,28 @@ bool World::is_over() const
 // On key callback
 void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 {
-    //UP: TODO: change condition for jump and double jump
-    //if (m_player.m_on_ground && (key == GLFW_KEY_UP || key == GLFW_KEY_W)) {
-	if (key == GLFW_KEY_UP || key == GLFW_KEY_W) {
+    if (m_player.can_jump() && (key == GLFW_KEY_UP || key == GLFW_KEY_W)) {
         if (action == GLFW_PRESS) {
-            //m_player.m_is_jumping = true;
-            //m_player.set_direction({0,-5});
-            m_player.set_direction({0,-1});
-        } else if (action == GLFW_RELEASE) {
-            //m_player.m_is_jumping = false;
-            m_player.set_direction({0, 0});
+            m_player.jump();
         }
     }
-    //DOWN: TODO REMOVE FOR JUMPING
-    if (key == GLFW_KEY_DOWN || key == GLFW_KEY_S) {
-        if (action == GLFW_PRESS) {
-            m_player.set_direction({0, 1});
-        } else if (action == GLFW_RELEASE) {
-            m_player.set_direction({0, 0});
-        }
-    }
+
     //LEFT
     if (key == GLFW_KEY_LEFT || key == GLFW_KEY_A) {
         if (action == GLFW_PRESS) {
-            m_player.set_direction({-1, 0});
+            m_player.walk(false);
         } else if (action == GLFW_RELEASE) {
-            m_player.set_direction({0, 0});
+            m_player.stop();
         }
     }
     // RIGHT
     if (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D) {
         if (action == GLFW_PRESS) {
-            m_player.set_direction({1, 0});
+            m_player.walk(true);
         } else if (action == GLFW_RELEASE) {
-            m_player.set_direction({0, 0});
+            m_player.stop();
         }
     }
-    
-    //TODO GRAVITY
-    /*
-    if (m_player.m_is_jumping == false && m_player.get_position().y < 400.f) {
-        m_player.set_direction({0,1});
-    }
-    */
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)

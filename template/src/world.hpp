@@ -61,7 +61,7 @@ private:
 	
   // Game entities
   std::vector<Spider> m_spiders;
-    
+
   float m_current_speed;
   float m_next_spider_spawn;
     
