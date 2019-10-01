@@ -70,6 +70,7 @@ bool Player::init()
 
 	m_is_alive = true;
     m_on_ground = false;
+    m_is_facing_forwards = true;
 
 	return true;
 }
@@ -178,7 +179,13 @@ void Player::move(vec2 off)
 }
 
 void Player::walk(bool forward) {
-    motion.speed.x = forward ? walking_speed : -walking_speed;
+    if (forward) {
+        motion.speed.x = walking_speed;
+        m_is_facing_forwards = true;
+    } else {
+        motion.speed.x = -walking_speed;
+        m_is_facing_forwards = false;
+    }
 }
 
 void Player::stop() {
