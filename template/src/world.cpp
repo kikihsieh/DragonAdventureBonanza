@@ -5,12 +5,12 @@
 #include <string.h>
 #include <cassert>
 #include <sstream>
+#include <iostream>
 
 // Same as static in c, local to compilation unit
 namespace
 {
-	const size_t MAX_SPIDER = 5;
-	const size_t SPIDER_DELAY_MS = 2000;
+	const size_t NUM_SPIDER = 5;
 	namespace
 	{
 		void glfw_err_cb(int error, const char* desc)
@@ -85,10 +85,8 @@ bool World::init(vec2 screen)
 
 	// Initialize the screen texture
 	m_screen_tex.create_from_screen(m_window);
-
-    m_camera.init(screen);
-
-	return m_player.init() && m_background.init() && m_ground.init() &&  m_spider.init();
+	
+	return m_player.init() && m_background.init() && m_ground.init() && init_enemies(m_screen_scale, fb_width, fb_height);
 }
 
 // Releases all the associated resources
@@ -107,12 +105,12 @@ bool World::update(float elapsed_ms)
 	
 	// check if player is on the ground
 	m_player.update(elapsed_ms);
-	m_spider.update(elapsed_ms);
 
 	m_ground.set_surface_y();
     m_player.land(m_ground);
+	for(auto& spider : m_spiders)
+		spider.update(elapsed_ms);
 
-    m_camera.update(m_player.get_position(), m_player.is_facing_forwards());
 	return true;
 }
 
@@ -148,9 +146,8 @@ void World::draw()
 
 	float sx = 2.f / (right - left);
 	float sy = 2.f / (top - bottom);
-    float tx = m_camera.compute_translation_x();
-    float ty = -(top + bottom) / (top - bottom);
-
+	float tx = -(right + left) / (right - left);
+	float ty = -(top + bottom) / (top - bottom);
 	mat3 projection_2D{ { sx, 0.f, 0.f },{ 0.f, sy, 0.f },{ tx, ty, 1.f } };
 
 	/////////////////////
@@ -171,7 +168,8 @@ void World::draw()
 	m_background.draw(projection_2D);
 	m_ground.draw(projection_2D);
 	m_player.draw(projection_2D);
-	m_spider.draw(projection_2D);
+	for (auto& spider : m_spiders)
+		spider.draw(projection_2D);
 
 	//////////////////
 	// Presenting
@@ -182,6 +180,23 @@ void World::draw()
 bool World::is_over() const
 {
 	return glfwWindowShouldClose(m_window);
+}
+
+bool World::init_enemies(float& screen_scale, int& w, int& h)
+{
+	vec2 screen = { (float)w / screen_scale, (float)h / screen_scale };
+	for (int i = 0; i < NUM_SPIDER; i++) {
+		Spider spider;
+		if (spider.init()) {
+			spider.set_init_position_and_max_xy(vec2{ 50 + m_dist(m_rng) * (screen.x - 50), m_dist(m_rng) * (screen.y - 150) });
+			m_spiders.emplace_back(spider);
+		}
+		else {
+			fprintf(stderr, "Failed to initialize spider");
+			return false;
+		}
+	}
+	return true;
 }
 
 // On key callback
@@ -215,4 +230,3 @@ void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
 
 }
-
