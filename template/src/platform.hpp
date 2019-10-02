@@ -20,12 +20,17 @@ public:
     // Returns the current platform position
     vec2 get_position() const;
     
-    float topSide;
-    float bottomSide;
-    float rightSide;
-    float leftSide;
+    vec2 get_bounding_box() const;
+    
+    void compute_world_coordinate();
+    
+    float top;
+    float bottom;
+    float left;
+    float right;
     
 private:
     Texture platform_med_texture;
     TexturedVertex vertices[4];
+    std::vector<vec2> platform_world_coord;
 };

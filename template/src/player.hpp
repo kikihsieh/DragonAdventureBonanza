@@ -17,7 +17,7 @@ public:
 	
 	// Update player position based on direction
 	// ms represents the number of milliseconds elapsed from the previous update() call
-	void update(float ms);
+	void update(float ms, const Platform& platform);
 	
 	// Renders the player
 	void draw(const mat3& projection)override;
@@ -32,6 +32,8 @@ public:
 	vec2 get_position() const;
     
     void set_position(vec2 pos);
+    
+    vec2 get_speed() const;
 
 	// Moves the player's position by the specified offset
 	void move(vec2 off);
@@ -54,17 +56,16 @@ public:
 	// TODO: use vector when we change to use mesh file
 	void compute_world_coordinate();
     
-    // Check if player is landed
-    void platformCollision(const Platform& platform);
+    vec2 get_bounding_box() const;
     
-    float topSide;
-    float bottomSide;
-    float rightSide;
-    float leftSide;
+    // Check if player collides with platform
+    void platformCollision(const Platform& platform);
 
 private:
 	bool m_is_alive; // True if the player is alive
     bool m_on_ground; // True if player is on ground/platform
+    bool m_is_collide; //True if player collide with platform
+    bool m_on_platform; // True if player on top of platform
 
     float walking_speed;
     float jumping_speed;

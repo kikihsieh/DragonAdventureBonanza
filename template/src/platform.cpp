@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <math.h>
+#include <cmath>
 #include <algorithm>
 using namespace std;
 
@@ -57,15 +58,9 @@ bool Platform::init() {
     if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
         return false;
     
-    motion.position = { 500.f, 500.f};
+    motion.position = {500.f, 650.f};
     physics.scale = { 0.3f, 0.3f };
-    
-    //intialize platform sides
-    topSide = get_position().y;
-    bottomSide = get_position().y + (platform_med_texture.height * 0.3);
-    leftSide = get_position().x;
-    rightSide = get_position().x + (platform_med_texture.width * 0.3);
-    
+    compute_world_coordinate();
     return true;
 }
 
@@ -127,4 +122,29 @@ void Platform::draw(const mat3& projection) {
 vec2 Platform::get_position() const
 {
     return motion.position;
+}
+
+vec2 Platform::get_bounding_box() const
+{
+    // Returns the local bounding coordinates scaled by the current size of the turtle
+    return { std::fabs(physics.scale.x) * platform_med_texture.width, std::fabs(physics.scale.y) * platform_med_texture.height };
+}
+
+void Platform::compute_world_coordinate()
+{
+    platform_world_coord.clear();
+    transform.begin();
+    transform.translate(motion.position);
+    transform.scale(physics.scale);
+    transform.end();
+    
+    for (auto& v : vertices) {
+        vec3 transformed_vertex = mul(transform.out, vec3{ v.position.x, v.position.y, 1.f });
+        platform_world_coord.push_back({ transformed_vertex.x, transformed_vertex.y });
+    }
+    
+    top = platform_world_coord[2].y;
+    bottom = platform_world_coord[0].y;
+    left = platform_world_coord[0].x;
+    right = platform_world_coord[2].x;
 }

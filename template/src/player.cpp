@@ -5,10 +5,13 @@
 
 // stlib
 #include <algorithm>
+#include <cmath>
+#include <iostream>
 
 bool Player::init()
 {
 	// Load shared texture
+    // 566w x 644h
 	if (!player_texture.is_valid())
 	{
 		if (!player_texture.load_from_file(textures_path("player.png")))
@@ -61,22 +64,18 @@ bool Player::init()
     gravity = 10.f;
 
 	// Setting initial values
-	motion.position = { 100.f, 400.f };
+    motion.position = { 500.f, 350.f };
 	motion.speed.x = 0.f;
 	motion.speed.y = 0.f;
 	motion.acc.x = 0.f;
 	motion.acc.y = gravity;
 
 	physics.scale = { 0.25f, 0.25f };
-    
-    //sides of player for collisions
-    topSide = get_position().y;
-    bottomSide = get_position().y + (player_texture.height * 0.25);
-    leftSide = get_position().x;
-    rightSide = get_position().x + (player_texture.width * 0.25);
 
 	m_is_alive = true;
     m_on_ground = false;
+    m_is_collide = false;
+    m_on_platform = false;
 
 	return true;
 }
@@ -94,20 +93,16 @@ void Player::destroy()
 }
 
 // Called on each frame by World::update()
-void Player::update(float ms)
+void Player::update(float ms, const Platform& platform)
 {
 	float x_step = motion.speed.x * (ms / 1000);
 	float y_step = motion.speed.y * (ms/ 1000);
 	motion.speed.y += motion.acc.y;
 	if (m_is_alive) {
         move({x_step, y_step});
+        m_on_platform = false;
+        platformCollision(platform);
     }
-    
-    //sides of player for collisions
-    topSide = get_position().y;
-    bottomSide = get_position().y + (player_texture.height * 0.25);
-    leftSide = get_position().x;
-    rightSide = get_position().x + (player_texture.width * 0.25);
 }
 
 void Player::draw(const mat3& projection)
@@ -189,6 +184,11 @@ void Player::set_position(vec2 pos)
     motion.position = pos;
 }
 
+vec2 Player::get_speed() const
+{
+    return motion.speed;
+}
+
 void Player::move(vec2 off)
 {
 	motion.position.x += off.x; 
@@ -209,7 +209,7 @@ void Player::jump() {
 
 bool Player::can_jump() {
     // TODO double jump can be added here
-    return m_on_ground;
+    return m_on_ground || m_on_platform;
 }
 
 void Player::land(const Ground& ground)
@@ -244,10 +244,55 @@ void Player::compute_world_coordinate()
 
 void Player::platformCollision(const Platform& platform)
 {
-    // TODO make these global, make scale 0.25 a constant
-    if (rightSide > platform.leftSide && leftSide < platform.rightSide) {
-        set_position({static_cast<float>(platform.leftSide - player_texture.width * 0.25), motion.position.y});
+    compute_world_coordinate();
+    float top = player_world_coord[2].y;
+    float bottom = player_world_coord[0].y;
+    float left = player_world_coord[0].x;
+    float right = player_world_coord[2].x;
+    
+    if (left < platform.right &&
+        right > platform.left &&
+        top < platform.bottom &&
+        bottom > platform.top)
+    {
+        m_is_collide = true;
     }
+    else {
+        m_is_collide = false;
+    }
+    
+    float w = player_texture.width * physics.scale.x * 0.5;
+    float h = player_texture.height * physics.scale.y * 0.5;
+    
+    if (m_is_collide) {
+        if (motion.speed.x > 0) { //going right
+            set_position({platform.left - w, motion.position.y});
+            motion.speed.x = 0.f;
+            //std::cout << "hit left" << std::endl;
+        }
+        if (motion.speed.x < 0) { //going left
+            set_position({platform.right + w, motion.position.y});
+            motion.speed.x = 0.f;
+            //std::cout << "hit right" << std::endl;
+        }
+        if (motion.speed.y > 0) { //going down
+            set_position({motion.position.x, platform.top - h});
+            motion.speed.y = 0.f;
+            motion.acc.y = 0.f;
+            m_on_platform = true;
+            //std::cout << "hit top" << std::endl;
+        }
+        if (motion.speed.y < 0) { //going up
+            set_position({motion.position.x, platform.bottom + h});
+            motion.speed.y = 0.f;
+            //std::cout << "hit bottom" << std::endl;
+        }
+    } else {
+        //std::cout << "hit nothing" << std::endl;
+    }
+    //std::cout << get_position().y << std::endl;
+    //std::cout << bottom << std::endl;
+    //std::cout << platform.top << std::endl;
 }
 
 bool Player::is_alive() const
@@ -259,4 +304,10 @@ bool Player::is_alive() const
 void Player::kill()
 {
 	m_is_alive = false;
+}
+
+vec2 Player::get_bounding_box() const
+{
+    // Returns the local bounding coordinates scaled by the current size of the turtle
+    return { std::fabs(physics.scale.x) * player_texture.width, std::fabs(physics.scale.y) * player_texture.height };
 }
