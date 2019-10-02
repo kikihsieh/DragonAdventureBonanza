@@ -38,6 +38,7 @@ set(SOURCE_FILES
   src/background.cpp
 	src/world.cpp
 	src/ground.cpp
+	src/platform.cpp
 
   src/project_path.hpp
 	src/common.hpp
@@ -45,7 +46,8 @@ set(SOURCE_FILES
 	src/spider.hpp
   src/background.hpp
 	src/world.hpp
-        src/ground.hpp)
+        src/ground.hpp
+	src/platform.hpp)
 
 if (IS_OS_MAC)
   include_directories(/usr/local/include)
