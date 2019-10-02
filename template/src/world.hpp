@@ -7,6 +7,7 @@
 #include "background.hpp"
 
 #include "ground.hpp"
+#include "camera.hpp"
 
 // stlib
 #include <vector>
@@ -69,6 +70,7 @@ private:
   Spider m_spider;
 	Background m_background;
   Ground m_ground;
+    Camera m_camera;
     
 	// C++ rng
 	std::default_random_engine m_rng;
