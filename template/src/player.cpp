@@ -70,6 +70,9 @@ bool Player::init()
 
 	m_is_alive = true;
     m_on_ground = false;
+
+	m_unlocked_double_jump = true;
+	
 	m_jump_count = 10;
 	
 	return true;
@@ -193,7 +196,7 @@ void Player::jump() {
 
 bool Player::can_jump() {
     // TODO double jump can be added here
-    return m_jump_count < 2;
+	return m_unlocked_double_jump ? m_jump_count < 2 : m_on_ground;
 }
 
 void Player::land(const Ground& ground)
