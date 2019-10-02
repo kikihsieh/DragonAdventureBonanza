@@ -6,10 +6,11 @@
 // stlib
 #include <algorithm>
 #include <cmath>
-
+#include <iostream>
 bool Player::init()
 {
 	// Load shared texture
+    // 566w x 644h
 	if (!player_texture.is_valid())
 	{
 		if (!player_texture.load_from_file(textures_path("player.png")))
@@ -62,7 +63,7 @@ bool Player::init()
     gravity = 10.f;
 
 	// Setting initial values
-	motion.position = { 100.f, 400.f };
+    motion.position = { 500.f, 350.f };
 	motion.speed.x = 0.f;
 	motion.speed.y = 0.f;
 	motion.acc.x = 0.f;
@@ -104,6 +105,8 @@ void Player::update(float ms, const Platform& platform)
         float y_step = motion.speed.y * (ms/ 1000);
         motion.speed.y += motion.acc.y;
         move({x_step, y_step});
+        m_on_platform = false;
+        platformCollision(platform);
     }
 }
 
@@ -246,7 +249,7 @@ void Player::compute_world_coordinate()
 void Player::platformCollision(const Platform& platform)
 {
     m_on_platform = false;
-    
+
     compute_world_coordinate();
     float top = player_world_coord[2].y;
     float bottom = player_world_coord[0].y;

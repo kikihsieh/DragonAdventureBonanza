@@ -106,7 +106,6 @@ bool World::update(float elapsed_ms)
 	
 	// check if player is on the ground
 	m_player.update(elapsed_ms, m_platform);
-
 	m_camera.update(m_player.get_position(), m_player.is_facing_forwards());
 
 	m_ground.set_surface_y();
@@ -114,7 +113,6 @@ bool World::update(float elapsed_ms)
 	for(auto& spider : m_spiders)
 		spider.update(elapsed_ms);
     m_player.platformCollision(m_platform);
-    
 	return true;
 }
 
