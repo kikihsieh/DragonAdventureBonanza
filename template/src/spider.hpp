@@ -18,10 +18,10 @@ public:
 	void destroy();
     
     //walking boundary 
-    void boundary(vec2 position);
+    void x_axis_movement();
     
     //spider jumping @ random time
-    void jump_Now(vec2, float);
+    void y_axis_movement(float step);
     
     //generate random time 
     int jump_Time(float step);
@@ -30,15 +30,13 @@ public:
 	// ms represents the number of milliseconds elapsed from the previous update() call
 	void update(float ms);
 
-    
+	void set_init_position_and_max_xy(vec2 coord);
+
 	// projection is the 2D orthographic projection matrix
 	void draw(const mat3& projection) override;
 
 	// Returns the current spider position
 	vec2 get_position()const;
-
-	// Sets the new spider position
-	void set_position(vec2 position);
 
 	// Returns the spider's bounding box for collision detection, called by collides_with()
 	vec2 get_bounding_box() const;
@@ -58,6 +56,5 @@ public:
     float currTime;
     
     bool randomBoo;
-    
 };
 

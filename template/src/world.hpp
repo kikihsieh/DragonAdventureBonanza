@@ -42,8 +42,7 @@ public:
 
 private:
     // Generates a new spider
-    bool spawn_spider();
-    
+    bool init_enemies(float& scale, int& w, int& h);
     
 	// !!! INPUT CALLBACK FUNCTIONS
 	void on_key(GLFWwindow*, int key, int, int action, int mod);
@@ -67,7 +66,6 @@ private:
   float m_next_spider_spawn;
     
 	Player m_player;
-  Spider m_spider;
 	Background m_background;
   Ground m_ground;
     Camera m_camera;
