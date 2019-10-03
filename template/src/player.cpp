@@ -217,7 +217,6 @@ void Player::land(const Ground& ground, const Platform& platform)
 	compute_world_coordinate();
 	for (vec2 pwc : player_world_coord) {
 		if (pwc.y >= ground.surface_y) {
-			std::cout << "Player landed on ground!" << std::endl;
 			m_on_ground = true;
 		    motion.speed.y = 0;
 		    motion.acc.y = 0;
@@ -259,9 +258,11 @@ void Player::platformCollision(const Platform& platform)
 		(right - 5.f) > platform.left &&
 		bottom >= platform.top &&
 		bottom < platform.bottom) {
-            motion.speed.y = 0.f;
+			if (motion.speed.y > 0)
+            	motion.speed.y = 0.f;
             motion.acc.y = 0.f;
             m_on_platform = true;
+
 	
 	} else if (motion.speed.x < 0 && 
 		left < platform.right &&
