@@ -4,8 +4,9 @@
 
 // stlib
 #include <algorithm>
+#include <iostream>
 
-bool Player::init()
+bool Player::init(vec2 x_bounds, vec2 y_bounds)
 {
 	// Load shared texture
 	if (!player_texture.is_valid())
@@ -76,6 +77,9 @@ bool Player::init()
 	
 	m_jump_count = 10;
 	
+	m_x_world_bounds = x_bounds;
+	m_y_world_bounds = y_bounds;
+	
 	return true;
 }
 
@@ -95,8 +99,26 @@ void Player::destroy()
 void Player::update(float ms)
 {
 	float x_step = motion.speed.x * (ms / 1000);
-	float y_step = motion.speed.y * (ms/ 1000);
+	float y_step = motion.speed.y * (ms / 1000);
+	
+	if ((x_step < 0 && motion.position.x < m_x_world_bounds.x) ||
+		(x_step > 0 && motion.position.x > m_x_world_bounds.y))
+		x_step = 0;
+
+	// Jumping		
+	if (y_step < 0 && motion.position.y < m_y_world_bounds.x) {
+		y_step *= -1.f;
+		motion.speed.y = 0;
+	}
+	
 	motion.speed.y += motion.acc.y;
+
+	// Die when touching bottom of screen
+	if (y_step > 0 && motion.position.y > m_y_world_bounds.y) {
+		std::cout <<  "Player died"  << std::endl;
+		m_is_alive = false;
+	}
+	
 	if (m_is_alive) {
         move({x_step, y_step});
     }
@@ -236,6 +258,7 @@ void Player::compute_world_coordinate()
 		player_world_coord.push_back({ transformed_vertex.x, transformed_vertex.y });
 	}
 }
+
 
 bool Player::is_alive() const
 {

@@ -59,15 +59,18 @@ private:
 	Texture m_screen_tex;
 
 	
-  // Game entities
-  std::vector<Spider> m_spiders;
+  	// Game entities
+  	std::vector<Spider> m_spiders;
 
-  float m_current_speed;
-  float m_next_spider_spawn;
+  	float m_current_speed;
+  	float m_next_spider_spawn;
     
+	vec2 m_x_boundaries;
+	vec2 m_y_boundaries; 
+	
 	Player m_player;
 	Background m_background;
-  Ground m_ground;
+  	Ground m_ground;
     Camera m_camera;
     
 	// C++ rng
