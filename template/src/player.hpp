@@ -29,6 +29,9 @@ public:
 
 	// Returns the current player position
 	vec2 get_position() const;
+	bool is_facing_forwards() {
+	    return m_is_facing_forwards;
+	}
 
 	// Moves the player's position by the specified offset
 	void move(vec2 off);
@@ -56,9 +59,10 @@ private:
     bool m_on_ground; // True if player is on ground/platform
 	
 	bool m_unlocked_double_jump;
-	
 	int m_jump_count;
 	
+    bool m_is_facing_forwards; // True if player is facing forward
+
     float walking_speed;
     float jumping_speed;
     float gravity;
