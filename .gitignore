@@ -35,3 +35,4 @@
 
 # Build Files
 build/
+template/src/project_path.hpp

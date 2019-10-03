@@ -72,6 +72,10 @@ bool Player::init()
     m_on_ground = false;
     m_is_facing_forwards = true;
 
+	m_unlocked_double_jump = true;
+	
+	m_jump_count = 10;
+	
 	return true;
 }
 
@@ -194,11 +198,12 @@ void Player::stop() {
 
 void Player::jump() {
     motion.speed.y = jumping_speed;
+	m_jump_count ++;
 }
 
 bool Player::can_jump() {
     // TODO double jump can be added here
-    return m_on_ground;
+	return m_unlocked_double_jump ? m_jump_count < 2 : m_on_ground;
 }
 
 void Player::land(const Ground& ground)
@@ -207,6 +212,7 @@ void Player::land(const Ground& ground)
 	for (vec2 pwc : player_world_coord) {
 		if (pwc.y >= ground.surface_y) {
 			m_on_ground = true;
+			m_jump_count = 0;
 		    motion.speed.y = 0;
 		    motion.acc.y = 0;
 			return;
