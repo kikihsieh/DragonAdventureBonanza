@@ -108,8 +108,9 @@ bool World::update(float elapsed_ms)
 	m_spider.update(elapsed_ms);
 
 	m_ground.set_surface_y();
-    m_player.land(m_ground);
 	
+    m_player.land(m_ground, m_platform);
+
 	return true;
 }
 

@@ -95,13 +95,13 @@ void Player::destroy()
 // Called on each frame by World::update()
 void Player::update(float ms, const Platform& platform)
 {
-	float x_step = motion.speed.x * (ms / 1000);
-	float y_step = motion.speed.y * (ms/ 1000);
-	motion.speed.y += motion.acc.y;
 	if (m_is_alive) {
+		platformCollision(platform);
+		
+		float x_step = motion.speed.x * (ms / 1000);
+		float y_step = motion.speed.y * (ms/ 1000);
+		motion.speed.y += motion.acc.y;
         move({x_step, y_step});
-        m_on_platform = false;
-        platformCollision(platform);
     }
 }
 
@@ -212,20 +212,32 @@ bool Player::can_jump() {
     return m_on_ground || m_on_platform;
 }
 
-void Player::land(const Ground& ground)
+void Player::land(const Ground& ground, const Platform& platform)
 {
 	compute_world_coordinate();
 	for (vec2 pwc : player_world_coord) {
 		if (pwc.y >= ground.surface_y) {
+			std::cout << "Player landed on ground!" << std::endl;
 			m_on_ground = true;
 		    motion.speed.y = 0;
 		    motion.acc.y = 0;
 			return;
 		}
 	}
+	
+	for (vec2 pwc : player_world_coord) {
+		if (pwc.y >= platform.top && pwc.x >= platform.left && pwc.x <= platform.right) {
+			std::cout << "Player landed on platform!" << std::endl;
+			m_on_ground = true;
+//		    motion.speed.y = 0;
+//		    motion.acc.y = 0;
+			return;
+		}
+	}
 	motion.acc.y = gravity;
 	m_on_ground = false;
 }
+
 
 void Player::compute_world_coordinate()
 {
@@ -244,52 +256,81 @@ void Player::compute_world_coordinate()
 
 void Player::platformCollision(const Platform& platform)
 {
+	m_on_platform = false;
+
     compute_world_coordinate();
     float top = player_world_coord[2].y;
     float bottom = player_world_coord[0].y;
     float left = player_world_coord[0].x;
     float right = player_world_coord[2].x;
     
-    if (left < platform.right &&
-        right > platform.left &&
-        top < platform.bottom &&
-        bottom > platform.top)
-    {
-        m_is_collide = true;
+	if ((left + 5.f) < platform.right &&
+		(right - 5.f) > platform.left &&
+		bottom >= platform.top &&
+		bottom < platform.bottom) {
+				std::cout << "above" << std::endl;
+	            motion.speed.y = 0.f;
+	            motion.acc.y = 0.f;
+	            m_on_platform = true;
+	
+	} else if (motion.speed.x < 0 && left < platform.right &&
+		left > platform.left &&
+        ((platform.top >= top &&
+		platform.top <= bottom) ||
+        (platform.bottom <= top &&
+		platform.bottom >= bottom))) {
+			motion.speed.x = 0.f;
+
+    } else if (motion.speed.x > 0 && right > platform.left &&
+		right < platform.right &&
+        ((platform.top >= top &&
+		platform.top <= bottom) ||
+        (platform.bottom <= top &&
+		platform.bottom >= bottom))) {
+			motion.speed.x = 0.f;
+
     }
-    else {
-        m_is_collide = false;
-    }
-    
-    float w = player_texture.width * physics.scale.x * 0.5;
-    float h = player_texture.height * physics.scale.y * 0.5;
-    
-    if (m_is_collide) {
-        if (motion.speed.x > 0) { //going right
-            set_position({platform.left - w, motion.position.y});
-            motion.speed.x = 0.f;
-            //std::cout << "hit left" << std::endl;
-        }
-        if (motion.speed.x < 0) { //going left
-            set_position({platform.right + w, motion.position.y});
-            motion.speed.x = 0.f;
-            //std::cout << "hit right" << std::endl;
-        }
-        if (motion.speed.y > 0) { //going down
-            set_position({motion.position.x, platform.top - h});
-            motion.speed.y = 0.f;
-            motion.acc.y = 0.f;
-            m_on_platform = true;
-            //std::cout << "hit top" << std::endl;
-        }
-        if (motion.speed.y < 0) { //going up
-            set_position({motion.position.x, platform.bottom + h});
-            motion.speed.y = 0.f;
-            //std::cout << "hit bottom" << std::endl;
-        }
-    } else {
-        //std::cout << "hit nothing" << std::endl;
-    }
+	
+//    if (left < platform.right &&
+//        right > platform.left &&
+//        top < platform.bottom &&
+//        bottom > platform.top)
+//    {
+//        m_is_collide = true;
+//    }
+//    else {
+//        m_is_collide = false;
+//    }
+//    
+//    float w = player_texture.width * physics.scale.x * 0.5;
+//    float h = player_texture.height * physics.scale.y * 0.5;
+//    
+//    if (m_is_collide) {
+//        if (motion.speed.x > 0) { //going right
+////            set_position({platform.left - w, motion.position.y});
+//            motion.speed.x = 0.f;
+//            //std::cout << "hit left" << std::endl;
+//        }
+//        if (motion.speed.x < 0) { //going left
+////            set_position({platform.right + w, motion.position.y});
+//            motion.speed.x = 0.f;
+//            //std::cout << "hit right" << std::endl;
+//        }
+//        if (motion.speed.y > 0) { //going down
+////            set_position({motion.position.x, platform.top - h});
+//            motion.speed.y = 0.f;
+//            motion.acc.y = 0.f;
+//            m_on_platform = true;
+//            //std::cout << "hit top" << std::endl;
+//        }
+//        if (motion.speed.y < 0) { //going up
+////            set_position({motion.position.x, platform.bottom + h});
+////            motion.speed.y = 0.f;
+//            //std::cout << "hit bottom" << std::endl;
+//        }
+//    } else {
+//        //std::cout << "hit nothing" << std::endl;
+//    }
     //std::cout << get_position().y << std::endl;
     //std::cout << bottom << std::endl;
     //std::cout << platform.top << std::endl;

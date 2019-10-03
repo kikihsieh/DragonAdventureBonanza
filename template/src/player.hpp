@@ -50,7 +50,9 @@ public:
     void jump();
 
 	// Check if player is landed
-	void land(const Ground& ground);
+	void land(const Ground& ground, const Platform& platform);
+
+
 	bool can_jump();
 
 	// TODO: use vector when we change to use mesh file
