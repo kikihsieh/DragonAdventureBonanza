@@ -63,7 +63,7 @@ bool Player::init()
     gravity = 10.f;
 
 	// Setting initial values
-    motion.position = { 500.f, 350.f };
+    motion.position = { 0.f, 350.f };
 	motion.speed.x = 0.f;
 	motion.speed.y = 0.f;
 	motion.acc.x = 0.f;
