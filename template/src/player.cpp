@@ -64,7 +64,7 @@ bool Player::init()
     gravity = 10.f;
 
 	// Setting initial values
-    motion.position = { 500.f, 350.f };
+    motion.position = { 0.f, 350.f };
 	motion.speed.x = 0.f;
 	motion.speed.y = 0.f;
 	motion.acc.x = 0.f;
@@ -224,16 +224,7 @@ void Player::land(const Ground& ground, const Platform& platform)
 			return;
 		}
 	}
-	
-	for (vec2 pwc : player_world_coord) {
-		if (pwc.y >= platform.top && pwc.x >= platform.left && pwc.x <= platform.right) {
-			std::cout << "Player landed on platform!" << std::endl;
-			m_on_ground = true;
-//		    motion.speed.y = 0;
-//		    motion.acc.y = 0;
-			return;
-		}
-	}
+
 	motion.acc.y = gravity;
 	m_on_ground = false;
 }
@@ -268,72 +259,38 @@ void Player::platformCollision(const Platform& platform)
 		(right - 5.f) > platform.left &&
 		bottom >= platform.top &&
 		bottom < platform.bottom) {
-				std::cout << "above" << std::endl;
-	            motion.speed.y = 0.f;
-	            motion.acc.y = 0.f;
-	            m_on_platform = true;
+            motion.speed.y = 0.f;
+            motion.acc.y = 0.f;
+            m_on_platform = true;
 	
-	} else if (motion.speed.x < 0 && left < platform.right &&
+	} else if (motion.speed.x < 0 && 
+		left < platform.right &&
 		left > platform.left &&
+		
         ((platform.top >= top &&
 		platform.top <= bottom) ||
         (platform.bottom <= top &&
 		platform.bottom >= bottom))) {
+			
 			motion.speed.x = 0.f;
 
-    } else if (motion.speed.x > 0 && right > platform.left &&
+    } else if (motion.speed.x > 0 && 
+		right > platform.left &&
 		right < platform.right &&
+		
         ((platform.top >= top &&
 		platform.top <= bottom) ||
         (platform.bottom <= top &&
 		platform.bottom >= bottom))) {
+			
 			motion.speed.x = 0.f;
 
-    }
-	
-//    if (left < platform.right &&
-//        right > platform.left &&
-//        top < platform.bottom &&
-//        bottom > platform.top)
-//    {
-//        m_is_collide = true;
-//    }
-//    else {
-//        m_is_collide = false;
-//    }
-//    
-//    float w = player_texture.width * physics.scale.x * 0.5;
-//    float h = player_texture.height * physics.scale.y * 0.5;
-//    
-//    if (m_is_collide) {
-//        if (motion.speed.x > 0) { //going right
-////            set_position({platform.left - w, motion.position.y});
-//            motion.speed.x = 0.f;
-//            //std::cout << "hit left" << std::endl;
-//        }
-//        if (motion.speed.x < 0) { //going left
-////            set_position({platform.right + w, motion.position.y});
-//            motion.speed.x = 0.f;
-//            //std::cout << "hit right" << std::endl;
-//        }
-//        if (motion.speed.y > 0) { //going down
-////            set_position({motion.position.x, platform.top - h});
-//            motion.speed.y = 0.f;
-//            motion.acc.y = 0.f;
-//            m_on_platform = true;
-//            //std::cout << "hit top" << std::endl;
-//        }
-//        if (motion.speed.y < 0) { //going up
-////            set_position({motion.position.x, platform.bottom + h});
-////            motion.speed.y = 0.f;
-//            //std::cout << "hit bottom" << std::endl;
-//        }
-//    } else {
-//        //std::cout << "hit nothing" << std::endl;
-//    }
-    //std::cout << get_position().y << std::endl;
-    //std::cout << bottom << std::endl;
-    //std::cout << platform.top << std::endl;
+    } else if ((left + 5.f) < platform.right &&
+		(right - 5.f) > platform.left &&
+		top <= platform.bottom &&
+		top > platform.top) {
+            motion.speed.y = gravity;
+	}
 }
 
 bool Player::is_alive() const

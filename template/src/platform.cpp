@@ -58,7 +58,7 @@ bool Platform::init() {
     if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
         return false;
     
-    motion.position = {500.f, 650.f};
+    motion.position = {500.f, 400.f};
     physics.scale = { 0.3f, 0.3f };
     compute_world_coordinate();
     return true;
