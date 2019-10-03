@@ -254,7 +254,7 @@ void Player::platformCollision(const Platform& platform)
     float bottom = player_world_coord[0].y;
     float left = player_world_coord[0].x;
     float right = player_world_coord[2].x;
-    
+
     if ((left + 5.f) < platform.right &&
         (right - 5.f) > platform.left &&
         bottom >= platform.top &&
