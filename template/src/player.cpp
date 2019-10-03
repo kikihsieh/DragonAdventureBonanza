@@ -98,15 +98,13 @@ void Player::destroy()
 // Called on each frame by World::update()
 void Player::update(float ms, const Platform& platform)
 {
-    if (m_is_alive) {
-        platformCollision(platform);
-        
-        float x_step = motion.speed.x * (ms / 1000);
-        float y_step = motion.speed.y * (ms/ 1000);
-        motion.speed.y += motion.acc.y;
+	if (m_is_alive) {
+		platformCollision(platform);
+		
+		float x_step = motion.speed.x * (ms / 1000);
+		float y_step = motion.speed.y * (ms/ 1000);
+		motion.speed.y += motion.acc.y;
         move({x_step, y_step});
-        m_on_platform = false;
-        platformCollision(platform);
     }
 }
 
@@ -231,6 +229,7 @@ void Player::land(const Ground& ground, const Platform& platform)
     m_on_ground = false;
 }
 
+
 void Player::compute_world_coordinate()
 {
 	player_world_coord.clear();
@@ -248,7 +247,7 @@ void Player::compute_world_coordinate()
 
 void Player::platformCollision(const Platform& platform)
 {
-    m_on_platform = false;
+	m_on_platform = false;
 
     compute_world_coordinate();
     float top = player_world_coord[2].y;
