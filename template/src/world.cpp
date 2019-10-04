@@ -88,7 +88,7 @@ bool World::init(vec2 screen)
 	m_camera.init(screen);
 
 	m_x_boundaries = {-200.f, 1000.f};
-	m_y_boundaries = {500.f, 700.f};
+	m_y_boundaries = {200.f, 700.f};
 	
 	return m_player.init(m_x_boundaries, m_y_boundaries) && m_background.init() && m_ground.init() && init_enemies(m_screen_scale, fb_width, fb_height);
 }
