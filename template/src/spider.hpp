@@ -21,7 +21,7 @@ public:
     void x_axis_movement();
     
     //spider jumping @ random time
-    void y_axis_movement(float step);
+    void y_axis_movement();
     
     //generate random time 
     int jump_Time(float step);
@@ -41,6 +41,17 @@ public:
 	// Returns the spider's bounding box for collision detection, called by collides_with()
 	vec2 get_bounding_box() const;
     
+    // setting random time
+    void set_randomT(int time);
+    
+    void reset_randomT();
+    
+    int min_waitTime = 5;
+    int max_waitTime = 10;
+    
+    
+    int randomTime();
+    
     int distance;
     int min_position;
     int max_position;
@@ -56,5 +67,7 @@ public:
     float currTime;
     
     bool randomBoo;
+    int init_randomTime;
+    int remaining;
 };
 

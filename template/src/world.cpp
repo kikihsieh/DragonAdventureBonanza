@@ -7,6 +7,7 @@
 #include <sstream>
 #include <iostream>
 
+#include <ctime>
 // Same as static in c, local to compilation unit
 namespace
 {
@@ -87,7 +88,10 @@ bool World::init(vec2 screen)
 	m_screen_tex.create_from_screen(m_window);
 	m_camera.init(screen);
 
-	return m_player.init() && m_background.init() && m_ground.init() && m_platform.init() && init_enemies(m_screen_scale, fb_width, fb_height);
+	m_x_boundaries = {-200.f, 1000.f};
+	m_y_boundaries = {200.f, 700.f};
+	
+	return m_player.init(m_x_boundaries, m_y_boundaries) && m_platform.init() &&m_background.init() && m_ground.init() && init_enemies(m_screen_scale, fb_width, fb_height);
 }
 
 // Releases all the associated resources
@@ -188,11 +192,20 @@ bool World::is_over() const
 
 bool World::init_enemies(float& screen_scale, int& w, int& h)
 {
+    int min_waitTime = 5;
+    int max_waitTime = 10;
+    int randomTime;
+    
+    
+    
 	vec2 screen = { (float)w / screen_scale, (float)h / screen_scale };
 	for (int i = 0; i < NUM_SPIDER; i++) {
 		Spider spider;
 		if (spider.init()) {
+            srand( time(0));
 			spider.set_init_position_and_max_xy(vec2{ 50 + m_dist(m_rng) * (screen.x - 50), m_dist(m_rng) * (screen.y - 150) });
+            randomTime = (rand()%(max_waitTime - min_waitTime + 1) + min_waitTime);
+            spider.set_randomT(randomTime * 10);
 			m_spiders.emplace_back(spider);
 		}
 		else {

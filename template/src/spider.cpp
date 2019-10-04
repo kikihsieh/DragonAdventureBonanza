@@ -3,7 +3,7 @@
 
 #include <cmath>
 #include <iostream>
-
+#include <ctime>
 Texture Spider::spider_texture;
 
 bool Spider::init()
@@ -70,6 +70,7 @@ bool Spider::init()
 	direction_y = true;
     randomBoo = false;
     
+    srand( time(0));
 	return true;
 }
 
@@ -88,16 +89,28 @@ void Spider::destroy()
 void Spider::update(float ms)
 {
     float step = -1.0 * motion.speed.x * (ms / 1000);
-    
-    if(randomBoo == false) {
-		jumpNow = true;
-        randomBoo =true;
-    };
+   /* remaining -= (ms / 1000);
+    if (remaining <= 0){
+        jumpNow = true;
+        y_axis_movement();
+    };*/
 
-    y_axis_movement(step);
     x_axis_movement();
 }
 
+/*
+ void Spider::trigger_jump(float ms){
+     
+     float elapsed = ms - t;
+     if (elapsed > remaining){
+         jumpNow= true;
+         y_axis_movement();
+         t = ms;
+ }
+ 
+ }
+
+*/
 void Spider::set_init_position_and_max_xy(vec2 coord)
 {
 	motion.position = coord;
@@ -108,6 +121,16 @@ void Spider::set_init_position_and_max_xy(vec2 coord)
 	distance_y = 50;
 	max_position_y = motion.position.y + distance_y;
 	min_position_y = motion.position.y;
+}
+
+void Spider::set_randomT(int time){
+   
+    remaining = time;
+}
+
+void Spider::reset_randomT(){
+ 
+    remaining = (rand()%(max_waitTime - min_waitTime + 1) + min_waitTime);
 }
 
 void Spider::draw(const mat3& projection)
@@ -189,16 +212,9 @@ void Spider::x_axis_movement()
     }
 }
 
-int Spider::jump_Time(float step){
-    int min_waitTime = 5;
-    int max_waitTime = 100;
-    int num = (rand()%(max_waitTime - min_waitTime + 1) + min_waitTime);
-    jumpT = num + step;
-    currTime = step;
-    return jumpT;
-}
 
-void Spider::y_axis_movement (float step){
+
+void Spider::y_axis_movement (){
     // move towards the positive x-axis
     if (jumpNow == true){
         if (direction_y == true){
@@ -215,6 +231,8 @@ void Spider::y_axis_movement (float step){
             if (min_position_y == motion.position.y){
                 direction_y = true;
                 jumpNow = false;
+                reset_randomT();
+                
                 
             }
         }

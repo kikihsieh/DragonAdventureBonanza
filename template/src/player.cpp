@@ -8,7 +8,7 @@
 #include <cmath>
 #include <iostream>
 
-bool Player::init()
+bool Player::init(vec2 x_bounds, vec2 y_bounds)
 {
 	// Load shared texture
     // 566w x 644h
@@ -82,6 +82,9 @@ bool Player::init()
 	
 	m_jump_count = 10;
 	
+	m_x_world_bounds = x_bounds;
+	m_y_world_bounds = y_bounds;
+	
 	return true;
 }
 
@@ -100,11 +103,31 @@ void Player::destroy()
 // Called on each frame by World::update()
 void Player::update(float ms, const Platform& platform)
 {
+
 	if (m_is_alive) {
 		platformCollision(platform);
 		
 		float x_step = motion.speed.x * (ms / 1000);
 		float y_step = motion.speed.y * (ms/ 1000);
+    
+    if ((x_step < 0 && motion.position.x < m_x_world_bounds.x) ||
+		  (x_step > 0 && motion.position.x > m_x_world_bounds.y))
+		  x_step = 0;
+
+	// Jumping		
+	if (y_step < 0 && motion.position.y < m_y_world_bounds.x) {
+		y_step *= -1.f;
+		motion.speed.y = 0;
+	}
+	
+	motion.speed.y += motion.acc.y;
+
+	// Die when touching bottom of screen
+	if (y_step > 0 && motion.position.y > m_y_world_bounds.y) {
+		std::cout <<  "Player died"  << std::endl;
+		m_is_alive = false;
+	}
+   
 		motion.speed.y += motion.acc.y;
         move({x_step, y_step});
     }

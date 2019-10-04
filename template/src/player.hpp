@@ -10,7 +10,7 @@ class Player : public Entity
 {
 public:
 	// Creates all the associated render resources and default transform
-	bool init();
+	bool init(vec2 x_bounds, vec2 y_bounds);
 
 	// Releases all associated resources
 	void destroy();
@@ -55,8 +55,8 @@ public:
 	// TODO: use vector when we change to use mesh file
 	void compute_world_coordinate();
     
-    // Check if player is landed
-    void platformCollision(const Platform& platform);
+  // Check if player is landed
+  void platformCollision(const Platform& platform);
 
 private:
 	bool m_is_alive; // True if the player is alive
@@ -72,6 +72,9 @@ private:
     float jumping_speed;
     float gravity;
 
+	vec2 m_x_world_bounds;
+	vec2 m_y_world_bounds;
+	
     Texture player_texture;
 	std::vector<vec2> player_world_coord;
 	TexturedVertex vertices[4];

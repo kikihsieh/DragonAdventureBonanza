@@ -17,6 +17,8 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
 
+
+
 // Container for all our entities and game logic. Individual rendering / update is 
 // deferred to the relative update() methods
 class World
@@ -65,6 +67,9 @@ private:
     float m_current_speed;
     float m_next_spider_spawn;
 
+  	vec2 m_x_boundaries;
+	  vec2 m_y_boundaries;
+  
     Player m_player;
     Spider m_spider;
     Background m_background;
