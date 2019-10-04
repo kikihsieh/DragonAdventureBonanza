@@ -58,18 +58,19 @@ private:
 	// The draw loop first renders to this texture, then it is used for the water shader
 	GLuint m_frame_buffer;
 	Texture m_screen_tex;
-	
-  // Game entities
-  std::vector<Spider> m_spiders;
 
-  float m_current_speed;
-  float m_next_spider_spawn;
-    
+    // Game entities
+    std::vector<Spider> m_spiders;
+
+    float m_current_speed;
+    float m_next_spider_spawn;
+
     Player m_player;
+    Spider m_spider;
     Background m_background;
     Ground m_ground;
-    Camera m_camera;
     Platform m_platform;
+    Camera m_camera;
     
 	// C++ rng
 	std::default_random_engine m_rng;

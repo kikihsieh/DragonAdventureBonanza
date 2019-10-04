@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <cmath>
 #include <iostream>
+
 bool Player::init()
 {
 	// Load shared texture
@@ -73,6 +74,7 @@ bool Player::init()
 
 	m_is_alive = true;
     m_on_ground = false;
+
     m_is_facing_forwards = true;
     m_on_platform = false;
 

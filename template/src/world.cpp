@@ -87,7 +87,7 @@ bool World::init(vec2 screen)
 	m_screen_tex.create_from_screen(m_window);
 	m_camera.init(screen);
 
-	return m_player.init() && m_background.init() && m_ground.init() && m_platform.init() && m_platform.init() && init_enemies(m_screen_scale, fb_width, fb_height);
+	return m_player.init() && m_background.init() && m_ground.init() && m_platform.init() && init_enemies(m_screen_scale, fb_width, fb_height);
 }
 
 // Releases all the associated resources
