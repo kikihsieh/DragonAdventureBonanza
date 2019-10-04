@@ -7,6 +7,7 @@
 #include <sstream>
 #include <iostream>
 
+#include <ctime>
 // Same as static in c, local to compilation unit
 namespace
 {
@@ -184,11 +185,20 @@ bool World::is_over() const
 
 bool World::init_enemies(float& screen_scale, int& w, int& h)
 {
+    int min_waitTime = 5;
+    int max_waitTime = 10;
+    int randomTime;
+    
+    
+    
 	vec2 screen = { (float)w / screen_scale, (float)h / screen_scale };
 	for (int i = 0; i < NUM_SPIDER; i++) {
 		Spider spider;
 		if (spider.init()) {
+            srand( time(0));
 			spider.set_init_position_and_max_xy(vec2{ 50 + m_dist(m_rng) * (screen.x - 50), m_dist(m_rng) * (screen.y - 150) });
+            randomTime = (rand()%(max_waitTime - min_waitTime + 1) + min_waitTime);
+            spider.set_randomT(randomTime * 10);
 			m_spiders.emplace_back(spider);
 		}
 		else {
