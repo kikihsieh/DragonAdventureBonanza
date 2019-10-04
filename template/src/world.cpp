@@ -85,7 +85,6 @@ bool World::init(vec2 screen)
 
 	// Initialize the screen texture
 	m_screen_tex.create_from_screen(m_window);
-
 	m_camera.init(screen);
 
 	m_x_boundaries = {-200.f, 1000.f};
@@ -109,15 +108,15 @@ bool World::update(float elapsed_ms)
 	vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
 	
 	// check if player is on the ground
-	m_player.update(elapsed_ms);
-
+	m_player.update(elapsed_ms, m_platform);
 	m_camera.update(m_player.get_position(), m_player.is_facing_forwards());
 
 	m_ground.set_surface_y();
-    m_player.land(m_ground);
+    m_player.land(m_ground, m_platform);
 	for(auto& spider : m_spiders)
 		spider.update(elapsed_ms);
-
+    m_player.platformCollision(m_platform);
+    
 	return true;
 }
 
@@ -177,6 +176,7 @@ void World::draw()
 	m_player.draw(projection_2D);
 	for (auto& spider : m_spiders)
 		spider.draw(projection_2D);
+    m_platform.draw(projection_2D);
 
 	//////////////////
 	// Presenting

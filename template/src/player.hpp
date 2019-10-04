@@ -4,6 +4,7 @@
 #include <vector>
 
 class Ground;
+class Platform;
 
 class Player : public Entity
 {
@@ -16,7 +17,7 @@ public:
 	
 	// Update player position based on direction
 	// ms represents the number of milliseconds elapsed from the previous update() call
-	void update(float ms);
+	void update(float ms, const Platform& platform);
 	
 	// Renders the player
 	void draw(const mat3& projection)override;
@@ -48,12 +49,15 @@ public:
     void jump();
 
 	// Check if player is landed
-	void land(const Ground& ground);
+	void land(const Ground& ground, const Platform& platform);
 	bool can_jump();
 
 	// TODO: use vector when we change to use mesh file
 	void compute_world_coordinate();
-		
+    
+  // Check if player is landed
+  void platformCollision(const Platform& platform);
+
 private:
 	bool m_is_alive; // True if the player is alive
     bool m_on_ground; // True if player is on ground/platform
@@ -62,6 +66,7 @@ private:
 	int m_jump_count;
 	
     bool m_is_facing_forwards; // True if player is facing forward
+    bool m_on_platform; // True if player on top of platform
 
     float walking_speed;
     float jumping_speed;

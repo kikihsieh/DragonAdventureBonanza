@@ -5,9 +5,9 @@
 #include "player.hpp"
 #include "spider.hpp"
 #include "background.hpp"
-
 #include "ground.hpp"
 #include "camera.hpp"
+#include "platform.hpp"
 
 // stlib
 #include <vector>
@@ -43,6 +43,7 @@ public:
 private:
     // Generates a new spider
     bool init_enemies(float& scale, int& w, int& h);
+    bool spawn_spider();
     
 	// !!! INPUT CALLBACK FUNCTIONS
 	void on_key(GLFWwindow*, int key, int, int action, int mod);
@@ -58,19 +59,20 @@ private:
 	GLuint m_frame_buffer;
 	Texture m_screen_tex;
 
-	
-  	// Game entities
-  	std::vector<Spider> m_spiders;
+    // Game entities
+    std::vector<Spider> m_spiders;
 
-  	float m_current_speed;
-  	float m_next_spider_spawn;
-    
-	vec2 m_x_boundaries;
-	vec2 m_y_boundaries; 
-	
-	Player m_player;
-	Background m_background;
-  	Ground m_ground;
+    float m_current_speed;
+    float m_next_spider_spawn;
+
+  	vec2 m_x_boundaries;
+	  vec2 m_y_boundaries;
+  
+    Player m_player;
+    Spider m_spider;
+    Background m_background;
+    Ground m_ground;
+    Platform m_platform;
     Camera m_camera;
     
 	// C++ rng
