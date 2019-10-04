@@ -39,6 +39,7 @@ set(SOURCE_FILES
 	src/world.cpp
 	src/ground.cpp
         src/camera.cpp
+	src/platform.cpp
 
   src/project_path.hpp
 	src/common.hpp
@@ -48,6 +49,7 @@ set(SOURCE_FILES
 	src/world.hpp
         src/ground.hpp
         src/camera.hpp
+	src/platform.hpp
         )
 
 if (IS_OS_MAC)

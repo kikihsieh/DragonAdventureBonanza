@@ -1,13 +1,17 @@
 // Header
 #include "player.hpp"
 #include "ground.hpp"
+#include "platform.hpp"
 
 // stlib
 #include <algorithm>
+#include <cmath>
+#include <iostream>
 
 bool Player::init()
 {
 	// Load shared texture
+    // 566w x 644h
 	if (!player_texture.is_valid())
 	{
 		if (!player_texture.load_from_file(textures_path("player.png")))
@@ -60,7 +64,7 @@ bool Player::init()
     gravity = 10.f;
 
 	// Setting initial values
-	motion.position = { 100.f, 400.f };
+    motion.position = { 0.f, 350.f };
 	motion.speed.x = 0.f;
 	motion.speed.y = 0.f;
 	motion.acc.x = 0.f;
@@ -70,7 +74,9 @@ bool Player::init()
 
 	m_is_alive = true;
     m_on_ground = false;
+
     m_is_facing_forwards = true;
+    m_on_platform = false;
 
 	m_unlocked_double_jump = true;
 	
@@ -92,12 +98,14 @@ void Player::destroy()
 }
 
 // Called on each frame by World::update()
-void Player::update(float ms)
+void Player::update(float ms, const Platform& platform)
 {
-	float x_step = motion.speed.x * (ms / 1000);
-	float y_step = motion.speed.y * (ms/ 1000);
-	motion.speed.y += motion.acc.y;
 	if (m_is_alive) {
+		platformCollision(platform);
+		
+		float x_step = motion.speed.x * (ms / 1000);
+		float y_step = motion.speed.y * (ms/ 1000);
+		motion.speed.y += motion.acc.y;
         move({x_step, y_step});
     }
 }
@@ -203,24 +211,26 @@ void Player::jump() {
 
 bool Player::can_jump() {
     // TODO double jump can be added here
-	return m_unlocked_double_jump ? m_jump_count < 2 : m_on_ground;
+	return m_unlocked_double_jump ? m_jump_count < 2 : (m_on_ground || m_on_platform);
 }
 
-void Player::land(const Ground& ground)
+void Player::land(const Ground& ground, const Platform& platform)
 {
-	compute_world_coordinate();
-	for (vec2 pwc : player_world_coord) {
-		if (pwc.y >= ground.surface_y) {
-			m_on_ground = true;
-			m_jump_count = 0;
-		    motion.speed.y = 0;
-		    motion.acc.y = 0;
-			return;
-		}
-	}
-	motion.acc.y = gravity;
-	m_on_ground = false;
+    compute_world_coordinate();
+    for (vec2 pwc : player_world_coord) {
+        if (pwc.y >= ground.surface_y) {
+            m_on_ground = true;
+            m_jump_count = 0;
+            motion.speed.y = 0;
+            motion.acc.y = 0;
+            return;
+        }
+    }
+    
+    motion.acc.y = gravity;
+    m_on_ground = false;
 }
+
 
 void Player::compute_world_coordinate()
 {
@@ -235,6 +245,56 @@ void Player::compute_world_coordinate()
 		vec3 transformed_vertex = mul(transform.out, vec3{ v.position.x, v.position.y, 1.f });
 		player_world_coord.push_back({ transformed_vertex.x, transformed_vertex.y });
 	}
+}
+
+void Player::platformCollision(const Platform& platform)
+{
+	m_on_platform = false;
+
+    compute_world_coordinate();
+    float top = player_world_coord[2].y;
+    float bottom = player_world_coord[0].y;
+    float left = player_world_coord[0].x;
+    float right = player_world_coord[2].x;
+
+    if ((left + 5.f) < platform.right &&
+        (right - 5.f) > platform.left &&
+        bottom >= platform.top &&
+        bottom < platform.bottom) {
+        if (motion.speed.y > 0) {
+            motion.speed.y = 0.f;
+        }
+        motion.acc.y = 0.f;
+        m_jump_count = 1;
+        m_on_platform = true;
+        
+        
+    } else if (motion.speed.x < 0 &&
+       left < platform.right &&
+       left > platform.left &&
+       
+       ((platform.top >= top &&
+         platform.top <= bottom) ||
+        (platform.bottom <= top &&
+         platform.bottom >= bottom))) {
+            motion.speed.x = 0.f;
+            
+    } else if (motion.speed.x > 0 &&
+       right > platform.left &&
+       right < platform.right &&
+       ((platform.top >= top &&
+         platform.top <= bottom) ||
+        (platform.bottom <= top &&
+         platform.bottom >= bottom))) {
+            
+            motion.speed.x = 0.f;
+            
+    } else if ((left + 5.f) < platform.right &&
+               (right - 5.f) > platform.left &&
+               top <= platform.bottom &&
+               top > platform.top) {
+        motion.speed.y = gravity;
+    }
 }
 
 bool Player::is_alive() const
