@@ -312,11 +312,6 @@ bool Player::collides_with(Spider& spider)
 			  (bottom < spider.bottom && bottom > spider.top))) {
 		// TODO: check if player is still alive
 		// life-- if life > 0 else die
-		std::cout << left << "player left and right " << right << std::endl;
-		std::cout << spider.left << "spider left and right " << spider.right<< std::endl;
-		std::cout << top << "player top and bottom " << bottom << std::endl;
-		std::cout << spider.bottom << "spider bottom and top "<<spider.top << std::endl;
-		std::cout << "Game over" << std::endl;
 		kill_enemy = false;
 		kill();
 		return true;
