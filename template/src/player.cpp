@@ -2,6 +2,7 @@
 #include "player.hpp"
 #include "ground.hpp"
 #include "platform.hpp"
+#include "spider.hpp"
 
 // stlib
 #include <algorithm>
@@ -77,6 +78,7 @@ bool Player::init(vec2 x_bounds, vec2 y_bounds)
 
     m_is_facing_forwards = true;
     m_on_platform = false;
+	kill_enemy = false;
 
 	m_unlocked_double_jump = true;
 	
@@ -124,13 +126,17 @@ void Player::update(float ms, const Platform& platform)
 
 	// Die when touching bottom of screen
 	if (y_step > 0 && motion.position.y > m_y_world_bounds.y) {
-		std::cout <<  "Player died"  << std::endl;
+		std::cout << "Player died" << std::endl;
 		m_is_alive = false;
 	}
    
 		motion.speed.y += motion.acc.y;
         move({x_step, y_step});
-    }
+	}
+	else {
+		float sink_step = 200.f * (ms / 1000);
+		move({ 0.f, sink_step });
+	}
 }
 
 void Player::draw(const mat3& projection)
@@ -239,6 +245,8 @@ bool Player::can_jump() {
 
 void Player::land(const Ground& ground, const Platform& platform)
 {
+	if (!m_is_alive)
+		return;
     compute_world_coordinate();
     for (vec2 pwc : player_world_coord) {
         if (pwc.y >= ground.surface_y) {
@@ -268,6 +276,48 @@ void Player::compute_world_coordinate()
 		vec3 transformed_vertex = mul(transform.out, vec3{ v.position.x, v.position.y, 1.f });
 		player_world_coord.push_back({ transformed_vertex.x, transformed_vertex.y });
 	}
+
+	top = player_world_coord[2].y;
+	bottom = player_world_coord[0].y;
+	left = player_world_coord[0].x;
+	right = player_world_coord[2].x;
+
+}
+
+bool Player::collides_with(Spider& spider)
+{
+	kill_enemy = false;
+
+	compute_world_coordinate();
+	spider.compute_world_coordinate();
+	// kills enemy
+
+	if ((left + 1.f) < spider.right &&
+		(right - 1.f) > spider.left &&
+		bottom >= spider.top &&
+		bottom < spider.bottom) {
+		if (motion.speed.y > 0) {
+			motion.speed.y = 0.f;
+		}
+		std::cout << "killed one enemy" << std::endl;
+		motion.acc.y = 0.f;
+		m_jump_count = 1;
+		kill_enemy = true;
+		return true;
+	}
+	// bump into enemy
+	else if (((left < spider.right && left > spider.left) || 
+			  (right > spider.left && right < spider.right)) &&
+			 ((top > spider.top && top <= spider.bottom) ||
+			  (bottom < spider.bottom && bottom > spider.top))) {
+		// TODO: check if player is still alive
+		// life-- if life > 0 else die
+		kill_enemy = false;
+		kill();
+		return true;
+	}
+
+	return false;
 }
 
 void Player::platformCollision(const Platform& platform)
@@ -275,10 +325,6 @@ void Player::platformCollision(const Platform& platform)
 	m_on_platform = false;
 
     compute_world_coordinate();
-    float top = player_world_coord[2].y;
-    float bottom = player_world_coord[0].y;
-    float left = player_world_coord[0].x;
-    float right = player_world_coord[2].x;
 
     if ((left + 5.f) < platform.right &&
         (right - 5.f) > platform.left &&
@@ -295,7 +341,6 @@ void Player::platformCollision(const Platform& platform)
     } else if (motion.speed.x < 0 &&
        left < platform.right &&
        left > platform.left &&
-       
        ((platform.top >= top &&
          platform.top <= bottom) ||
         (platform.bottom <= top &&

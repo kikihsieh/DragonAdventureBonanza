@@ -108,12 +108,33 @@ bool World::update(float elapsed_ms)
 	glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
 	
+	auto spider_it = m_spiders.begin();
+	while (spider_it != m_spiders.end())
+	{
+		if (m_player.is_alive() && m_player.collides_with(*spider_it))
+		{
+			if (m_player.kill_enemy) {
+				spider_it = m_spiders.erase(spider_it);
+				// Mix_PlayChannel(-1, m_salmon_eat_sound, 0);
+				// ++m_points;
+			}
+			else if (!m_player.is_alive()) {
+				//m_player.destroy();
+				//Mix_PlayChannel(-1, m_salmon_dead_sound, 0);
+				break;
+			}
+		}
+		else
+			++spider_it;
+	}
+
 	// check if player is on the ground
 	m_player.update(elapsed_ms, m_platform);
 	m_camera.update(m_player.get_position(), m_player.is_facing_forwards());
 
 	m_ground.set_surface_y();
     m_player.land(m_ground, m_platform);
+
 	for(auto& spider : m_spiders)
 		spider.update(elapsed_ms);
     m_player.platformCollision(m_platform);
@@ -204,8 +225,11 @@ bool World::init_enemies(float& screen_scale, int& w, int& h)
 		if (spider.init()) {
             srand( time(0));
 			spider.set_init_position_and_max_xy(vec2{ 50 + m_dist(m_rng) * (screen.x - 50), m_dist(m_rng) * (screen.y - 150) });
+			//use this line to test
+			//spider.set_init_position_and_max_xy(vec2{200.f,600.f});
             randomTime = (rand()%(max_waitTime - min_waitTime + 1) + min_waitTime);
             spider.set_randomT(randomTime * 10);
+
 			m_spiders.emplace_back(spider);
 		}
 		else {

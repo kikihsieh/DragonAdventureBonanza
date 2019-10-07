@@ -22,7 +22,6 @@ bool Spider::init()
 	float wr = spider_texture.width * 0.5f;
 	float hr = spider_texture.height * 0.5f;
 
-	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.02f };
 	vertices[0].texcoord = { 0.f, 1.f };
 	vertices[1].position = { +wr, +hr, -0.02f };
@@ -244,4 +243,23 @@ vec2 Spider::get_bounding_box() const
 	// Returns the local bounding coordinates scaled by the current size of the spider
 	// fabs is to avoid negative scale due to the facing direction.
 	return { std::fabs(physics.scale.x) * spider_texture.width, std::fabs(physics.scale.y) * spider_texture.height };
+}
+
+void Spider::compute_world_coordinate()
+{
+	spider_world_coord.clear();
+	transform.begin();
+	transform.translate(motion.position);
+	transform.rotate(motion.radians);
+	transform.scale(physics.scale);
+	transform.end();
+
+	for (auto& v : vertices) {
+		vec3 transformed_vertex = mul(transform.out, vec3{ v.position.x, v.position.y, 1.f });
+		spider_world_coord.push_back({ transformed_vertex.x, transformed_vertex.y });
+	}
+	top = spider_world_coord[2].y;
+	bottom = spider_world_coord[0].y;
+	left = spider_world_coord[2].x;
+	right = spider_world_coord[0].x;
 }

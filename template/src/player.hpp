@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.hpp"
+#include "spider.hpp"
 #include <vector>
 
 class Ground;
@@ -58,10 +59,13 @@ public:
   // Check if player is landed
   void platformCollision(const Platform& platform);
 
+	bool collides_with(Spider& spider);
+
+	bool kill_enemy;
+
 private:
 	bool m_is_alive; // True if the player is alive
     bool m_on_ground; // True if player is on ground/platform
-	
 	bool m_unlocked_double_jump;
 	int m_jump_count;
 	
@@ -71,6 +75,11 @@ private:
     float walking_speed;
     float jumping_speed;
     float gravity;
+
+	float top;
+	float bottom;
+	float left;
+	float right;
 
 	vec2 m_x_world_bounds;
 	vec2 m_y_world_bounds;

@@ -52,6 +52,8 @@ public:
     
     int randomTime();
     
+	void compute_world_coordinate();
+
     int distance;
     int min_position;
     int max_position;
@@ -69,5 +71,14 @@ public:
     bool randomBoo;
     int init_randomTime;
     int remaining;
-};
 
+	float top;
+	float bottom;
+	float left;
+	float right;
+
+private:
+
+	std::vector<vec2> spider_world_coord;
+	TexturedVertex vertices[4];
+};
