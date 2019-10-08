@@ -69,7 +69,7 @@ bool Spider::init()
 	direction_y = true;
     randomBoo = false;
     
-    srand( time(0));
+    
 	return true;
 }
 
@@ -88,28 +88,15 @@ void Spider::destroy()
 void Spider::update(float ms)
 {
     float step = -1.0 * motion.speed.x * (ms / 1000);
-   /* remaining -= (ms / 1000);
+   remaining -= (ms / 1000);
     if (remaining <= 0){
         jumpNow = true;
         y_axis_movement();
-    };*/
-
+    };
     x_axis_movement();
 }
 
-/*
- void Spider::trigger_jump(float ms){
-     
-     float elapsed = ms - t;
-     if (elapsed > remaining){
-         jumpNow= true;
-         y_axis_movement();
-         t = ms;
- }
- 
- }
 
-*/
 void Spider::set_init_position_and_max_xy(vec2 coord)
 {
 	motion.position = coord;
@@ -122,14 +109,13 @@ void Spider::set_init_position_and_max_xy(vec2 coord)
 	min_position_y = motion.position.y;
 }
 
-void Spider::set_randomT(int time){
-   
-    remaining = time;
+void Spider::set_randomT(){
+    srand( time(0));
+    remaining = (rand()%(max_waitTime - min_waitTime + 1) + min_waitTime) *10;
 }
 
 void Spider::reset_randomT(){
- 
-    remaining = (rand()%(max_waitTime - min_waitTime + 1) + min_waitTime);
+    remaining = (rand()%(max_waitTime - min_waitTime + 1) + min_waitTime) *10;
 }
 
 void Spider::draw(const mat3& projection)
@@ -227,7 +213,7 @@ void Spider::y_axis_movement (){
             if (min_position_y < motion.position.y){
                 motion.position.y -= 1;
             }
-            if (min_position_y == motion.position.y){
+            if (min_position_y >= motion.position.y){
                 direction_y = true;
                 jumpNow = false;
                 reset_randomT();
