@@ -44,7 +44,6 @@ public:
 
 private:
     bool init_enemies(float& scale, int& w, int& h);
-    //bool spawn_spider();
     
 	// !!! INPUT CALLBACK FUNCTIONS
 	void on_key(GLFWwindow*, int key, int, int action, int mod);
@@ -63,12 +62,11 @@ private:
     // Game entities
     std::vector<Spider> m_spiders;
 
-    float m_current_speed;
-    float m_next_spider_spawn;
 
+    
   	vec2 m_x_boundaries;
-	  vec2 m_y_boundaries;
-  
+    vec2 m_y_boundaries;
+
     Player m_player;
     Spider m_spider;
     Background m_background;

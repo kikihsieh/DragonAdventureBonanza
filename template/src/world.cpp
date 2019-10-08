@@ -21,16 +21,16 @@ namespace
 	}
 }
 
-World::World() :
-m_next_spider_spawn(0.f)
+
+World::World()
 {
-	// Seeding rng with random device
-	m_rng = std::default_random_engine(std::random_device()());
+    // Seeding rng with random device
+    m_rng = std::default_random_engine(std::random_device()());
 }
 
 World::~World()
 {
-
+    
 }
 
 // World initialization
@@ -91,7 +91,7 @@ bool World::init(vec2 screen)
 	m_x_boundaries = {-200.f, 1000.f};
 	m_y_boundaries = {200.f, 700.f};
 	
-	return m_player.init(m_x_boundaries, m_y_boundaries) && m_platform.init() &&m_background.init() && m_ground.init() && init_enemies(m_screen_scale, fb_width, fb_height);
+    return m_player.init(m_x_boundaries, m_y_boundaries) && m_platform.init() && m_background.init() && m_ground.init() && init_enemies(m_screen_scale, fb_width, fb_height);
 }
 
 // Releases all the associated resources
@@ -213,29 +213,22 @@ bool World::is_over() const
 
 bool World::init_enemies(float& screen_scale, int& w, int& h)
 {
-    int min_waitTime = 5;
-    int max_waitTime = 10;
-    int randomTime;
-    
-    
-    
+
+    srand( time(0));
 	vec2 screen = { (float)w / screen_scale, (float)h / screen_scale };
 	for (int i = 0; i < NUM_SPIDER; i++) {
 		Spider spider;
 		if (spider.init()) {
             srand( time(0));
 			spider.set_init_position_and_max_xy(vec2{ 50 + m_dist(m_rng) * (screen.x - 50), m_dist(m_rng) * (screen.y - 150) });
-			//use this line to test
-			//spider.set_init_position_and_max_xy(vec2{200.f,600.f});
-            randomTime = (rand()%(max_waitTime - min_waitTime + 1) + min_waitTime);
-            spider.set_randomT(randomTime * 10);
-
+            spider.set_randomT();
 			m_spiders.emplace_back(spider);
 		}
 		else {
 			fprintf(stderr, "Failed to initialize spider");
 			return false;
 		}
+      
 	}
 	return true;
 }

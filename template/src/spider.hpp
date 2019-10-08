@@ -42,12 +42,12 @@ public:
 	vec2 get_bounding_box() const;
     
     // setting random time
-    void set_randomT(int time);
+    void set_randomT();
     
     void reset_randomT();
     
-    int min_waitTime = 5;
-    int max_waitTime = 10;
+    int min_waitTime = 2;
+    int max_waitTime = 6;
     
     
     int randomTime();
