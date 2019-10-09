@@ -287,15 +287,14 @@ void Player::compute_world_coordinate()
 bool Player::collides_with(Spider& spider)
 {
 	kill_enemy = false;
-
 	compute_world_coordinate();
 	spider.compute_world_coordinate();
 	// kills enemy
 
 	if ((left + 1.f) < spider.right &&
 		(right - 1.f) > spider.left &&
-		bottom >= spider.top &&
-		bottom < spider.bottom) {
+		bottom >= spider.top-5.f &&
+		bottom <= spider.top+5.f) {
 		if (motion.speed.y > 0) {
 			motion.speed.y = 0.f;
 		}
@@ -306,10 +305,8 @@ bool Player::collides_with(Spider& spider)
 		return true;
 	}
 	// bump into enemy
-	else if (((left < spider.right && left > spider.left) || 
-			  (right > spider.left && right < spider.right)) &&
-			 ((top > spider.top && top <= spider.bottom) ||
-			  (bottom < spider.bottom && bottom > spider.top))) {
+	else if (top < spider.bottom && bottom > spider.top && left <spider.right && right > spider.left){
+		
 		// TODO: check if player is still alive
 		// life-- if life > 0 else die
 		kill_enemy = false;
