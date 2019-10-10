@@ -4,23 +4,13 @@
 #include <cmath>
 #include <iostream>
 #include <ctime>
-Texture Spider::spider_texture;
 
 bool Spider::init()
 {
-	// Load shared texture
-	if (!spider_texture.is_valid())
-	{
-		if (!spider_texture.load_from_file(textures_path("spider.png")))
-		{
-			fprintf(stderr, "Failed to load spider texture!");
-			return false;
-		}
-	}
 
 	// The position corresponds to the center of the texture
-	float wr = spider_texture.width * 0.5f;
-	float hr = spider_texture.height * 0.5f;
+	float wr = texture->width * 0.5f;
+	float hr = texture->height * 0.5f;
 
 	vertices[0].position = { -wr, +hr, -0.02f };
 	vertices[0].texcoord = { 0.f, 1.f };
@@ -61,7 +51,7 @@ bool Spider::init()
 	// Setting initial values, scale is negative to make it face the opposite way
 	// 1.0 would be as big as the original texture.
 	
-    physics.scale = { -0.4f, 0.4f };
+    physics.scale = { 1.f, 1.f };
     
     direction = true; // true = walking to right, false= left
     jumpNow = false;
@@ -96,11 +86,10 @@ void Spider::update(float ms)
     x_axis_movement();
 }
 
-
 void Spider::set_init_position_and_max_xy(vec2 coord)
 {
 	motion.position = coord;
-	distance = 20;
+    distance = 20;
 	max_position = motion.position.x + distance;
 	min_position = motion.position.x - distance;
 	inital_pos = motion.position.x;
@@ -155,7 +144,7 @@ void Spider::draw(const mat3& projection)
 
 	// Enabling and binding texture to slot 0
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, spider_texture.id);
+	glBindTexture(GL_TEXTURE_2D, texture->id);
 
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform.out);
@@ -197,8 +186,6 @@ void Spider::x_axis_movement()
     }
 }
 
-
-
 void Spider::y_axis_movement (){
     // move towards the positive x-axis
     if (jumpNow == true){
@@ -228,7 +215,7 @@ vec2 Spider::get_bounding_box() const
 {
 	// Returns the local bounding coordinates scaled by the current size of the spider
 	// fabs is to avoid negative scale due to the facing direction.
-	return { std::fabs(physics.scale.x) * spider_texture.width, std::fabs(physics.scale.y) * spider_texture.height };
+	return { std::fabs(physics.scale.x) * texture->width, std::fabs(physics.scale.y) * texture->height };
 }
 
 void Spider::compute_world_coordinate()

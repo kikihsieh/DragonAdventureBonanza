@@ -40,6 +40,7 @@ set(SOURCE_FILES
 	src/ground.cpp
         src/camera.cpp
 	src/platform.cpp
+    src/tile.cpp
 
   src/project_path.hpp
 	src/common.hpp
@@ -50,6 +51,7 @@ set(SOURCE_FILES
         src/ground.hpp
         src/camera.hpp
 	src/platform.hpp
+    src/tile.hpp
         )
 
 if (IS_OS_MAC)

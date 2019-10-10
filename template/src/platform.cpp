@@ -59,7 +59,7 @@ bool Platform::init() {
     if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
         return false;
     
-    motion.position = {500.f, 600.f};
+    motion.position = {500.f, 400.f};
     physics.scale = { 0.3f, 0.3f };
     compute_world_coordinate();
     return true;
@@ -123,6 +123,10 @@ void Platform::draw(const mat3& projection) {
 vec2 Platform::get_position() const
 {
     return motion.position;
+}
+
+void Platform::setPosition(float row, float col) {
+    //TODO
 }
 
 vec2 Platform::get_bounding_box() const
