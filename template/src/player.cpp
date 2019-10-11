@@ -265,7 +265,7 @@ bool Player::can_jump() {
 }
 
 bool Player::can_airdash() {
-	return !m_on_ground && !m_airdashing;
+	return !m_on_ground && !m_on_platform && !m_airdashing;
 }
 
 bool Player::is_airdashing() {
