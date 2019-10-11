@@ -6,9 +6,6 @@
 // spider enemy
 class Spider : public Entity
 {
-	// Shared between all enemies, no need to load one for each instance
-	static Texture spider_texture;
-
 public:
     
 	// Creates all the associated render resources and default transform
@@ -76,9 +73,12 @@ public:
 	float bottom;
 	float left;
 	float right;
-
+    
+    Texture * texture;
+    
+    void setPosition(float row, float col);
+    
 private:
-
-	std::vector<vec2> spider_world_coord;
-	TexturedVertex vertices[4];
+    TexturedVertex vertices[4];
+    std::vector<vec2> spider_world_coord;
 };

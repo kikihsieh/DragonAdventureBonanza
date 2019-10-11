@@ -20,6 +20,8 @@ public:
     // Returns the current platform position
     vec2 get_position() const;
     
+    void setPosition(float row, float col);
+    
     vec2 get_bounding_box() const;
     
     void compute_world_coordinate();

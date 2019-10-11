@@ -66,7 +66,7 @@ struct Texture
 	Texture();
 	~Texture();
 
-	GLuint id;
+	GLuint id = 0;
 	GLuint depth_render_buffer_id;
 	int width;
 	int height;

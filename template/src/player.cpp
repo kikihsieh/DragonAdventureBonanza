@@ -65,13 +65,13 @@ bool Player::init(vec2 x_bounds, vec2 y_bounds)
     gravity = 10.f;
 
 	// Setting initial values
-    motion.position = { 0.f, 350.f };
+    motion.position = { 300.f, 450.f };
 	motion.speed.x = 0.f;
 	motion.speed.y = 0.f;
 	motion.acc.x = 0.f;
 	motion.acc.y = gravity;
 
-	physics.scale = { 0.25f, 0.25f };
+	physics.scale = { 0.2f, 0.2f };
 
 	m_is_alive = true;
     m_on_ground = false;

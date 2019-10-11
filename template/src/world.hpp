@@ -8,6 +8,7 @@
 #include "ground.hpp"
 #include "camera.hpp"
 #include "platform.hpp"
+#include "tile.hpp"
 
 // stlib
 #include <vector>
@@ -41,9 +42,19 @@ public:
 
 	// Should the game be over ?
 	bool is_over()const;
+    
+    bool setTextures();
 
 private:
-    bool init_enemies(float& scale, int& w, int& h);
+    // Generates a new spider
+    //bool init_enemies(float& scale, int& w, int& h);
+    bool init_enemies(int x, int y);
+    bool spawn_spider();
+    
+    //Load tiles
+    bool loadLevel(int arr[17][50]);
+    bool drawMap();
+    int map[17][50];
     
 	// !!! INPUT CALLBACK FUNCTIONS
 	void on_key(GLFWwindow*, int key, int, int action, int mod);
@@ -61,18 +72,27 @@ private:
 
     // Game entities
     std::vector<Spider> m_spiders;
-
-
+    std::vector<Tile> m_tiles;
     
   	vec2 m_x_boundaries;
     vec2 m_y_boundaries;
 
     Player m_player;
-    Spider m_spider;
     Background m_background;
     Ground m_ground;
-    Platform m_platform;
     Camera m_camera;
+    Platform m_platform;
+    
+    Texture tile1_texture;
+    Texture tile1_left_texture;
+    Texture tile1_right_texture;
+    Texture tile1_left_corner_texture;
+    Texture tile1_right_corner_texture;
+    Texture tile1_left_end_texture;
+    Texture tile1_right_end_texture;
+    Texture tile2_texture;
+    
+    Texture spider_texture;
     
 	// C++ rng
 	std::default_random_engine m_rng;
