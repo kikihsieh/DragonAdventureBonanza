@@ -35,7 +35,7 @@ int level1[17][50] = {
 // Same as static in c, local to compilation unit
 namespace
 {
-	const size_t NUM_SPIDER = 5;
+	const size_t NUM_SPIDER = 0;
 	namespace
 	{
 		void glfw_err_cb(int error, const char* desc)
@@ -430,30 +430,37 @@ bool World::setTextures()
 }
 
 // On key callback
-void World::on_key(GLFWwindow*, int key, int, int action, int mod)
+void World::on_key(GLFWwindow* window, int key, int, int action, int mod)
 {
     if (m_player.can_jump() && (key == GLFW_KEY_UP || key == GLFW_KEY_W)) {
         if (action == GLFW_PRESS) {
             m_player.jump();
         }
-    }
-
-    //LEFT
-    if (key == GLFW_KEY_LEFT || key == GLFW_KEY_A) {
-        if (action == GLFW_PRESS) {
+    } 
+	if (m_player.can_airdash() && (key == GLFW_KEY_LEFT_SHIFT || key == GLFW_KEY_RIGHT_SHIFT)) {
+		if (action == GLFW_PRESS) {
+			if (glfwGetKey(window, GLFW_KEY_LEFT) || glfwGetKey(window, GLFW_KEY_A))
+				m_player.air_dash(false);
+			else
+				m_player.air_dash(true);
+		}
+	} 
+	
+	if (key == GLFW_KEY_LEFT || key == GLFW_KEY_A) {
+        if (action == GLFW_PRESS && !m_player.is_airdashing()) {
             m_player.walk(false);
-        } else if (action == GLFW_RELEASE) {
+        } else if (action == GLFW_RELEASE && !m_player.is_airdashing()) {
             m_player.stop();
         }
-    }
-    // RIGHT
-    if (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D) {
-        if (action == GLFW_PRESS) {
+    } 
+	
+	if (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D) {
+        if (action == GLFW_PRESS && !m_player.is_airdashing()) {
             m_player.walk(true);
-        } else if (action == GLFW_RELEASE) {
+        } else if (action == GLFW_RELEASE && !m_player.is_airdashing()) {
             m_player.stop();
         }
-    }
+    } 
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
