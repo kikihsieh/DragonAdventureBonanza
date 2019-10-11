@@ -75,12 +75,17 @@ bool Player::init(vec2 x_bounds, vec2 y_bounds)
 
 	m_is_alive = true;
     m_on_ground = false;
-
+	
     m_is_facing_forwards = true;
     m_on_platform = false;
 	kill_enemy = false;
 
 	m_unlocked_double_jump = true;
+	
+	m_airdashing = false;
+	
+	m_airdash_duration = 500.f;
+	m_airdash_timer = 0;
 	
 	m_jump_count = 10;
 	
@@ -109,27 +114,37 @@ void Player::update(float ms, const Platform& platform)
 	if (m_is_alive) {
 		platformCollision(platform);
 		
+		if (m_airdashing && abs(motion.speed.x) > 0) {
+			motion.speed.x -= (motion.speed.x / abs(motion.speed.x)) * 20;
+		} else {
+			m_airdashing = false;
+			gravity = 10;
+		}
+
+			
 		float x_step = motion.speed.x * (ms / 1000);
 		float y_step = motion.speed.y * (ms/ 1000);
     
-    if ((x_step < 0 && motion.position.x < m_x_world_bounds.x) ||
-		  (x_step > 0 && motion.position.x > m_x_world_bounds.y))
-		  x_step = 0;
+	    if ((x_step < 0 && motion.position.x < m_x_world_bounds.x) ||
+			  (x_step > 0 && motion.position.x > m_x_world_bounds.y)) {
+			  	x_step = 0;
+				m_airdashing = false;
+		}
 
-	// Jumping		
-	if (y_step < 0 && motion.position.y < m_y_world_bounds.x) {
-		y_step *= -1.f;
-		motion.speed.y = 0;
-	}
-	
-	motion.speed.y += motion.acc.y;
-
-	// Die when touching bottom of screen
-	if (y_step > 0 && motion.position.y > m_y_world_bounds.y) {
-		std::cout << "Player died" << std::endl;
-		m_is_alive = false;
-	}
-   
+		// Jumping		
+		if (y_step < 0 && motion.position.y < m_y_world_bounds.x) {
+			y_step *= -1.f;
+			motion.speed.y = 0;
+		}
+		
+		motion.speed.y += motion.acc.y;
+		
+		// Die when touching bottom of screen
+		if (y_step > 0 && motion.position.y > m_y_world_bounds.y) {
+			std::cout << "Player died" << std::endl;
+			m_is_alive = false;
+		}
+	   
 		motion.speed.y += motion.acc.y;
         move({x_step, y_step});
 	}
@@ -238,9 +253,23 @@ void Player::jump() {
 	m_jump_count ++;
 }
 
+void Player::air_dash(bool forward) {
+	motion.speed.x =  forward ? 1000.f : -1000.f;
+	motion.speed.y = 0;
+	gravity = 0;
+	m_airdashing = true;
+}
+
 bool Player::can_jump() {
-    // TODO double jump can be added here
 	return m_unlocked_double_jump ? m_jump_count < 2 : (m_on_ground || m_on_platform);
+}
+
+bool Player::can_airdash() {
+	return !m_on_ground && !m_airdashing;
+}
+
+bool Player::is_airdashing() {
+	return m_airdashing;
 }
 
 void Player::land(const Ground& ground, const Platform& platform)
@@ -251,6 +280,7 @@ void Player::land(const Ground& ground, const Platform& platform)
     for (vec2 pwc : player_world_coord) {
         if (pwc.y >= ground.surface_y) {
             m_on_ground = true;
+			m_airdashing = false;
             m_jump_count = 0;
             motion.speed.y = 0;
             motion.acc.y = 0;

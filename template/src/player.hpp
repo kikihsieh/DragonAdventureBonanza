@@ -48,16 +48,20 @@ public:
     void walk(bool forward);
     void stop();
     void jump();
-
+	void air_dash(bool forward);
+	
 	// Check if player is landed
 	void land(const Ground& ground, const Platform& platform);
 	bool can_jump();
+	
+	bool can_airdash();
+	bool is_airdashing();
 
 	// TODO: use vector when we change to use mesh file
 	void compute_world_coordinate();
     
-  // Check if player is landed
-  void platformCollision(const Platform& platform);
+  	// Check if player is landed
+  	void platformCollision(const Platform& platform);
 
 	bool collides_with(Spider& spider);
 
@@ -67,7 +71,10 @@ private:
 	bool m_is_alive; // True if the player is alive
     bool m_on_ground; // True if player is on ground/platform
 	bool m_unlocked_double_jump;
+	bool m_stopped_airdash;
 	int m_jump_count;
+	
+	bool m_airdashing;
 	
     bool m_is_facing_forwards; // True if player is facing forward
     bool m_on_platform; // True if player on top of platform
@@ -75,12 +82,15 @@ private:
     float walking_speed;
     float jumping_speed;
     float gravity;
-
+	
 	float top;
 	float bottom;
 	float left;
 	float right;
-
+	
+	float m_airdash_duration;
+	float m_airdash_timer;
+	
 	vec2 m_x_world_bounds;
 	vec2 m_y_world_bounds;
 	
