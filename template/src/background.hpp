@@ -8,7 +8,7 @@ class Background : public Entity
 public:
 	
 	// Creates all the associated render resources and default transform
-	bool init();
+	bool init(const char* path);
 
 	// Releases all associated resources
 	void destroy();

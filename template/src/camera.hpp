@@ -10,6 +10,8 @@ public:
     void init(vec2 dim);
 
     void update(vec2 player, bool moving_forwards);
+    void reset();
+
     float compute_translation_x();
 
 private:

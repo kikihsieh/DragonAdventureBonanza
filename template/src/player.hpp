@@ -1,7 +1,7 @@
 #pragma once
 
 #include "common.hpp"
-#include "spider.hpp"
+#include "enemies/spider.hpp"
 #include <vector>
 
 class Ground;
@@ -11,14 +11,14 @@ class Player : public Entity
 {
 public:
 	// Creates all the associated render resources and default transform
-	bool init(vec2 x_bounds, vec2 y_bounds);
+	bool init();
 
 	// Releases all associated resources
 	void destroy();
 	
 	// Update player position based on direction
 	// ms represents the number of milliseconds elapsed from the previous update() call
-	void update(float ms, const Platform& platform);
+	void update(float ms);
 	
 	// Renders the player
 	void draw(const mat3& projection)override;
@@ -90,9 +90,6 @@ private:
 	
 	float m_airdash_duration;
 	float m_airdash_timer;
-	
-	vec2 m_x_world_bounds;
-	vec2 m_y_world_bounds;
 	
     Texture player_texture;
 	std::vector<vec2> player_world_coord;

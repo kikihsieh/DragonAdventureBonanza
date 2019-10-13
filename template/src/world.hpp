@@ -3,7 +3,7 @@
 // internal
 #include "common.hpp"
 #include "player.hpp"
-#include "spider.hpp"
+#include "enemies/spider.hpp"
 #include "background.hpp"
 #include "ground.hpp"
 #include "camera.hpp"
@@ -17,10 +17,9 @@
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <SDL_mixer.h>
+#include <levels/level.hpp>
 
-
-
-// Container for all our entities and game logic. Individual rendering / update is 
+// Container for all our entities and game logic. Individual rendering / update is
 // deferred to the relative update() methods
 class World
 {
@@ -42,19 +41,9 @@ public:
 
 	// Should the game be over ?
 	bool is_over()const;
-    
-    bool setTextures();
 
 private:
-    // Generates a new spider
-    //bool init_enemies(float& scale, int& w, int& h);
-    bool init_enemies(int x, int y);
-    bool spawn_spider();
-    
-    //Load tiles
-    bool loadLevel(int arr[17][50]);
-    bool drawMap();
-    int map[17][50];
+    bool load_scene(Level* level);
     
 	// !!! INPUT CALLBACK FUNCTIONS
 	void on_key(GLFWwindow*, int key, int, int action, int mod);
@@ -71,30 +60,10 @@ private:
 	Texture m_screen_tex;
 
     // Game entities
-    std::vector<Spider> m_spiders;
-    std::vector<Tile> m_tiles;
-    
-  	vec2 m_x_boundaries;
-    vec2 m_y_boundaries;
+    static Level* m_levels[5];
+    static Level* m_current_level;
 
     Player m_player;
     Background m_background;
-    Ground m_ground;
     Camera m_camera;
-    Platform m_platform;
-    
-    Texture tile1_texture;
-    Texture tile1_left_texture;
-    Texture tile1_right_texture;
-    Texture tile1_left_corner_texture;
-    Texture tile1_right_corner_texture;
-    Texture tile1_left_end_texture;
-    Texture tile1_right_end_texture;
-    Texture tile2_texture;
-    
-    Texture spider_texture;
-    
-	// C++ rng
-	std::default_random_engine m_rng;
-	std::uniform_real_distribution<float> m_dist; // default 0..1
 };

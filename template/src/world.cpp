@@ -2,36 +2,11 @@
 #include "world.hpp"
 
 // stlib
-#include <string.h>
-#include <cassert>
 #include <sstream>
-#include <iostream>
 #include <ctime>
 
-int rows = 17; //y values
-int cols = 50; //x values
+#include <levels/forest_level.hpp>
 
-int level1[17][50] = {
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,7,1,1,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,1,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,1,8,0,0,0,0,0,0,0,0,0,7,1,8,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,1,1,1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,3,6,6,6,2,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,3,6,6,6,6,6,2,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5},
-    {2,1,1,1,1,1,4,0,0,9,0,0,5,1,1,1,1,3,6,6,6,6,6,6,6,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3},
-    {6,6,6,6,6,6,2,1,1,1,1,1,3,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6},
-    {6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6},
-};
-
-#include <ctime>
 // Same as static in c, local to compilation unit
 namespace
 {
@@ -46,16 +21,11 @@ namespace
 }
 
 
-World::World()
-{
-    // Seeding rng with random device
-    m_rng = std::default_random_engine(std::random_device()());
-}
+World::World() {}
 
-World::~World()
-{
-    
-}
+World::~World() {}
+
+Level* World::m_levels[5] = { new ForestLevel() };
 
 // World initialization
 bool World::init(vec2 screen)
@@ -112,15 +82,16 @@ bool World::init(vec2 screen)
 	m_screen_tex.create_from_screen(m_window);
 	m_camera.init(screen);
 
-	m_x_boundaries = {0.f, 2400.f};
-	m_y_boundaries = {200.f, 700.f};
+	return load_scene(m_levels[0]);
 
-    return setTextures() && m_player.init(m_x_boundaries, m_y_boundaries) && m_platform.init() &&m_background.init() && m_ground.init() && /*init_enemies(m_screen_scale, fb_width, fb_height) &&*/ loadLevel(level1);
+//    return setTextures() && m_player.init(m_x_boundaries, m_y_boundaries) && m_platform.init() &&m_background.init() && m_ground.init() && /*init_enemies(m_screen_scale, fb_width, fb_height) &&*/ loadLevel(level1);
+//	m_current_level = m_levels[0];
+
+//    return m_player.init() && m_platform.init() && m_background.init() && m_ground.init() && init_enemies(m_screen_scale, fb_width, fb_height);
 }
 
 // Releases all the associated resources
-void World::destroy()
-{
+void World::destroy() {
 	glDeleteFramebuffers(1, &m_frame_buffer);
 	glfwDestroyWindow(m_window);
 }
@@ -131,44 +102,25 @@ bool World::update(float elapsed_ms)
 	int w, h;
 	glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
-	
-	auto spider_it = m_spiders.begin();
-	while (spider_it != m_spiders.end())
-	{
-		if (m_player.is_alive() && m_player.collides_with(*spider_it))
-		{
-			if (m_player.kill_enemy) {
-				spider_it = m_spiders.erase(spider_it);
-				// Mix_PlayChannel(-1, m_salmon_eat_sound, 0);
-				// ++m_points;
-			}
-			else if (!m_player.is_alive()) {
-				//m_player.destroy();
-				//Mix_PlayChannel(-1, m_salmon_dead_sound, 0);
-				break;
-			}
-		}
-		else
-			++spider_it;
-	}
 
 	// check if player is on the ground
-	m_player.update(elapsed_ms, m_platform);
+	m_player.update(elapsed_ms);
 	m_camera.update(m_player.get_position(), m_player.is_facing_forwards());
 
-	m_ground.set_surface_y();
-    m_player.land(m_ground, m_platform);
+//    m_player.land(m_ground, m_platform);
 
-	for(auto& spider : m_spiders)
-		spider.update(elapsed_ms);
-    
+//	for(auto& spider : m_spiders)
+//		spider.update(elapsed_ms);
+
+//    m_player.platformCollision(m_platform);
+    m_current_level->update();
+
 	return true;
 }
 
 // Render our game world
 // http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
-void World::draw()
-{
+void World::draw() {
 	// Clearing error buffer
 	gl_flush_errors();
 
@@ -217,12 +169,7 @@ void World::draw()
 	glBindTexture(GL_TEXTURE_2D, m_screen_tex.id);
 
 	m_background.draw(projection_2D);
-	m_ground.draw(projection_2D);
-    for (auto& tile : m_tiles)
-        tile.draw(projection_2D);
-	for (auto& spider : m_spiders)
-		spider.draw(projection_2D);
-    m_platform.draw(projection_2D);
+    m_current_level->draw(projection_2D);
     m_player.draw(projection_2D);
 
 	//////////////////
@@ -231,202 +178,15 @@ void World::draw()
 }
 
 // Should the game be over ?
-bool World::is_over() const
-{
+bool World::is_over() const {
 	return glfwWindowShouldClose(m_window);
 }
 
-bool World::loadLevel(int arr[17][50])
-{
-    for (int row = 0; row < rows; row++) {
-        for (int col = 0; col < cols; col++) {
-            map[row][col] = arr[row][col];
-        }
-    }
-    drawMap();
-    return true;
-}
-
-bool World::drawMap()
-{
-    int type = 0;
-    
-    for (int row = 0; row < rows; row++) {
-        for (int col = 0; col < cols; col++) {
-            type = map[row][col];
-            if (type == 1) {
-                Tile tile;
-                tile.texture = &tile1_texture;
-                if (tile.init()) {
-                    tile.setPosition(col, row);
-                    m_tiles.emplace_back(tile);
-                }
-            }
-            else if (type == 2) {
-                Tile tile;
-                tile.texture = &tile1_left_texture;
-                if (tile.init()) {
-                    tile.setPosition(col, row);
-                    m_tiles.emplace_back(tile);
-                }
-            }
-            else if (type == 3) {
-                Tile tile;
-                tile.texture = &tile1_right_texture;
-                if (tile.init()) {
-                    tile.setPosition(col, row);
-                    m_tiles.emplace_back(tile);
-                }
-            }
-            else if (type == 4) {
-                Tile tile;
-                tile.texture = &tile1_left_corner_texture;
-                if (tile.init()) {
-                    tile.setPosition(col, row);
-                    m_tiles.emplace_back(tile);
-                }
-            }
-            else if (type == 5) {
-                Tile tile;
-                tile.texture = &tile1_right_corner_texture;
-                if (tile.init()) {
-                    tile.setPosition(col, row);
-                    m_tiles.emplace_back(tile);
-                }
-            }
-            else if (type == 6) {
-                Tile tile;
-                tile.texture = &tile2_texture;
-                if (tile.init()) {
-                    tile.setPosition(col, row);
-                    m_tiles.emplace_back(tile);
-                }
-            }
-            else if (type == 7) {
-                Tile tile;
-                tile.texture = &tile1_left_end_texture;
-                if (tile.init()) {
-                    tile.setPosition(col, row);
-                    m_tiles.emplace_back(tile);
-                }
-            }
-            else if (type == 8) {
-                Tile tile;
-                tile.texture = &tile1_right_end_texture;
-                if (tile.init()) {
-                    tile.setPosition(col, row);
-                    m_tiles.emplace_back(tile);
-                }
-            }
-            else if (type == 9) {
-                init_enemies(col, row);
-            }
-        }
-    }
-    return true;
-}
-
-bool World::init_enemies(int x, int y)
-{
-    srand( time(0));
-    
-    int min_waitTime = 5;
-    int max_waitTime = 10;
-    int randomTime;
-    
-    Spider spider;
-    spider.texture = &spider_texture;
-    if (spider.init()) {
-        srand( time(0));
-        //TODO fix these hard coded values, but 24 pixels is half a tile, a tile is 48x48
-        spider.set_init_position_and_max_xy({x*48.f - 24.f, y*48.f+24.f});
-        randomTime = (rand()%(max_waitTime - min_waitTime + 1) + min_waitTime);
-        spider.set_randomT();
-        m_spiders.emplace_back(spider);
-    }
-    else {
-        fprintf(stderr, "Failed to initialize spider");
-        return false;
-    }
-    return true;
-}
-
-//assigns all tile variables a texture
-bool World::setTextures()
-{
-    if (!tile1_texture.is_valid())
-    {
-        if (!tile1_texture.load_from_file(textures_path("tile1.png")))
-        {
-            fprintf(stderr, "Failed to load tile texture!");
-            return false;
-        }
-    }
-    if (!tile1_left_texture.is_valid())
-    {
-        if (!tile1_left_texture.load_from_file(textures_path("tile1_left.png")))
-        {
-            fprintf(stderr, "Failed to load tile texture!");
-            return false;
-        }
-    }
-    if (!tile1_right_texture.is_valid())
-    {
-        if (!tile1_right_texture.load_from_file(textures_path("tile1_right.png")))
-        {
-            fprintf(stderr, "Failed to load tile texture!");
-            return false;
-        }
-    }
-    if (!tile1_left_corner_texture.is_valid())
-    {
-        if (!tile1_left_corner_texture.load_from_file(textures_path("tile1_left_corner.png")))
-        {
-            fprintf(stderr, "Failed to load tile texture!");
-            return false;
-        }
-    }
-    if (!tile1_right_corner_texture.is_valid())
-    {
-        if (!tile1_right_corner_texture.load_from_file(textures_path("tile1_right_corner.png")))
-        {
-            fprintf(stderr, "Failed to load tile texture!");
-            return false;
-        }
-    }
-    if (!tile2_texture.is_valid())
-    {
-        if (!tile2_texture.load_from_file(textures_path("tile2.png")))
-        {
-            fprintf(stderr, "Failed to load tile texture!");
-            return false;
-        }
-    }
-    if (!tile1_left_end_texture.is_valid())
-    {
-        if (!tile1_left_end_texture.load_from_file(textures_path("tile1_left_end.png")))
-        {
-            fprintf(stderr, "Failed to load tile texture!");
-            return false;
-        }
-    }
-    if (!tile1_right_end_texture.is_valid())
-    {
-        if (!tile1_right_end_texture.load_from_file(textures_path("tile1_right_end.png")))
-        {
-            fprintf(stderr, "Failed to load tile texture!");
-            return false;
-        }
-    }
-    if (!spider_texture.is_valid())
-    {
-        if (!spider_texture.load_from_file(textures_path("spider.png")))
-        {
-            fprintf(stderr, "Failed to load spider texture!");
-            return false;
-        }
-    }
-    return true;
+bool World::load_scene(Level* level) {
+    m_background.init(level->getMBgTexturePath());
+    m_camera.reset();
+    level->init();
+    return false;
 }
 
 // On key callback
@@ -467,3 +227,29 @@ void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
 
 }
+
+
+//bool World::init_enemies(int x, int y)
+//{
+//    srand( time(0));
+//
+//    int min_waitTime = 5;
+//    int max_waitTime = 10;
+//    int randomTime;
+//
+//    Spider spider;
+//    spider.texture = &spider_texture;
+//    if (spider.init()) {
+//        srand( time(0));
+//        //TODO fix these hard coded values, but 24 pixels is half a tile, a tile is 48x48
+//        spider.set_init_position_and_max_xy({x*48.f - 24.f, y*48.f+24.f});
+//        randomTime = (rand()%(max_waitTime - min_waitTime + 1) + min_waitTime);
+//        spider.set_randomT();
+//        m_spiders.emplace_back(spider);
+//    }
+//    else {
+//        fprintf(stderr, "Failed to initialize spider");
+//        return false;
+//    }
+//    return true;
+//}

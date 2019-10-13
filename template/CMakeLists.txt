@@ -34,25 +34,28 @@ set(SOURCE_FILES
 	src/main.cpp
 	src/common.cpp
 	src/player.cpp
-	src/spider.cpp
+        src/enemies/spider.cpp
   src/background.cpp
 	src/world.cpp
 	src/ground.cpp
         src/camera.cpp
 	src/platform.cpp
     src/tile.cpp
+        src/levels/level.cpp
+        src/levels/forest_level.cpp
 
   src/project_path.hpp
 	src/common.hpp
 	src/player.hpp
-	src/spider.hpp
+        src/enemies/spider.hpp
   src/background.hpp
 	src/world.hpp
         src/ground.hpp
         src/camera.hpp
 	src/platform.hpp
     src/tile.hpp
-        )
+        src/levels/level.hpp
+        src/levels/forest_level.hpp src/levels/map.cpp src/levels/map.hpp)
 
 if (IS_OS_MAC)
   include_directories(/usr/local/include)

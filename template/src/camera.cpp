@@ -15,6 +15,14 @@ void Camera::init(vec2 dim) {
     m_snap_threshold_b = false;
 }
 
+void Camera::reset() {
+    m_center.x = m_dim.x / 2.0f;
+    m_center.y = m_dim.y / 2.0f;
+
+    m_snap_threshold_f = true;
+    m_snap_threshold_b = false;
+}
+
 void Camera::update(vec2 player_pos, bool moving_forwards) {
     if (moving_forwards) {
         m_snap_threshold_b = false;

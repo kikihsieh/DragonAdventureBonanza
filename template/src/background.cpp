@@ -2,12 +2,12 @@
 
 #include <iostream>
 #include <math.h>
-bool Background::init() {
+bool Background::init(const char* path) {
 
 	// Load shared texture
 	if (!background_texture.is_valid())
 	{
-		if (!background_texture.load_from_file(textures_path("background.png")))
+		if (!background_texture.load_from_file(path))
 		{
 			fprintf(stderr, "Failed to load background texture!");
 			return false;
