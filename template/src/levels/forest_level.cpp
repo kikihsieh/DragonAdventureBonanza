@@ -2,16 +2,15 @@
 #include "forest_level.hpp"
 
 ForestLevel::ForestLevel(bool unlocked) :
-    Level(textures_path("background.png"), unlocked) {
+    Level(unlocked) {
 }
 
 ForestLevel::~ForestLevel() = default;
 
 bool ForestLevel::init() {
-    return Level::init_textures(m_tile_vec, m_texture_map);
+    return Level::init_scene(m_tile_vec, m_texture_map);
 }
 
 void ForestLevel::update() {
     Level::update();
 }
-

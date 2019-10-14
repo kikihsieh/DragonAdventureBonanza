@@ -11,7 +11,7 @@ class Player : public Entity
 {
 public:
 	// Creates all the associated render resources and default transform
-	bool init();
+    bool init(vec2 x_bounds, vec2 y_bounds);
 
 	// Releases all associated resources
 	void destroy();
@@ -53,6 +53,9 @@ public:
 	// Check if player is landed
 	void land(const Ground& ground, const Platform& platform);
 	bool can_jump();
+
+    vec2 m_x_world_bounds;
+    vec2 m_y_world_bounds;
 	
 	bool can_airdash();
 	bool is_airdashing();

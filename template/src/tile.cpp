@@ -5,6 +5,10 @@
 #include <algorithm>
 using namespace std;
 
+Tile::~Tile() {
+    destroy();
+}
+
 bool Tile::init() {
     
     // The position corresponds to the center of the texture
@@ -23,7 +27,6 @@ bool Tile::init() {
     
     // Counterclockwise as it's the default opengl front winding direction
     uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
-    
     
     // Clearing errors
     gl_flush_errors();

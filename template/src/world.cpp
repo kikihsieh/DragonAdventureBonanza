@@ -83,8 +83,7 @@ bool World::init(vec2 screen)
 	m_screen_tex.create_from_screen(m_window);
 	m_camera.init(screen);
 
-    m_current_scene = m_scenes.at(FOREST);
-	return load_scene(m_current_scene);
+	return load_scene(m_scenes.at(FOREST));
 
 //    return set_textures() && m_player.init(m_x_boundaries, m_y_boundaries) && m_platform.init() &&m_background.init() && m_ground.init() && /*init_enemies(m_screen_scale, fb_width, fb_height) &&*/ loadLevel(level1);
 //	m_current_scene = m_scenes[0];
@@ -185,10 +184,17 @@ bool World::is_over() const {
 }
 
 bool World::load_scene(Level* level) {
+    if (m_current_scene) {
+        m_current_scene->destroy();
+    }
+
     m_background.init(level->get_bg_texture_path());
-    m_player.init();
+    if (m_current_scene->is_level()) {
+        m_player.init(level->get_x_boundaries(), level->get_y_boundaries());
+    }
     m_camera.reset();
     level->init();
+    m_current_scene = level;
     return true;
 }
 

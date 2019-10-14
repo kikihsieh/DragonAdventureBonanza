@@ -12,32 +12,47 @@ typedef std::map<int, const char*> TexturePathMapping;
 class Level {
 
 public:
-    Level(const char* bg_texture_path, bool unlocked);
+    explicit Level(bool unlocked);
     ~Level();
 
     virtual bool init() = 0;
+    virtual const char * get_bg_texture_path() = 0;
+
+    virtual void destroy();
     virtual void update();
     virtual void draw(const mat3& projection);
 
-    const char * get_bg_texture_path() const {
-        return m_bg_texture_path;
+    bool is_level() const {
+        return true;
+    }
+
+    bool is_unlocked() const {
+        return m_unlocked;
+    }
+
+    vec2 get_x_boundaries() const {
+        return m_x_boundaries;
+    }
+
+    vec2 get_y_boundaries() const {
+        return m_y_boundaries;
     }
 
 protected:
-    bool init_textures(MapVector map, TexturePathMapping mapping);
-
-    const char* m_bg_texture_path;
+    bool init_scene(MapVector map, TexturePathMapping mapping);
 
     TextureMapping m_texture_mapping;
     TileMap* m_tile_map;
 
     bool m_unlocked;
 
-    vec2 m_x_boundaries;
-    vec2 m_y_boundaries;
+protected:
+
+    vec2 m_x_boundaries{};
+    vec2 m_y_boundaries{};
 
     // Game entities
-    std::vector<Entity> m_enemies;
+    std::vector<std::shared_ptr<Entity>> m_enemies;
 };
 
 #endif //DAB_LEVEL_HPP

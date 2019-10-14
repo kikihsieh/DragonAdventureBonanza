@@ -8,8 +8,12 @@ public:
     explicit ForestLevel(bool unlocked);
     ~ForestLevel();
 
-    void update();
-    bool init();
+    void update() override;
+    bool init() override;
+
+    const char * get_bg_texture_path() override {
+        return textures_path("background.png");
+    }
 
 private:
     const MapVector m_tile_vec = {

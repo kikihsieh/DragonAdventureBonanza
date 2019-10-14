@@ -9,11 +9,14 @@ typedef std::vector<std::vector<int>> MapVector;
 
 class TileMap {
 public:
-    void init(MapVector map, TextureMapping mapping);
+    TileMap();
+    ~TileMap();
+
+    bool init(MapVector map, TextureMapping mapping);
     void draw(const mat3 &projection);
 
 private:
-    std::vector<Tile*> m_tiles;
+    std::vector<std::shared_ptr<Tile>> m_tiles;
 };
 
 #endif //DAB_TILE_MAP_HPP
