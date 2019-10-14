@@ -9,3 +9,7 @@ VolcanoLevel::~VolcanoLevel() = default;
 bool VolcanoLevel::init() {
     return Level::init_scene(m_tile_vec, m_texture_map);
 }
+
+bool VolcanoLevel::init_walking_enemy(int type, vec2 initial_pos) {
+    return true;
+}

@@ -41,23 +41,15 @@ bool Level::init_scene(MapVector map, TexturePathMapping mapping) {
 }
 
 bool Level::init_enemy(int type, vec2 initial_pos) {
-    std::shared_ptr<Spider> spider = std::make_shared<Spider>();
-    spider->texture = m_texture_mapping.at(type);
-    if (spider->init()) {
-        spider->set_init_position_and_max_xy(initial_pos);
-        m_enemies.emplace_back(spider);
+    if (type == -1) {
+        return init_walking_enemy(type, initial_pos);
     }
-    else {
-        fprintf(stderr, "Failed to initialize spider");
-        return false;
-    }
-    return true;
+    return false;
 }
 
 void Level::update(float elapsed_ms) {
     for (auto& enemy : m_enemies) {
-        Spider* spider = (Spider*) enemy.get();
-        spider->update(elapsed_ms);
+        enemy->update(elapsed_ms);
     }
 }
 

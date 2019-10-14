@@ -19,7 +19,7 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
                 continue;
             }
 
-            // tiles less than 0 is an enemy
+            // tiles less than 0 are enemies
             if (*col < 0) {
                 float pos_x = ((float) (col - row->begin()) * m_tile_size.x);
                 float pos_y = ((float) (row - map.begin()) * m_tile_size.y);
@@ -34,6 +34,7 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
                 tile->set_position(col - row->begin(), row - map.begin());
                 m_tiles.emplace_back(tile);
                 // TODO: Tile size should be set by tile map or at least initialized better
+                //  because currently it could be 0 if the first tile it encounters is an enemy
                 if (m_tile_size.x == 0 && m_tile_size.y == 0) {
                     m_tile_size = tile->get_size();
                 }

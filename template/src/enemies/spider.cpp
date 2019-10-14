@@ -5,6 +5,10 @@
 #include <iostream>
 #include <ctime>
 
+Spider::Spider() : Enemy(Enemy::WALKING) {
+
+}
+
 bool Spider::init()
 {
 

@@ -8,7 +8,6 @@ public:
     explicit ForestLevel(bool unlocked);
     ~ForestLevel();
 
-    void update(float elapsed_time) override;
     bool init() override;
 
     const char * get_bg_texture_path() override {
@@ -16,6 +15,8 @@ public:
     }
 
 private:
+    bool init_walking_enemy(int type, vec2 initial_pos) override;
+
     /*
 1 platform  tile
 2 3 4 5 6   tile 1  4 is main tile

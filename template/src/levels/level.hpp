@@ -3,9 +3,11 @@
 
 #include <common.hpp>
 #include <vector>
-#include <levels/tile.hpp>
 #include <map>
+
 #include "tile_map.hpp"
+#include "tile.hpp"
+#include "enemies/enemy.hpp"
 
 typedef std::map<int, const char*> TexturePathMapping;
 typedef std::map<int, Texture*> TextureMapping;
@@ -47,6 +49,8 @@ public:
     std::vector<std::shared_ptr<Tile>> get_tiles() const;
 
 protected:
+    virtual bool init_walking_enemy(int type, vec2 initial_pos) = 0;
+
     bool init_scene(MapVector map, TexturePathMapping mapping);
 
     TextureMapping m_texture_mapping;
@@ -58,7 +62,7 @@ protected:
     vec2 m_y_boundaries{};
 
     // Game entities
-    std::vector<std::shared_ptr<Entity>> m_enemies;
+    std::vector<std::shared_ptr<Enemy>> m_enemies;
 };
 
 #endif //DAB_LEVEL_HPP
