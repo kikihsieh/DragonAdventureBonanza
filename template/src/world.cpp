@@ -21,11 +21,12 @@ namespace
 }
 
 
-World::World() {}
+World::World() {
+    map_init(m_scenes)
+            (FOREST, new ForestLevel(true));
+}
 
-World::~World() {}
-
-Level* World::m_levels[5] = { new ForestLevel() };
+World::~World() = default;
 
 // World initialization
 bool World::init(vec2 screen)
@@ -82,10 +83,11 @@ bool World::init(vec2 screen)
 	m_screen_tex.create_from_screen(m_window);
 	m_camera.init(screen);
 
-	return load_scene(m_levels[0]);
+    m_current_scene = m_scenes.at(FOREST);
+	return load_scene(m_current_scene);
 
-//    return setTextures() && m_player.init(m_x_boundaries, m_y_boundaries) && m_platform.init() &&m_background.init() && m_ground.init() && /*init_enemies(m_screen_scale, fb_width, fb_height) &&*/ loadLevel(level1);
-//	m_current_level = m_levels[0];
+//    return set_textures() && m_player.init(m_x_boundaries, m_y_boundaries) && m_platform.init() &&m_background.init() && m_ground.init() && /*init_enemies(m_screen_scale, fb_width, fb_height) &&*/ loadLevel(level1);
+//	m_current_scene = m_scenes[0];
 
 //    return m_player.init() && m_platform.init() && m_background.init() && m_ground.init() && init_enemies(m_screen_scale, fb_width, fb_height);
 }
@@ -113,7 +115,7 @@ bool World::update(float elapsed_ms)
 //		spider.update(elapsed_ms);
 
 //    m_player.platformCollision(m_platform);
-    m_current_level->update();
+    m_current_scene->update();
 
 	return true;
 }
@@ -169,7 +171,7 @@ void World::draw() {
 	glBindTexture(GL_TEXTURE_2D, m_screen_tex.id);
 
 	m_background.draw(projection_2D);
-    m_current_level->draw(projection_2D);
+    m_current_scene->draw(projection_2D);
     m_player.draw(projection_2D);
 
 	//////////////////
@@ -183,10 +185,11 @@ bool World::is_over() const {
 }
 
 bool World::load_scene(Level* level) {
-    m_background.init(level->getMBgTexturePath());
+    m_background.init(level->get_bg_texture_path());
+    m_player.init();
     m_camera.reset();
     level->init();
-    return false;
+    return true;
 }
 
 // On key callback

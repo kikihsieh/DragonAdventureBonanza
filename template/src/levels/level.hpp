@@ -4,31 +4,32 @@
 #include <common.hpp>
 #include <vector>
 #include <tile.hpp>
+#include <map>
+#include "tile_map.hpp"
+
+typedef std::map<int, const char*> TexturePathMapping;
 
 class Level {
+
 public:
-    Level();
+    Level(const char* bg_texture_path, bool unlocked);
     ~Level();
 
-    virtual void init();
+    virtual bool init() = 0;
     virtual void update();
     virtual void draw(const mat3& projection);
-    virtual bool draw_map();
 
-    const char * getMBgTexturePath() const {
+    const char * get_bg_texture_path() const {
         return m_bg_texture_path;
     }
 
 protected:
-    //Load tiles
-    bool loadLevel(int arr[17][50]);
-    bool drawMap();
-    int map[17][50];
-
-    virtual void setTextures();
-    std::vector<Tile> m_tiles;
+    bool init_textures(MapVector map, TexturePathMapping mapping);
 
     const char* m_bg_texture_path;
+
+    TextureMapping m_texture_mapping;
+    TileMap* m_tile_map;
 
     bool m_unlocked;
 

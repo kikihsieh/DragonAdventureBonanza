@@ -1,12 +1,17 @@
+#include <iostream>
 #include "forest_level.hpp"
 
-ForestLevel::ForestLevel()
-{
-    Level::m_bg_texture_path = textures_path("background.png");
-    Level::m_x_boundaries = {-200.f, 1000.f};
-    Level::m_y_boundaries = {200.f, 700.f};
+ForestLevel::ForestLevel(bool unlocked) :
+    Level(textures_path("background.png"), unlocked) {
+}
+
+ForestLevel::~ForestLevel() = default;
+
+bool ForestLevel::init() {
+    return Level::init_textures(m_tile_vec, m_texture_map);
 }
 
 void ForestLevel::update() {
     Level::update();
 }
+

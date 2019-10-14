@@ -55,7 +55,7 @@ set(SOURCE_FILES
 	src/platform.hpp
     src/tile.hpp
         src/levels/level.hpp
-        src/levels/forest_level.hpp src/levels/map.cpp src/levels/map.hpp)
+        src/levels/forest_level.hpp src/levels/tile_map.cpp src/levels/tile_map.hpp)
 
 if (IS_OS_MAC)
   include_directories(/usr/local/include)

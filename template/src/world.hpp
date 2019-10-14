@@ -24,6 +24,15 @@
 class World
 {
 public:
+    enum Scene {
+        MAIN_MENU,
+        FOREST,
+        VOLCANO,
+        CAVE,
+        SNOW_MOUNTAIN,
+        NIGHT_SKY
+    };
+
 	World();
 	~World();
 
@@ -60,8 +69,8 @@ private:
 	Texture m_screen_tex;
 
     // Game entities
-    static Level* m_levels[5];
-    static Level* m_current_level;
+    Level* m_current_scene;
+    std::map<Scene, Level*> m_scenes;
 
     Player m_player;
     Background m_background;

@@ -8,8 +8,8 @@ using namespace std;
 bool Tile::init() {
     
     // The position corresponds to the center of the texture
-    float wr = texture->width * 0.5f;
-    float hr = texture->height * 0.5f;
+    float wr = m_texture->width * 0.5f;
+    float hr = m_texture->height * 0.5f;
     
     //TexturedVertex vertices[4];
     vertices[0].position = { -wr, +hr, -0.02f };
@@ -97,7 +97,7 @@ void Tile::draw(const mat3& projection) {
     
     // Enabling and binding texture to slot 0
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture->id);
+    glBindTexture(GL_TEXTURE_2D, m_texture->id);
     
     // Setting uniform values to the currently bound program
     glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform.out);
@@ -109,10 +109,10 @@ void Tile::draw(const mat3& projection) {
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
 
-void Tile::setPosition(float x, float y)
+void Tile::set_position(float x, float y)
 {
-    motion.position.x = x * texture->width - texture->width*0.5f;
-    motion.position.y = y * texture->height + texture->height*0.5f;
+    motion.position.x = x * m_texture->width - m_texture->width*0.5f;
+    motion.position.y = y * m_texture->height + m_texture->height*0.5f;
 }
 
 void Tile::compute_world_coordinate()
