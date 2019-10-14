@@ -11,7 +11,6 @@
 // Same as static in c, local to compilation unit
 namespace
 {
-	const size_t NUM_SPIDER = 0;
 	namespace
 	{
 		void glfw_err_cb(int error, const char* desc)
