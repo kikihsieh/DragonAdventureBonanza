@@ -1,6 +1,7 @@
 #include "level.hpp"
 
 #include <utility>
+#include <enemies/spider.hpp>
 
 Level::Level(bool unlocked) :
     m_unlocked(unlocked),
@@ -19,7 +20,7 @@ void Level::destroy() {
 }
 
 bool Level::init_scene(MapVector map, TexturePathMapping mapping) {
-    m_tile_map = new TileMap();
+    m_tile_map = new TileMap(this);
     for (auto & iter : mapping) {
         auto* texture = new Texture();
         if (!texture->is_valid()) {
@@ -33,11 +34,34 @@ bool Level::init_scene(MapVector map, TexturePathMapping mapping) {
     return m_tile_map->init(std::move(map), m_texture_mapping);
 }
 
-void Level::update() {
-    // TODO: update enemies here
+bool Level::init_enemy(int type, vec2 initial_pos) {
+    std::shared_ptr<Spider> spider = std::make_shared<Spider>();
+    spider->texture = m_texture_mapping.at(type);
+    if (spider->init()) {
+        spider->set_init_position_and_max_xy(initial_pos);
+        m_enemies.emplace_back(spider);
+    }
+    else {
+        fprintf(stderr, "Failed to initialize spider");
+        return false;
+    }
+    return true;
+}
+
+void Level::update(float elapsed_ms) {
+    for (auto& enemy : m_enemies) {
+        Spider* spider = (Spider*) enemy.get();
+        spider->update(elapsed_ms);
+    }
 }
 
 void Level::draw(const mat3 &projection) {
     m_tile_map->draw(projection);
-    // TODO: draw enemies;
+    for (auto& enemy : m_enemies) {
+        enemy.get()->draw(projection);
+    }
+}
+
+std::vector<std::shared_ptr<Tile>> Level::get_tiles() const {
+    return std::vector<std::shared_ptr<Tile>>();
 }

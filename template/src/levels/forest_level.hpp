@@ -8,7 +8,7 @@ public:
     explicit ForestLevel(bool unlocked);
     ~ForestLevel();
 
-    void update() override;
+    void update(float elapsed_time) override;
     bool init() override;
 
     const char * get_bg_texture_path() override {

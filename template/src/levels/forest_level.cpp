@@ -10,6 +10,6 @@ bool ForestLevel::init() {
     return Level::init_scene(m_tile_vec, m_texture_map);
 }
 
-void ForestLevel::update() {
-    Level::update();
+void ForestLevel::update(float elapsed_time) {
+    Level::update(elapsed_time);
 }

@@ -9,7 +9,3 @@ VolcanoLevel::~VolcanoLevel() = default;
 bool VolcanoLevel::init() {
     return Level::init_scene(m_tile_vec, m_texture_map);
 }
-
-void VolcanoLevel::update() {
-    Level::update();
-}

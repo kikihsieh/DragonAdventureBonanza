@@ -3,13 +3,16 @@
 
 #include <common.hpp>
 #include <levels/tile.hpp>
+#include "level.hpp"
+
+class Level; // forward declaration
 
 typedef std::map<int, Texture*> TextureMapping;
 typedef std::vector<std::vector<int>> MapVector;
 
 class TileMap {
 public:
-    TileMap();
+    explicit TileMap(Level* level);
     ~TileMap();
 
     bool init(MapVector map, TextureMapping mapping);
@@ -21,6 +24,7 @@ public:
 
 private:
     std::vector<std::shared_ptr<Tile>> m_tiles;
+    Level* m_level;
 };
 
 #endif //DAB_TILE_MAP_HPP

@@ -25,7 +25,7 @@ public:
     void set_texture(Texture *texture) {
         m_texture = texture;
     }
-    
+
     float top;
     float bottom;
     float left;

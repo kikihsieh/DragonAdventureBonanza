@@ -8,6 +8,10 @@
 #include "tile_map.hpp"
 
 typedef std::map<int, const char*> TexturePathMapping;
+typedef std::map<int, Texture*> TextureMapping;
+typedef std::vector<std::vector<int>> MapVector;
+
+class TileMap;
 
 class Level {
 
@@ -19,8 +23,10 @@ public:
     virtual const char * get_bg_texture_path() = 0;
 
     virtual void destroy();
-    virtual void update();
+    virtual void update(float elapsed_ms);
     virtual void draw(const mat3& projection);
+
+    bool init_enemy(int type, vec2 initial_pos);
 
     bool is_level() const {
         return true;
@@ -38,9 +44,7 @@ public:
         return m_y_boundaries;
     }
 
-    std::vector<std::shared_ptr<Tile>> get_tiles() const {
-        return m_tile_map->get_tiles();
-    }
+    std::vector<std::shared_ptr<Tile>> get_tiles() const;
 
 protected:
     bool init_scene(MapVector map, TexturePathMapping mapping);
@@ -49,8 +53,6 @@ protected:
     TileMap* m_tile_map;
 
     bool m_unlocked;
-
-protected:
 
     vec2 m_x_boundaries{};
     vec2 m_y_boundaries{};

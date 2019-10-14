@@ -9,7 +9,6 @@ public:
     explicit VolcanoLevel(bool unlocked);
     ~VolcanoLevel();
 
-    void update() override;
     bool init() override;
 
     const char * get_bg_texture_path() override {

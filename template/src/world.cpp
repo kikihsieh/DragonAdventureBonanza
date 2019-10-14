@@ -104,7 +104,7 @@ bool World::update(float elapsed_ms)
 	// check if player is on the ground
 	m_player.update(elapsed_ms, m_current_scene->get_tiles());
 	m_camera.update(m_player.get_position(), m_player.is_facing_forwards());
-    m_current_scene->update();
+    m_current_scene->update(elapsed_ms);
 	return true;
 }
 
@@ -235,29 +235,3 @@ void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
 
 }
-
-
-//bool World::init_enemies(int x, int y)
-//{
-//    srand( time(0));
-//
-//    int min_waitTime = 5;
-//    int max_waitTime = 10;
-//    int randomTime;
-//
-//    Spider spider;
-//    spider.texture = &spider_texture;
-//    if (spider.init()) {
-//        srand( time(0));
-//        //TODO fix these hard coded values, but 24 pixels is half a tile, a tile is 48x48
-//        spider.set_init_position_and_max_xy({x*48.f - 24.f, y*48.f+24.f});
-//        randomTime = (rand()%(max_waitTime - min_waitTime + 1) + min_waitTime);
-//        spider.set_randomT();
-//        m_spiders.emplace_back(spider);
-//    }
-//    else {
-//        fprintf(stderr, "Failed to initialize spider");
-//        return false;
-//    }
-//    return true;
-//}

@@ -40,8 +40,8 @@ set(SOURCE_FILES
         src/ground.cpp
         src/camera.cpp
         src/platform.cpp
-        src/levels/tile.cpp
         src/levels/level.cpp
+        src/levels/tile.cpp
         src/levels/forest_level.cpp
         src/levels/tile_map.cpp
         src/levels/volcano_level.cpp
@@ -55,8 +55,8 @@ set(SOURCE_FILES
         src/ground.hpp
         src/camera.hpp
         src/platform.hpp
-        src/levels/tile.hpp
         src/levels/level.hpp
+        src/levels/tile.hpp
         src/levels/forest_level.hpp
         src/levels/tile_map.hpp
         src/levels/volcano_level.hpp)
