@@ -8,7 +8,7 @@
 #include "ground.hpp"
 #include "camera.hpp"
 #include "platform.hpp"
-#include "tile.hpp"
+#include "levels/tile.hpp"
 
 // stlib
 #include <vector>

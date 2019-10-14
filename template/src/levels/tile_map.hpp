@@ -2,7 +2,7 @@
 #define DAB_TILE_MAP_HPP
 
 #include <common.hpp>
-#include <tile.hpp>
+#include <levels/tile.hpp>
 
 typedef std::map<int, Texture*> TextureMapping;
 typedef std::vector<std::vector<int>> MapVector;

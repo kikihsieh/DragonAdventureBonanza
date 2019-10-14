@@ -40,7 +40,7 @@ set(SOURCE_FILES
         src/ground.cpp
         src/camera.cpp
         src/platform.cpp
-        src/tile.cpp
+        src/levels/tile.cpp
         src/levels/level.cpp
         src/levels/forest_level.cpp
         src/levels/tile_map.cpp
@@ -55,7 +55,7 @@ set(SOURCE_FILES
         src/ground.hpp
         src/camera.hpp
         src/platform.hpp
-        src/tile.hpp
+        src/levels/tile.hpp
         src/levels/level.hpp
         src/levels/forest_level.hpp
         src/levels/tile_map.hpp
