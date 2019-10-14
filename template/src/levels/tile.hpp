@@ -22,6 +22,8 @@ public:
     
     void compute_world_coordinate();
 
+    vec2 get_size();
+
     void set_texture(Texture *texture) {
         m_texture = texture;
     }

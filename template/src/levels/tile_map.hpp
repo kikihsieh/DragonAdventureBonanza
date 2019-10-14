@@ -22,9 +22,15 @@ public:
         return m_tiles;
     }
 
+    vec2 get_map_dim() {
+        return m_map_dim;
+    }
+
 private:
     std::vector<std::shared_ptr<Tile>> m_tiles;
     Level* m_level;
+    vec2 m_tile_size;
+    vec2 m_map_dim;
 };
 
 #endif //DAB_TILE_MAP_HPP

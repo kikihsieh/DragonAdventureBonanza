@@ -2,7 +2,7 @@
 #include <map>
 #include "tile_map.hpp"
 
-TileMap::TileMap(Level* level) : m_level(level) {
+TileMap::TileMap(Level* level) : m_level(level), m_tile_size() {
 }
 
 TileMap::~TileMap() {
@@ -21,8 +21,9 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
 
             // tiles less than 0 is an enemy
             if (*col < 0) {
-                // TODO: calculate world position of enemy
-                m_level->init_enemy(*col, {(float) (col - row->begin()), (float) (row - map.begin())});
+                float pos_x = ((float) (col - row->begin()) * m_tile_size.x);
+                float pos_y = ((float) (row - map.begin()) * m_tile_size.y);
+                m_level->init_enemy(*col, {pos_x, pos_y});
             } else {
                 std::shared_ptr<Tile> tile = std::make_shared<Tile>();
                 tile->set_texture(dict.at(*col));
@@ -32,9 +33,16 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
                 }
                 tile->set_position(col - row->begin(), row - map.begin());
                 m_tiles.emplace_back(tile);
+                // TODO: Tile size should be set by tile map or at least initialized better
+                if (m_tile_size.x == 0 && m_tile_size.y == 0) {
+                    m_tile_size = tile->get_size();
+                }
             }
         }
     }
+    // TODO: get from number of rows and columns
+    m_map_dim.x = 50.f * m_tile_size.x;
+    m_map_dim.y = 17.f * m_tile_size.y;
     return true;
 }
 

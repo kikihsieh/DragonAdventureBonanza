@@ -2,13 +2,13 @@
 
 #include <utility>
 #include <enemies/spider.hpp>
+#include <iostream>
 
 Level::Level(bool unlocked) :
     m_unlocked(unlocked),
-    m_tile_map(nullptr){
-    // TODO: Calculate these values based on number of tiles
-    m_x_boundaries = {-200.f, 1000.f};
-    m_y_boundaries = {200.f, 700.f};
+    m_tile_map(nullptr),
+    m_x_boundaries{-200.f, 0},
+    m_y_boundaries{200.f, 0} {
 }
 
 Level::~Level() = default;
@@ -31,7 +31,13 @@ bool Level::init_scene(MapVector map, TexturePathMapping mapping) {
         }
         m_texture_mapping.insert(TextureMapping::value_type(iter.first, texture));
     }
-    return m_tile_map->init(std::move(map), m_texture_mapping);
+    if (!m_tile_map->init(std::move(map), m_texture_mapping)) {
+        fprintf(stderr, "Failed to initialize tile map!");
+        return false;
+    }
+    m_x_boundaries.y = m_x_boundaries.x + m_tile_map->get_map_dim().x;
+    m_y_boundaries.y = m_y_boundaries.x + m_tile_map->get_map_dim().y;
+    return true;
 }
 
 bool Level::init_enemy(int type, vec2 initial_pos) {
@@ -63,5 +69,5 @@ void Level::draw(const mat3 &projection) {
 }
 
 std::vector<std::shared_ptr<Tile>> Level::get_tiles() const {
-    return std::vector<std::shared_ptr<Tile>>();
+    return m_tile_map->get_tiles();
 }

@@ -181,10 +181,10 @@ bool World::load_scene(Level* level) {
 
     m_current_scene = level;
     m_background.init(level->get_bg_texture_path());
+    level->init();
     if (m_current_scene->is_level()) {
         m_player.init(level->get_x_boundaries(), level->get_y_boundaries());
     }
-    level->init();
     return true;
 }
 
