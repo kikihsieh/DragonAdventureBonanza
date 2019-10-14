@@ -102,7 +102,7 @@ bool World::update(float elapsed_ms)
 	vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
 
 	// check if player is on the ground
-	m_player.update(elapsed_ms);
+	m_player.update(elapsed_ms, m_current_scene->get_tiles());
 	m_camera.update(m_player.get_position(), m_player.is_facing_forwards());
     m_current_scene->update();
 	return true;

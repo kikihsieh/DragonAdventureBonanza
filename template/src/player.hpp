@@ -17,7 +17,7 @@ public:
 	
 	// Update player position based on direction
 	// ms represents the number of milliseconds elapsed from the previous update() call
-	void update(float ms);
+    void update(float ms, std::vector<std::shared_ptr<Tile>> m_tiles);
 	
 	// Renders the player
 	void draw(const mat3& projection)override;
@@ -62,7 +62,7 @@ public:
 	void compute_world_coordinate();
     
   	// Check if player is landed
-  	void platformCollision(const Tile& platform);
+  	void platformCollision(Tile* platform);
 
 	bool collides_with(Spider& spider);
 

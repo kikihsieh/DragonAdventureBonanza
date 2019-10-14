@@ -108,12 +108,12 @@ void Player::destroy()
 }
 
 // Called on each frame by World::update()
-void Player::update(float ms)
+void Player::update(float ms, std::vector<std::shared_ptr<Tile>> m_tiles)
 {
 	if (m_is_alive) {
-//        for(auto& tile : m_tiles) {
-//            platformCollision(tile);
-//        }
+        for(auto& tile : m_tiles) {
+            platformCollision(tile.get());
+        }
 
 		if (m_airdashing && abs(motion.speed.x) > 0) {
 			motion.speed.x -= (motion.speed.x / abs(motion.speed.x)) * 20;
@@ -327,17 +327,17 @@ bool Player::collides_with(Spider& spider)
 	return false;
 }
 
-void Player::platformCollision(const Tile& platform)
+void Player::platformCollision(Tile* platform)
 {
     m_on_ground = false;
     motion.acc.y = gravity;
 
     compute_world_coordinate();
 
-    if ((left + 0.1f) < platform.right &&
-        (right - 0.1f) > platform.left &&
-        bottom >= platform.top &&
-        bottom < platform.bottom) {
+    if ((left + 0.1f) < platform->right &&
+        (right - 0.1f) > platform->left &&
+        bottom >= platform->top &&
+        bottom < platform->bottom) {
         if (motion.speed.y > 0) {
             motion.speed.y = 0.f;
         }
@@ -348,28 +348,28 @@ void Player::platformCollision(const Tile& platform)
         
         
     } else if (motion.speed.x < 0 &&
-       left < platform.right &&
-       left > platform.left &&
-       ((platform.top >= top &&
-         platform.top <= bottom) ||
-        (platform.bottom <= top &&
-         platform.bottom >= bottom))) {
+       left < platform->right &&
+       left > platform->left &&
+       ((platform->top >= top &&
+         platform->top <= bottom) ||
+        (platform->bottom <= top &&
+         platform->bottom >= bottom))) {
             motion.speed.x = 0.f;
             
     } else if (motion.speed.x > 0 &&
-       right > platform.left &&
-       right < platform.right &&
-       ((platform.top >= top &&
-         platform.top <= bottom) ||
-        (platform.bottom <= top &&
-         platform.bottom >= bottom))) {
+       right > platform->left &&
+       right < platform->right &&
+       ((platform->top >= top &&
+         platform->top <= bottom) ||
+        (platform->bottom <= top &&
+         platform->bottom >= bottom))) {
             
             motion.speed.x = 0.f;
             
-    } else if ((left + 0.1f) < platform.right &&
-               (right - 0.1f) > platform.left &&
-               top <= platform.bottom &&
-               top > platform.top) {
+    } else if ((left + 0.1f) < platform->right &&
+               (right - 0.1f) > platform->left &&
+               top <= platform->bottom &&
+               top > platform->top) {
         motion.speed.y = gravity;
     }
 }

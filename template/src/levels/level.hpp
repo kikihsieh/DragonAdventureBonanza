@@ -38,6 +38,10 @@ public:
         return m_y_boundaries;
     }
 
+    std::vector<std::shared_ptr<Tile>> get_tiles() const {
+        return m_tile_map->get_tiles();
+    }
+
 protected:
     bool init_scene(MapVector map, TexturePathMapping mapping);
 

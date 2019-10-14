@@ -15,6 +15,10 @@ public:
     bool init(MapVector map, TextureMapping mapping);
     void draw(const mat3 &projection);
 
+    std::vector<std::shared_ptr<Tile>> get_tiles() const {
+        return m_tiles;
+    }
+
 private:
     std::vector<std::shared_ptr<Tile>> m_tiles;
 };
