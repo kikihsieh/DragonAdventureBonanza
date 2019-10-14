@@ -4,8 +4,7 @@
 #include "enemies/spider.hpp"
 #include <vector>
 
-class Ground;
-class Platform;
+class Tile;
 
 class Player : public Entity
 {
@@ -51,7 +50,6 @@ public:
 	void air_dash(bool forward);
 	
 	// Check if player is landed
-	void land(const Ground& ground, const Platform& platform);
 	bool can_jump();
 
     vec2 m_x_world_bounds;
@@ -64,7 +62,7 @@ public:
 	void compute_world_coordinate();
     
   	// Check if player is landed
-  	void platformCollision(const Platform& platform);
+  	void platformCollision(const Tile& platform);
 
 	bool collides_with(Spider& spider);
 
@@ -80,7 +78,6 @@ private:
 	bool m_airdashing;
 	
     bool m_is_facing_forwards; // True if player is facing forward
-    bool m_on_platform; // True if player on top of platform
 
     float walking_speed;
     float jumping_speed;

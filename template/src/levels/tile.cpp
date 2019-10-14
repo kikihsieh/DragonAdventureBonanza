@@ -51,7 +51,7 @@ bool Tile::init() {
         return false;
     
     //motion.position = { 33.5f, 33.5f};
-    physics.scale = { 1.f, 1.f };
+    physics.scale = { 0.75f, 0.75f };
     compute_world_coordinate();
     
     return true;
@@ -114,8 +114,8 @@ void Tile::draw(const mat3& projection) {
 
 void Tile::set_position(float x, float y)
 {
-    motion.position.x = x * m_texture->width - m_texture->width*0.5f;
-    motion.position.y = y * m_texture->height + m_texture->height*0.5f;
+    motion.position.x = x * m_texture->width*physics.scale.x - m_texture->width*0.5f*physics.scale.x;
+    motion.position.y = y * m_texture->height*physics.scale.y + m_texture->height*0.5f*physics.scale.y;
 }
 
 void Tile::compute_world_coordinate()

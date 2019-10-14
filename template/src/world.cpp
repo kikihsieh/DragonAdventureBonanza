@@ -104,12 +104,7 @@ bool World::update(float elapsed_ms)
 	// check if player is on the ground
 	m_player.update(elapsed_ms);
 	m_camera.update(m_player.get_position(), m_player.is_facing_forwards());
-
-//    m_player.land(m_ground, m_platform);
-
-//    m_player.platformCollision(m_platform);
     m_current_scene->update();
-
 	return true;
 }
 
@@ -194,8 +189,7 @@ bool World::load_scene(Level* level) {
 }
 
 // On key callback
-void World::on_key(GLFWwindow* window, int key, int, int action, int mod)
-{
+void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
     if (key == GLFW_KEY_1 && action == GLFW_RELEASE) {
         load_scene(m_scenes.at(FOREST));
         return;

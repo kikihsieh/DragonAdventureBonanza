@@ -3,6 +3,7 @@
 #include "ground.hpp"
 #include "platform.hpp"
 #include "enemies/spider.hpp"
+#include "levels/tile.hpp"
 
 // stlib
 #include <algorithm>
@@ -65,19 +66,18 @@ bool Player::init(vec2 x_bounds, vec2 y_bounds)
     gravity = 10.f;
 
 	// Setting initial values
-    motion.position = { 300.f, 450.f };
+    motion.position = { 100.f, 450.f };
 	motion.speed.x = 0.f;
 	motion.speed.y = 0.f;
 	motion.acc.x = 0.f;
 	motion.acc.y = gravity;
 
-	physics.scale = { 0.2f, 0.2f };
+	physics.scale = { 0.16f, 0.16f };
 
 	m_is_alive = true;
     m_on_ground = false;
 	
     m_is_facing_forwards = true;
-    m_on_platform = false;
 	kill_enemy = false;
 
 	m_unlocked_double_jump = true;
@@ -111,6 +111,10 @@ void Player::destroy()
 void Player::update(float ms)
 {
 	if (m_is_alive) {
+//        for(auto& tile : m_tiles) {
+//            platformCollision(tile);
+//        }
+
 		if (m_airdashing && abs(motion.speed.x) > 0) {
 			motion.speed.x -= (motion.speed.x / abs(motion.speed.x)) * 20;
 		} else {
@@ -258,37 +262,16 @@ void Player::air_dash(bool forward) {
 }
 
 bool Player::can_jump() {
-	return m_unlocked_double_jump ? m_jump_count < 2 : (m_on_ground || m_on_platform);
+	return m_unlocked_double_jump ? m_jump_count < 2 : m_on_ground;
 }
 
 bool Player::can_airdash() {
-	return !m_on_ground && !m_on_platform && !m_airdashing;
+	return !m_on_ground && !m_airdashing;
 }
 
 bool Player::is_airdashing() {
 	return m_airdashing;
 }
-
-void Player::land(const Ground& ground, const Platform& platform)
-{
-	if (!m_is_alive)
-		return;
-    compute_world_coordinate();
-    for (vec2 pwc : player_world_coord) {
-        if (pwc.y >= ground.surface_y) {
-            m_on_ground = true;
-			m_airdashing = false;
-            m_jump_count = 0;
-            motion.speed.y = 0;
-            motion.acc.y = 0;
-            return;
-        }
-    }
-    
-    motion.acc.y = gravity;
-    m_on_ground = false;
-}
-
 
 void Player::compute_world_coordinate()
 {
@@ -344,14 +327,15 @@ bool Player::collides_with(Spider& spider)
 	return false;
 }
 
-void Player::platformCollision(const Platform& platform)
+void Player::platformCollision(const Tile& platform)
 {
-	m_on_platform = false;
+    m_on_ground = false;
+    motion.acc.y = gravity;
 
     compute_world_coordinate();
 
-    if ((left + 5.f) < platform.right &&
-        (right - 5.f) > platform.left &&
+    if ((left + 0.1f) < platform.right &&
+        (right - 0.1f) > platform.left &&
         bottom >= platform.top &&
         bottom < platform.bottom) {
         if (motion.speed.y > 0) {
@@ -359,7 +343,8 @@ void Player::platformCollision(const Platform& platform)
         }
         motion.acc.y = 0.f;
         m_jump_count = 1;
-        m_on_platform = true;
+        m_on_ground = true;
+        m_airdashing = false;
         
         
     } else if (motion.speed.x < 0 &&
@@ -381,13 +366,21 @@ void Player::platformCollision(const Platform& platform)
             
             motion.speed.x = 0.f;
             
-    } else if ((left + 5.f) < platform.right &&
-               (right - 5.f) > platform.left &&
+    } else if ((left + 0.1f) < platform.right &&
+               (right - 0.1f) > platform.left &&
                top <= platform.bottom &&
                top > platform.top) {
         motion.speed.y = gravity;
     }
 }
+/* TODO NEW COLLISION
+void Player::platformCollision(const Tile& platform)
+{
+    m_on_ground = false;
+    motion.acc.y = 0.f;
+    m_jump_count = 1;
+}
+*/
 
 bool Player::is_alive() const
 {

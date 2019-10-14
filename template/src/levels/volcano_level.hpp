@@ -13,7 +13,7 @@ public:
     bool init() override;
 
     const char * get_bg_texture_path() override {
-        return textures_path("background-old.png");
+        return textures_path("platform-lg.png");
     }
 
 private:
@@ -38,15 +38,15 @@ private:
     };
 
     const TexturePathMapping m_texture_map = {
-            { 1, textures_path("tile1.png")},
-            { 2, textures_path("tile1_left.png")},
-            { 3, textures_path("tile1_right.png")},
-            { 4, textures_path("tile1_left_corner.png")},
-            { 5, textures_path("tile1_right_corner.png")},
-            { 6, textures_path("tile2.png")},
-            { 7, textures_path("tile1_left_end.png")},
-            { 8, textures_path("tile1_right_end.png")},
-            {9, textures_path("spider.png")}
+            { 1, textures_path("tiles/tile.png")},
+            { 2, textures_path("tiles/tile1.png")},
+            { 3, textures_path("tiles/tile1_right.png")},
+            { 4, textures_path("tiles/tile1.png")},
+            { 5, textures_path("tiles/tile1_right.png")},
+            { 6, textures_path("tiles/tile1_right_end.png")},
+            { 7, textures_path("tiles/tile2_left.png")},
+            { 8, textures_path("tiles/tile2.png")},
+            { 9, textures_path("tiles/tile2_right.png")}
     };
 };
 #endif //DAB_VOLCANO_LEVEL_H
