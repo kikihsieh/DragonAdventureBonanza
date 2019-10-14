@@ -37,9 +37,7 @@ set(SOURCE_FILES
         src/enemies/spider.cpp
         src/background.cpp
         src/world.cpp
-        src/ground.cpp
         src/camera.cpp
-        src/platform.cpp
         src/levels/level.cpp
         src/levels/tile.cpp
         src/levels/forest_level.cpp
@@ -52,9 +50,7 @@ set(SOURCE_FILES
         src/enemies/spider.hpp
         src/background.hpp
         src/world.hpp
-        src/ground.hpp
         src/camera.hpp
-        src/platform.hpp
         src/levels/level.hpp
         src/levels/tile.hpp
         src/levels/forest_level.hpp

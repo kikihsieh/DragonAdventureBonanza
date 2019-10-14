@@ -11,7 +11,7 @@ typedef std::map<int, const char*> TexturePathMapping;
 typedef std::map<int, Texture*> TextureMapping;
 typedef std::vector<std::vector<int>> MapVector;
 
-class TileMap;
+class TileMap; // forward declaration
 
 class Level {
 

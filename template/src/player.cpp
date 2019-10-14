@@ -1,7 +1,5 @@
 // Header
 #include "player.hpp"
-#include "ground.hpp"
-#include "platform.hpp"
 #include "enemies/spider.hpp"
 #include "levels/tile.hpp"
 

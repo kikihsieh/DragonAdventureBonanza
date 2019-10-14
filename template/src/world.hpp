@@ -5,9 +5,7 @@
 #include "player.hpp"
 #include "enemies/spider.hpp"
 #include "background.hpp"
-#include "ground.hpp"
 #include "camera.hpp"
-#include "platform.hpp"
 #include "levels/tile.hpp"
 
 // stlib
