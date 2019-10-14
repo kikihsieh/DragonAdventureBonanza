@@ -6,6 +6,7 @@
 #include <ctime>
 
 #include <levels/forest_level.hpp>
+#include <levels/volcano_level.hpp>
 
 // Same as static in c, local to compilation unit
 namespace
@@ -23,7 +24,8 @@ namespace
 
 World::World() {
     map_init(m_scenes)
-            (FOREST, new ForestLevel(true));
+            (FOREST, new ForestLevel(true))
+            (VOLCANO, new VolcanoLevel(true));
 }
 
 World::~World() = default;
@@ -84,11 +86,6 @@ bool World::init(vec2 screen)
 	m_camera.init(screen);
 
 	return load_scene(m_scenes.at(FOREST));
-
-//    return set_textures() && m_player.init(m_x_boundaries, m_y_boundaries) && m_platform.init() &&m_background.init() && m_ground.init() && /*init_enemies(m_screen_scale, fb_width, fb_height) &&*/ loadLevel(level1);
-//	m_current_scene = m_scenes[0];
-
-//    return m_player.init() && m_platform.init() && m_background.init() && m_ground.init() && init_enemies(m_screen_scale, fb_width, fb_height);
 }
 
 // Releases all the associated resources
@@ -109,9 +106,6 @@ bool World::update(float elapsed_ms)
 	m_camera.update(m_player.get_position(), m_player.is_facing_forwards());
 
 //    m_player.land(m_ground, m_platform);
-
-//	for(auto& spider : m_spiders)
-//		spider.update(elapsed_ms);
 
 //    m_player.platformCollision(m_platform);
     m_current_scene->update();
@@ -187,20 +181,31 @@ bool World::load_scene(Level* level) {
     if (m_current_scene) {
         m_current_scene->destroy();
     }
+    m_background.destroy();
+    m_camera.reset();
 
+    m_current_scene = level;
     m_background.init(level->get_bg_texture_path());
     if (m_current_scene->is_level()) {
         m_player.init(level->get_x_boundaries(), level->get_y_boundaries());
     }
-    m_camera.reset();
     level->init();
-    m_current_scene = level;
     return true;
 }
 
 // On key callback
 void World::on_key(GLFWwindow* window, int key, int, int action, int mod)
 {
+    if (key == GLFW_KEY_1 && action == GLFW_RELEASE) {
+        load_scene(m_scenes.at(FOREST));
+        return;
+    }
+
+    if (key == GLFW_KEY_2 && action == GLFW_RELEASE) {
+        load_scene(m_scenes.at(VOLCANO));
+        return;
+    }
+
     if (m_player.can_jump() && (key == GLFW_KEY_UP || key == GLFW_KEY_W)) {
         if (action == GLFW_PRESS) {
             m_player.jump();

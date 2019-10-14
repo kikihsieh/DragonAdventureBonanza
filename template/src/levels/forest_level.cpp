@@ -1,4 +1,3 @@
-#include <iostream>
 #include "forest_level.hpp"
 
 ForestLevel::ForestLevel(bool unlocked) :

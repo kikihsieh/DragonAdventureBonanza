@@ -2,6 +2,10 @@
 #include <map>
 #include "tile_map.hpp"
 
+TileMap::TileMap() {
+
+}
+
 TileMap::~TileMap() {
     m_tiles.clear();
 }

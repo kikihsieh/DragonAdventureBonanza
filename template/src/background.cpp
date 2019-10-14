@@ -2,12 +2,23 @@
 
 #include <iostream>
 #include <math.h>
+
+Background::Background() : background_texture(new Texture()) {
+}
+
+Background::~Background() {
+    delete background_texture;
+}
+
 bool Background::init(const char* path) {
+    if (!background_texture) {
+        background_texture = new Texture();
+    }
 
 	// Load shared texture
-	if (!background_texture.is_valid())
+	if (!background_texture->is_valid())
 	{
-		if (!background_texture.load_from_file(path))
+		if (!background_texture->load_from_file(path))
 		{
 			fprintf(stderr, "Failed to load background texture!");
 			return false;
@@ -15,8 +26,8 @@ bool Background::init(const char* path) {
 	}
 
 	// The position corresponds to the center of the texture
-	float wr = background_texture.width * 0.5f;
-	float hr = background_texture.height * 0.5f;
+	float wr = background_texture->width * 0.5f;
+	float hr = background_texture->height * 0.5f;
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.02f };
@@ -66,6 +77,8 @@ void Background::destroy() {
 	glDeleteShader(effect.vertex);
 	glDeleteShader(effect.fragment);
 	glDeleteShader(effect.program);
+    delete background_texture;
+    background_texture = nullptr;
 }
 
 void Background::draw(const mat3& projection) {
@@ -96,7 +109,7 @@ void Background::draw(const mat3& projection) {
 
 	// Enabling and binding texture to slot 0
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, background_texture.id);
+	glBindTexture(GL_TEXTURE_2D, background_texture->id);
 
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform.out);
