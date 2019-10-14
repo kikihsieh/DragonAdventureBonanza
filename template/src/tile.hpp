@@ -6,7 +6,6 @@
 
 class Tile : public Entity
 {
-    //TODO ask TA about changing the tiles
 public:
     
     // Creates all the associated render resources and default transform

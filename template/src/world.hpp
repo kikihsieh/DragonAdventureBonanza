@@ -83,14 +83,20 @@ private:
     Camera m_camera;
     Platform m_platform;
     
+    Texture tile_texture;
     Texture tile1_texture;
     Texture tile1_left_texture;
     Texture tile1_right_texture;
-    Texture tile1_left_corner_texture;
-    Texture tile1_right_corner_texture;
     Texture tile1_left_end_texture;
     Texture tile1_right_end_texture;
+    
     Texture tile2_texture;
+    Texture tile2_left_texture;
+    Texture tile2_right_texture;
+    
+    Texture tile3_texture;
+    Texture tile3_left_texture;
+    Texture tile3_right_texture;
     
     Texture spider_texture;
     

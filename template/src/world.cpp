@@ -11,24 +11,32 @@
 int rows = 17; //y values
 int cols = 50; //x values
 
+/*
+1 platform  tile
+2 3 4 5 6   tile 1  4 is main tile
+7 8 9       tile 2  8 is main tile
+10 11 12    tile 3  11 is main tile
+
+*/
+
 int level1[17][50] = {
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,7,1,1,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,1,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,4,4,5,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,11,11,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,1,8,0,0,0,0,0,0,0,0,0,7,1,8,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,1,1,1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,3,6,6,6,2,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,3,6,6,6,6,6,2,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5},
-    {2,1,1,1,1,1,4,0,0,9,0,0,5,1,1,1,1,3,6,6,6,6,6,6,6,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3},
-    {6,6,6,6,6,6,2,1,1,1,1,1,3,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6},
-    {6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,4,4,4,5,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,10,8,8,8,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,11,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {4,4,4,5,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+    {8,8,8,12,0,0,0,0,0,0,2,3,4,4,4,4,4,4,4,4,4,5,6},
+    {11,11,9,0,0,0,0,0,0,0,0,10,11,11,11,11,11,11,11,11,11,12}
 };
 
 #include <ctime>
@@ -113,9 +121,9 @@ bool World::init(vec2 screen)
 	m_camera.init(screen);
 
 	m_x_boundaries = {0.f, 2400.f};
-	m_y_boundaries = {200.f, 700.f};
+	m_y_boundaries = {20.f, 800.f};
 
-    return setTextures() && m_player.init(m_x_boundaries, m_y_boundaries) && m_platform.init() &&m_background.init() && m_ground.init() && /*init_enemies(m_screen_scale, fb_width, fb_height) &&*/ loadLevel(level1);
+    return setTextures() && m_player.init(m_x_boundaries, m_y_boundaries) && m_background.init() && loadLevel(level1);
 }
 
 // Releases all the associated resources
@@ -153,11 +161,8 @@ bool World::update(float elapsed_ms)
 	}
 
 	// check if player is on the ground
-	m_player.update(elapsed_ms, m_platform);
+	m_player.update(elapsed_ms, m_tiles);
 	m_camera.update(m_player.get_position(), m_player.is_facing_forwards());
-
-	m_ground.set_surface_y();
-    m_player.land(m_ground, m_platform);
 
 	for(auto& spider : m_spiders)
 		spider.update(elapsed_ms);
@@ -217,12 +222,10 @@ void World::draw()
 	glBindTexture(GL_TEXTURE_2D, m_screen_tex.id);
 
 	m_background.draw(projection_2D);
-	m_ground.draw(projection_2D);
     for (auto& tile : m_tiles)
         tile.draw(projection_2D);
 	for (auto& spider : m_spiders)
 		spider.draw(projection_2D);
-    m_platform.draw(projection_2D);
     m_player.draw(projection_2D);
 
 	//////////////////
@@ -254,25 +257,10 @@ bool World::drawMap()
     for (int row = 0; row < rows; row++) {
         for (int col = 0; col < cols; col++) {
             type = map[row][col];
+            
             if (type == 1) {
                 Tile tile;
-                tile.texture = &tile1_texture;
-                if (tile.init()) {
-                    tile.setPosition(col, row);
-                    m_tiles.emplace_back(tile);
-                }
-            }
-            else if (type == 2) {
-                Tile tile;
-                tile.texture = &tile1_left_texture;
-                if (tile.init()) {
-                    tile.setPosition(col, row);
-                    m_tiles.emplace_back(tile);
-                }
-            }
-            else if (type == 3) {
-                Tile tile;
-                tile.texture = &tile1_right_texture;
+                tile.texture = &tile_texture;
                 if (tile.init()) {
                     tile.setPosition(col, row);
                     m_tiles.emplace_back(tile);
@@ -280,7 +268,15 @@ bool World::drawMap()
             }
             else if (type == 4) {
                 Tile tile;
-                tile.texture = &tile1_left_corner_texture;
+                tile.texture = &tile1_texture;
+                if (tile.init()) {
+                    tile.setPosition(col, row);
+                    m_tiles.emplace_back(tile);
+                }
+            }
+            else if (type == 3) {
+                Tile tile;
+                tile.texture = &tile1_left_texture;
                 if (tile.init()) {
                     tile.setPosition(col, row);
                     m_tiles.emplace_back(tile);
@@ -288,13 +284,30 @@ bool World::drawMap()
             }
             else if (type == 5) {
                 Tile tile;
-                tile.texture = &tile1_right_corner_texture;
+                tile.texture = &tile1_right_texture;
+                if (tile.init()) {
+                    tile.setPosition(col, row);
+                    m_tiles.emplace_back(tile);
+                }
+            }
+            else if (type == 2) {
+                Tile tile;
+                tile.texture = &tile1_left_end_texture;
                 if (tile.init()) {
                     tile.setPosition(col, row);
                     m_tiles.emplace_back(tile);
                 }
             }
             else if (type == 6) {
+                Tile tile;
+                tile.texture = &tile1_right_end_texture;
+                if (tile.init()) {
+                    tile.setPosition(col, row);
+                    m_tiles.emplace_back(tile);
+                }
+            }
+            //tile2
+            else if (type == 8) {
                 Tile tile;
                 tile.texture = &tile2_texture;
                 if (tile.init()) {
@@ -304,21 +317,46 @@ bool World::drawMap()
             }
             else if (type == 7) {
                 Tile tile;
-                tile.texture = &tile1_left_end_texture;
-                if (tile.init()) {
-                    tile.setPosition(col, row);
-                    m_tiles.emplace_back(tile);
-                }
-            }
-            else if (type == 8) {
-                Tile tile;
-                tile.texture = &tile1_right_end_texture;
+                tile.texture = &tile2_left_texture;
                 if (tile.init()) {
                     tile.setPosition(col, row);
                     m_tiles.emplace_back(tile);
                 }
             }
             else if (type == 9) {
+                Tile tile;
+                tile.texture = &tile2_right_texture;
+                if (tile.init()) {
+                    tile.setPosition(col, row);
+                    m_tiles.emplace_back(tile);
+                }
+            }
+            //tile 3
+            else if (type == 11) {
+                Tile tile;
+                tile.texture = &tile3_texture;
+                if (tile.init()) {
+                    tile.setPosition(col, row);
+                    m_tiles.emplace_back(tile);
+                }
+            }
+            else if (type == 10) {
+                Tile tile;
+                tile.texture = &tile3_left_texture;
+                if (tile.init()) {
+                    tile.setPosition(col, row);
+                    m_tiles.emplace_back(tile);
+                }
+            }
+            else if (type == 12) {
+                Tile tile;
+                tile.texture = &tile3_right_texture;
+                if (tile.init()) {
+                    tile.setPosition(col, row);
+                    m_tiles.emplace_back(tile);
+                }
+            }
+            else if (type == -1) {
                 init_enemies(col, row);
             }
         }
@@ -354,9 +392,19 @@ bool World::init_enemies(int x, int y)
 //assigns all tile variables a texture
 bool World::setTextures()
 {
+    //platform tile
+    if (!tile_texture.is_valid())
+    {
+        if (!tile_texture.load_from_file(textures_path("tiles/tile.png")))
+        {
+            fprintf(stderr, "Failed to load tile texture!");
+            return false;
+        }
+    }
+    //tile 1
     if (!tile1_texture.is_valid())
     {
-        if (!tile1_texture.load_from_file(textures_path("tile1.png")))
+        if (!tile1_texture.load_from_file(textures_path("tiles/tile1.png")))
         {
             fprintf(stderr, "Failed to load tile texture!");
             return false;
@@ -364,7 +412,7 @@ bool World::setTextures()
     }
     if (!tile1_left_texture.is_valid())
     {
-        if (!tile1_left_texture.load_from_file(textures_path("tile1_left.png")))
+        if (!tile1_left_texture.load_from_file(textures_path("tiles/tile1_left.png")))
         {
             fprintf(stderr, "Failed to load tile texture!");
             return false;
@@ -372,31 +420,7 @@ bool World::setTextures()
     }
     if (!tile1_right_texture.is_valid())
     {
-        if (!tile1_right_texture.load_from_file(textures_path("tile1_right.png")))
-        {
-            fprintf(stderr, "Failed to load tile texture!");
-            return false;
-        }
-    }
-    if (!tile1_left_corner_texture.is_valid())
-    {
-        if (!tile1_left_corner_texture.load_from_file(textures_path("tile1_left_corner.png")))
-        {
-            fprintf(stderr, "Failed to load tile texture!");
-            return false;
-        }
-    }
-    if (!tile1_right_corner_texture.is_valid())
-    {
-        if (!tile1_right_corner_texture.load_from_file(textures_path("tile1_right_corner.png")))
-        {
-            fprintf(stderr, "Failed to load tile texture!");
-            return false;
-        }
-    }
-    if (!tile2_texture.is_valid())
-    {
-        if (!tile2_texture.load_from_file(textures_path("tile2.png")))
+        if (!tile1_right_texture.load_from_file(textures_path("tiles/tile1_right.png")))
         {
             fprintf(stderr, "Failed to load tile texture!");
             return false;
@@ -404,7 +428,7 @@ bool World::setTextures()
     }
     if (!tile1_left_end_texture.is_valid())
     {
-        if (!tile1_left_end_texture.load_from_file(textures_path("tile1_left_end.png")))
+        if (!tile1_left_end_texture.load_from_file(textures_path("tiles/tile1_left_end.png")))
         {
             fprintf(stderr, "Failed to load tile texture!");
             return false;
@@ -412,12 +436,63 @@ bool World::setTextures()
     }
     if (!tile1_right_end_texture.is_valid())
     {
-        if (!tile1_right_end_texture.load_from_file(textures_path("tile1_right_end.png")))
+        if (!tile1_right_end_texture.load_from_file(textures_path("tiles/tile1_right_end.png")))
         {
             fprintf(stderr, "Failed to load tile texture!");
             return false;
         }
     }
+    //tile 2
+    if (!tile2_texture.is_valid())
+    {
+        if (!tile2_texture.load_from_file(textures_path("tiles/tile2.png")))
+        {
+            fprintf(stderr, "Failed to load tile texture!");
+            return false;
+        }
+    }
+    if (!tile2_left_texture.is_valid())
+    {
+        if (!tile2_left_texture.load_from_file(textures_path("tiles/tile2_left.png")))
+        {
+            fprintf(stderr, "Failed to load tile texture!");
+            return false;
+        }
+    }
+    if (!tile2_right_texture.is_valid())
+    {
+        if (!tile2_right_texture.load_from_file(textures_path("tiles/tile2_right.png")))
+        {
+            fprintf(stderr, "Failed to load tile texture!");
+            return false;
+        }
+    }
+    //tile 3
+    if (!tile3_texture.is_valid())
+    {
+        if (!tile3_texture.load_from_file(textures_path("tiles/tile3.png")))
+        {
+            fprintf(stderr, "Failed to load tile texture!");
+            return false;
+        }
+    }
+    if (!tile3_left_texture.is_valid())
+    {
+        if (!tile3_left_texture.load_from_file(textures_path("tiles/tile3_left.png")))
+        {
+            fprintf(stderr, "Failed to load tile texture!");
+            return false;
+        }
+    }
+    if (!tile3_right_texture.is_valid())
+    {
+        if (!tile3_right_texture.load_from_file(textures_path("tiles/tile3_right.png")))
+        {
+            fprintf(stderr, "Failed to load tile texture!");
+            return false;
+        }
+    }
+    //enemies
     if (!spider_texture.is_valid())
     {
         if (!spider_texture.load_from_file(textures_path("spider.png")))
