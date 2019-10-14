@@ -13,8 +13,12 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
     std::vector< std::vector<int> >::const_iterator row;
     std::vector<int>::const_iterator col;
 
+    int longest_row = 0;
+
     for (row = map.begin(); row != map.end(); ++row) {
+        int row_length = 0;
         for (col = row->begin(); col != row->end(); ++col) {
+            row_length++;
             if (*col == 0) {
                 continue;
             }
@@ -40,10 +44,10 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
                 }
             }
         }
+        longest_row = (row_length > longest_row) ? row_length : longest_row;
     }
-    // TODO: get from number of rows and columns
-    m_map_dim.x = 50.f * m_tile_size.x;
-    m_map_dim.y = 17.f * m_tile_size.y;
+    m_map_dim.x = longest_row * m_tile_size.x;
+    m_map_dim.y = ((float) (map.end() - map.begin())) * m_tile_size.y;
     return true;
 }
 

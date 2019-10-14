@@ -35,8 +35,8 @@ bool Level::init_scene(MapVector map, TexturePathMapping mapping) {
         fprintf(stderr, "Failed to initialize tile map!");
         return false;
     }
-    m_x_boundaries.y = m_x_boundaries.x + m_tile_map->get_map_dim().x;
-    m_y_boundaries.y = m_y_boundaries.x + m_tile_map->get_map_dim().y;
+    m_x_boundaries.y = m_tile_map->get_map_dim().x;
+    m_y_boundaries.y = m_tile_map->get_map_dim().y;
     return true;
 }
 
