@@ -7,6 +7,7 @@
 
 #include <levels/forest_level.hpp>
 #include <levels/volcano_level.hpp>
+#include <scenes/menu.hpp>
 
 // Same as static in c, local to compilation unit
 namespace
@@ -24,7 +25,8 @@ namespace
 World::World() {
     map_init(m_scenes)
             (FOREST, new ForestLevel(true))
-            (VOLCANO, new VolcanoLevel(true));
+            (VOLCANO, new VolcanoLevel(true))
+			(MAIN_MENU, new Menu());
 }
 
 World::~World() = default;
@@ -102,7 +104,7 @@ bool World::update(float elapsed_ms)
 
 	// check if player is on the ground
 	if (m_current_scene->is_level()) {
-		m_player.update(elapsed_ms, m_current_level->get_tiles());
+		m_player.update(elapsed_ms, ((Level*) m_current_scene)->get_tiles());
 		m_camera.update(m_player.get_position(), m_player.is_facing_forwards());
 		m_current_scene->update(elapsed_ms);
 	}
@@ -159,7 +161,6 @@ void World::draw() {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_screen_tex.id);
 
-	m_background.draw(projection_2D);
     m_current_scene->draw(projection_2D);
     m_player.draw(projection_2D);
 
@@ -173,21 +174,22 @@ bool World::is_over() const {
 	return glfwWindowShouldClose(m_window);
 }
 
-bool World::load_scene(Level* level) {
+bool World::load_scene(Scene* scene) {
     if (m_current_scene) {
         m_current_scene->destroy();
     }
-    m_background.destroy();
     m_camera.reset();
 
-    m_current_scene = level;
-	m_current_level = level;
-    m_background.init(level->get_bg_texture_path());
-    level->init();
-    if (m_current_scene->is_level()) {
-        m_player.init(level->get_x_boundaries(), level->get_y_boundaries());
-    }
-    return true;
+    m_current_scene = scene;
+    if (scene->is_level()) {
+		Level* level = (Level*) scene;
+    	level->init();
+       	m_player.init(level->get_x_boundaries(), level->get_y_boundaries());
+
+    } else {
+		m_current_scene->init(m_current_scene->get_bg_texture_path());
+	}
+	return true;
 }
 
 // On key callback

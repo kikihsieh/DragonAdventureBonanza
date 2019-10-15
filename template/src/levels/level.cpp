@@ -16,10 +16,11 @@ Level::~Level() = default;
 /** destroys resources not needed when the scene is not active **/
 void Level::destroy() {
     m_enemies.clear();
+    m_background.destroy();
     delete m_tile_map;
 }
 
-bool Level::init_scene(MapVector map, TexturePathMapping mapping) {
+bool Level::init_scene(MapVector map, TexturePathMapping mapping, const char * texturePath ) {
     m_tile_map = new TileMap(this);
     for (auto & iter : mapping) {
         auto* texture = new Texture();
@@ -37,6 +38,7 @@ bool Level::init_scene(MapVector map, TexturePathMapping mapping) {
     }
     m_x_boundaries.y = m_tile_map->get_map_dim().x;
     m_y_boundaries.y = m_tile_map->get_map_dim().y;
+    m_background.init(texturePath);
     return true;
 }
 
@@ -54,6 +56,7 @@ void Level::update(float elapsed_ms) {
 }
 
 void Level::draw(const mat3 &projection) {
+    m_background.draw(projection);
     m_tile_map->draw(projection);
     for (auto& enemy : m_enemies) {
         enemy.get()->draw(projection);

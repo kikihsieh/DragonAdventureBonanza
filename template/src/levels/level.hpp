@@ -10,6 +10,7 @@
 #include "tile.hpp"
 #include "enemies/enemy.hpp"
 #include "scene.hpp"
+#include "background.hpp"
 
 typedef std::map<int, const char*> TexturePathMapping;
 typedef std::map<int, Texture*> TextureMapping;
@@ -25,11 +26,11 @@ public:
     ~Level();
 
     virtual bool init() = 0;
-    virtual const char * get_bg_texture_path() = 0;
+//    virtual const char * get_bg_texture_path() = 0;
 
-    virtual void destroy() override;
-    virtual void update(float elapsed_ms) override;
-    virtual void draw(const mat3& projection) override;
+    void destroy() override;
+    void update(float elapsed_ms) override;
+    void draw(const mat3& projection) override;
 
     bool init_enemy(int type, vec2 initial_pos);
 
@@ -54,7 +55,7 @@ public:
 protected:
     virtual bool init_walking_enemy(int type, vec2 initial_pos) = 0;
 
-    bool init_scene(MapVector map, TexturePathMapping mapping);
+    bool init_scene(MapVector map, TexturePathMapping mapping, const char * texturePath);
 
     TextureMapping m_texture_mapping;
     TileMap* m_tile_map;
@@ -66,6 +67,9 @@ protected:
 
     // Game entities
     std::vector<std::shared_ptr<Enemy>> m_enemies;
+
+private:
+    Background m_background;
 };
 
 #endif //DAB_LEVEL_HPP

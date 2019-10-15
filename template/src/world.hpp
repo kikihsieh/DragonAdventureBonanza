@@ -50,7 +50,7 @@ public:
 	bool is_over()const;
 
 private:
-    bool load_scene(Level* level);
+    bool load_scene(Scene* scene);
     
 	// !!! INPUT CALLBACK FUNCTIONS
 	void on_key(GLFWwindow*, int key, int, int action, int mod);
@@ -68,10 +68,8 @@ private:
 
     // Game entities
     Scene* m_current_scene;
-	Level* m_current_level;
-    std::map<Scene_names, Level*> m_scenes;
+    std::map<Scene_names, Scene*> m_scenes;
 
     Player m_player;
-    Background m_background;
     Camera m_camera;
 };
