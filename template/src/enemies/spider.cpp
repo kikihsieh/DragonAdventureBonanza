@@ -47,7 +47,7 @@ bool Spider::init()
 		return false;
 
 	// Loading shaders
-	if (!effect.load_from_file(shader_path("spider.vs.glsl"), shader_path("spider.fs.glsl")))
+	if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
 		return false;
 
 	motion.radians = 0.f;

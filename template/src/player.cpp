@@ -56,7 +56,7 @@ bool Player::init(vec2 x_bounds, vec2 y_bounds)
 		return false;
 
 	// Loading shaders
-	if (!effect.load_from_file(shader_path("player.vs.glsl"), shader_path("player.fs.glsl")))
+	if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
 		return false;
 
     walking_speed = 250.f;
