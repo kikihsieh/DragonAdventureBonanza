@@ -31,28 +31,32 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/project_path.hpp.in" "${CMAKE_CU
 # file(GLOB SOURCE_FILES src/*.cpp src/*.hpp)
 
 set(SOURCE_FILES
-	src/main.cpp
-	src/common.cpp
-	src/player.cpp
-	src/spider.cpp
-  src/background.cpp
-	src/world.cpp
-	src/ground.cpp
+        src/main.cpp
+        src/common.cpp
+        src/player.cpp
+        src/enemies/spider.cpp
+        src/background.cpp
+        src/world.cpp
         src/camera.cpp
-	src/platform.cpp
-    src/tile.cpp
+        src/levels/level.cpp
+        src/levels/tile.cpp
+        src/levels/forest_level.cpp
+        src/levels/tile_map.cpp
+        src/levels/volcano_level.cpp
 
-  src/project_path.hpp
-	src/common.hpp
-	src/player.hpp
-	src/spider.hpp
-  src/background.hpp
-	src/world.hpp
-        src/ground.hpp
+        src/project_path.hpp
+        src/common.hpp
+        src/player.hpp
+        src/enemies/spider.hpp
+        src/background.hpp
+        src/world.hpp
         src/camera.hpp
-	src/platform.hpp
-    src/tile.hpp
-        )
+        src/levels/level.hpp
+        src/levels/tile.hpp
+        src/levels/forest_level.hpp
+        src/levels/tile_map.hpp
+        src/levels/volcano_level.hpp
+        src/enemies/enemy.hpp)
 
 if (IS_OS_MAC)
   include_directories(/usr/local/include)

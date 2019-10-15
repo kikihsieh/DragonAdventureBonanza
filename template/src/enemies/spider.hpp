@@ -1,13 +1,15 @@
 #pragma once
 
 #include "common.hpp"
+#include "enemy.hpp"
 #include <vector>
 
 // spider enemy
-class Spider : public Entity
+class Spider : public Enemy
 {
 public:
-    
+    Spider();
+
 	// Creates all the associated render resources and default transform
 	bool init();
 
@@ -25,7 +27,7 @@ public:
 
 	// Update spider due to current
 	// ms represents the number of milliseconds elapsed from the previous update() call
-	void update(float ms);
+	void update(float ms) override;
 
 	void set_init_position_and_max_xy(vec2 coord);
 

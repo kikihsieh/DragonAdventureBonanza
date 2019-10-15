@@ -6,9 +6,9 @@
 
 class Tile : public Entity
 {
-    //TODO ask TA about changing the tiles
 public:
-    
+    ~Tile();
+
     // Creates all the associated render resources and default transform
     bool init();
     
@@ -18,18 +18,26 @@ public:
     // Renders the background
     void draw(const mat3& projection)override;
     
-    void setPosition(float x, float y);
+    void set_position(float x, float y);
     
     void compute_world_coordinate();
-    
+
+    vec2 get_size();
+
+    void set_texture(Texture *texture) {
+        m_texture = texture;
+    }
+
     float top;
     float bottom;
     float left;
     float right;
     
-    Texture * texture; //todo GLint
-    
 private:
+    Texture * m_texture;
+
+private:
+    //todo GLint
     TexturedVertex vertices[4];
     std::vector<vec2> platform_world_coord;
 };

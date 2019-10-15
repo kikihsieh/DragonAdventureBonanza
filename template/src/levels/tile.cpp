@@ -1,15 +1,17 @@
 #include "tile.hpp"
 
-#include <iostream>
-#include <math.h>
 #include <algorithm>
 using namespace std;
+
+Tile::~Tile() {
+    destroy();
+}
 
 bool Tile::init() {
     
     // The position corresponds to the center of the texture
-    float wr = texture->width * 0.5f;
-    float hr = texture->height * 0.5f;
+    float wr = m_texture->width * 0.5f;
+    float hr = m_texture->height * 0.5f;
     
     //TexturedVertex vertices[4];
     vertices[0].position = { -wr, +hr, -0.02f };
@@ -23,7 +25,6 @@ bool Tile::init() {
     
     // Counterclockwise as it's the default opengl front winding direction
     uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
-    
     
     // Clearing errors
     gl_flush_errors();
@@ -48,7 +49,7 @@ bool Tile::init() {
         return false;
     
     //motion.position = { 33.5f, 33.5f};
-    physics.scale = { 1.f, 1.f };
+    physics.scale = { 0.75f, 0.75f };
     compute_world_coordinate();
     
     return true;
@@ -97,7 +98,7 @@ void Tile::draw(const mat3& projection) {
     
     // Enabling and binding texture to slot 0
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture->id);
+    glBindTexture(GL_TEXTURE_2D, m_texture->id);
     
     // Setting uniform values to the currently bound program
     glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform.out);
@@ -109,10 +110,14 @@ void Tile::draw(const mat3& projection) {
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
 
-void Tile::setPosition(float x, float y)
+void Tile::set_position(float x, float y)
 {
-    motion.position.x = x * texture->width - texture->width*0.5f;
-    motion.position.y = y * texture->height + texture->height*0.5f;
+    motion.position.x = x * m_texture->width*physics.scale.x - m_texture->width*0.5f*physics.scale.x;
+    motion.position.y = y * m_texture->height*physics.scale.y + m_texture->height*0.5f*physics.scale.y;
+}
+
+vec2 Tile::get_size() {
+    return {m_texture->width*physics.scale.x, m_texture->height*physics.scale.y};
 }
 
 void Tile::compute_world_coordinate()

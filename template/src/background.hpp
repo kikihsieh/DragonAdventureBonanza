@@ -6,9 +6,11 @@
 class Background : public Entity
 {
 public:
+    Background();
+    ~Background();
 	
 	// Creates all the associated render resources and default transform
-	bool init();
+	bool init(const char* path);
 
 	// Releases all associated resources
 	void destroy();
@@ -17,5 +19,5 @@ public:
 	void draw(const mat3& projection)override;
 
 private:
-	Texture background_texture;
+	Texture* background_texture;
 };

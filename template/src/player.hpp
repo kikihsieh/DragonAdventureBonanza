@@ -1,24 +1,23 @@
 #pragma once
 
 #include "common.hpp"
-#include "spider.hpp"
+#include "enemies/spider.hpp"
 #include <vector>
 
-class Ground;
-class Platform;
+class Tile;
 
 class Player : public Entity
 {
 public:
 	// Creates all the associated render resources and default transform
-	bool init(vec2 x_bounds, vec2 y_bounds);
+    bool init(vec2 x_bounds, vec2 y_bounds);
 
 	// Releases all associated resources
 	void destroy();
 	
 	// Update player position based on direction
 	// ms represents the number of milliseconds elapsed from the previous update() call
-	void update(float ms, const Platform& platform);
+    void update(float ms, std::vector<std::shared_ptr<Tile>> m_tiles);
 	
 	// Renders the player
 	void draw(const mat3& projection)override;
@@ -51,8 +50,10 @@ public:
 	void air_dash(bool forward);
 	
 	// Check if player is landed
-	void land(const Ground& ground, const Platform& platform);
 	bool can_jump();
+
+    vec2 m_x_world_bounds;
+    vec2 m_y_world_bounds;
 	
 	bool can_airdash();
 	bool is_airdashing();
@@ -61,7 +62,7 @@ public:
 	void compute_world_coordinate();
     
   	// Check if player is landed
-  	void platformCollision(const Platform& platform);
+  	void platformCollision(Tile* platform);
 
 	bool collides_with(Spider& spider);
 
@@ -77,7 +78,6 @@ private:
 	bool m_airdashing;
 	
     bool m_is_facing_forwards; // True if player is facing forward
-    bool m_on_platform; // True if player on top of platform
 
     float walking_speed;
     float jumping_speed;
@@ -90,9 +90,6 @@ private:
 	
 	float m_airdash_duration;
 	float m_airdash_timer;
-	
-	vec2 m_x_world_bounds;
-	vec2 m_y_world_bounds;
 	
     Texture player_texture;
 	std::vector<vec2> player_world_coord;
