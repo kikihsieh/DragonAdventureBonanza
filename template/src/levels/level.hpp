@@ -9,6 +9,7 @@
 #include "tile_map.hpp"
 #include "tile.hpp"
 #include "enemies/enemy.hpp"
+#include "scene.hpp"
 
 typedef std::map<int, const char*> TexturePathMapping;
 typedef std::map<int, Texture*> TextureMapping;
@@ -16,7 +17,8 @@ typedef std::vector<std::vector<int>> MapVector;
 
 class TileMap; // forward declaration
 
-class Level {
+class Level : public Scene
+{
 
 public:
     explicit Level(bool unlocked);
@@ -25,13 +27,13 @@ public:
     virtual bool init() = 0;
     virtual const char * get_bg_texture_path() = 0;
 
-    virtual void destroy();
-    virtual void update(float elapsed_ms);
-    virtual void draw(const mat3& projection);
+    virtual void destroy() override;
+    virtual void update(float elapsed_ms) override;
+    virtual void draw(const mat3& projection) override;
 
     bool init_enemy(int type, vec2 initial_pos);
 
-    bool is_level() const {
+    bool is_level() override {
         return true;
     }
 

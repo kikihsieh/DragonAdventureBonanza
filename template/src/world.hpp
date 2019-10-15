@@ -22,7 +22,7 @@
 class World
 {
 public:
-    enum Scene {
+    enum Scene_names {
         MAIN_MENU,
         FOREST,
         VOLCANO,
@@ -67,8 +67,9 @@ private:
 	Texture m_screen_tex;
 
     // Game entities
-    Level* m_current_scene;
-    std::map<Scene, Level*> m_scenes;
+    Scene* m_current_scene;
+	Level* m_current_level;
+    std::map<Scene_names, Level*> m_scenes;
 
     Player m_player;
     Background m_background;

@@ -101,9 +101,11 @@ bool World::update(float elapsed_ms)
 	vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
 
 	// check if player is on the ground
-	m_player.update(elapsed_ms, m_current_scene->get_tiles());
-	m_camera.update(m_player.get_position(), m_player.is_facing_forwards());
-    m_current_scene->update(elapsed_ms);
+	if (m_current_scene->is_level()) {
+		m_player.update(elapsed_ms, m_current_level->get_tiles());
+		m_camera.update(m_player.get_position(), m_player.is_facing_forwards());
+		m_current_scene->update(elapsed_ms);
+	}
 	return true;
 }
 
@@ -179,6 +181,7 @@ bool World::load_scene(Level* level) {
     m_camera.reset();
 
     m_current_scene = level;
+	m_current_level = level;
     m_background.init(level->get_bg_texture_path());
     level->init();
     if (m_current_scene->is_level()) {
