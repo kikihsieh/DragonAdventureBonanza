@@ -4,6 +4,7 @@
 #include <common.hpp>
 #include <levels/tile.hpp>
 #include "level.hpp"
+#include <memory>
 
 class Level; // forward declaration
 

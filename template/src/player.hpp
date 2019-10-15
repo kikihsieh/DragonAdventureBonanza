@@ -3,6 +3,7 @@
 #include "common.hpp"
 #include "enemies/spider.hpp"
 #include <vector>
+#include <memory>
 
 class Tile;
 

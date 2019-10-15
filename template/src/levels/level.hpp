@@ -4,6 +4,7 @@
 #include <common.hpp>
 #include <vector>
 #include <map>
+#include <memory>
 
 #include "tile_map.hpp"
 #include "tile.hpp"
