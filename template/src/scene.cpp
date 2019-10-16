@@ -12,8 +12,8 @@ Scene::Scene() {
 
 Scene::~Scene() = default;
 
-bool Scene::init(const char* path) {
-    return m_background.init(path);
+bool Scene::init() {
+    return m_background.init(get_bg_texture_path());
 }
 
 // Releases all graphics resources

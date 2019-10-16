@@ -7,7 +7,7 @@
 
 #include <levels/forest_level.hpp>
 #include <levels/volcano_level.hpp>
-#include <scenes/menu.hpp>
+#include <scenes/start_menu.hpp>
 
 // Same as static in c, local to compilation unit
 namespace
@@ -26,7 +26,7 @@ World::World() {
     map_init(m_scenes)
             (FOREST, new ForestLevel(true))
             (VOLCANO, new VolcanoLevel(true))
-			(MAIN_MENU, new Menu());
+			(MAIN_MENU, new StartMenu());
 }
 
 World::~World() = default;
@@ -187,7 +187,7 @@ bool World::load_scene(Scene* scene) {
        	m_player.init(level->get_x_boundaries(), level->get_y_boundaries());
 
     } else {
-		m_current_scene->init(m_current_scene->get_bg_texture_path());
+		m_current_scene->init();
 	}
 	return true;
 }

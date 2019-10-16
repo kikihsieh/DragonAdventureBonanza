@@ -21,7 +21,7 @@ void Level::destroy() {
 }
 
 bool Level::init_scene(MapVector map, TexturePathMapping mapping, const char * texturePath ) {
-    Scene::init(texturePath);
+    Scene::init();
     m_tile_map = new TileMap(this);
     for (auto & iter : mapping) {
         auto* texture = new Texture();

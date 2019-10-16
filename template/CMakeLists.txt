@@ -56,7 +56,7 @@ set(SOURCE_FILES
         src/levels/forest_level.hpp
         src/levels/tile_map.hpp
         src/levels/volcano_level.hpp
-        src/enemies/enemy.hpp src/scene.cpp src/scene.hpp src/scenes/menu.cpp src/scenes/menu.hpp)
+        src/enemies/enemy.hpp src/scene.cpp src/scene.hpp src/scenes/button.cpp src/scenes/button.hpp src/scenes/start_menu.cpp src/scenes/start_menu.hpp)
 
 if (IS_OS_MAC)
   include_directories(/usr/local/include)

@@ -14,7 +14,7 @@ public:
     ~Scene();
 
     // Creates all the associated render resources and default transform
-    virtual bool init(const char* path);
+    virtual bool init();
 
     // Releases all associated resources
     virtual void destroy();
