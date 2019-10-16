@@ -18,7 +18,7 @@ public:
 	
 	// Update player position based on direction
 	// ms represents the number of milliseconds elapsed from the previous update() call
-    void update(float ms, std::vector<std::shared_ptr<Tile>> m_tiles);
+    void update(float ms);
 	
 	// Renders the player
 	void draw(const mat3& projection)override;

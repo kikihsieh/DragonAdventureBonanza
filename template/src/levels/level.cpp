@@ -8,7 +8,7 @@ Level::Level(bool unlocked) :
     m_unlocked(unlocked),
     m_tile_map(nullptr),
     m_x_boundaries{-200.f, 0},
-    m_y_boundaries{200.f, 0} {
+    m_y_boundaries{0, 0} {
 }
 
 Level::~Level() = default;
@@ -61,8 +61,4 @@ void Level::draw(const mat3 &projection) {
     for (auto& enemy : m_enemies) {
         enemy.get()->draw(projection);
     }
-}
-
-std::vector<std::shared_ptr<Tile>> Level::get_tiles() const {
-    return m_tile_map->get_tiles();
 }

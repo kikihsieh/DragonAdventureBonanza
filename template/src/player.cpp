@@ -106,12 +106,9 @@ void Player::destroy()
 }
 
 // Called on each frame by World::update()
-void Player::update(float ms, std::vector<std::shared_ptr<Tile>> m_tiles)
+void Player::update(float ms)
 {
 	if (m_is_alive) {
-        for(auto& tile : m_tiles) {
-            platformCollision(tile.get());
-        }
 
 		if (m_airdashing && abs(motion.speed.x) > 0) {
 			motion.speed.x -= (motion.speed.x / abs(motion.speed.x)) * 20;
@@ -120,7 +117,6 @@ void Player::update(float ms, std::vector<std::shared_ptr<Tile>> m_tiles)
 			gravity = 10;
 		}
 
-			
 		float x_step = motion.speed.x * (ms / 1000);
 		float y_step = motion.speed.y * (ms/ 1000);
 

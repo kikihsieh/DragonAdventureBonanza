@@ -12,25 +12,28 @@ typedef std::map<int, Texture*> TextureMapping;
 typedef std::vector<std::vector<int>> MapVector;
 
 class TileMap {
+    static vec2 TILE_SIZE;
+
 public:
     explicit TileMap(Level* level);
     ~TileMap();
 
+    //https://stackoverflow.com/questions/919612/mapping-two-integers-to-one-in-a-unique-and-deterministic-way
+    static int hash(int x, int y) {
+        return x >= y ? x * x + x + y : x + y * y;  // where x, y >= 0
+    }
+
     bool init(MapVector map, TextureMapping mapping);
     void draw(const mat3 &projection);
-
-    std::vector<std::shared_ptr<Tile>> get_tiles() const {
-        return m_tiles;
-    }
 
     vec2 get_map_dim() {
         return m_map_dim;
     }
 
 private:
-    std::vector<std::shared_ptr<Tile>> m_tiles;
+    std::map<int, std::shared_ptr<Tile>> m_tiles;
+
     Level* m_level;
-    vec2 m_tile_size;
     vec2 m_map_dim;
 };
 

@@ -2,7 +2,9 @@
 #include <map>
 #include "tile_map.hpp"
 
-TileMap::TileMap(Level* level) : m_level(level), m_tile_size() {
+vec2 TileMap::TILE_SIZE = {48, 48};
+
+TileMap::TileMap(Level* level) : m_level(level) {
 }
 
 TileMap::~TileMap() {
@@ -16,17 +18,19 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
     int longest_row = 0;
 
     for (row = map.begin(); row != map.end(); ++row) {
-        int row_length = 0;
+        int row_index = row - map.begin();
         for (col = row->begin(); col != row->end(); ++col) {
-            row_length++;
+
             if (*col == 0) {
                 continue;
             }
 
+            int col_index = col - row->begin();
+
             // tiles less than 0 are enemies
             if (*col < 0) {
-                float pos_x = ((float) (col - row->begin()) * m_tile_size.x);
-                float pos_y = ((float) (row - map.begin()) * m_tile_size.y);
+                float pos_x = ((float) (col_index))  * TILE_SIZE.x;
+                float pos_y = ((float) (row_index) * TILE_SIZE.y);
                 m_level->init_enemy(*col, {pos_x, pos_y});
             } else {
                 std::shared_ptr<Tile> tile = std::make_shared<Tile>();
@@ -36,23 +40,19 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
                     return false;
                 }
                 tile->set_position(col - row->begin(), row - map.begin());
-                m_tiles.emplace_back(tile);
-                // TODO: Tile size should be set by tile map or at least initialized better
-                //  because currently it could be 0 if the first tile it encounters is an enemy
-                if (m_tile_size.x == 0 && m_tile_size.y == 0) {
-                    m_tile_size = tile->get_size();
-                }
+                m_tiles.insert(std::map<int, std::shared_ptr<Tile>>::value_type(
+                        TileMap::hash(col_index, row_index), tile));
             }
         }
-        longest_row = (row_length > longest_row) ? row_length : longest_row;
+        longest_row = (row_index > longest_row) ? row_index : longest_row;
     }
-    m_map_dim.x = longest_row * m_tile_size.x;
-    m_map_dim.y = ((float) (map.end() - map.begin())) * m_tile_size.y;
+    m_map_dim.x = longest_row * TILE_SIZE.x;
+    m_map_dim.y = ((float) (map.end() - map.begin())) * TILE_SIZE.y;
     return true;
 }
 
 void TileMap::draw(const mat3 &projection) {
     for (auto& tile : m_tiles) {
-        tile->draw(projection);
+        tile.second->draw(projection);
     }
 }

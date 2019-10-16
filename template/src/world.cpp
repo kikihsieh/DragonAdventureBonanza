@@ -3,7 +3,6 @@
 
 // stlib
 #include <sstream>
-#include <ctime>
 
 #include <levels/forest_level.hpp>
 #include <levels/volcano_level.hpp>
@@ -104,7 +103,7 @@ bool World::update(float elapsed_ms)
 
 	// check if player is on the ground
 	if (m_current_scene->is_level()) {
-		m_player.update(elapsed_ms, ((Level*) m_current_scene)->get_tiles());
+		m_player.update(elapsed_ms);
 		m_camera.update(m_player.get_position(), m_player.is_facing_forwards());
 		m_current_scene->update(elapsed_ms);
 	}
