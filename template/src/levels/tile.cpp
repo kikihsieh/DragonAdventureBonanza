@@ -116,10 +116,6 @@ void Tile::set_position(float x, float y)
     motion.position.y = y * m_texture->height*physics.scale.y + m_texture->height*0.5f*physics.scale.y;
 }
 
-vec2 Tile::get_size() {
-    return {m_texture->width*physics.scale.x, m_texture->height*physics.scale.y};
-}
-
 void Tile::compute_world_coordinate()
 {
     platform_world_coord.clear();

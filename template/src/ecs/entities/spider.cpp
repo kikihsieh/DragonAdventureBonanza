@@ -2,10 +2,9 @@
 #include "spider.hpp"
 
 #include <cmath>
-#include <iostream>
 #include <ctime>
 
-Spider::Spider() : Enemy(Enemy::WALKING) {
+Spider::Spider() {
 
 }
 

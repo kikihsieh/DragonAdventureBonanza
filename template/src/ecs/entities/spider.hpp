@@ -1,11 +1,10 @@
 #pragma once
 
 #include "common.hpp"
-#include "enemy.hpp"
 #include <vector>
 
 // spider enemy
-class Spider : public Enemy
+class Spider : public Entity
 {
 public:
     Spider();
@@ -27,7 +26,7 @@ public:
 
 	// Update spider due to current
 	// ms represents the number of milliseconds elapsed from the previous update() call
-	void update(float ms) override;
+	void update(float ms);
 
 	void set_init_position_and_max_xy(vec2 coord);
 

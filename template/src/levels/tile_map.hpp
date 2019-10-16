@@ -30,8 +30,14 @@ public:
         return m_map_dim;
     }
 
+    const std::map<int, std::shared_ptr<Tile>> &get_tiles() const {
+        return m_tiles;
+    }
+
 private:
     std::map<int, std::shared_ptr<Tile>> m_tiles;
+
+private:
 
     Level* m_level;
     vec2 m_map_dim;

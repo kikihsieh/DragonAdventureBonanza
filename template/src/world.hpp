@@ -2,8 +2,8 @@
 
 // internal
 #include "common.hpp"
-#include "player.hpp"
-#include "enemies/spider.hpp"
+#include "ecs/entities/player.hpp"
+#include "ecs/entities/spider.hpp"
 #include "background.hpp"
 #include "camera.hpp"
 #include "levels/tile.hpp"
@@ -70,6 +70,5 @@ private:
     Scene* m_current_scene;
     std::map<Scene_names, Scene*> m_scenes;
 
-    Player m_player;
     Camera m_camera;
 };

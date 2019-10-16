@@ -1,6 +1,5 @@
 // Header
 #include "player.hpp"
-#include "enemies/spider.hpp"
 #include "levels/tile.hpp"
 
 // stlib
@@ -116,6 +115,7 @@ void Player::update(float ms)
 			m_airdashing = false;
 			gravity = 10;
 		}
+
 
 		float x_step = motion.speed.x * (ms / 1000);
 		float y_step = motion.speed.y * (ms/ 1000);
@@ -288,94 +288,38 @@ void Player::compute_world_coordinate()
 
 }
 
-bool Player::collides_with(Spider& spider)
-{
-	kill_enemy = false;
-	compute_world_coordinate();
-	spider.compute_world_coordinate();
-	// kills enemy
-
-	if ((left + 1.f) < spider.right &&
-		(right - 1.f) > spider.left &&
-		bottom >= spider.top-5.f &&
-		bottom <= spider.top+5.f) {
-		if (motion.speed.y > 0) {
-			motion.speed.y = 0.f;
-		}
-		std::cout << "killed one enemy" << std::endl;
-		motion.acc.y = 0.f;
-		m_jump_count = 1;
-		kill_enemy = true;
-		return true;
-	}
-	// bump into enemy
-	else if (top < spider.bottom && bottom > spider.top && left <spider.right && right > spider.left){
-		
-		// TODO: check if player is still alive
-		// life-- if life > 0 else die
-		kill_enemy = false;
-		kill();
-		return true;
-	}
-
-	return false;
-}
-
-void Player::platformCollision(Tile* platform)
-{
-    m_on_ground = false;
-    motion.acc.y = gravity;
-
-    compute_world_coordinate();
-	platform->compute_world_coordinate();
-
-    if ((left + 0.1f) < platform->right &&
-        (right - 0.1f) > platform->left &&
-        bottom >= platform->top &&
-        bottom < platform->bottom) {
-        if (motion.speed.y > 0) {
-            motion.speed.y = 0.f;
-        }
-        motion.acc.y = 0.f;
-        m_jump_count = 1;
-        m_on_ground = true;
-        m_airdashing = false;
-        
-        
-    } else if (motion.speed.x < 0 &&
-       left < platform->right &&
-       left > platform->left &&
-       ((platform->top >= top &&
-         platform->top <= bottom) ||
-        (platform->bottom <= top &&
-         platform->bottom >= bottom))) {
-            motion.speed.x = 0.f;
-            
-    } else if (motion.speed.x > 0 &&
-       right > platform->left &&
-       right < platform->right &&
-       ((platform->top >= top &&
-         platform->top <= bottom) ||
-        (platform->bottom <= top &&
-         platform->bottom >= bottom))) {
-            
-            motion.speed.x = 0.f;
-            
-    } else if ((left + 0.1f) < platform->right &&
-               (right - 0.1f) > platform->left &&
-               top <= platform->bottom &&
-               top > platform->top) {
-        motion.speed.y = gravity;
-    }
-}
-/* TODO NEW COLLISION
-void Player::platformCollision(const Tile& platform)
-{
-    m_on_ground = false;
-    motion.acc.y = 0.f;
-    m_jump_count = 1;
-}
-*/
+//bool Player::collides_with(Spider& spider)
+//{
+//	kill_enemy = false;
+//	compute_world_coordinate();
+//	spider.compute_world_coordinate();
+//	// kills enemy
+//
+//	if ((left + 1.f) < spider.right &&
+//		(right - 1.f) > spider.left &&
+//		bottom >= spider.top-5.f &&
+//		bottom <= spider.top+5.f) {
+//		if (motion.speed.y > 0) {
+//			motion.speed.y = 0.f;
+//		}
+//		std::cout << "killed one enemy" << std::endl;
+//		motion.acc.y = 0.f;
+//		m_jump_count = 1;
+//		kill_enemy = true;
+//		return true;
+//	}
+//	// bump into enemy
+//	else if (top < spider.bottom && bottom > spider.top && left <spider.right && right > spider.left){
+//
+//		// TODO: check if player is still alive
+//		// life-- if life > 0 else die
+//		kill_enemy = false;
+//		kill();
+//		return true;
+//	}
+//
+//	return false;
+//}
 
 bool Player::is_alive() const
 {

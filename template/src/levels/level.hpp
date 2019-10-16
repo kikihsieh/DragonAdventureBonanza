@@ -8,9 +8,9 @@
 
 #include "tile_map.hpp"
 #include "tile.hpp"
-#include "enemies/enemy.hpp"
 #include "scene.hpp"
 #include "background.hpp"
+#include <ecs/systems/physics_system.hpp>
 
 typedef std::map<int, const char*> TexturePathMapping;
 typedef std::map<int, Texture*> TextureMapping;
@@ -26,7 +26,6 @@ public:
     ~Level();
 
     virtual bool init() = 0;
-//    virtual const char * get_bg_texture_path() = 0;
 
     void destroy() override;
     void update(float elapsed_ms) override;
@@ -50,8 +49,6 @@ public:
         return m_y_boundaries;
     }
 
-    std::vector<std::shared_ptr<Tile>> get_tiles() const;
-
 protected:
     virtual bool init_walking_enemy(int type, vec2 initial_pos) = 0;
 
@@ -59,14 +56,15 @@ protected:
 
     TextureMapping m_texture_mapping;
     TileMap* m_tile_map;
+    PhysicsSystem* m_physics_system;
 
     bool m_unlocked;
 
-    vec2 m_x_boundaries{};
-    vec2 m_y_boundaries{};
+    vec2 m_x_boundaries;
+    vec2 m_y_boundaries;
 
     // Game entities
-    std::vector<std::shared_ptr<Enemy>> m_enemies;
+    std::vector<std::shared_ptr<Entity>> m_entities;
 
 };
 

@@ -2,7 +2,7 @@
 #define DAB_CAMERA_HPP
 
 #include "common.hpp"
-#include "player.hpp"
+#include "ecs/entities/player.hpp"
 
 class Camera {
 

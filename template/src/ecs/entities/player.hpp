@@ -1,7 +1,6 @@
 #pragma once
 
 #include "common.hpp"
-#include "enemies/spider.hpp"
 #include <vector>
 #include <memory>
 
@@ -64,8 +63,6 @@ public:
     
   	// Check if player is landed
   	void platformCollision(Tile* platform);
-
-	bool collides_with(Spider& spider);
 
 	bool kill_enemy;
 

@@ -101,12 +101,10 @@ bool World::update(float elapsed_ms)
 	glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
 
-	// check if player is on the ground
-	if (m_current_scene->is_level()) {
-		m_player.update(elapsed_ms);
-		m_camera.update(m_player.get_position(), m_player.is_facing_forwards());
-		m_current_scene->update(elapsed_ms);
-	}
+//	if (m_current_scene->is_level()) {
+//		m_camera.update(m_player.get_position(), m_player.is_facing_forwards());
+//	}
+    m_current_scene->update(elapsed_ms);
 	return true;
 }
 
@@ -161,7 +159,6 @@ void World::draw() {
 	glBindTexture(GL_TEXTURE_2D, m_screen_tex.id);
 
     m_current_scene->draw(projection_2D);
-    m_player.draw(projection_2D);
 
 	//////////////////
 	// Presenting
@@ -180,14 +177,7 @@ bool World::load_scene(Scene* scene) {
     m_camera.reset();
 
     m_current_scene = scene;
-    if (scene->is_level()) {
-		Level* level = (Level*) scene;
-    	level->init();
-       	m_player.init(level->get_x_boundaries(), level->get_y_boundaries());
-
-    } else {
-		m_current_scene->init();
-	}
+    m_current_scene->init();
 	return true;
 }
 
@@ -203,35 +193,35 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
         return;
     }
 
-    if (m_player.can_jump() && (key == GLFW_KEY_UP || key == GLFW_KEY_W)) {
-        if (action == GLFW_PRESS) {
-            m_player.jump();
-        }
-    } 
-	if (m_player.can_airdash() && (key == GLFW_KEY_LEFT_SHIFT || key == GLFW_KEY_RIGHT_SHIFT)) {
-		if (action == GLFW_PRESS) {
-			if (glfwGetKey(window, GLFW_KEY_LEFT) || glfwGetKey(window, GLFW_KEY_A))
-				m_player.air_dash(false);
-			else
-				m_player.air_dash(true);
-		}
-	} 
-	
-	if (key == GLFW_KEY_LEFT || key == GLFW_KEY_A) {
-        if (action == GLFW_PRESS && !m_player.is_airdashing()) {
-            m_player.walk(false);
-        } else if (action == GLFW_RELEASE && !m_player.is_airdashing()) {
-            m_player.stop();
-        }
-    } 
-	
-	if (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D) {
-        if (action == GLFW_PRESS && !m_player.is_airdashing()) {
-            m_player.walk(true);
-        } else if (action == GLFW_RELEASE && !m_player.is_airdashing()) {
-            m_player.stop();
-        }
-    } 
+//    if (m_player.can_jump() && (key == GLFW_KEY_UP || key == GLFW_KEY_W)) {
+//        if (action == GLFW_PRESS) {
+//            m_player.jump();
+//        }
+//    }
+//	if (m_player.can_airdash() && (key == GLFW_KEY_LEFT_SHIFT || key == GLFW_KEY_RIGHT_SHIFT)) {
+//		if (action == GLFW_PRESS) {
+//			if (glfwGetKey(window, GLFW_KEY_LEFT) || glfwGetKey(window, GLFW_KEY_A))
+//				m_player.air_dash(false);
+//			else
+//				m_player.air_dash(true);
+//		}
+//	}
+//
+//	if (key == GLFW_KEY_LEFT || key == GLFW_KEY_A) {
+//        if (action == GLFW_PRESS && !m_player.is_airdashing()) {
+//            m_player.walk(false);
+//        } else if (action == GLFW_RELEASE && !m_player.is_airdashing()) {
+//            m_player.stop();
+//        }
+//    }
+//
+//	if (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D) {
+//        if (action == GLFW_PRESS && !m_player.is_airdashing()) {
+//            m_player.walk(true);
+//        } else if (action == GLFW_RELEASE && !m_player.is_airdashing()) {
+//            m_player.stop();
+//        }
+//    }
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)

@@ -27,7 +27,7 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
 
             int col_index = col - row->begin();
 
-            // tiles less than 0 are enemies
+            // tiles less than 0 are entities
             if (*col < 0) {
                 float pos_x = ((float) (col_index))  * TILE_SIZE.x;
                 float pos_y = ((float) (row_index) * TILE_SIZE.y);
@@ -46,7 +46,7 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
         }
         longest_row = (row_index > longest_row) ? row_index : longest_row;
     }
-    m_map_dim.x = longest_row * TILE_SIZE.x;
+    m_map_dim.x = ((float) longest_row) * TILE_SIZE.x;
     m_map_dim.y = ((float) (map.end() - map.begin())) * TILE_SIZE.y;
     return true;
 }
