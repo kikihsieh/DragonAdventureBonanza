@@ -18,6 +18,7 @@ void Level::destroy() {
     Scene::destroy();
     m_entities.clear();
     delete m_tile_map;
+    delete m_physics_system;
 }
 
 bool Level::init_scene(MapVector map, TexturePathMapping mapping, const char * texturePath) {

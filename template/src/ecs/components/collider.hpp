@@ -1,8 +1,6 @@
 #ifndef DAB_COLLIDER_HPP
 #define DAB_COLLIDER_HPP
 
-#endif //DAB_COLLIDER_HPP
-
 struct Collider {
     enum Collision_Direction {
         NONE,
@@ -13,3 +11,5 @@ struct Collider {
     };
     Collision_Direction colliding;
 };
+
+#endif //DAB_COLLIDER_HPP
