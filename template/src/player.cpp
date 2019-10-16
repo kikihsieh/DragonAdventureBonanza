@@ -331,6 +331,7 @@ void Player::platformCollision(Tile* platform)
     motion.acc.y = gravity;
 
     compute_world_coordinate();
+	platform->compute_world_coordinate();
 
     if ((left + 0.1f) < platform->right &&
         (right - 0.1f) > platform->left &&

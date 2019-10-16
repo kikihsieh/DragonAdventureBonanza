@@ -68,8 +68,6 @@ protected:
     // Game entities
     std::vector<std::shared_ptr<Enemy>> m_enemies;
 
-private:
-    Background m_background;
 };
 
 #endif //DAB_LEVEL_HPP

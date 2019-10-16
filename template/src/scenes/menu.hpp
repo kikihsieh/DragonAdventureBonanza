@@ -10,7 +10,7 @@ public:
     ~Menu();
 
     const char * get_bg_texture_path() override {
-        return textures_path("background.png");
+        return textures_path("night.png");
     }
 };
 

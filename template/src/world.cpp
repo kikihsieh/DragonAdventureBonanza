@@ -86,7 +86,7 @@ bool World::init(vec2 screen)
 	m_screen_tex.create_from_screen(m_window);
 	m_camera.init(screen);
 
-	return load_scene(m_scenes.at(FOREST));
+	return load_scene(m_scenes.at(MAIN_MENU));
 }
 
 // Releases all the associated resources

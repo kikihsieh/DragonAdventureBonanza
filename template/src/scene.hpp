@@ -5,8 +5,9 @@
 #define DAB_SCENE_HPP
 
 #include "common.hpp"
+#include "background.hpp"
 
-class Scene: public Entity
+class Scene
 {
 public:
     Scene();
@@ -25,6 +26,6 @@ public:
     virtual const char * get_bg_texture_path() = 0;
 
 private:
-    Texture* m_texture;
+    Background m_background;
 };
 #endif
