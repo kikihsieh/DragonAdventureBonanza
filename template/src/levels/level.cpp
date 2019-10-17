@@ -23,7 +23,6 @@ void Level::destroy() {
 }
 
 bool Level::init_scene(MapVector map, TexturePathMapping mapping, const char * texturePath) {
-    Scene::init();
     m_tile_map = new TileMap(this);
     for (auto & iter : mapping) {
         auto* texture = new Texture();
@@ -46,7 +45,8 @@ bool Level::init_scene(MapVector map, TexturePathMapping mapping, const char * t
     m_x_boundaries.y = m_tile_map->get_map_dim().x;
     m_y_boundaries.y = m_tile_map->get_map_dim().y;
 //    m_physics_system = new PhysicsSystem(m_tile_map->get_tiles());
-    return init_player();
+    init_player();
+    return Scene::init();
 }
 
 bool Level::init_enemy(int type, vec2 initial_pos) {

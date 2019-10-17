@@ -13,6 +13,8 @@ bool Tile::init() {
     //motion.position = { 33.5f, 33.5f};
     scale = { 0.75f, 0.75f };
     drawable = new Drawable();
+    drawable->fs_shader = shader_path("background.fs.glsl");
+    drawable->vs_shader = shader_path("background.vs.glsl");
 //    compute_world_coordinate();
     return true;
 }

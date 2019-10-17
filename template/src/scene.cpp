@@ -8,10 +8,11 @@
 Scene::Scene() {
 }
 
-Scene::~Scene() = default;
+Scene::~Scene() {
+    m_entities.clear();
+};
 
 bool Scene::init() {
-    m_entities.clear();
     Background background;
     background.scale = {1.f, 1.f};
     background.radians = 0.f;
