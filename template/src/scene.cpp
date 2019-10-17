@@ -3,6 +3,7 @@
 //
 
 #include "scene.hpp"
+#include "background.hpp"
 
 #include <iostream>
 #include <math.h>
@@ -14,9 +15,9 @@ Scene::~Scene() = default;
 
 bool Scene::init() {
     m_entities.clear();
-    Entity *background = {};
-    background->scale = {1.f, 1.f};
-    background->radians = 0.f;
+    Background background;
+    background.scale = {1.f, 1.f};
+    background.radians = 0.f;
     m_entities.emplace_back(background);
 
     return m_rendersystem.init(m_entities);
@@ -24,11 +25,11 @@ bool Scene::init() {
 
 // Releases all graphics resources
 void Scene::destroy() {
-    m_rendersystem.destroy(m_entities);
+    m_rendersystem.destroy();
 }
 
 void Scene::draw(const mat3& projection) {
-    m_rendersystem.draw(projection, m_entities);
+    m_rendersystem.draw();
 }
 
 bool Scene::is_level() {

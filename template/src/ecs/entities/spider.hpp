@@ -3,6 +3,8 @@
 #include "common.hpp"
 #include <vector>
 
+#include "ecs/entities/entity.hpp"
+
 // spider enemy
 class Spider : public Entity
 {
@@ -14,14 +16,14 @@ public:
 
 	// Releases all the associated resources
 	void destroy();
-    
-    //walking boundary 
+
+    //walking boundary
     void x_axis_movement();
-    
+
     //spider jumping @ random time
     void y_axis_movement();
-    
-    //generate random time 
+
+    //generate random time
     int jump_Time(float step);
 
 	// Update spider due to current
@@ -31,25 +33,25 @@ public:
 	void set_init_position_and_max_xy(vec2 coord);
 
 	// projection is the 2D orthographic projection matrix
-	void draw(const mat3& projection) override;
+	void draw(const mat3& projection);
 
 	// Returns the current spider position
 	vec2 get_position()const;
 
 	// Returns the spider's bounding box for collision detection, called by collides_with()
 	vec2 get_bounding_box() const;
-    
+
     // setting random time
     void set_randomT();
-    
+
     void reset_randomT();
-    
+
     int min_waitTime = 2;
     int max_waitTime = 6;
-    
-    
+
+
     int randomTime();
-    
+
 	void compute_world_coordinate();
 
     int distance;
@@ -58,14 +60,14 @@ public:
     int distance_y;
     int min_position_y;
     int max_position_y;
-    
+
     int inital_pos;
     bool direction;
     bool direction_y;
     bool jumpNow;
     int jumpT;
     float currTime;
-    
+
     bool randomBoo;
     int init_randomTime;
     int remaining;
@@ -74,11 +76,11 @@ public:
 	float bottom;
 	float left;
 	float right;
-    
+
     Texture * texture;
-    
+
     void setPosition(float row, float col);
-    
+
 private:
     TexturedVertex vertices[4];
     std::vector<vec2> spider_world_coord;

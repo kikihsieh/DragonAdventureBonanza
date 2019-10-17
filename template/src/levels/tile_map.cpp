@@ -8,6 +8,7 @@ TileMap::TileMap(Level* level) : m_level(level) {
 }
 
 TileMap::~TileMap() {
+    // TODO delete tiles!!!
     m_tiles.clear();
 }
 
@@ -33,14 +34,14 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
                 float pos_y = ((float) (row_index) * TILE_SIZE.y);
                 m_level->init_enemy(*col, {pos_x, pos_y});
             } else {
-                std::shared_ptr<Tile> tile = std::make_shared<Tile>();
-                tile->set_texture(dict.at(*col));
-                if (!tile->init()) {
+                Tile tile;
+                tile.set_texture(dict.at(*col));
+                if (!tile.init()) {
                     fprintf(stderr, "Failed to initialize tile!");
                     return false;
                 }
-                tile->set_position(col - row->begin(), row - map.begin());
-                m_tiles.insert(std::map<int, std::shared_ptr<Tile>>::value_type(
+                tile.set_position(col - row->begin(), row - map.begin());
+                m_tiles.insert(std::map<int, Tile>::value_type(
                         TileMap::hash(col_index, row_index), tile));
             }
         }
@@ -53,6 +54,6 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
 
 void TileMap::draw(const mat3 &projection) {
     for (auto& tile : m_tiles) {
-        tile.second->draw(projection);
+//        tile.second->draw(projection);
     }
 }

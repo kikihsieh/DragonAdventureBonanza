@@ -1,23 +1,20 @@
 #pragma once
 
-#include "common.hpp"
+#include <ecs/entities/entity.hpp>
 
 
 class Background : public Entity
 {
 public:
-    // Background();
-    // ~Background();
+     Background();
+     ~Background();
 	
 	// Creates all the associated render resources and default transform
-	// bool init(const char* path);
+	 bool init(const char* path);
 
 	// Releases all associated resources
-	// void destroy();
-
-	// Renders the background
-	// void draw(const mat3& projection)override;
+	void destroy();
 
 private:
-	// Texture* background_texture;
+	 Texture* background_texture;
 };

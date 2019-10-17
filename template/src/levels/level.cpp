@@ -1,6 +1,7 @@
 #include "level.hpp"
 
 #include <utility>
+#include <ecs/entities/player.hpp>
 // #include <ecs/entities/player.hpp>
 
 Level::Level(bool unlocked) :
@@ -44,7 +45,7 @@ bool Level::init_scene(MapVector map, TexturePathMapping mapping, const char * t
     
     m_x_boundaries.y = m_tile_map->get_map_dim().x;
     m_y_boundaries.y = m_tile_map->get_map_dim().y;
-    m_physics_system = new PhysicsSystem(m_tile_map->get_tiles());
+//    m_physics_system = new PhysicsSystem(m_tile_map->get_tiles());
     return init_player();
 }
 
@@ -56,15 +57,15 @@ bool Level::init_enemy(int type, vec2 initial_pos) {
 }
 
 bool Level::init_player(){
-    Entity *player = {};
-    player->position = { 100.f, 450.f };
-    player->physics->gravity = 10.f;
-    player->physics->horizontal_acc = 0.f;
-    player->physics->walking_speed = 250.f;
-    player->physics->vx=0.f;
-    player->physics->vy=0.f;
-    player->physics->jump_speed = -500.f;
-    player->scale = {0.16f, 0.16f};
+    Player player;
+    player.position = { 100.f, 450.f };
+    player.physics->gravity = 10.f;
+    player.physics->horizontal_acc = 0.f;
+    player.physics->walking_speed = 250.f;
+    player.physics->vx=0.f;
+    player.physics->vy=0.f;
+    player.physics->jump_speed = -500.f;
+    player.scale = {0.16f, 0.16f};
     m_entities.emplace_back(player);
     return true;
 }

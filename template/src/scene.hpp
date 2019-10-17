@@ -27,7 +27,7 @@ public:
     virtual bool is_level();
     virtual const char * get_bg_texture_path() = 0;
 
-    std::vector<Entity*> m_entities;
+    std::vector<Entity> m_entities;
 
 private:
 	RenderSystem m_rendersystem;

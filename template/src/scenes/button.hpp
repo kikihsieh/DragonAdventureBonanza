@@ -6,7 +6,7 @@
 #define DAB_BUTTON_H
 
 #include "common.hpp"
-
+#include <ecs/entities/entity.hpp>
 
 class Button : public Entity {
 public:
@@ -20,7 +20,7 @@ public:
     void destroy();
 
     // Renders the background
-    void draw(const mat3& projection)override;
+    void draw(const mat3& projection);
 
     void update(float ms);
 protected:

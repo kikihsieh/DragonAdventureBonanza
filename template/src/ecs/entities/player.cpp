@@ -7,57 +7,15 @@
 #include <cmath>
 #include <iostream>
 
+Player::Player() {
+    drawable = {};
+    drawable->texture_path = textures_path("player.png");
+    drawable->fs_shader = shader_path("textured.fs.glsl");
+    drawable->vs_shader = shader_path("textured.vs.glsl");
+}
+
 bool Player::init(vec2 x_bounds, vec2 y_bounds)
 {
-	// Load shared texture
-    // 566w x 644h
-	// if (!player_texture.is_valid())
-	// {
-	// 	if (!player_texture.load_from_file(textures_path("player.png")))
-	// 	{
-	// 		fprintf(stderr, "Failed to load player texture!");
-	// 		return false;
-	// 	}
-	// }
-	
-	// // The position corresponds to the center of the texture
-	// float wr = player_texture.width * 0.5f;
-	// float hr = player_texture.height * 0.5f;
-
-	// vertices[0].position = { -wr, +hr, -0.02f };
-	// vertices[0].texcoord = { 0.f, 1.f };
-	// vertices[1].position = { +wr, +hr, -0.02f };
-	// vertices[1].texcoord = { 1.f, 1.f };
-	// vertices[2].position = { +wr, -hr, -0.02f };
-	// vertices[2].texcoord = { 1.f, 0.f };
-	// vertices[3].position = { -wr, -hr, -0.02f };
-	// vertices[3].texcoord = { 0.f, 0.f };
-	
-	// // Counterclockwise as it's the default opengl front winding direction
-	// uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
-	
-	// // Clearing errors
-	// gl_flush_errors();
-
-	// // Vertex Buffer creation
-	// glGenBuffers(1, &mesh.vbo);
-	// glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	// glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, vertices, GL_STATIC_DRAW);
-
-	// // Index Buffer creation
-	// glGenBuffers(1, &mesh.ibo);
-	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
-	// glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_STATIC_DRAW);
-	
-	// // Vertex Array (Container for Vertex + Index buffer)
-	// glGenVertexArrays(1, &mesh.vao);
-	// if (gl_has_errors())
-	// 	return false;
-
-	// // Loading shaders
-	// if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
-	// 	return false;
-
     // walking_speed = 250.f;
     // jumping_speed = -500.f;
     // gravity = 10.f;
@@ -107,47 +65,47 @@ bool Player::init(vec2 x_bounds, vec2 y_bounds)
 // Called on each frame by World::update()
 void Player::update(float ms)
 {
-	if (m_is_alive) {
+//	if (m_is_alive) {
 
-		if (m_airdashing && abs(motion.speed.x) > 0) {
-			motion.speed.x -= (motion.speed.x / abs(motion.speed.x)) * 20;
-		} else {
-			m_airdashing = false;
-			gravity = 10;
-		}
+//		if (m_airdashing && abs(motion.speed.x) > 0) {
+//			motion.speed.x -= (motion.speed.x / abs(motion.speed.x)) * 20;
+//		} else {
+//			m_airdashing = false;
+//			gravity = 10;
+//		}
 
 
-		float x_step = motion.speed.x * (ms / 1000);
-		float y_step = motion.speed.y * (ms/ 1000);
+//		float x_step = motion.speed.x * (ms / 1000);
+//		/float y_step = motion.speed.y * (ms/ 1000);
 
-	    if ((x_step < 0 && motion.position.x < m_x_world_bounds.x) ||
-			  (x_step > 0 && motion.position.x > m_x_world_bounds.y)) {
-			  	x_step = 0;
-				m_airdashing = false;
-		}
+//	    if ((x_step < 0 && motion.position.x < m_x_world_bounds.x) ||
+//			  (x_step > 0 && motion.position.x > m_x_world_bounds.y)) {
+//			  	x_step = 0;
+//				m_airdashing = false;
+//		}
 
 		// Jumping
-		if (y_step < 0 && motion.position.y < m_y_world_bounds.x) {
-			y_step *= -1.f;
-			motion.speed.y = 0;
-		}
+//		if (y_step < 0 && motion.position.y < m_y_world_bounds.x) {
+//			y_step *= -1.f;
+//			motion.speed.y = 0;
+}
 
-		motion.speed.y += motion.acc.y;
+//		motion.speed.y += motion.acc.y;
 
 		// Die when touching bottom of screen
-		if (y_step > 0 && motion.position.y > m_y_world_bounds.y) {
-			std::cout << "Player died" << std::endl;
-			m_is_alive = false;
-		}
+//		if (y_step > 0 && motion.position.y > m_y_world_bounds.y) {
+//			std::cout << "Player died" << std::endl;
+//			m_is_alive = false;
+//		}
 	   
-		motion.speed.y += motion.acc.y;
-        move({x_step, y_step});
-	}
-	else {
-		float sink_step = 200.f * (ms / 1000);
-		move({ 0.f, sink_step });
-	}
-}
+//		motion.speed.y += motion.acc.y;
+//        move({x_step, y_step});
+//	}
+//	else {
+//		float sink_step = 200.f * (ms / 1000);
+//		move({ 0.f, sink_step });
+//	}
+//}
 
 // void Player::draw(const mat3& projection)
 // {
@@ -200,38 +158,38 @@ void Player::update(float ms)
 
 vec2 Player::get_position() const
 {
-	return motion.position;
+//	return motion.position;
 }
 
 void Player::move(vec2 off)
 {
-	motion.position.x += off.x; 
-	motion.position.y += off.y; 
+//	motion.position.x += off.x;
+//	motion.position.y += off.y;
 }
 
 void Player::walk(bool forward) {
     if (forward) {
-        motion.speed.x = walking_speed;
+//        motion.speed.x = walking_speed;
         m_is_facing_forwards = true;
     } else {
-        motion.speed.x = -walking_speed;
+//        motion.speed.x = -walking_speed;
         m_is_facing_forwards = false;
     }
 }
 
 void Player::stop() {
-    motion.speed.x = 0;
+//    motion.speed.x = 0;
 }
 
 void Player::jump() {
-    motion.speed.y = jumping_speed;
+//    motion.speed.y = jumping_speed;
 	m_jump_count ++;
 }
 
 void Player::air_dash(bool forward) {
-	motion.speed.x =  forward ? 1000.f : -1000.f;
-	motion.speed.y = 0;
-	gravity = 0;
+//	motion.speed.x =  forward ? 1000.f : -1000.f;
+//	motion.speed.y = 0;
+//	gravity = 0;
 	m_airdashing = true;
 }
 
@@ -250,16 +208,16 @@ bool Player::is_airdashing() {
 void Player::compute_world_coordinate()
 {
 	player_world_coord.clear();
-	transform.begin();
-	transform.translate(motion.position);
-	transform.rotate(motion.radians);
-	transform.scale(physics.scale);
-	transform.end();
+//	transform.begin();
+//	transform.translate(motion.position);
+//	transform.rotate(motion.radians);
+//	transform.scale(physics.scale);
+//	transform.end();
 
-	for (auto& v : vertices) {
-		vec3 transformed_vertex = mul(transform.out, vec3{ v.position.x, v.position.y, 1.f });
-		player_world_coord.push_back({ transformed_vertex.x, transformed_vertex.y });
-	}
+//	for (auto& v : vertices) {
+//		vec3 transformed_vertex = mul(transform.out, vec3{ v.position.x, v.position.y, 1.f });
+//		player_world_coord.push_back({ transformed_vertex.x, transformed_vertex.y });
+//	}
 
 	top = player_world_coord[2].y;
 	bottom = player_world_coord[0].y;

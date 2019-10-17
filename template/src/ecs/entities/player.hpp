@@ -10,6 +10,8 @@ class Tile;
 class Player : public Entity
 {
 public:
+    Player();
+
 	// Creates all the associated render resources and default transform
     bool init(vec2 x_bounds, vec2 y_bounds);
 

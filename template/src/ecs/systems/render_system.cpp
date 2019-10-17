@@ -6,49 +6,53 @@
 
 RenderSystem::RenderSystem(){
     //update this when adding sprites
-    map_init(entity_textures)
-            (PLAYER,"player.png")
-            (FOREST_BACKGROUND, "background.png")
-            (CAVE_BACKGROUND, "platform-lg.png")
-            (START_MENU_BACKGROUND,"night.png");
-    map_init(vs_shader_types)
-            (PLAYER, "textured.vs.glsl")
-            (FOREST_BACKGROUND, "background.vs.glsl")
-            (CAVE_BACKGROUND, "background.vs.glsl")
-            (START_MENU_BACKGROUND, "background.vs.glsl");
-    map_init(fs_shader_types)
-            (PLAYER, "textured.fs.glsl")
-            (FOREST_BACKGROUND, "background.fs.glsl")
-            (CAVE_BACKGROUND, "background.fs.glsl")
-            (START_MENU_BACKGROUND, "background.fs.glsl");
+//    map_init(entity_textures)
+//            (PLAYER,"player.png")
+//            (FOREST_BACKGROUND, "background.png")
+//            (CAVE_BACKGROUND, "platform-lg.png")
+//            (START_MENU_BACKGROUND,"night.png");
+//    map_init(vs_shader_types)
+//            (PLAYER, "textured.vs.glsl")
+//            (FOREST_BACKGROUND, "background.vs.glsl")
+//            (CAVE_BACKGROUND, "background.vs.glsl")
+//            (START_MENU_BACKGROUND, "background.vs.glsl");
+//    map_init(fs_shader_types)
+//            (PLAYER, "textured.fs.glsl")
+//            (FOREST_BACKGROUND, "background.fs.glsl")
+//            (CAVE_BACKGROUND, "background.fs.glsl")
+//            (START_MENU_BACKGROUND, "background.fs.glsl");
 }
 
 RenderSystem::~RenderSystem() = default;
 
-bool RenderSystem::init(const std::vector<Entity*>& entities) {
+bool RenderSystem::init(const std::vector<Entity> &entities) {
+    m_entities = entities;
 
     for (auto & entity : entities){
-        if (!entity->texture->is_valid())
-	    {
-		    if (!entity->texture->load_from_file(textures_path("player.png")))
-		    {
-			    fprintf(stderr, "Failed to load player texture!");
-			    return false;
-		    }
-	    }
-	
-	// The position corresponds to the center of the texture
-    	float wr = entity->texture->width * 0.5f;
-    	float hr = entity->texture->height * 0.5f;
+        if (entity.drawable == nullptr) {
+            continue;
+        }
+        Drawable * drawable = entity.drawable;
 
-    	entity->vertices[0].position = { -wr, +hr, -0.02f };
-    	entity->vertices[0].texcoord = { 0.f, 1.f };
-    	entity->vertices[1].position = { +wr, +hr, -0.02f };
-    	entity->vertices[1].texcoord = { 1.f, 1.f };
-    	entity->vertices[2].position = { +wr, -hr, -0.02f };
-    	entity->vertices[2].texcoord = { 1.f, 0.f };
-    	entity->vertices[3].position = { -wr, -hr, -0.02f };
-    	entity->vertices[3].texcoord = { 0.f, 0.f };
+        if (!entity.drawable->texture->is_valid()) {
+            if (entity.drawable->texture->load_from_file(entity.drawable->texture_path)){
+                fprintf(stderr, "Failed to load player texture!");
+                return false;
+            }
+        }
+
+	// The position corresponds to the center of the texture
+    	float wr = drawable->texture->width * 0.5f;
+    	float hr = drawable->texture->height * 0.5f;
+
+        drawable->vertices[0].position = { -wr, +hr, -0.02f };
+        drawable->vertices[0].texcoord = { 0.f, 1.f };
+        drawable->vertices[1].position = { +wr, +hr, -0.02f };
+        drawable->vertices[1].texcoord = { 1.f, 1.f };
+        drawable->vertices[2].position = { +wr, -hr, -0.02f };
+        drawable->vertices[2].texcoord = { 1.f, 0.f };
+        drawable->vertices[3].position = { -wr, -hr, -0.02f };
+        drawable->vertices[3].texcoord = { 0.f, 0.f };
     
     	// Counterclockwise as it's the default opengl front winding direction
     	uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
@@ -57,67 +61,67 @@ bool RenderSystem::init(const std::vector<Entity*>& entities) {
     	gl_flush_errors();
 
     	// Vertex Buffer creation
-    	glGenBuffers(1, &entity->vbo);
-    	glBindBuffer(GL_ARRAY_BUFFER, entity->vbo);
-    	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, entity->vertices, GL_STATIC_DRAW);
+    	glGenBuffers(1, &drawable->vbo);
+    	glBindBuffer(GL_ARRAY_BUFFER, drawable->vbo);
+    	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, drawable->vertices, GL_STATIC_DRAW);
 
     	// Index Buffer creation
-    	glGenBuffers(1, &entity->ibo);
-    	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, entity->ibo);
+    	glGenBuffers(1, &drawable->ibo);
+    	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawable->ibo);
     	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_STATIC_DRAW);
     
     	// Vertex Array (Container for Vertex + Index buffer)
-    	glGenVertexArrays(1, &entity->vao);
+    	glGenVertexArrays(1, &drawable->vao);
     	if (gl_has_errors())
     		return false;
 
     	// Loading shaders
-    	if (!entity->effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
+    	if (!load_from_file(drawable->effect, drawable->vs_shader, drawable->fs_shader))
     		return false;
     };
 }
 
-void RenderSystem::destroy(const std::vector<Entity*>& entities) {
-	for(auto & entity: entities){
-        glDeleteBuffers(1, &entity->vbo);
-	    glDeleteShader(entity->effect.vertex);
-	    glDeleteShader(entity->effect.fragment);
-	    glDeleteShader(entity->effect.program);
-        delete entity->texture;
-        entity->texture = nullptr;
+void RenderSystem::destroy() {
+	for(auto & entity: m_entities){
+        glDeleteBuffers(1, &entity.drawable->vbo);
+	    glDeleteShader(entity.drawable->effect.vertex);
+	    glDeleteShader(entity.drawable->effect.fragment);
+	    glDeleteShader(entity.drawable->effect.program);
+        delete entity.drawable->texture;
+        entity.drawable->texture = nullptr;
     }
 }
 
-void RenderSystem::draw(const mat3 & projection, const std::vector<Entity*>& entities)
+void RenderSystem::draw()
 {
-    for(auto & entity: entities){
+    for(auto & entity: m_entities){
+        if (entity.drawable == nullptr) {
+            continue;
+        }
+        Drawable * drawable = entity.drawable;
 
-        entity->transform.begin();
-	    entity->transform.translate(entity->position);
-	    entity->transform.rotate(entity->radians);
-	    entity->transform.scale(entity->scale);
-	    entity->transform.end();
+        transform(entity);
 
 	    // Enabling alpha channel for textures
 	    glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	    glDisable(GL_DEPTH_TEST);
 
 	    // Setting shaders
-	    glUseProgram(entity->effect.program);
+	    glUseProgram(drawable->effect.program);
     
 	    // Getting uniform locations for glUniform* calls
-	    GLint transform_uloc = glGetUniformLocation(entity->effect.program, "transform");
-	    GLint color_uloc = glGetUniformLocation(entity->effect.program, "fcolor");
-	    GLint projection_uloc = glGetUniformLocation(entity->effect.program, "projection");
+	    GLint transform_uloc = glGetUniformLocation(drawable->effect.program, "transform");
+	    GLint color_uloc = glGetUniformLocation(drawable->effect.program, "fcolor");
+	    GLint projection_uloc = glGetUniformLocation(drawable->effect.program, "projection");
 
 	    // Setting vertices and indices
-	    glBindVertexArray(entity->vao);
-	    glBindBuffer(GL_ARRAY_BUFFER, entity->vbo);
-	    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, entity->ibo);
+	    glBindVertexArray(drawable->vao);
+	    glBindBuffer(GL_ARRAY_BUFFER, drawable->vbo);
+	    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawable->ibo);
 
 	    // Input data location as in the vertex buffer
-	    GLint in_position_loc = glGetAttribLocation(entity->effect.program, "in_position");
-	    GLint in_texcoord_loc = glGetAttribLocation(entity->effect.program, "in_texcoord");
+	    GLint in_position_loc = glGetAttribLocation(drawable->effect.program, "in_position");
+	    GLint in_texcoord_loc = glGetAttribLocation(drawable->effect.program, "in_texcoord");
 	    glEnableVertexAttribArray(in_position_loc);
 	    glEnableVertexAttribArray(in_texcoord_loc);
 	    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)0);
@@ -125,13 +129,13 @@ void RenderSystem::draw(const mat3 & projection, const std::vector<Entity*>& ent
 
 	    // Enabling and binding texture to slot 0
 	    glActiveTexture(GL_TEXTURE0);
-	    glBindTexture(GL_TEXTURE_2D, entity->texture->id);
+	    glBindTexture(GL_TEXTURE_2D, drawable->texture->id);
 
 	    // Setting uniform values to the currently bound program
-	    glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&entity->transform.out);
+	    glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&drawable->transform);
 	    float color[] = { 1.f, 1.f, 1.f };
 	    glUniform3fv(color_uloc, 1, color);
-	    glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
+	    glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&drawable->projection);
 
 	    // Drawing!
 	    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
@@ -161,7 +165,7 @@ namespace
 	}
 }
 
-bool Entity::Effect::load_from_file(const char* vs_path, const char* fs_path) 
+bool RenderSystem::load_from_file(Drawable::Effect& effect, const char* vs_path, const char* fs_path)
 {
 	gl_flush_errors();
 
@@ -186,38 +190,38 @@ bool Entity::Effect::load_from_file(const char* vs_path, const char* fs_path)
 	GLsizei vs_len = (GLsizei)vs_str.size();
 	GLsizei fs_len = (GLsizei)fs_str.size();
 
-	vertex = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertex, 1, &vs_src, &vs_len);
-	fragment = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragment, 1, &fs_src, &fs_len);
+	effect.vertex = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(effect.vertex, 1, &vs_src, &vs_len);
+    effect.fragment = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(effect.fragment, 1, &fs_src, &fs_len);
 
 	// Compiling
 	// Shaders already delete if compilation fails
-	if (!gl_compile_shader(vertex))
+	if (!gl_compile_shader(effect.vertex))
 		return false;
 
-	if (!gl_compile_shader(fragment))
+	if (!gl_compile_shader(effect.fragment))
 	{
-		glDeleteShader(vertex);
+		glDeleteShader(effect.vertex);
 		return false;
 	}
 
 	// Linking
-	program = glCreateProgram();
-	glAttachShader(program, vertex);
-	glAttachShader(program, fragment);
-	glLinkProgram(program);
+    effect.program = glCreateProgram();
+	glAttachShader(effect.program, effect.vertex);
+	glAttachShader(effect.program, effect.fragment);
+	glLinkProgram(effect.program);
 	{
 		GLint is_linked = 0;
-		glGetProgramiv(program, GL_LINK_STATUS, &is_linked);
+		glGetProgramiv(effect.program, GL_LINK_STATUS, &is_linked);
 		if (is_linked == GL_FALSE)
 		{
 			GLint log_len;
-			glGetProgramiv(program, GL_INFO_LOG_LENGTH, &log_len);
+			glGetProgramiv(effect.program, GL_INFO_LOG_LENGTH, &log_len);
 			std::vector<char> log(log_len);
-			glGetProgramInfoLog(program, log_len, &log_len, log.data());
+			glGetProgramInfoLog(effect.program, log_len, &log_len, log.data());
 
-			release();
+            release(effect);
 			fprintf(stderr, "Link error: %s", log.data());
 			return false;
 		}
@@ -225,7 +229,7 @@ bool Entity::Effect::load_from_file(const char* vs_path, const char* fs_path)
 
 	if (gl_has_errors())
 	{
-		release();
+		release(effect);
 		fprintf(stderr, "OpenGL errors occured while compiling Effect");
 		return false;
 	}
@@ -233,25 +237,23 @@ bool Entity::Effect::load_from_file(const char* vs_path, const char* fs_path)
 	return true;
 }
 
-void Entity::Effect::release()
+void RenderSystem::release(Drawable::Effect &effect)
 {
-	glDeleteProgram(program);
-	glDeleteShader(vertex);
-	glDeleteShader(fragment);
+	glDeleteProgram(effect.program);
+	glDeleteShader(effect.vertex);
+	glDeleteShader(effect.fragment);
 }
 
-void Entity::Transform::begin()
-{
-	out = { { 1.f, 0.f, 0.f }, { 0.f, 1.f, 0.f}, { 0.f, 0.f, 1.f} };
+
+void RenderSystem::transform(Entity &entity) {
+    mat3 out = { { 1.f, 0.f, 0.f }, { 0.f, 1.f, 0.f}, { 0.f, 0.f, 1.f} };
+    translate(out, entity.position);
+    rotate(out, entity.radians);
+    scale(out, entity.scale);
+    entity.drawable->transform = out;
 }
 
-void Entity::Transform::scale(vec2 scale)
-{
-	mat3 S = { { scale.x, 0.f, 0.f },{ 0.f, scale.y, 0.f },{ 0.f, 0.f, 1.f } };
-	out = mul(out, S);
-}
-
-void Entity::Transform::rotate(float radians)
+void RenderSystem::rotate(mat3 &out, float radians)
 {
 	float c = cosf(radians);
 	float s = sinf(radians);
@@ -259,13 +261,14 @@ void Entity::Transform::rotate(float radians)
 	out = mul(out, R);
 }
 
-void Entity::Transform::translate(vec2 offset)
+void RenderSystem::translate(mat3 &out, vec2 offset)
 {
 	mat3 T = { { 1.f, 0.f, 0.f },{ 0.f, 1.f, 0.f },{ offset.x, offset.y, 1.f } };
 	out = mul(out, T);
 }
 
-void Entity::Transform::end()
+void RenderSystem::scale(mat3 &out, vec2 scale)
 {
-	//
+    mat3 S = { { scale.x, 0.f, 0.f },{ 0.f, scale.y, 0.f },{ 0.f, 0.f, 1.f } };
+    out = mul(out, S);
 }
