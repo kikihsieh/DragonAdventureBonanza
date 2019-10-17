@@ -5,6 +5,12 @@
 #include "common.hpp"
 
 struct Entity {
+
+    ~Entity() {
+        delete physics;
+        delete drawable;
+    }
+
     // pointers to all components go here
 	Physics *physics = nullptr;
 	Drawable* drawable = nullptr;
