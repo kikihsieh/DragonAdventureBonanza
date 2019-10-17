@@ -8,7 +8,9 @@ Background::Background()  {
     drawable->vs_shader = shader_path("background.vs.glsl");
 }
 
-Background::~Background() {}
+Background::~Background() {
+    // TODO: !!!!! FREE MEMORY
+}
 
 bool Background::init(const char* path) {
     drawable->texture_path = path;
