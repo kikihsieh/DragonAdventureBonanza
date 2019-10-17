@@ -16,7 +16,7 @@ bool Scene::init() {
     background.scale = {1.f, 1.f};
     background.radians = 0.f;
     background.init(get_bg_texture_path());
-    m_entities.emplace_back(background);
+    m_entities.push_back(background);
 
     return m_rendersystem.init(m_entities);
 }

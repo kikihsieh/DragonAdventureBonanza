@@ -66,12 +66,12 @@ bool Level::init_player(){
     player.physics->vy=0.f;
     player.physics->jump_speed = -500.f;
     player.scale = {0.16f, 0.16f};
-    m_entities.emplace_back(player);
+    m_entities.push_back(player);
     return true;
 }
 
 void Level::update(float elapsed_ms) {
-    m_physics_system->update(elapsed_ms);
+//    m_physics_system->update(elapsed_ms);
 }
 
 void Level::draw(const mat3 &projection) {

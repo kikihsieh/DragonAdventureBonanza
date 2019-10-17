@@ -64,9 +64,6 @@ protected:
 
     vec2 m_x_boundaries;
     vec2 m_y_boundaries;
-
-    // Game entities
-    // std::vector<std::shared_ptr<Entity>> m_entities;
 };
 
 #endif //DAB_LEVEL_HPP

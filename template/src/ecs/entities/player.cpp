@@ -12,6 +12,7 @@ Player::Player() {
     drawable->texture_path = textures_path("player.png");
     drawable->fs_shader = shader_path("textured.fs.glsl");
     drawable->vs_shader = shader_path("textured.vs.glsl");
+    physics = new Physics();
 }
 
 bool Player::init(vec2 x_bounds, vec2 y_bounds)
