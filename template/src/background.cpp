@@ -1,17 +1,15 @@
 #include "background.hpp"
 
-Background::Background() : background_texture(new Texture()) {
+Background::Background()  {
     scale = {1.f, 1.f};
     radians = 0.f;
-    Drawable* d = new Drawable();
-    d->fs_shader = shader_path("background.fs.glsl");
-    d->vs_shader = shader_path("background.vs.glsl");
-    drawable = d;
+    drawable = new Drawable();
+    drawable->fs_shader = shader_path("background.fs.glsl");
+    drawable->vs_shader = shader_path("background.vs.glsl");
 }
 
 Background::~Background() {
     // TODO: !!!!! FREE MEMORY
-     delete background_texture;
 }
 
 bool Background::init(const char* path) {
@@ -21,6 +19,5 @@ bool Background::init(const char* path) {
  }
 
  void Background::destroy() {
-     delete background_texture;
-     background_texture = nullptr;
+
  }

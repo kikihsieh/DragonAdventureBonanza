@@ -14,7 +14,4 @@ public:
 
 	// Releases all associated resources
 	void destroy();
-
-private:
-	 Texture* background_texture;
 };

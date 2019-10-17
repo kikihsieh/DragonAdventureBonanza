@@ -4,24 +4,7 @@
 #include <sstream>
 #include <cmath>
 
-RenderSystem::RenderSystem(){
-    //update this when adding sprites
-//    map_init(entity_textures)
-//            (PLAYER,"player.png")
-//            (FOREST_BACKGROUND, "background.png")
-//            (CAVE_BACKGROUND, "platform-lg.png")
-//            (START_MENU_BACKGROUND,"night.png");
-//    map_init(vs_shader_types)
-//            (PLAYER, "textured.vs.glsl")
-//            (FOREST_BACKGROUND, "background.vs.glsl")
-//            (CAVE_BACKGROUND, "background.vs.glsl")
-//            (START_MENU_BACKGROUND, "background.vs.glsl");
-//    map_init(fs_shader_types)
-//            (PLAYER, "textured.fs.glsl")
-//            (FOREST_BACKGROUND, "background.fs.glsl")
-//            (CAVE_BACKGROUND, "background.fs.glsl")
-//            (START_MENU_BACKGROUND, "background.fs.glsl");
-}
+RenderSystem::RenderSystem(){}
 
 RenderSystem::~RenderSystem() = default;
 
@@ -35,7 +18,7 @@ bool RenderSystem::init(const std::vector<Entity> &entities) {
         Drawable * drawable = entity.drawable;
 
         if (!entity.drawable->texture->is_valid()) {
-            if (entity.drawable->texture->load_from_file(entity.drawable->texture_path)){
+            if (!entity.drawable->texture->load_from_file(entity.drawable->texture_path)){
                 fprintf(stderr, "Failed to load player texture!");
                 return false;
             }

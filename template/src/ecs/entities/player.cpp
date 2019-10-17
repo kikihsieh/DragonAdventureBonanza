@@ -8,7 +8,7 @@
 #include <iostream>
 
 Player::Player() {
-    drawable = {};
+    drawable = new Drawable();
     drawable->texture_path = textures_path("player.png");
     drawable->fs_shader = shader_path("textured.fs.glsl");
     drawable->vs_shader = shader_path("textured.vs.glsl");

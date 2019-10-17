@@ -5,9 +5,6 @@
 #include "scene.hpp"
 #include "background.hpp"
 
-#include <iostream>
-#include <math.h>
-
 Scene::Scene() {
 }
 
@@ -18,6 +15,7 @@ bool Scene::init() {
     Background background;
     background.scale = {1.f, 1.f};
     background.radians = 0.f;
+    background.init(get_bg_texture_path());
     m_entities.emplace_back(background);
 
     return m_rendersystem.init(m_entities);
