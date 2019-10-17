@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ecs/components/drawable.hpp>
+#include "../components/drawable.hpp"
 #include "../components/physics.hpp"
 #include "common.hpp"
 

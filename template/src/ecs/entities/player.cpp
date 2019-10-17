@@ -159,6 +159,7 @@ void Player::update(float ms)
 
 vec2 Player::get_position() const
 {
+	return vec2{ 0.f,0.f };
 //	return motion.position;
 }
 

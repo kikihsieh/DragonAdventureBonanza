@@ -155,6 +155,7 @@ void Spider::draw(const mat3& projection)
 
 vec2 Spider::get_position()const
 {
+	return vec2{ 0.f,0.f };
 //	return motion.position;
 }
 
@@ -210,6 +211,7 @@ void Spider::y_axis_movement (){
 
 vec2 Spider::get_bounding_box() const
 {
+	return{ 0.f,0.f };
 	// Returns the local bounding coordinates scaled by the current size of the spider
 	// fabs is to avoid negative scale due to the facing direction.
 //	return { std::fabs(physics.scale.x) * texture->width, std::fabs(physics.scale.y) * texture->height };
