@@ -1,6 +1,5 @@
 #include "render_system.hpp"
 #include <vector>
-#include <iostream>
 #include <sstream>
 #include <cmath>
 
@@ -70,8 +69,6 @@ void RenderSystem::destroy() {
 	    glDeleteShader(entity.drawable->effect.vertex);
 	    glDeleteShader(entity.drawable->effect.fragment);
 	    glDeleteShader(entity.drawable->effect.program);
-        delete entity.drawable->texture;
-        entity.drawable->texture = nullptr;
     }
 }
 

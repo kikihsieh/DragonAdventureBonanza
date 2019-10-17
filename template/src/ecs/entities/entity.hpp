@@ -2,14 +2,21 @@
 
 #include "../components/drawable.hpp"
 #include "../components/physics.hpp"
-#include "common.hpp"
 
 struct Entity {
-    // pointers to all components go here
-	Physics *physics = nullptr;
-	Drawable* drawable = nullptr;
+    Entity() :
+        physics(nullptr),
+        drawable(nullptr),
+        radians(0.f),
+        position({0.f, 0.f}),
+        scale({1.f, 1.f}) {
+    }
 
-	float radians = 0.f;
-	vec2 position = {0,0};
-	vec2 scale = {0,0};
+    // Components
+	Physics *physics;
+	Drawable* drawable;
+
+	float radians;
+	vec2 position;
+	vec2 scale;
 };

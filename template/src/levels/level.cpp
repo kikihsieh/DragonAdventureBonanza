@@ -2,7 +2,6 @@
 
 #include <utility>
 #include <ecs/entities/player.hpp>
-// #include <ecs/entities/player.hpp>
 
 Level::Level(bool unlocked) :
     m_unlocked(unlocked),
@@ -22,7 +21,7 @@ void Level::destroy() {
     delete m_physics_system;
 }
 
-bool Level::init_scene(MapVector map, TexturePathMapping mapping, const char * texturePath) {
+bool Level::init_scene(MapVector map, TexturePathMapping mapping) {
     m_tile_map = new TileMap(this);
     for (auto & iter : mapping) {
         auto* texture = new Texture();
@@ -39,12 +38,8 @@ bool Level::init_scene(MapVector map, TexturePathMapping mapping, const char * t
         return false;
     }
     
-    // std::shared_ptr<Player> player = std::make_shared<Player>();
-    // player->init(get_x_boundaries(), get_y_boundaries());
-    
     m_x_boundaries.y = m_tile_map->get_map_dim().x;
     m_y_boundaries.y = m_tile_map->get_map_dim().y;
-//    m_physics_system = new PhysicsSystem(m_tile_map->get_tiles());
     init_player();
     return Scene::init();
 }
@@ -58,26 +53,11 @@ bool Level::init_enemy(int type, vec2 initial_pos) {
 
 bool Level::init_player(){
     Player player;
-    player.position = { 100.f, 450.f };
-    player.physics->gravity = 10.f;
-    player.physics->horizontal_acc = 0.f;
-    player.physics->walking_speed = 250.f;
-    player.physics->vx=0.f;
-    player.physics->vy=0.f;
-    player.physics->jump_speed = -500.f;
-    player.scale = {0.16f, 0.16f};
-    m_entities.push_back(player);
+//     player->init(get_x_boundaries(), get_y_boundaries());
+    m_entities.emplace_back(player);
     return true;
 }
 
 void Level::update(float elapsed_ms) {
 //    m_physics_system->update(elapsed_ms);
-}
-
-void Level::draw(const mat3 &projection) {
-    Scene::draw(projection);
-    m_tile_map->draw(projection);
-    // for (auto& enemy : m_entities) {
-    //     enemy.get()->draw(projection);
-    // }
 }

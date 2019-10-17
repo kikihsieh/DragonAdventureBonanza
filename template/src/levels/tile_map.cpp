@@ -7,10 +7,7 @@ vec2 TileMap::TILE_SIZE = {48, 48};
 TileMap::TileMap(Level* level) : m_level(level) {
 }
 
-TileMap::~TileMap() {
-    // TODO delete tiles!!!
-    m_tiles.clear();
-}
+TileMap::~TileMap() = default;
 
 bool TileMap::init(MapVector map, TextureMapping dict) {
     std::vector< std::vector<int> >::const_iterator row;
@@ -41,7 +38,7 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
                 }
                 tile.set_texture(dict.at(*col));
                 tile.set_position(col - row->begin(), row - map.begin());
-                m_level->m_entities.push_back(tile);
+                m_level->m_entities.emplace_back(tile);
                 // TODO: Need to fix this to only store a pointer to tile
                 m_tiles.insert(std::map<int, Tile>::value_type(
                         TileMap::hash(col_index, row_index), tile));
@@ -52,10 +49,4 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
     m_map_dim.x = ((float) longest_row) * TILE_SIZE.x;
     m_map_dim.y = ((float) (map.end() - map.begin())) * TILE_SIZE.y;
     return true;
-}
-
-void TileMap::draw(const mat3 &projection) {
-    for (auto& tile : m_tiles) {
-//        tile.second->draw(projection);
-    }
 }

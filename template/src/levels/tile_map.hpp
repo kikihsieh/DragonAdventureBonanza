@@ -24,7 +24,6 @@ public:
     }
 
     bool init(MapVector map, TextureMapping mapping);
-    void draw(const mat3 &projection);
 
     vec2 get_map_dim() {
         return m_map_dim;

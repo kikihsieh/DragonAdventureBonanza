@@ -4,9 +4,6 @@
 #include "../ext/stb_image/stb_image.h"
 
 // stlib
-#include <vector>
-#include <iostream>
-#include <sstream>
 #include <cmath>
 
 void gl_flush_errors()

@@ -8,7 +8,6 @@
 
 class PhysicsSystem {
 public:
-    PhysicsSystem(std::map<int, std::shared_ptr<Tile>> tiles);
     void update(float elapsed_ms);
 
 private:

@@ -30,7 +30,6 @@ public:
 
     void destroy() override;
     void update(float elapsed_ms) override;
-    void draw(const mat3& projection) override;
 
     bool init_enemy(int type, vec2 initial_pos);
     bool init_player();
@@ -54,7 +53,7 @@ public:
 protected:
     virtual bool init_walking_enemy(int type, vec2 initial_pos) = 0;
 
-    bool init_scene(MapVector map, TexturePathMapping mapping, const char * texturePath);
+    bool init_scene(MapVector map, TexturePathMapping mapping);
 
     TextureMapping m_texture_mapping;
     TileMap* m_tile_map;

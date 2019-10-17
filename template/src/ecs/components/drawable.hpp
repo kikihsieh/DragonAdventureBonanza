@@ -4,6 +4,15 @@
 #include <common.hpp>
 
 struct Drawable {
+
+    Drawable() :
+        texture(new Texture()) {
+    }
+
+    ~Drawable() {
+        delete texture;
+    }
+
     const char* texture_path;
     const char* vs_shader;
     const char* fs_shader;
@@ -16,7 +25,7 @@ struct Drawable {
     GLuint ibo;
 
     TexturedVertex vertices[4];
-    Texture *texture = new Texture();
+    Texture *texture;
 
     mat3 transform;
     mat3 projection;
@@ -29,4 +38,5 @@ struct Drawable {
         GLuint program;
     } effect;
 };
+
 #endif //DAB_DRAWABLE_HPP

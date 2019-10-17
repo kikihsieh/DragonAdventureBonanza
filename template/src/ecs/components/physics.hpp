@@ -1,11 +1,15 @@
-#pragma once
+struct Physics {
+    Physics() :
+        gravity(10.f),
+        acceleration({0.f, 0.f}),
+        velocity({0.f, 0.f}),
+        jump_speed(50.f),
+        walk_speed(50.f) {
+    }
 
-struct Physics
-{
     float gravity;
-    float horizontal_acc; // do we need this?
-    float walking_speed;
-    float vx;
-    float vy;
+    vec2 acceleration;
+    vec2 velocity;
     float jump_speed;
+    float walk_speed;
 };

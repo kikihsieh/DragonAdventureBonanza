@@ -3,21 +3,19 @@
 //
 
 #include "scene.hpp"
-#include "background.hpp"
+#include "ecs/entities/background.hpp"
 
 Scene::Scene() {
 }
 
 Scene::~Scene() {
+    // TODO: call delete on the contents of m_entities
     m_entities.clear();
 };
 
 bool Scene::init() {
-    Background background;
-    background.scale = {1.f, 1.f};
-    background.radians = 0.f;
-    background.init(get_bg_texture_path());
-    m_entities.push_back(background);
+    Background background(get_bg_texture_path());
+    m_entities.emplace_back(background);
 
     return m_rendersystem.init(m_entities);
 }
@@ -25,6 +23,8 @@ bool Scene::init() {
 // Releases all graphics resources
 void Scene::destroy() {
     m_rendersystem.destroy();
+    // TODO call delete on the contents of m_entities
+    m_entities.clear();
 }
 
 void Scene::draw(const mat3& projection) {

@@ -5,8 +5,6 @@
 #define DAB_SCENE_HPP
 
 #include <vector>
-#include "common.hpp"
-// #include "background.hpp"
 #include "ecs/systems/render_system.hpp"
 
 class Scene

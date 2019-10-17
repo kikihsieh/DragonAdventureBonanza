@@ -8,7 +8,7 @@ ForestLevel::ForestLevel(bool unlocked) :
 ForestLevel::~ForestLevel() = default;
 
 bool ForestLevel::init() {
-    return Level::init_scene(m_tile_vec, m_texture_map, get_bg_texture_path());
+    return Level::init_scene(m_tile_vec, m_texture_map);
 }
 
 bool ForestLevel::init_walking_enemy(int type, vec2 initial_pos) {
