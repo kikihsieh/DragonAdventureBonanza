@@ -28,43 +28,8 @@ endif()
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/project_path.hpp.in" "${CMAKE_CURRENT_SOURCE_DIR}/src/project_path.hpp")
 
 # You can switch to use the file GLOB for simplicity but at your own risk
-# file(GLOB SOURCE_FILES src/*.cpp src/*.hpp)
+file(GLOB_RECURSE SOURCE_FILES src/*.cpp src/*.hpp)
 
-set(SOURCE_FILES
-        src/main.cpp
-        src/common.cpp
-        src/ecs/entities/player.cpp
-        src/ecs/entities/spider.cpp
-        src/background.cpp
-        src/world.cpp
-        src/camera.cpp
-        src/levels/level.cpp
-        src/levels/tile.cpp
-        src/levels/forest_level.cpp
-        src/levels/tile_map.cpp
-        src/levels/volcano_level.cpp
-        src/scene.cpp
-        src/scenes/button.cpp
-        src/scenes/start_menu.cpp
-        src/ecs/systems/physics_system.cpp
-
-        src/project_path.hpp
-        src/common.hpp
-        src/ecs/entities/player.hpp
-        src/ecs/entities/spider.hpp
-        src/background.hpp
-        src/world.hpp
-        src/camera.hpp
-        src/levels/level.hpp
-        src/levels/tile.hpp
-        src/levels/forest_level.hpp
-        src/levels/tile_map.hpp
-        src/levels/volcano_level.hpp
-        src/scene.hpp
-        src/scenes/button.hpp
-        src/scenes/start_menu.hpp
-        src/ecs/components/collider.hpp
-        src/ecs/systems/physics_system.hpp)
 
 if (IS_OS_MAC)
   include_directories(/usr/local/include)

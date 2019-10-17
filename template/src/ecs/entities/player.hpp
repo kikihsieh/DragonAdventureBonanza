@@ -3,6 +3,7 @@
 #include "common.hpp"
 #include <vector>
 #include <memory>
+#include "ecs/entities/entity.hpp"
 
 class Tile;
 
@@ -13,14 +14,14 @@ public:
     bool init(vec2 x_bounds, vec2 y_bounds);
 
 	// Releases all associated resources
-	void destroy();
+	// void destroy();
 	
 	// Update player position based on direction
 	// ms represents the number of milliseconds elapsed from the previous update() call
     void update(float ms);
 	
 	// Renders the player
-	void draw(const mat3& projection)override;
+	// void draw(const mat3& projection)override;
 
 // ========================================
 // TODO: collision code
@@ -77,9 +78,9 @@ private:
 	
     bool m_is_facing_forwards; // True if player is facing forward
 
-    float walking_speed;
-    float jumping_speed;
-    float gravity;
+    // float walking_speed;
+    // float jumping_speed;
+    // float gravity;
 	
 	float top;
 	float bottom;
@@ -89,7 +90,7 @@ private:
 	float m_airdash_duration;
 	float m_airdash_timer;
 	
-    Texture player_texture;
+    // Texture player_texture;
 	std::vector<vec2> player_world_coord;
-	TexturedVertex vertices[4];
+	// TexturedVertex vertices[4];
 };

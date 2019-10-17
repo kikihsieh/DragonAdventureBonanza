@@ -6,10 +6,11 @@
 #include <map>
 #include <memory>
 
+#include "../ecs/entities/entity.hpp"
 #include "tile_map.hpp"
 #include "tile.hpp"
 #include "scene.hpp"
-#include "background.hpp"
+// #include "background.hpp"
 #include <ecs/systems/physics_system.hpp>
 
 typedef std::map<int, const char*> TexturePathMapping;
@@ -32,6 +33,7 @@ public:
     void draw(const mat3& projection) override;
 
     bool init_enemy(int type, vec2 initial_pos);
+    bool init_player();
 
     bool is_level() override {
         return true;
@@ -64,8 +66,7 @@ protected:
     vec2 m_y_boundaries;
 
     // Game entities
-    std::vector<std::shared_ptr<Entity>> m_entities;
-
+    // std::vector<std::shared_ptr<Entity>> m_entities;
 };
 
 #endif //DAB_LEVEL_HPP

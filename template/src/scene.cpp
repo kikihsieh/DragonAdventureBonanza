@@ -13,16 +13,22 @@ Scene::Scene() {
 Scene::~Scene() = default;
 
 bool Scene::init() {
-    return m_background.init(get_bg_texture_path());
+    m_entities.clear();
+    Entity *background = {};
+    background->scale = {1.f, 1.f};
+    background->radians = 0.f;
+    m_entities.emplace_back(background);
+
+    return m_rendersystem.init(m_entities);
 }
 
 // Releases all graphics resources
 void Scene::destroy() {
-    m_background.destroy();
+    m_rendersystem.destroy(m_entities);
 }
 
 void Scene::draw(const mat3& projection) {
-    m_background.draw(projection);
+    m_rendersystem.draw(projection, m_entities);
 }
 
 bool Scene::is_level() {

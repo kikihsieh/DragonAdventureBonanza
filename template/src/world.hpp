@@ -2,9 +2,9 @@
 
 // internal
 #include "common.hpp"
-#include "ecs/entities/player.hpp"
+// #include "ecs/entities/player.hpp"
 #include "ecs/entities/spider.hpp"
-#include "background.hpp"
+// #include "background.hpp"
 #include "camera.hpp"
 #include "levels/tile.hpp"
 

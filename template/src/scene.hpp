@@ -4,8 +4,10 @@
 #ifndef DAB_SCENE_HPP
 #define DAB_SCENE_HPP
 
+#include <vector>
 #include "common.hpp"
-#include "background.hpp"
+// #include "background.hpp"
+#include "ecs/systems/render_system.hpp"
 
 class Scene
 {
@@ -25,7 +27,9 @@ public:
     virtual bool is_level();
     virtual const char * get_bg_texture_path() = 0;
 
+    std::vector<Entity*> m_entities;
+
 private:
-    Background m_background;
+	RenderSystem m_rendersystem;
 };
 #endif
