@@ -6,7 +6,7 @@
 #include "ecs/entities/spider.hpp"
 // #include "background.hpp"
 #include "camera.hpp"
-#include "levels/tile.hpp"
+#include "ecs/entities/tile.hpp"
 
 // stlib
 #include <vector>

@@ -31,13 +31,7 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
                 float pos_y = ((float) (row_index) * TILE_SIZE.y);
 //                m_level->init_enemy(*col, {pos_x, pos_y});
             } else {
-                Tile tile;
-                if (!tile.init()) {
-                    fprintf(stderr, "Failed to initialize tile!");
-                    return false;
-                }
-                tile.set_texture(dict.at(*col));
-                tile.set_position(col - row->begin(), row - map.begin());
+                Tile tile(dict.at(*col), col_index, row_index);
                 m_level->m_entities.emplace_back(tile);
                 // TODO: Need to fix this to only store a pointer to tile
                 m_tiles.insert(std::map<int, Tile>::value_type(

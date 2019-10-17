@@ -2,7 +2,7 @@
 #define DAB_TILE_MAP_HPP
 
 #include <common.hpp>
-#include <levels/tile.hpp>
+#include <ecs/entities/tile.hpp>
 #include "level.hpp"
 #include <memory>
 

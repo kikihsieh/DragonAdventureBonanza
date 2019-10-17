@@ -1,8 +1,6 @@
 #include <ecs/entities/entity.hpp>
 
-class Background : public Entity
-{
-public:
+struct Background : public Entity {
     Background(const char* texture_path) : Entity() {
         drawable = new Drawable();
         drawable->texture_path = texture_path;

@@ -6,12 +6,12 @@
 #include <map>
 #include <memory>
 
+#include "../ecs/systems/physics_system.hpp"
 #include "../ecs/entities/entity.hpp"
+#include "ecs/entities/tile.hpp"
 #include "tile_map.hpp"
-#include "tile.hpp"
 #include "scene.hpp"
-// #include "background.hpp"
-#include <ecs/systems/physics_system.hpp>
+
 
 typedef std::map<int, const char*> TexturePathMapping;
 typedef std::map<int, Texture*> TextureMapping;
