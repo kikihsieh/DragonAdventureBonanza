@@ -1,21 +1,21 @@
 #pragma once
 
-#include "common.hpp"
 #include <vector>
 
-
+#include "common.hpp"
 #include "entity.hpp"
 
 struct Tile : public Entity {
-    Tile(Texture* texture, int col, int row) {
-        scale = { 0.75f, 0.75f };
+    Tile(Texture* texture, vec2 pos, vec2 scale, vec2 size) {
+        this->scale = scale;
 
         drawable = new Drawable();
         drawable->fs_shader = shader_path("textured.fs.glsl");
         drawable->vs_shader = shader_path("textured.vs.glsl");
         drawable->texture = texture;  
 
-        position.x = col * texture->width*scale.x - texture->width*0.5f*scale.x;
-        position.y = row * texture->height*scale.y + texture->height*0.5f*scale.y;
+        texture->height = size.x;
+        texture->width = size.y;
+        position = pos;
     }
 };

@@ -2,7 +2,8 @@
 #include <map>
 #include "tile_map.hpp"
 
-vec2 TileMap::TILE_SIZE = {48, 48};
+vec2 TileMap::TILE_SIZE = {64, 64};
+vec2 TileMap::TILE_SCALE = { 0.75f, 0.75f };
 
 TileMap::TileMap(Level* level) : m_level(level) {
 }
@@ -26,12 +27,10 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
             int col_index = col - row->begin();
 
             if (*col < 0) {
-                float pos_x = ((float) (col_index))  * TILE_SIZE.x;
-                float pos_y = ((float) (row_index) * TILE_SIZE.y);
-                Spider s(dict.at(*col), col_index, row_index);
+                Spider s(dict.at(*col), get_coord_from_tile_pos(col_index, row_index));
                 m_level->m_entities.emplace_back(s);
             } else {
-                Tile tile(dict.at(*col), col_index, row_index);
+                Tile tile(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), TILE_SCALE, TILE_SIZE);
                 auto it = m_level->m_entities.emplace(m_level->m_entities.end(), tile);
                 m_tiles.insert(std::map<int, Tile*>::value_type(
                         TileMap::hash(col_index, row_index), (Tile*) &*it));
