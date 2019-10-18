@@ -1,10 +1,12 @@
 #include "physics_system.hpp"
 
 void PhysicsSystem::update(float ms) {
-    for (auto entity : m_entities) {
+    for (auto &entity : *m_entities) {
         if (!entity.physics) {
             continue;
         }
+
+        // TODO use acceleration
 
         float x_step = entity.physics->velocity.x * (ms / 1000);
         float y_step = entity.physics->velocity.y * (ms / 1000);
@@ -14,8 +16,9 @@ void PhysicsSystem::update(float ms) {
     }
 }
 
-bool PhysicsSystem::init(const std::vector<Entity> &entities, std::map<int, Tile *> tiles) {
+bool PhysicsSystem::init(std::vector<Entity> *entities, std::map<int, Tile *> tiles) {
     m_entities = entities;
     m_tiles = tiles;
+
     return true;
 }

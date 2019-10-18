@@ -16,7 +16,7 @@ bool Scene::init() {
     Background background(get_bg_texture_path());
     m_entities.insert(m_entities.begin(), background);
 
-    return m_rendersystem.init(m_entities);
+    return m_rendersystem.init(&m_entities);
 }
 
 // Releases all graphics resources

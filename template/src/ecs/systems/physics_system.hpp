@@ -6,12 +6,12 @@
 
 class PhysicsSystem {
 public:
-    bool init(const std::vector<Entity> &entities, std::map<int, Tile*> tiles);
+    bool init(std::vector<Entity> *entities, std::map<int, Tile*> tiles);
 
     void update(float ms);
 
 private:
-    std::vector<Entity> m_entities;
+    std::vector<Entity>* m_entities;
     std::map<int, Tile*> m_tiles;
 };
 

@@ -9,7 +9,7 @@ public:
 	RenderSystem();
 	~RenderSystem();
 
-	bool init(const std::vector<Entity> &entities);
+	bool init(std::vector<Entity>* entities);
 	void destroy();
 	void draw(mat3 projection);
 
@@ -22,7 +22,7 @@ private:
     void scale(mat3 &out, vec2 scale);
 
     void release(Drawable::Effect& effect);
-    std::vector<Entity> m_entities;
+    std::vector<Entity>* m_entities;
     std::map<const char*, Drawable::Effect> m_effects;
     mat3 out;
 };

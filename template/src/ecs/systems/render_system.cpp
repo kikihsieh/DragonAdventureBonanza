@@ -7,11 +7,12 @@ RenderSystem::RenderSystem(){}
 
 RenderSystem::~RenderSystem() = default;
 
-bool RenderSystem::init(const std::vector<Entity> &entities) {
+bool RenderSystem::init(std::vector<Entity> *entities) {
 	m_effects = {};
     m_entities = entities;
 
-    for (auto & entity : entities){
+
+    for (auto & entity : *entities){
         if (entity.drawable == nullptr) {
             continue;
         }
@@ -71,7 +72,7 @@ bool RenderSystem::init(const std::vector<Entity> &entities) {
 }
 
 void RenderSystem::destroy() {
-	for(auto & entity: m_entities){
+	for(auto & entity: *m_entities){
         glDeleteBuffers(1, &entity.drawable->vbo);
 	    glDeleteShader(entity.drawable->effect.vertex);
 	    glDeleteShader(entity.drawable->effect.fragment);
@@ -81,7 +82,7 @@ void RenderSystem::destroy() {
 
 void RenderSystem::draw(mat3 projection)
 {
-    for(auto & entity: m_entities){
+    for(auto & entity: *m_entities){
         if (entity.drawable == nullptr) {
             continue;
         }

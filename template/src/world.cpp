@@ -101,9 +101,6 @@ bool World::update(float elapsed_ms)
 	glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
 
-//	if (m_current_scene->is_level()) {
-//		m_camera.update(m_player.get_position(), m_player.is_facing_forwards());
-//	}
     m_current_scene->update(elapsed_ms);
 	return true;
 }
