@@ -9,14 +9,18 @@ void PhysicsSystem::update(float ms) {
             continue;
         }
 
-        entity.physics->velocity.x += entity.physics->acceleration.x;
-        entity.physics->velocity.y += entity.physics->acceleration.y;
-
         float x_step = entity.physics->velocity.x * (ms / 1000);
         float y_step = entity.physics->velocity.y * (ms / 1000);
 
-        entity.position.x += x_step;
-        entity.position.y += y_step;
+        if (entity.input) {
+            // inputs here
+        } else {
+            entity.physics->velocity.x += entity.physics->acceleration.x;
+            entity.physics->velocity.y += entity.physics->acceleration.y;
+
+            entity.position.x += x_step;
+            entity.position.y += y_step;
+        }
 
         if (entity.collider) {
             tile_collisions(entity);

@@ -2,7 +2,6 @@
 
 #include <vector>
 
-#include "common.hpp"
 #include "entity.hpp"
 
 struct Tile : public Entity {

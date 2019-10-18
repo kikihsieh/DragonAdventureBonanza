@@ -84,6 +84,13 @@ bool World::init(vec2 screen)
 	// Initialize the screen texture
 	m_screen_tex.create_from_screen(m_window);
 	m_camera.init(screen);
+	m_input_updates={
+		{"UP", false},
+		{"LEFT", false},
+		{"RIGHT", false},
+		{"SHIFT_LEFT", false},
+		{"SHIFT_RIGHT", false}
+	};
 
 	return load_scene(m_scenes.at(MAIN_MENU));
 }
@@ -101,7 +108,7 @@ bool World::update(float elapsed_ms)
 	glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
 
-    m_current_scene->update(elapsed_ms);
+    m_current_scene->update(elapsed_ms, &m_input_updates);
 	return true;
 }
 
@@ -190,35 +197,39 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
         return;
     }
 
-//    if (m_player.can_jump() && (key == GLFW_KEY_UP || key == GLFW_KEY_W)) {
-//        if (action == GLFW_PRESS) {
-//            m_player.jump();
-//        }
-//    }
-//	if (m_player.can_airdash() && (key == GLFW_KEY_LEFT_SHIFT || key == GLFW_KEY_RIGHT_SHIFT)) {
-//		if (action == GLFW_PRESS) {
-//			if (glfwGetKey(window, GLFW_KEY_LEFT) || glfwGetKey(window, GLFW_KEY_A))
-//				m_player.air_dash(false);
-//			else
-//				m_player.air_dash(true);
-//		}
-//	}
-//
-//	if (key == GLFW_KEY_LEFT || key == GLFW_KEY_A) {
-//        if (action == GLFW_PRESS && !m_player.is_airdashing()) {
-//            m_player.walk(false);
-//        } else if (action == GLFW_RELEASE && !m_player.is_airdashing()) {
-//            m_player.stop();
-//        }
-//    }
-//
-//	if (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D) {
-//        if (action == GLFW_PRESS && !m_player.is_airdashing()) {
-//            m_player.walk(true);
-//        } else if (action == GLFW_RELEASE && !m_player.is_airdashing()) {
-//            m_player.stop();
-//        }
-//    }
+   	if (key == GLFW_KEY_UP || key == GLFW_KEY_W) {
+	   	if (action == GLFW_PRESS){
+       		m_input_updates["UP"] = true;
+	   	} else if (action == GLFW_RELEASE ) {
+			m_input_updates["UP"] = false;
+		}
+   	}
+
+// Were we only trying to do right airdash?
+	// if ((key == GLFW_KEY_LEFT_SHIFT || key == GLFW_KEY_RIGHT_SHIFT) && action == GLFW_PRESS) {
+	// 	if (glfwGetKey(window, GLFW_KEY_LEFT) || glfwGetKey(window, GLFW_KEY_A)){
+	// 		// m_player.air_dash(false);
+	// 	}
+	// 	else{
+	// 		// m_player.air_dash(true);
+	// 	}
+	// }
+
+	if (key == GLFW_KEY_LEFT || key == GLFW_KEY_A) {
+       if (action == GLFW_PRESS) {
+        	m_input_updates["LEFT"] = true;
+       } else if (action == GLFW_RELEASE ) {
+        	m_input_updates["LEFT"] = false;
+       }
+   	}
+
+	if (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D) {
+       if (action == GLFW_PRESS) {
+		   m_input_updates["RIGHT"] = true;
+       } else if (action == GLFW_RELEASE) {
+			m_input_updates["RIGHT"] = false;
+       }
+   	}
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)

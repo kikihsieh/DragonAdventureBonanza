@@ -2,11 +2,7 @@
 
 // internal
 #include "common.hpp"
-// #include "ecs/entities/player.hpp"
-#include "ecs/entities/spider.hpp"
-// #include "background.hpp"
 #include "camera.hpp"
-#include "ecs/entities/tile.hpp"
 
 // stlib
 #include <vector>
@@ -69,6 +65,7 @@ private:
     // Game entities
     Scene* m_current_scene;
     std::map<Scene_names, Scene*> m_scenes;
+	std::map<const char*, bool> m_input_updates;
 
     Camera m_camera;
 };

@@ -22,7 +22,7 @@ void StartMenu::destroy() {
     m_buttons.clear();
 }
 
-void StartMenu::update(float elapsed_ms) {
+void StartMenu::update(float elapsed_ms, std::map<const char*, bool> *input_updates) {
     for (auto& button : m_buttons) {
         button->update(elapsed_ms);
     }
