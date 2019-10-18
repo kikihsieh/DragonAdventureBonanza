@@ -10,7 +10,6 @@ Scene::Scene() : m_inputsystem(new InputSystem()){
 
 Scene::~Scene() {
     destroy();
-    delete m_inputsystem;
 };
 
 bool Scene::init() {

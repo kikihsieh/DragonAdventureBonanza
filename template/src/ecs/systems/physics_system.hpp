@@ -13,7 +13,7 @@ public:
 private:
     void tile_collisions(Entity& entity);
     void entity_collisions(Entity& entity);
-    bool collide(Entity& e1, Entity& e2);
+    void collide(Entity& e1, Entity& e2);
     void move(float ms, Entity& entity);
 
     std::vector<Entity>* m_entities;

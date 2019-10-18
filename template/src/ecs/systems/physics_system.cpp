@@ -84,7 +84,7 @@ void PhysicsSystem::move(float ms, Entity& entity) {
     entity.position.y += y_step;
 }
 
-bool PhysicsSystem::collide(Entity &e1, Entity &e2) {
+void PhysicsSystem::collide(Entity &e1, Entity &e2) {
     float e1_height = e1.drawable->texture->height * e1.scale.x;
     float e1_width = e1.drawable->texture->width * e1.scale.y;
 
@@ -105,12 +105,10 @@ bool PhysicsSystem::collide(Entity &e1, Entity &e2) {
     bool y_overlaps = (e1_top < e2_bottom) && (e1_bottom > e2_top);
     bool collision = x_overlaps && y_overlaps;
 
-    if (collision) {
-        if (y_overlaps) {
-            e1.collider->vertical = true;
-        } else {
-            e1.collider->horizontal = true;
-        }
+    // TODO: check for side and bottom collisions
+    //  Update collider of e2 if != nullptr
+    if ((collision && e1_bottom > e2_top)) {
+        e1.collider->vertical = true;
     }
-    return collision;
+
 }
