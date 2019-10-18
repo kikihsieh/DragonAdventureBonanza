@@ -7,11 +7,10 @@
 #include <memory>
 
 #include "../ecs/systems/physics_system.hpp"
-#include "../ecs/entities/entity.hpp"
 #include "ecs/entities/tile.hpp"
 #include "tile_map.hpp"
 #include "scene.hpp"
-
+#include "../ecs/entities/player.hpp"
 
 typedef std::map<int, const char*> TexturePathMapping;
 typedef std::map<int, Texture*> TextureMapping;
@@ -50,6 +49,8 @@ public:
         return m_y_boundaries;
     }
 
+    vec2 get_player_position() override;
+    bool is_forward() override;
 protected:
     virtual bool init_walking_enemy(int type, vec2 initial_pos) = 0;
 
@@ -58,6 +59,7 @@ protected:
     TextureMapping m_texture_mapping;
     TileMap* m_tile_map;
     PhysicsSystem* m_physics_system;
+    Player* m_player;
 
     bool m_unlocked;
 

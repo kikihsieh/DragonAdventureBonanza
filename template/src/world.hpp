@@ -2,7 +2,8 @@
 
 // internal
 #include "common.hpp"
-#include "camera.hpp"
+#include "ecs/systems/camera_system.hpp"
+#include <levels/level.hpp>
 
 // stlib
 #include <vector>
@@ -11,7 +12,6 @@
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <SDL_mixer.h>
-#include <levels/level.hpp>
 
 // Container for all our entities and game logic. Individual rendering / update is
 // deferred to the relative update() methods
@@ -45,6 +45,7 @@ public:
 	// Should the game be over ?
 	bool is_over()const;
 
+	CameraSystem* m_camera;
 private:
     bool load_scene(Scene* scene);
     
@@ -66,6 +67,4 @@ private:
     // Game entities
     Scene* m_current_scene;
     std::map<Scene_names, Scene*> m_scenes;
-
-    Camera m_camera;
 };

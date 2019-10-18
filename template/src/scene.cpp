@@ -21,6 +21,7 @@ bool Scene::init() {
 // Releases all graphics resources
 void Scene::destroy() {
     m_rendersystem.destroy();
+    delete m_inputsystem;
     // TODO call delete on the contents of m_entities
     m_entities.clear();
 }

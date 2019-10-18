@@ -1,19 +1,18 @@
-#ifndef DAB_CAMERA_HPP
-#define DAB_CAMERA_HPP
+#pragma once
 
-#include "common.hpp"
-#include "ecs/entities/player.hpp"
+#include "../entities/player.hpp"
 
-class Camera {
-
+class CameraSystem{
 public:
-    void init(vec2 dim);
-
-    void update(vec2 player, bool moving_forwards);
+    CameraSystem();
+    ~CameraSystem();
+    
+    bool init(vec2 dim);
+    void update(vec2 player_pos, bool moving_forwards);
     void reset();
 
     float compute_translation_x();
-
+    
 private:
     vec2 m_center;
     vec2 m_dim;
@@ -26,5 +25,3 @@ private:
     bool m_snap_threshold_b; // true if camera should snap to default backwards position
     bool m_snap_threshold_f; // true if camera should snap to default forwards position
 };
-
-#endif //DAB_CAMERA_HPP

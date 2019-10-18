@@ -85,13 +85,14 @@ bool World::init(vec2 screen)
 
 	// Initialize the screen texture
 	m_screen_tex.create_from_screen(m_window);
-	m_camera.init(screen);
+	m_camera->init(screen);
 
 	return load_scene(m_scenes.at(MAIN_MENU));
 }
 
 // Releases all the associated resources
 void World::destroy() {
+	delete m_camera;
 	glDeleteFramebuffers(1, &m_frame_buffer);
 	glfwDestroyWindow(m_window);
 }
@@ -99,11 +100,10 @@ void World::destroy() {
 // Update our game world
 bool World::update(float elapsed_ms)
 {
-	int w, h;
-	glfwGetFramebufferSize(m_window, &w, &h);
-	vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
-
     m_current_scene->update(elapsed_ms);
+	vec2 pos = m_current_scene->get_player_position();
+	bool moving_forwards = m_current_scene->is_forward();
+	m_camera->update(pos, moving_forwards);
 	return true;
 }
 
@@ -138,7 +138,7 @@ void World::draw() {
 
 	float sx = 2.f / (right - left);
 	float sy = 2.f / (top - bottom);
-	float tx = m_camera.compute_translation_x();
+	float tx = m_camera->compute_translation_x();
 	float ty = -(top + bottom) / (top - bottom);
 	mat3 projection_2D{ { sx, 0.f, 0.f },{ 0.f, sy, 0.f },{ tx, ty, 1.f } };
 
@@ -173,7 +173,7 @@ bool World::load_scene(Scene* scene) {
     if (m_current_scene) {
         m_current_scene->destroy();
     }
-    m_camera.reset();
+    m_camera->reset();
 
     m_current_scene = scene;
     m_current_scene->init();
