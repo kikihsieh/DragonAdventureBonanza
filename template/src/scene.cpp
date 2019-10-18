@@ -15,7 +15,7 @@ Scene::~Scene() {
 
 bool Scene::init() {
     Background background(get_bg_texture_path());
-    m_entities.emplace_back(background);
+    m_entities.insert(m_entities.begin(), background);
 
     return m_rendersystem.init(m_entities);
 }
@@ -28,7 +28,7 @@ void Scene::destroy() {
 }
 
 void Scene::draw(const mat3& projection) {
-    m_rendersystem.draw();
+    m_rendersystem.draw(projection);
 }
 
 bool Scene::is_level() {

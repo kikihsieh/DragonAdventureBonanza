@@ -11,7 +11,7 @@ public:
 
 	bool init(const std::vector<Entity> &entities);
 	void destroy();
-	void draw();
+	void draw(mat3 projection);
 
 private:
     bool load_from_file(Drawable::Effect& effect, const char* vs_path, const char* fs_path);
@@ -23,4 +23,5 @@ private:
 
     void release(Drawable::Effect& effect);
     std::vector<Entity> m_entities;
+    std::map<const char*, Drawable::Effect> m_effects;
 };

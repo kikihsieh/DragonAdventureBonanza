@@ -25,7 +25,6 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
 
             int col_index = col - row->begin();
 
-            // tiles less than 0 are entities
             if (*col < 0) {
                 float pos_x = ((float) (col_index))  * TILE_SIZE.x;
                 float pos_y = ((float) (row_index) * TILE_SIZE.y);
@@ -34,12 +33,13 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
                 Tile tile(dict.at(*col), col_index, row_index);
                 m_level->m_entities.emplace_back(tile);
                 // TODO: Need to fix this to only store a pointer to tile
-                m_tiles.insert(std::map<int, Tile>::value_type(
+            m_tiles.insert(std::map<int, Tile>::value_type(
                         TileMap::hash(col_index, row_index), tile));
             }
         }
         longest_row = (row_index > longest_row) ? row_index : longest_row;
     }
+    
     m_map_dim.x = ((float) longest_row) * TILE_SIZE.x;
     m_map_dim.y = ((float) (map.end() - map.begin())) * TILE_SIZE.y;
     return true;

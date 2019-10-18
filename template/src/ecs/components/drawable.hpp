@@ -28,7 +28,6 @@ struct Drawable {
     Texture *texture;
 
     mat3 transform;
-    mat3 projection;
 
     // Effect component of Entity for Vertex and Fragment shader, which are then put(linked) together in a
     // single program that is then bound to the pipeline.

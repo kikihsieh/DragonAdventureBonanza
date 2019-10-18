@@ -8,6 +8,7 @@ RenderSystem::RenderSystem(){}
 RenderSystem::~RenderSystem() = default;
 
 bool RenderSystem::init(const std::vector<Entity> &entities) {
+	m_effects = {};
     m_entities = entities;
 
     for (auto & entity : entities){
@@ -57,10 +58,16 @@ bool RenderSystem::init(const std::vector<Entity> &entities) {
     	if (gl_has_errors())
     		return false;
 
-    	// Loading shaders
-    	if (!load_from_file(drawable->effect, drawable->vs_shader, drawable->fs_shader))
-    		return false;
+    	// Loading shaders: check if it's already in memory
+		if (m_effects.find(drawable->vs_shader) == m_effects.end()){
+			if (!load_from_file(drawable->effect, drawable->vs_shader, drawable->fs_shader))
+    			return false;
+			m_effects[drawable->vs_shader] = drawable->effect;
+		}else{
+			drawable->effect = m_effects[drawable->vs_shader];
+		};
     };
+	return true;
 }
 
 void RenderSystem::destroy() {
@@ -72,7 +79,7 @@ void RenderSystem::destroy() {
     }
 }
 
-void RenderSystem::draw()
+void RenderSystem::draw(mat3 projection)
 {
     for(auto & entity: m_entities){
         if (entity.drawable == nullptr) {
@@ -84,7 +91,7 @@ void RenderSystem::draw()
 
 	    // Enabling alpha channel for textures
 	    glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	    glDisable(GL_DEPTH_TEST);
+		 glDisable(GL_DEPTH_TEST);
 
 	    // Setting shaders
 	    glUseProgram(drawable->effect.program);
@@ -115,7 +122,7 @@ void RenderSystem::draw()
 	    glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&drawable->transform);
 	    float color[] = { 1.f, 1.f, 1.f };
 	    glUniform3fv(color_uloc, 1, color);
-	    glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&drawable->projection);
+	    glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
 
 	    // Drawing!
 	    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
@@ -223,7 +230,6 @@ void RenderSystem::release(Drawable::Effect &effect)
 	glDeleteShader(effect.vertex);
 	glDeleteShader(effect.fragment);
 }
-
 
 void RenderSystem::transform(Entity &entity) {
     mat3 out = { { 1.f, 0.f, 0.f }, { 0.f, 1.f, 0.f}, { 0.f, 0.f, 1.f} };
