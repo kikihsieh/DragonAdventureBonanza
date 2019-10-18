@@ -1,7 +1,6 @@
 #ifndef DAB_BUTTON_H
 #define DAB_BUTTON_H
 
-// #include "common.hpp"
 #include "entity.hpp"
 
 struct Button : public Entity {
@@ -14,7 +13,7 @@ struct Button : public Entity {
         drawable->fs_shader = shader_path("textured.fs.glsl");
         drawable->vs_shader = shader_path("textured.vs.glsl");
 
-		// input = new Input();
+		input = new Input();
         
         position =  {600.f,400.f};
     }

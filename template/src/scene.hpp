@@ -27,6 +27,7 @@ public:
     virtual bool is_level();
 
     void on_key(int key, int action);
+    void on_mouse(int key, int action, double xpos, double ypos);
 
     std::vector<Entity> m_entities; // TODO: should probably be a protected member
 protected:
