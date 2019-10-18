@@ -8,7 +8,7 @@ Level::Level(bool unlocked) :
     m_tile_map(nullptr),
     m_x_boundaries{-200.f, 0},
     m_y_boundaries{0, 0},
-    m_physics_system(nullptr) {
+    m_physics_system(new PhysicsSystem()) {
 }
 
 Level::~Level() = default;
@@ -41,6 +41,7 @@ bool Level::init_scene(MapVector map, TexturePathMapping mapping) {
     m_x_boundaries.y = m_tile_map->get_map_dim().x;
     m_y_boundaries.y = m_tile_map->get_map_dim().y;
     init_player();
+    m_physics_system->init(m_entities, m_tile_map->get_tiles());
     return Scene::init();
 }
 
@@ -53,11 +54,10 @@ bool Level::init_enemy(int type, vec2 initial_pos) {
 
 bool Level::init_player(){
     Player player;
-//     player->init(get_x_boundaries(), get_y_boundaries());
     m_entities.emplace_back(player);
     return true;
 }
 
 void Level::update(float elapsed_ms) {
-//    m_physics_system->update(elapsed_ms);
+    m_physics_system->update(elapsed_ms);
 }

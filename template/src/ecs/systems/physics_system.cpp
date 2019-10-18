@@ -1,10 +1,21 @@
 #include "physics_system.hpp"
 
-#include <utility>
-#include <levels/tile_map.hpp>
+void PhysicsSystem::update(float ms) {
+    for (auto entity : m_entities) {
+        if (!entity.physics) {
+            continue;
+        }
 
-void PhysicsSystem::update(float elapsed_time) {
-    for (auto collider : m_colliders) {
-        collider.colliding = Collider::NONE;
+        float x_step = entity.physics->velocity.x * (ms / 1000);
+        float y_step = entity.physics->velocity.y * (ms / 1000);
+
+        entity.position.x += x_step;
+        entity.position.y += y_step;
     }
+}
+
+bool PhysicsSystem::init(const std::vector<Entity> &entities, std::map<int, Tile *> tiles) {
+    m_entities = entities;
+    m_tiles = tiles;
+    return true;
 }

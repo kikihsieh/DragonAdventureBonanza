@@ -31,11 +31,10 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
 //                m_level->init_enemy(*col, {pos_x, pos_y});
             } else {
                 Tile tile(dict.at(*col), col_index, row_index);
-                m_level->m_entities.emplace_back(tile);
-                // TODO: Need to fix this to only store a pointer to tile
-            m_tiles.insert(std::map<int, Tile>::value_type(
-                        TileMap::hash(col_index, row_index), tile));
-            }
+                auto it = m_level->m_entities.emplace(m_level->m_entities.end(), tile);
+                m_tiles.insert(std::map<int, Tile*>::value_type(
+                        TileMap::hash(col_index, row_index), (Tile*) &*it));
+                }
         }
         longest_row = (row_index > longest_row) ? row_index : longest_row;
     }

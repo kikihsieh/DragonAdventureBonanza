@@ -29,12 +29,12 @@ public:
         return m_map_dim;
     }
 
-    const std::map<int, Tile> &get_tiles() const {
+    const std::map<int, Tile*> &get_tiles() const {
         return m_tiles;
     }
 
 private:
-    std::map<int, Tile> m_tiles;
+    std::map<int, Tile*> m_tiles;
 
 private:
 

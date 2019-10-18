@@ -24,4 +24,5 @@ private:
     void release(Drawable::Effect& effect);
     std::vector<Entity> m_entities;
     std::map<const char*, Drawable::Effect> m_effects;
+    mat3 out;
 };

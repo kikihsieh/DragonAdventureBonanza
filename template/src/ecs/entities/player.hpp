@@ -9,6 +9,7 @@ struct Player : public Entity {
         physics->gravity = 10.f;
         physics->walk_speed = 250.f;
         physics->jump_speed = -500.f;
+        physics->velocity = { 150.f, -500.f };
 
         drawable = new Drawable();
         drawable->texture_path = textures_path("player.png");

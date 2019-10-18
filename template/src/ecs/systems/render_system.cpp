@@ -232,7 +232,7 @@ void RenderSystem::release(Drawable::Effect &effect)
 }
 
 void RenderSystem::transform(Entity &entity) {
-    mat3 out = { { 1.f, 0.f, 0.f }, { 0.f, 1.f, 0.f}, { 0.f, 0.f, 1.f} };
+    out = { { 1.f, 0.f, 0.f }, { 0.f, 1.f, 0.f}, { 0.f, 0.f, 1.f} };
     translate(out, entity.position);
     rotate(out, entity.radians);
     scale(out, entity.scale);

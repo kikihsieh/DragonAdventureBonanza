@@ -1,18 +1,18 @@
 #ifndef DAB_PHYSICS_SYSTEM_HPP
 #define DAB_PHYSICS_SYSTEM_HPP
 
-#include <memory>
 #include <ecs/entities/tile.hpp>
 #include <map>
-#include <ecs/components/collider.hpp>
 
 class PhysicsSystem {
 public:
-    void update(float elapsed_ms);
+    bool init(const std::vector<Entity> &entities, std::map<int, Tile*> tiles);
+
+    void update(float ms);
 
 private:
-    std::map<int, std::shared_ptr<Tile>> m_tiles;
-    std::vector<Collider> m_colliders;
+    std::vector<Entity> m_entities;
+    std::map<int, Tile*> m_tiles;
 };
 
 #endif //DAB_PHYSICS_SYSTEM_HPP

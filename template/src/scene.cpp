@@ -9,8 +9,7 @@ Scene::Scene() {
 }
 
 Scene::~Scene() {
-    // TODO: call delete on the contents of m_entities
-    m_entities.clear();
+    destroy();
 };
 
 bool Scene::init() {
