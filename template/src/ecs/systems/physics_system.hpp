@@ -6,16 +6,18 @@
 
 class PhysicsSystem {
 public:
-    bool init(std::vector<Entity> *entities, std::map<int, Tile*> tiles);
+    bool init(std::vector<Entity> *entities, const std::map<int, Tile>& tiles);
 
     void update(float ms);
 
 private:
     void tile_collisions(Entity& entity);
     void entity_collisions(Entity& entity);
+    bool collide(Entity& e1, Entity& e2);
+    void move(float ms, Entity& entity);
 
     std::vector<Entity>* m_entities;
-    std::map<int, Tile*> m_tiles;
+    std::map<int, Tile> m_tiles;
 };
 
 #endif //DAB_PHYSICS_SYSTEM_HPP

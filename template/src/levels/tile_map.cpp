@@ -2,8 +2,9 @@
 #include <map>
 #include "tile_map.hpp"
 
-vec2 TileMap::TILE_SIZE = {64, 64};
-vec2 TileMap::TILE_SCALE = { 0.75f, 0.75f };
+vec2 TileMap::tile_size = {64, 64};
+vec2 TileMap::tile_scale = {0.75f, 0.75f };
+vec2 TileMap::tile_screen_size = {tile_size.x * tile_scale.x, tile_size.y * tile_scale.y};
 
 TileMap::TileMap(Level* level) : m_level(level) {
 }
@@ -15,31 +16,44 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
     std::vector<int>::const_iterator col;
 
     int longest_row = 0;
+    int col_index = 0;
 
     for (row = map.begin(); row != map.end(); ++row) {
         int row_index = row - map.begin();
+        col_index = 0;
         for (col = row->begin(); col != row->end(); ++col) {
-
             if (*col == 0) {
+                col_index ++;
                 continue;
             }
-
-            int col_index = col - row->begin();
 
             if (*col < 0) {
                 Spider s(dict.at(*col), get_coord_from_tile_pos(col_index, row_index));
                 m_level->m_entities.emplace_back(s);
             } else {
-                Tile tile(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), TILE_SCALE, TILE_SIZE);
+                Tile tile(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), tile_scale, tile_size);
                 auto it = m_level->m_entities.emplace(m_level->m_entities.end(), tile);
-                m_tiles.insert(std::map<int, Tile*>::value_type(
-                        TileMap::hash(col_index, row_index), (Tile*) &*it));
+                m_tiles.insert(std::map<int, Tile>::value_type(
+                        TileMap::hash(col_index, row_index), tile)); // TODO: don't store 2 copies of tile
                 }
+            col_index ++;
         }
         longest_row = (row_index > longest_row) ? row_index : longest_row;
     }
     
-    m_map_dim.x = ((float) longest_row) * TILE_SIZE.x;
-    m_map_dim.y = ((float) (map.end() - map.begin())) * TILE_SIZE.y;
+    m_map_dim.x = ((float) longest_row) * tile_size.x;
+    m_map_dim.y = ((float) (map.end() - map.begin())) * tile_size.y;
     return true;
+}
+
+std::pair<int, int> TileMap::get_tile_pos_from_coord(float x, float y, vec2 size) {
+    float x_pos = (x - size.x*0.5f + tile_screen_size.x*0.5f);
+    float y_pos = (y - size.y*0.5f - tile_screen_size.y*0.5f);
+
+    float x_tiles = x_pos / tile_screen_size.x;
+    float y_tiles = y_pos / tile_screen_size.y;
+
+    int col = ceil(x_tiles);
+    int row = ceil(y_tiles);
+    return {col, row};
 }
