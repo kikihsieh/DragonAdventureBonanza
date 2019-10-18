@@ -26,10 +26,10 @@ public:
     explicit Level(bool unlocked);
     ~Level();
 
-    virtual bool init() = 0;
+    virtual bool init() override = 0;
 
     void destroy() override;
-    void update(float elapsed_ms, std::map<const char*, bool> *input_updates) override;
+    void update(float elapsed_ms) override;
 
     bool init_enemy(int type, vec2 initial_pos);
     bool init_player();

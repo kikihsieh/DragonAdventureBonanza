@@ -58,6 +58,6 @@ bool Level::init_player(){
     return true;
 }
 
-void Level::update(float elapsed_ms, std::map<const char*, bool> *input_updates) {
+void Level::update(float elapsed_ms) {
     m_physics_system->update(elapsed_ms);
 }

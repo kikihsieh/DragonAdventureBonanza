@@ -21,16 +21,18 @@ public:
     // Releases all associated resources
     virtual void destroy();
 
-    virtual void update(float elapsed_ms, std::map<const char*, bool> *input_updates);
+    virtual void update(float elapsed_ms);
 
     virtual void draw(const mat3& projection);
     virtual bool is_level();
+
+    void on_key(int key, int action);
+
+    std::vector<Entity> m_entities; // TODO: should probably be a protected member
+protected:
     virtual const char * get_bg_texture_path() = 0;
 
-    std::vector<Entity> m_entities;
-    
-private:
 	RenderSystem m_rendersystem;
-    InputSystem* m_inputsystem;
+    InputSystem *m_inputsystem;
 };
 #endif

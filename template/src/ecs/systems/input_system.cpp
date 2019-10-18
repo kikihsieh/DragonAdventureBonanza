@@ -1,44 +1,38 @@
 #include "input_system.hpp"
 #include <vector>
-#include <map> 
-#include <sstream>
-#include <cmath>
-
-void InputSystem::update(std::map<const char*, bool> *input_updates) {
-    for (auto &entity : *m_entities) {
-        if (!entity.input) {
-            continue;
-        }
-        
-        if (&input_updates->at("UP")){
-            entity.input->up_pressed = true;
-        } else{
-            entity.input->up_pressed = false;
-        }
-        if (&input_updates->at("RIGHT")){
-            entity.input->right_pressed = true;
-        } else {
-            entity.input->right_pressed = false;
-        }
-        if (&input_updates->at("LEFT")){
-            entity.input->left_pressed = true;
-        } else {
-            entity.input->left_pressed = false;
-        }
-        if (&input_updates->at("SHIFT_LEFT")){
-            entity.input->shift_left = true;
-        } else {
-            entity.input->shift_left = false;
-        }
-        if (&input_updates->at("SHIFT_RIGHT")){
-            entity.input->shift_right = true;
-        } else {
-            entity.input->shift_right = false;
-        }
-    }
-}
 
 bool InputSystem::init(std::vector<Entity> *entities) {
     m_entities = entities;
     return true;
+}
+
+void InputSystem::update(int key, int action) {
+    for (auto &entity : *m_entities) {
+        if (!entity.input) {
+            continue;
+        }
+
+        if (key == GLFW_KEY_UP || key == GLFW_KEY_W) {
+            if (action == GLFW_PRESS){
+                entity.input->up = true;
+            } else if (action == GLFW_RELEASE ) {
+                entity.input->up = false;
+            }
+        }
+        if (key == GLFW_KEY_LEFT || key == GLFW_KEY_A) {
+            if (action == GLFW_PRESS) {
+                entity.input->left = true;
+            } else if (action == GLFW_RELEASE ) {
+                entity.input->left = false;
+            }
+        }
+
+        if (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D) {
+            if (action == GLFW_PRESS) {
+                entity.input->right = true;
+            } else if (action == GLFW_RELEASE) {
+                entity.input->right = false;
+            }
+        }
+    }
 }

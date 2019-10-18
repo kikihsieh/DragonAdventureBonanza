@@ -18,7 +18,7 @@ public:
 
     bool init() override;
     void destroy() override;
-    void update(float elapsed_ms, std::map<const char*, bool> *input_updates) override;
+    void update(float elapsed_ms) override;
     void draw(const mat3& projection) override;
 
     const char * get_bg_texture_path() override {

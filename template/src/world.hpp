@@ -65,7 +65,6 @@ private:
     // Game entities
     Scene* m_current_scene;
     std::map<Scene_names, Scene*> m_scenes;
-	std::map<const char*, bool> m_input_updates;
 
     Camera m_camera;
 };
