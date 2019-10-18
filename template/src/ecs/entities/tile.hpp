@@ -2,9 +2,9 @@
 
 #include "common.hpp"
 #include <vector>
-#include <stdio.h>
 
-#include <ecs/entities/entity.hpp>
+
+#include "entity.hpp"
 
 struct Tile : public Entity {
     Tile(Texture* texture, int col, int row) {

@@ -1,4 +1,4 @@
-#include <ecs/entities/entity.hpp>
+#include "entity.hpp"
 
 struct Background : public Entity {
     Background(const char* texture_path) : Entity() {
