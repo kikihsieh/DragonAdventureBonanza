@@ -28,7 +28,8 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
             if (*col < 0) {
                 float pos_x = ((float) (col_index))  * TILE_SIZE.x;
                 float pos_y = ((float) (row_index) * TILE_SIZE.y);
-//                m_level->init_enemy(*col, {pos_x, pos_y});
+                Spider s(dict.at(*col), col_index, row_index);
+                m_level->m_entities.emplace_back(s);
             } else {
                 Tile tile(dict.at(*col), col_index, row_index);
                 auto it = m_level->m_entities.emplace(m_level->m_entities.end(), tile);

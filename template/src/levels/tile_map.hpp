@@ -3,6 +3,7 @@
 
 #include <common.hpp>
 #include <ecs/entities/tile.hpp>
+#include <ecs/entities/spider.hpp>
 #include "level.hpp"
 #include <memory>
 

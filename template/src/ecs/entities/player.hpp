@@ -1,4 +1,4 @@
-#include "ecs/entities/entity.hpp"
+#include "entity.hpp"
 
 struct Player : public Entity {
     Player() {
