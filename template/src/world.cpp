@@ -67,8 +67,10 @@ bool World::init(vec2 screen)
 	glfwSetWindowUserPointer(m_window, this);
 	auto key_redirect = [](GLFWwindow* wnd, int _0, int _1, int _2, int _3) { ((World*)glfwGetWindowUserPointer(wnd))->on_key(wnd, _0, _1, _2, _3); };
 	auto cursor_pos_redirect = [](GLFWwindow* wnd, double _0, double _1) { ((World*)glfwGetWindowUserPointer(wnd))->on_mouse_move(wnd, _0, _1); };
+	auto mouse_button_redirect = [](GLFWwindow* wnd,int _0, int _1, int _2) { ((World*)glfwGetWindowUserPointer(wnd))->on_mouse_click(wnd, _0, _1, _2); };
 	glfwSetKeyCallback(m_window, key_redirect);
 	glfwSetCursorPosCallback(m_window, cursor_pos_redirect);
+	glfwSetMouseButtonCallback(m_window, mouse_button_redirect);
 
 	// Create a frame buffer
 	m_frame_buffer = 0;
@@ -193,7 +195,13 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
     m_current_scene->on_key(key, action);
 }
 
+void World::on_mouse_click(GLFWwindow* window, int key, int action, int mod) {
+	double xposition, yposition;
+    glfwGetCursorPos(window, &xposition, &yposition);
+	m_current_scene->on_mouse(key,action, xposition, yposition);
+}
+
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
-
+	
 }

@@ -37,5 +37,9 @@ void Scene::update(float elapsed_ms) {
 }
 
 void Scene::on_key(int key, int action) {
-    m_inputsystem->update(key, action);
+    m_inputsystem->on_key_update(key, action);
+}
+
+void Scene::on_mouse(int key, int action, double xpos, double ypos) {
+    m_inputsystem ->on_mouse_update(key, action, xpos, ypos);
 }
