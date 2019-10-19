@@ -13,7 +13,8 @@ struct Entity {
         input(nullptr),
         radians(0.f),
         position({0.f, 0.f}),
-        scale({1.f, 1.f}) {
+        scale({1.f, 1.f}),
+        is_facing_forward(false) {
     }
 
     // Components
@@ -25,4 +26,6 @@ struct Entity {
 	float radians;
 	vec2 position;
 	vec2 scale;
+
+    bool is_facing_forward;
 };

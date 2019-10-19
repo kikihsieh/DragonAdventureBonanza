@@ -64,7 +64,7 @@ vec2 Level::get_player_position(){
 }
 
 bool Level::is_forward(){
-    return m_entities.at(player_index).input->right;
+    return m_entities.at(player_index).is_facing_forward;
 }
 
 void Level::update(float elapsed_ms) {

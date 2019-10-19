@@ -12,8 +12,10 @@ void PhysicsSystem::update(float ms) {
 
         if (entity.input) {
             if (entity.input->right) {
+                entity.is_facing_forward = true;
                 entity.physics->velocity.x = entity.physics->walk_speed;
             } else if (entity.input->left) {
+                entity.is_facing_forward = false;
                 entity.physics->velocity.x = -1 * entity.physics->walk_speed;
             } else {
                 entity.physics->velocity.x = 0;

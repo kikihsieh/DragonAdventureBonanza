@@ -20,5 +20,6 @@ struct Player : public Entity {
 
         collider = new Collider();
 		input = new Input();
+        is_facing_forward = true;
 	}
 };
