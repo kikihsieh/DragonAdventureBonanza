@@ -11,14 +11,16 @@ Level::Level(bool unlocked) :
     m_physics_system(new PhysicsSystem()) {
 }
 
-Level::~Level() = default;
+Level::~Level() {
+    delete m_physics_system;
+    destroy();
+}
 
 /** destroys resources not needed when the scene is not active **/
 void Level::destroy() {
     Scene::destroy();
-    m_entities.clear();
     delete m_tile_map;
-    delete m_physics_system;
+    m_entities.clear();
 }
 
 bool Level::init_scene(MapVector map, TexturePathMapping mapping) {

@@ -17,6 +17,15 @@ struct Entity {
         is_facing_forward(false) {
     }
 
+    ~Entity() {
+        // TODO Fix memory leaks. Cannot simply delete here because after inserting into list,
+        //  destructor is called and left with dangling pointer
+//        delete physics;
+//        delete drawable;
+//        delete collider;
+//        delete input;
+    }
+
     // Components
 	Physics *physics;
 	Drawable* drawable;
