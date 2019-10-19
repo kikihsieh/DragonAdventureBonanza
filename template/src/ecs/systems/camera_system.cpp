@@ -1,4 +1,5 @@
 #include "camera_system.hpp"
+#include <cmath>
 
 CameraSystem::CameraSystem(){}
 
