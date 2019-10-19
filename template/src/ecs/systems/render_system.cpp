@@ -1,5 +1,6 @@
 #include "render_system.hpp"
 #include <vector>
+#include <list>
 #include <sstream>
 #include <cmath>
 
@@ -7,7 +8,7 @@ RenderSystem::RenderSystem(){}
 
 RenderSystem::~RenderSystem() = default;
 
-bool RenderSystem::init(std::vector<Entity> *entities) {
+bool RenderSystem::init(std::list<Entity> *entities) {
 	m_effects = {};
     m_entities = entities;
 

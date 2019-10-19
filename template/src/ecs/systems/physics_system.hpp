@@ -3,10 +3,11 @@
 
 #include <ecs/entities/tile.hpp>
 #include <map>
+#include <list>
 
 class PhysicsSystem {
 public:
-    bool init(std::vector<Entity> *entities, const std::map<int, Tile>& tiles);
+    bool init(std::list<Entity> *entities, const std::map<int, Tile>& tiles);
 
     void update(float ms);
 
@@ -16,7 +17,7 @@ private:
     void collide(Entity& e1, Entity& e2);
     void move(float ms, Entity& entity);
 
-    std::vector<Entity>* m_entities;
+    std::list<Entity>* m_entities;
     std::map<int, Tile> m_tiles;
 };
 

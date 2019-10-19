@@ -5,10 +5,6 @@
 #include "ecs/systems/camera_system.hpp"
 #include <levels/level.hpp>
 
-// stlib
-#include <vector>
-#include <random>
-
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <SDL_mixer.h>

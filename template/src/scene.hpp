@@ -4,7 +4,7 @@
 #ifndef DAB_SCENE_HPP
 #define DAB_SCENE_HPP
 
-#include <vector>
+#include <list>
 #include <map>
 #include <ecs/systems/render_system.hpp>
 #include <ecs/systems/input_system.hpp>
@@ -32,7 +32,7 @@ public:
     void on_key(int key, int action);
     void on_mouse(int key, int action, double xpos, double ypos);
 
-    std::vector<Entity> m_entities; // TODO: should probably be a protected member
+    std::list<Entity> m_entities; // TODO: should probably be a protected member
 protected:
     virtual const char * get_bg_texture_path() = 0;
 

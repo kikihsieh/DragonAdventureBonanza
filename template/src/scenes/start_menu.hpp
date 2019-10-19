@@ -6,7 +6,6 @@
 #define DAB_START_MENU_H
 
 #include <memory>
-#include <vector>
 
 #include "scene.hpp"
 

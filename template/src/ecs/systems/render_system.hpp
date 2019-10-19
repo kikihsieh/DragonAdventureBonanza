@@ -1,6 +1,6 @@
 #pragma once
 #include "common.hpp"
-#include <vector>
+#include <list>
 #include <map>
 #include "../entities/entity.hpp"
 
@@ -9,7 +9,7 @@ public:
 	RenderSystem();
 	~RenderSystem();
 
-	bool init(std::vector<Entity>* entities);
+	bool init(std::list<Entity>* entities);
 	void destroy();
 	void draw(mat3 projection);
 
@@ -22,7 +22,7 @@ private:
     void scale(mat3 &out, vec2 scale);
 
     void release(Drawable::Effect& effect);
-    std::vector<Entity>* m_entities;
+    std::list<Entity>* m_entities;
     std::map<const char*, Drawable::Effect> m_effects;
     mat3 out;
 };

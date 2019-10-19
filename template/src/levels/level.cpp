@@ -55,16 +55,16 @@ bool Level::init_enemy(int type, vec2 initial_pos) {
 bool Level::init_player(){
     Player player;
     m_entities.emplace_back(player);
-    player_index = m_entities.size();
+    m_player = &m_entities.back();
     return true;
 }
 
 vec2 Level::get_player_position(){
-    return m_entities.at(player_index).position;
+    return m_player->position;
 }
 
 bool Level::is_forward(){
-    return m_entities.at(player_index).is_facing_forward;
+    return m_player->is_facing_forward;
 }
 
 void Level::update(float elapsed_ms) {

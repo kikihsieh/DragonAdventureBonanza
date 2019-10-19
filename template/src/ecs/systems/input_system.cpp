@@ -1,8 +1,8 @@
 #include "input_system.hpp"
-#include <vector>
+#include <list>
 // #include <iostream>
 
-bool InputSystem::init(std::vector<Entity> *entities) {
+bool InputSystem::init(std::list<Entity> *entities) {
     m_entities = entities;
     return true;
 }
@@ -47,7 +47,7 @@ void InputSystem::on_mouse_update(int key, int action, double xpos, double ypos)
         if (key == GLFW_MOUSE_BUTTON_LEFT){
             if (action == GLFW_PRESS){
                 entity.input->mouse_left = true;
-                // print out to check mouse event works, need to update here once button is updated
+                // TODO: print out to check mouse event works, need to update here once button is updated
                 // std::cout << "left clicked" << std::endl;
             } else {
                 entity.input -> mouse_left = false;

@@ -1,14 +1,14 @@
 #pragma once
 
-#include <vector>
+#include <list>
 #include "../entities/entity.hpp"
 
 class InputSystem {
 public:
-    bool init(std::vector<Entity>* entities);
+    bool init(std::list<Entity>* entities);
     void on_key_update(int key, int action);
     void on_mouse_update(int key, int action, double xpos, double ypos);
     
 private:
-    std::vector<Entity>* m_entities;
+    std::list<Entity>* m_entities;
 };

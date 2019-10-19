@@ -10,7 +10,6 @@
 #include "ecs/entities/tile.hpp"
 #include "tile_map.hpp"
 #include "scene.hpp"
-#include "../ecs/entities/player.hpp"
 
 typedef std::map<int, const char*> TexturePathMapping;
 typedef std::map<int, Texture*> TextureMapping;
@@ -59,7 +58,7 @@ protected:
     TextureMapping m_texture_mapping;
     TileMap* m_tile_map;
     PhysicsSystem* m_physics_system;
-    int player_index;
+    Entity* m_player;
 
     bool m_unlocked;
 

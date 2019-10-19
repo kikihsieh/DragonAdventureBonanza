@@ -43,7 +43,7 @@ void PhysicsSystem::update(float ms) {
     }
 }
 
-bool PhysicsSystem::init(std::vector<Entity> *entities, const std::map<int, Tile >& tiles) {
+bool PhysicsSystem::init(std::list<Entity> *entities, const std::map<int, Tile >& tiles) {
     m_entities = entities;
     m_tiles = tiles;
 
