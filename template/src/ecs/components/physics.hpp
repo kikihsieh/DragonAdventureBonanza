@@ -1,0 +1,15 @@
+struct Physics {
+    Physics() :
+        gravity(10.f),
+        acceleration({0.f, 0.f}),
+        velocity({0.f, 0.f}),
+        jump_speed(50.f),
+        walk_speed(50.f) {
+    }
+
+    float gravity;
+    vec2 acceleration;
+    vec2 velocity;
+    float jump_speed;
+    float walk_speed;
+};

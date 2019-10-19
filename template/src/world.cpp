@@ -3,10 +3,10 @@
 
 // stlib
 #include <sstream>
-#include <ctime>
 
 #include <levels/forest_level.hpp>
 #include <levels/volcano_level.hpp>
+#include <scenes/start_menu.hpp>
 
 // Same as static in c, local to compilation unit
 namespace
@@ -21,10 +21,11 @@ namespace
 }
 
 
-World::World() {
+World::World() : m_camera(new CameraSystem()) {
     map_init(m_scenes)
             (FOREST, new ForestLevel(true))
-            (VOLCANO, new VolcanoLevel(true));
+            (VOLCANO, new VolcanoLevel(true))
+			(MAIN_MENU, new StartMenu());
 }
 
 World::~World() = default;
@@ -66,8 +67,10 @@ bool World::init(vec2 screen)
 	glfwSetWindowUserPointer(m_window, this);
 	auto key_redirect = [](GLFWwindow* wnd, int _0, int _1, int _2, int _3) { ((World*)glfwGetWindowUserPointer(wnd))->on_key(wnd, _0, _1, _2, _3); };
 	auto cursor_pos_redirect = [](GLFWwindow* wnd, double _0, double _1) { ((World*)glfwGetWindowUserPointer(wnd))->on_mouse_move(wnd, _0, _1); };
+	auto mouse_button_redirect = [](GLFWwindow* wnd,int _0, int _1, int _2) { ((World*)glfwGetWindowUserPointer(wnd))->on_mouse_click(wnd, _0, _1, _2); };
 	glfwSetKeyCallback(m_window, key_redirect);
 	glfwSetCursorPosCallback(m_window, cursor_pos_redirect);
+	glfwSetMouseButtonCallback(m_window, mouse_button_redirect);
 
 	// Create a frame buffer
 	m_frame_buffer = 0;
@@ -82,13 +85,14 @@ bool World::init(vec2 screen)
 
 	// Initialize the screen texture
 	m_screen_tex.create_from_screen(m_window);
-	m_camera.init(screen);
+	m_camera->init(screen);
 
-	return load_scene(m_scenes.at(FOREST));
+	return load_scene(m_scenes.at(MAIN_MENU));
 }
 
 // Releases all the associated resources
 void World::destroy() {
+	delete m_camera;
 	glDeleteFramebuffers(1, &m_frame_buffer);
 	glfwDestroyWindow(m_window);
 }
@@ -96,14 +100,10 @@ void World::destroy() {
 // Update our game world
 bool World::update(float elapsed_ms)
 {
-	int w, h;
-	glfwGetFramebufferSize(m_window, &w, &h);
-	vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
-
-	// check if player is on the ground
-	m_player.update(elapsed_ms, m_current_scene->get_tiles());
-	m_camera.update(m_player.get_position(), m_player.is_facing_forwards());
     m_current_scene->update(elapsed_ms);
+	vec2 pos = m_current_scene->get_player_position();
+	bool moving_forwards = m_current_scene->is_forward();
+	m_camera->update(pos, moving_forwards);
 	return true;
 }
 
@@ -138,7 +138,7 @@ void World::draw() {
 
 	float sx = 2.f / (right - left);
 	float sy = 2.f / (top - bottom);
-	float tx = m_camera.compute_translation_x();
+	float tx = m_camera->compute_translation_x();
 	float ty = -(top + bottom) / (top - bottom);
 	mat3 projection_2D{ { sx, 0.f, 0.f },{ 0.f, sy, 0.f },{ tx, ty, 1.f } };
 
@@ -157,9 +157,7 @@ void World::draw() {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_screen_tex.id);
 
-	m_background.draw(projection_2D);
     m_current_scene->draw(projection_2D);
-    m_player.draw(projection_2D);
 
 	//////////////////
 	// Presenting
@@ -171,20 +169,15 @@ bool World::is_over() const {
 	return glfwWindowShouldClose(m_window);
 }
 
-bool World::load_scene(Level* level) {
+bool World::load_scene(Scene* scene) {
     if (m_current_scene) {
         m_current_scene->destroy();
     }
-    m_background.destroy();
-    m_camera.reset();
+    m_camera->reset();
 
-    m_current_scene = level;
-    m_background.init(level->get_bg_texture_path());
-    level->init();
-    if (m_current_scene->is_level()) {
-        m_player.init(level->get_x_boundaries(), level->get_y_boundaries());
-    }
-    return true;
+    m_current_scene = scene;
+    m_current_scene->init();
+	return true;
 }
 
 // On key callback
@@ -199,38 +192,16 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
         return;
     }
 
-    if (m_player.can_jump() && (key == GLFW_KEY_UP || key == GLFW_KEY_W)) {
-        if (action == GLFW_PRESS) {
-            m_player.jump();
-        }
-    } 
-	if (m_player.can_airdash() && (key == GLFW_KEY_LEFT_SHIFT || key == GLFW_KEY_RIGHT_SHIFT)) {
-		if (action == GLFW_PRESS) {
-			if (glfwGetKey(window, GLFW_KEY_LEFT) || glfwGetKey(window, GLFW_KEY_A))
-				m_player.air_dash(false);
-			else
-				m_player.air_dash(true);
-		}
-	} 
-	
-	if (key == GLFW_KEY_LEFT || key == GLFW_KEY_A) {
-        if (action == GLFW_PRESS && !m_player.is_airdashing()) {
-            m_player.walk(false);
-        } else if (action == GLFW_RELEASE && !m_player.is_airdashing()) {
-            m_player.stop();
-        }
-    } 
-	
-	if (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D) {
-        if (action == GLFW_PRESS && !m_player.is_airdashing()) {
-            m_player.walk(true);
-        } else if (action == GLFW_RELEASE && !m_player.is_airdashing()) {
-            m_player.stop();
-        }
-    } 
+    m_current_scene->on_key(key, action);
+}
+
+void World::on_mouse_click(GLFWwindow* window, int key, int action, int mod) {
+	double xposition, yposition;
+    glfwGetCursorPos(window, &xposition, &yposition);
+	m_current_scene->on_mouse(key,action, xposition, yposition);
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
-
+	
 }

@@ -4,10 +4,12 @@
 #include <common.hpp>
 #include <vector>
 #include <map>
+#include <memory>
 
+#include "../ecs/systems/physics_system.hpp"
+#include "ecs/entities/tile.hpp"
 #include "tile_map.hpp"
-#include "tile.hpp"
-#include "enemies/enemy.hpp"
+#include "scene.hpp"
 
 typedef std::map<int, const char*> TexturePathMapping;
 typedef std::map<int, Texture*> TextureMapping;
@@ -15,22 +17,22 @@ typedef std::vector<std::vector<int>> MapVector;
 
 class TileMap; // forward declaration
 
-class Level {
+class Level : public Scene
+{
 
 public:
     explicit Level(bool unlocked);
     ~Level();
 
-    virtual bool init() = 0;
-    virtual const char * get_bg_texture_path() = 0;
+    virtual bool init() override = 0;
 
-    virtual void destroy();
-    virtual void update(float elapsed_ms);
-    virtual void draw(const mat3& projection);
+    void destroy() override;
+    void update(float elapsed_ms) override;
 
     bool init_enemy(int type, vec2 initial_pos);
+    bool init_player();
 
-    bool is_level() const {
+    bool is_level() override {
         return true;
     }
 
@@ -46,8 +48,8 @@ public:
         return m_y_boundaries;
     }
 
-    std::vector<std::shared_ptr<Tile>> get_tiles() const;
-
+    vec2 get_player_position() override;
+    bool is_forward() override;
 protected:
     virtual bool init_walking_enemy(int type, vec2 initial_pos) = 0;
 
@@ -55,14 +57,13 @@ protected:
 
     TextureMapping m_texture_mapping;
     TileMap* m_tile_map;
+    PhysicsSystem* m_physics_system;
+    Entity* m_player;
 
     bool m_unlocked;
 
-    vec2 m_x_boundaries{};
-    vec2 m_y_boundaries{};
-
-    // Game entities
-    std::vector<std::shared_ptr<Enemy>> m_enemies;
+    vec2 m_x_boundaries;
+    vec2 m_y_boundaries;
 };
 
 #endif //DAB_LEVEL_HPP

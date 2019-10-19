@@ -2,27 +2,19 @@
 
 // internal
 #include "common.hpp"
-#include "player.hpp"
-#include "enemies/spider.hpp"
-#include "background.hpp"
-#include "camera.hpp"
-#include "levels/tile.hpp"
-
-// stlib
-#include <vector>
-#include <random>
+#include "ecs/systems/camera_system.hpp"
+#include <levels/level.hpp>
 
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <SDL_mixer.h>
-#include <levels/level.hpp>
 
 // Container for all our entities and game logic. Individual rendering / update is
 // deferred to the relative update() methods
 class World
 {
 public:
-    enum Scene {
+    enum Scene_names {
         MAIN_MENU,
         FOREST,
         VOLCANO,
@@ -49,12 +41,14 @@ public:
 	// Should the game be over ?
 	bool is_over()const;
 
+	CameraSystem* m_camera;
 private:
-    bool load_scene(Level* level);
+    bool load_scene(Scene* scene);
     
 	// !!! INPUT CALLBACK FUNCTIONS
 	void on_key(GLFWwindow*, int key, int, int action, int mod);
 	void on_mouse_move(GLFWwindow* window, double xpos, double ypos);
+	void on_mouse_click(GLFWwindow* window, int key, int action, int mod);
 
 private:
 	// Window handle
@@ -67,10 +61,6 @@ private:
 	Texture m_screen_tex;
 
     // Game entities
-    Level* m_current_scene;
-    std::map<Scene, Level*> m_scenes;
-
-    Player m_player;
-    Background m_background;
-    Camera m_camera;
+    Scene* m_current_scene;
+    std::map<Scene_names, Scene*> m_scenes;
 };

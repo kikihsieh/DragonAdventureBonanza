@@ -1,22 +1,24 @@
 #include "level.hpp"
 
 #include <utility>
-#include <enemies/spider.hpp>
-#include <iostream>
+#include <ecs/entities/player.hpp>
 
 Level::Level(bool unlocked) :
     m_unlocked(unlocked),
     m_tile_map(nullptr),
     m_x_boundaries{-200.f, 0},
-    m_y_boundaries{200.f, 0} {
+    m_y_boundaries{0, 0},
+    m_physics_system(new PhysicsSystem()) {
 }
 
 Level::~Level() = default;
 
 /** destroys resources not needed when the scene is not active **/
 void Level::destroy() {
-    m_enemies.clear();
+    Scene::destroy();
+    m_entities.clear();
     delete m_tile_map;
+    delete m_physics_system;
 }
 
 bool Level::init_scene(MapVector map, TexturePathMapping mapping) {
@@ -35,9 +37,12 @@ bool Level::init_scene(MapVector map, TexturePathMapping mapping) {
         fprintf(stderr, "Failed to initialize tile map!");
         return false;
     }
+    
     m_x_boundaries.y = m_tile_map->get_map_dim().x;
     m_y_boundaries.y = m_tile_map->get_map_dim().y;
-    return true;
+    init_player();
+    m_physics_system->init(&m_entities, m_tile_map->get_tiles());
+    return Scene::init();
 }
 
 bool Level::init_enemy(int type, vec2 initial_pos) {
@@ -47,19 +52,21 @@ bool Level::init_enemy(int type, vec2 initial_pos) {
     return false;
 }
 
+bool Level::init_player(){
+    Player player;
+    m_entities.emplace_back(player);
+    m_player = &m_entities.back();
+    return true;
+}
+
+vec2 Level::get_player_position(){
+    return m_player->position;
+}
+
+bool Level::is_forward(){
+    return m_player->is_facing_forward;
+}
+
 void Level::update(float elapsed_ms) {
-    for (auto& enemy : m_enemies) {
-        enemy->update(elapsed_ms);
-    }
-}
-
-void Level::draw(const mat3 &projection) {
-    m_tile_map->draw(projection);
-    for (auto& enemy : m_enemies) {
-        enemy.get()->draw(projection);
-    }
-}
-
-std::vector<std::shared_ptr<Tile>> Level::get_tiles() const {
-    return m_tile_map->get_tiles();
+    m_physics_system->update(elapsed_ms);
 }

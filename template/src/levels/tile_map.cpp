@@ -2,57 +2,58 @@
 #include <map>
 #include "tile_map.hpp"
 
-TileMap::TileMap(Level* level) : m_level(level), m_tile_size() {
+vec2 TileMap::tile_size = {64, 64};
+vec2 TileMap::tile_scale = {0.75f, 0.75f };
+vec2 TileMap::tile_screen_size = {tile_size.x * tile_scale.x, tile_size.y * tile_scale.y};
+
+TileMap::TileMap(Level* level) : m_level(level) {
 }
 
-TileMap::~TileMap() {
-    m_tiles.clear();
-}
+TileMap::~TileMap() = default;
 
 bool TileMap::init(MapVector map, TextureMapping dict) {
     std::vector< std::vector<int> >::const_iterator row;
     std::vector<int>::const_iterator col;
 
     int longest_row = 0;
+    int col_index = 0;
 
     for (row = map.begin(); row != map.end(); ++row) {
-        int row_length = 0;
+        int row_index = row - map.begin();
+        col_index = 0;
         for (col = row->begin(); col != row->end(); ++col) {
-            row_length++;
             if (*col == 0) {
+                col_index ++;
                 continue;
             }
 
-            // tiles less than 0 are enemies
             if (*col < 0) {
-                float pos_x = ((float) (col - row->begin()) * m_tile_size.x);
-                float pos_y = ((float) (row - map.begin()) * m_tile_size.y);
-                m_level->init_enemy(*col, {pos_x, pos_y});
+                Spider s(dict.at(*col), get_coord_from_tile_pos(col_index, row_index));
+                m_level->m_entities.emplace_back(s);
             } else {
-                std::shared_ptr<Tile> tile = std::make_shared<Tile>();
-                tile->set_texture(dict.at(*col));
-                if (!tile->init()) {
-                    fprintf(stderr, "Failed to initialize tile!");
-                    return false;
+                Tile tile(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), tile_scale, tile_size);
+                auto it = m_level->m_entities.emplace(m_level->m_entities.end(), tile);
+                m_tiles.insert(std::map<int, Tile>::value_type(
+                        TileMap::hash(col_index, row_index), tile)); // TODO: don't store 2 copies of tile
                 }
-                tile->set_position(col - row->begin(), row - map.begin());
-                m_tiles.emplace_back(tile);
-                // TODO: Tile size should be set by tile map or at least initialized better
-                //  because currently it could be 0 if the first tile it encounters is an enemy
-                if (m_tile_size.x == 0 && m_tile_size.y == 0) {
-                    m_tile_size = tile->get_size();
-                }
-            }
+            col_index ++;
         }
-        longest_row = (row_length > longest_row) ? row_length : longest_row;
+        longest_row = (row_index > longest_row) ? row_index : longest_row;
     }
-    m_map_dim.x = longest_row * m_tile_size.x;
-    m_map_dim.y = ((float) (map.end() - map.begin())) * m_tile_size.y;
+    
+    m_map_dim.x = ((float) longest_row) * tile_size.x;
+    m_map_dim.y = ((float) (map.end() - map.begin())) * tile_size.y;
     return true;
 }
 
-void TileMap::draw(const mat3 &projection) {
-    for (auto& tile : m_tiles) {
-        tile->draw(projection);
-    }
+std::pair<int, int> TileMap::get_tile_pos_from_coord(float x, float y, vec2 size) {
+    float x_pos = (x - size.x*0.5f + tile_screen_size.x*0.5f);
+    float y_pos = (y - size.y*0.5f - tile_screen_size.y*0.5f);
+
+    float x_tiles = x_pos / tile_screen_size.x;
+    float y_tiles = y_pos / tile_screen_size.y;
+
+    int col = ceil(x_tiles);
+    int row = ceil(y_tiles);
+    return {col, row};
 }
