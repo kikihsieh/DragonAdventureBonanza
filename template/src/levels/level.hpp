@@ -59,7 +59,7 @@ protected:
     TextureMapping m_texture_mapping;
     TileMap* m_tile_map;
     PhysicsSystem* m_physics_system;
-    Player* m_player;
+    int player_index;
 
     bool m_unlocked;
 

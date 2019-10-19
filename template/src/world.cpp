@@ -21,7 +21,7 @@ namespace
 }
 
 
-World::World() {
+World::World() : m_camera(new CameraSystem()) {
     map_init(m_scenes)
             (FOREST, new ForestLevel(true))
             (VOLCANO, new VolcanoLevel(true))

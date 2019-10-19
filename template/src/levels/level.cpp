@@ -17,7 +17,6 @@ Level::~Level() = default;
 void Level::destroy() {
     Scene::destroy();
     m_entities.clear();
-    delete m_player;
     delete m_tile_map;
     delete m_physics_system;
 }
@@ -55,17 +54,17 @@ bool Level::init_enemy(int type, vec2 initial_pos) {
 
 bool Level::init_player(){
     Player player;
-    m_player = &player;
     m_entities.emplace_back(player);
+    player_index = m_entities.size();
     return true;
 }
 
 vec2 Level::get_player_position(){
-    return m_player->position;
+    return m_entities.at(player_index).position;
 }
 
 bool Level::is_forward(){
-    return m_player->input->right;
+    return m_entities.at(player_index).input->right;
 }
 
 void Level::update(float elapsed_ms) {
