@@ -4,8 +4,8 @@
 // stlib
 #include <sstream>
 
-#include <levels/forest_level.hpp>
-#include <levels/volcano_level.hpp>
+#include <scenes/levels/forest_level.hpp>
+#include <scenes/levels/volcano_level.hpp>
 #include <scenes/start_menu.hpp>
 
 // Same as static in c, local to compilation unit

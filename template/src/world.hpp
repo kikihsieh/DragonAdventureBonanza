@@ -3,7 +3,7 @@
 // internal
 #include "common.hpp"
 #include "ecs/systems/camera_system.hpp"
-#include <levels/level.hpp>
+#include <scenes/levels/level.hpp>
 
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
