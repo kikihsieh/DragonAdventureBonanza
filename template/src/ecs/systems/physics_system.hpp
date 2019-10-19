@@ -7,7 +7,7 @@
 
 class PhysicsSystem {
 public:
-    bool init(std::list<Entity> *entities, const std::map<int, Tile>& tiles);
+    bool init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles);
 
     void update(float ms);
 
@@ -18,7 +18,7 @@ private:
     void move(float ms, Entity& entity);
 
     std::list<Entity>* m_entities;
-    std::map<int, Tile> m_tiles;
+    std::map<int, Tile*> m_tiles;
 };
 
 #endif //DAB_PHYSICS_SYSTEM_HPP

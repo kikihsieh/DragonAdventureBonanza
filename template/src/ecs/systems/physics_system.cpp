@@ -43,7 +43,7 @@ void PhysicsSystem::update(float ms) {
     }
 }
 
-bool PhysicsSystem::init(std::list<Entity> *entities, const std::map<int, Tile >& tiles) {
+bool PhysicsSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles) {
     m_entities = entities;
     m_tiles = tiles;
 
@@ -65,8 +65,8 @@ void PhysicsSystem::tile_collisions(Entity& entity) {
             if (!m_tiles.count(TileMap::hash(col, row))) {
                 continue;
             }
-            Tile tile = m_tiles.at(TileMap::hash(col, row));
-            collide(entity, tile);
+            Tile* tile = m_tiles.at(TileMap::hash(col, row));
+            collide(entity, *tile);
         }
     }
 }
