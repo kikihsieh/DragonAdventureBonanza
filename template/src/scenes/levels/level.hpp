@@ -7,6 +7,7 @@
 #include <memory>
 
 #include "../../ecs/systems/physics_system.hpp"
+#include "../../ecs/systems/enemy_motion_system.hpp"
 #include "../../ecs/entities/tile.hpp"
 #include "tile_map.hpp"
 #include "scenes/scene.hpp"
@@ -58,6 +59,7 @@ protected:
     TextureMapping m_texture_mapping;
     TileMap* m_tile_map;
     PhysicsSystem* m_physics_system;
+    EnemyMotionSystem* m_enemy_motionsystem;
     Entity* m_player;
 
     bool m_unlocked;

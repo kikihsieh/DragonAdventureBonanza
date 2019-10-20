@@ -4,10 +4,12 @@
 #include "../components/drawable.hpp"
 #include "../components/physics.hpp"
 #include "../components/input.hpp"
+#include "../components/enemyAI.hpp"
 
 struct Entity {
     Entity() :
         physics(nullptr),
+        enemyai(nullptr),
         drawable(nullptr),
         collider(nullptr),
         input(nullptr),
@@ -28,6 +30,7 @@ struct Entity {
 
     // Components
 	Physics *physics;
+    EnemyAI *enemyai;
 	Drawable* drawable;
 	Collider* collider;
     Input* input;
