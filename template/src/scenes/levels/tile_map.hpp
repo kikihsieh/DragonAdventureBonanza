@@ -29,8 +29,8 @@ public:
     static std::pair<int, int> get_tile_pos_from_coord(float x, float y, vec2 size);
 
     static vec2 get_coord_from_tile_pos(int col, int row) {
-        float x = col * tile_size.x * tile_scale.x - tile_screen_size.x;
-        float y = row * tile_size.y * tile_scale.y + tile_screen_size.y;
+        float x = col * tile_size.x * tile_scale.x + tile_screen_size.x*0.5f;
+        float y = row * tile_size.y * tile_scale.y + tile_screen_size.y*0.5f;
         return {x, y};
     }
 

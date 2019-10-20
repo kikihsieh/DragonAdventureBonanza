@@ -109,8 +109,7 @@ void PhysicsSystem::collide(Entity &e1, Entity &e2) {
 
     // TODO: check for side and bottom collisions
     //  Update collider of e2 if != nullptr
-    if ((collision && e1_bottom > e2_top)) {
+    if ((collision && (e1_bottom > e2_top || e1_top < e2_bottom))) {
         e1.collider->vertical = true;
     }
-
 }

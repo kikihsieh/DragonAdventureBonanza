@@ -13,8 +13,8 @@ struct Tile : public Entity {
         drawable->vs_shader = shader_path("textured.vs.glsl");
         drawable->texture = texture;  
 
-        texture->height = size.x;
-        texture->width = size.y;
+        texture->height = size.y;
+        texture->width = size.x;
         position = pos;
     }
 };
