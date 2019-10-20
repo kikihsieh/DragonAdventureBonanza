@@ -12,16 +12,14 @@ bool RenderSystem::init(std::list<Entity> *entities) {
 	m_effects = {};
     m_entities = entities;
 
-
     for (auto & entity : *entities){
         if (entity.drawable == nullptr) {
             continue;
         }
         Drawable * drawable = entity.drawable;
-
         if (!entity.drawable->texture->is_valid()) {
             if (!entity.drawable->texture->load_from_file(entity.drawable->texture_path)){
-                fprintf(stderr, "Failed to load player texture!");
+        		fprintf(stderr, "Failed to load %s texture!", entity.drawable->texture_path);
                 return false;
             }
         }
