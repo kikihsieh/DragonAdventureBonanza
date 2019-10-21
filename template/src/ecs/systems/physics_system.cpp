@@ -50,12 +50,19 @@ void PhysicsSystem::update(float ms) {
                 entity.physics->velocity.y = 0;
             }
         }
+
+        if (entity.position.y > m_level_bounds_y.y) {
+            // Fall off screen handler. Requires health
+        }
     }
 }
 
-bool PhysicsSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles) {
+bool PhysicsSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles, vec2 level_bounds) {
     m_entities = entities;
     m_tiles = tiles;
+
+    m_level_bounds_x = {0, level_bounds.x};
+    m_level_bounds_y = {0, level_bounds.y};
 
     return true;
 }
@@ -91,6 +98,15 @@ void PhysicsSystem::move(float ms, Entity& entity) {
 
     float x_step = entity.physics->velocity.x * (ms / 1000);
     float y_step = entity.physics->velocity.y * (ms / 1000);
+
+    if (entity.physics->velocity.x < 0 && entity.position.x < m_level_bounds_x.x)
+        x_step = 0;
+    if (entity.physics->velocity.x > 0 && entity.position.x > m_level_bounds_x.y)
+        x_step = 0;
+    if (entity.physics->velocity.y < 0 && entity.position.y < m_level_bounds_y.x) {
+        y_step = 0;
+        entity.physics->velocity.y = 0;
+    }
 
     entity.position.x += x_step;
     entity.position.y += y_step;

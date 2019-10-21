@@ -56,7 +56,7 @@ bool Level::init_level(MapVector map, TexturePathMapping mapping) {
     m_y_boundaries.y = m_tile_map->get_map_dim().y;
 
     return init_player() &&
-           m_physics_system->init(&m_entities, m_tile_map->get_tiles()) &&
+            m_physics_system->init(&m_entities, m_tile_map->get_tiles(), m_tile_map->get_map_dim())&&
            m_airdash_system->init(&m_entities) && m_enemy_motionsystem->init(&m_entities, m_tile_map->get_tiles()) &&
            Scene::init();
 }
