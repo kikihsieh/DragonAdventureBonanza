@@ -2,6 +2,7 @@
 #define DAB_DRAWABLE_HPP
 
 #include <common.hpp>
+#include <memory>
 
 struct Drawable {
 
