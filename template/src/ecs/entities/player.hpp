@@ -18,6 +18,8 @@ struct Player : public Entity {
         drawable->fs_shader = shader_path("textured.fs.glsl");
         drawable->vs_shader = shader_path("textured.vs.glsl");
 
+        airdash = new AirDash();
+
         collider = new Collider();
 		input = new Input();
         is_facing_forward = true;

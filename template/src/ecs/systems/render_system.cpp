@@ -12,7 +12,6 @@ bool RenderSystem::init(std::list<Entity> *entities) {
 	m_effects = {};
     m_entities = entities;
 
-
     for (auto & entity : *entities){
         if (entity.drawable == nullptr) {
             continue;

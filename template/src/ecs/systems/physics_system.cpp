@@ -11,17 +11,19 @@ void PhysicsSystem::update(float ms) {
         }
 
         if (entity.input) {
-            if (entity.input->right) {
-                entity.is_facing_forward = true;
-                entity.physics->velocity.x = entity.physics->walk_speed;
-            } else if (entity.input->left) {
-                entity.is_facing_forward = false;
-                entity.physics->velocity.x = -1 * entity.physics->walk_speed;
-            } else {
-                entity.physics->velocity.x = 0;
-            }
-            if (entity.input->up) {
-                entity.physics->velocity.y = entity.physics->jump_speed;
+            if (!entity.airdash || !entity.airdash->airdashing) {
+                if (entity.input->right) {
+                    entity.is_facing_forward = true;
+                    entity.physics->velocity.x = entity.physics->walk_speed;
+                } else if (entity.input->left) {
+                    entity.is_facing_forward = false;
+                    entity.physics->velocity.x = -1 * entity.physics->walk_speed;
+                } else {
+                    entity.physics->velocity.x = 0;
+                }
+                if (entity.input->up) {
+                    entity.physics->velocity.y = entity.physics->jump_speed;
+                }
             }
         }
 
@@ -133,6 +135,9 @@ void PhysicsSystem::collide(Entity &e1, Entity &e2) {
                 e1.collider->horizontal = true; // right
             } else {
                 e1.collider->top = true;
+
+                if (e1.airdash)
+                    e1.airdash->can_airdash = true;
             }
         }
     }
