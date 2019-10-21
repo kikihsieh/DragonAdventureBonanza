@@ -261,9 +261,25 @@ void RenderSystem::scale(mat3 &out, vec2 scale)
 
 void RenderSystem::update(float ms) {
     for (auto & entity : *m_entities) {
-        if (entity.drawable == nullptr) {
+        if (entity.drawable == nullptr || entity.animatable == nullptr) {
             continue;
         }
+        if (entity.animatable) {
+            if (entity.input->left) {
+                entity.animatable->index++;
+                if (entity.animatable->index == 16) {
+                    entity.animatable->index = 0;
+                }
+            } else if (entity.input->right) {
+                entity.animatable->index++;
+                if (entity.animatable->index == 16) {
+                    entity.animatable->index = 0;
+                }
+            } else {
+                entity.animatable->index = 0;
+            }
+        }
+
         Drawable *drawable = entity.drawable;
         if (!entity.drawable->texture->is_valid()) {
             if (!entity.drawable->texture->load_from_file(entity.drawable->texture_path)) {
