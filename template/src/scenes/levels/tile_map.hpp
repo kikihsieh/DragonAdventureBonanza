@@ -47,6 +47,8 @@ public:
 private:
     std::map<int, Tile*> m_tiles;
 
+    float m_jump_buffer;
+
     Level* m_level;
     vec2 m_map_dim{};
 };

@@ -7,7 +7,7 @@ vec2 TileMap::tile_size = {64, 64};
 vec2 TileMap::tile_scale = {0.75f, 0.75f };
 vec2 TileMap::tile_screen_size = {tile_size.x * tile_scale.x, tile_size.y * tile_scale.y};
 
-TileMap::TileMap(Level* level) : m_level(level) {
+TileMap::TileMap(Level* level) : m_level(level), m_jump_buffer(2.f) {
 }
 
 TileMap::~TileMap() = default;
@@ -45,7 +45,7 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
     }
 
     m_map_dim.x = (col_index - 1) * tile_screen_size.x;
-    m_map_dim.y = row_count * tile_screen_size.y;
+    m_map_dim.y = row_count * tile_screen_size.y + m_jump_buffer;
 
     return true;
 }

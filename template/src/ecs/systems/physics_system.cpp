@@ -117,6 +117,11 @@ void PhysicsSystem::move(float ms, Entity& entity) {
     entity.position.y += y_step;
 }
 
+/**
+ * This function expects that the first entity is collidable
+ * @param e1 : a collidable entity
+ * @param e2 : any entity
+ */
 void PhysicsSystem::collide(Entity &e1, Entity &e2) {
     float e1_height = e1.drawable->texture->height * e1.scale.x;
     float e1_width = e1.drawable->texture->width * e1.scale.y;
@@ -154,16 +159,14 @@ void PhysicsSystem::collide(Entity &e1, Entity &e2) {
             } else {
                 e1.collider->top = true;
 
-                if (e1.physics) {
-                    e1.physics->jump_count = 0;
-                }
-
-                if (e1.airdash)
-                    e1.airdash->can_airdash = true;
-
                 if (e2.collider) {
                     e2.collider->bottom = true;
                 }
+
+                // TODO: @Austin please move these two if statements out of this function
+                if (e1.airdash)
+                    e1.airdash->can_airdash = true;
+
 
                 if (e1.physics) {
                     e1.physics->jump_count = 0;

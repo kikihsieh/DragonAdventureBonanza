@@ -279,14 +279,13 @@ void RenderSystem::update(float ms) {
             entity.animatable->countdown = entity.animatable->frame_switch_time;
             if (entity.physics->velocity.x > 0) {
                 entity.animatable->index++;
-                // TODO : max index should be a variable
-                if (entity.animatable->index == 4) {
+                if (entity.animatable->index == entity.animatable->m_texture_mapping.size()) {
                     entity.animatable->index = 0;
                 }
             } else {
                 entity.animatable->index--;
                 if (entity.animatable->index == -1) {
-                    entity.animatable->index = 3;
+                    entity.animatable->index = entity.animatable->m_texture_mapping.size() - 1;
                 }
             }
         }

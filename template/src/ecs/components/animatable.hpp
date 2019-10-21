@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include <memory>
+
 typedef std::map<int, const char*> TexturePathMapping;
 typedef std::map<int, std::shared_ptr<Texture>> TextureMapping;
 
