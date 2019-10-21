@@ -54,21 +54,18 @@ void EnemyMotionSystem::update(float ms) {
         if (entity.is_facing_forward && m_tiles.count(TileMap::hash(platform_tile_pos.first+1, platform_tile_pos.second)) == 0) {
             entity.is_facing_forward = !(entity.is_facing_forward);
             // change direction
-            entity.physics->velocity.x = -1 * entity.physics->walk_speed;
+               entity.physics->velocity.x *= -1;
         }
-        if (!entity.is_facing_forward && m_tiles.count(TileMap::hash(platform_tile_pos.first, platform_tile_pos.second)) == 0) {
+        else if (!entity.is_facing_forward && m_tiles.count(TileMap::hash(platform_tile_pos.first, platform_tile_pos.second)) == 0) {
             entity.is_facing_forward = !(entity.is_facing_forward);
             // change direction
-            entity.physics->velocity.x = -1 * entity.physics->walk_speed;
+            entity.physics->velocity.x *= -1;
         }
-
-        /*
         if (entity.collider->left || entity.collider->right){
             entity.is_facing_forward = !(entity.is_facing_forward);
             // change direction 
-            entity.physics->velocity.x = -1 * entity.physics->walk_speed;
+            entity.physics->velocity.x *= -1;
         }
-        */
     }
     
 }
