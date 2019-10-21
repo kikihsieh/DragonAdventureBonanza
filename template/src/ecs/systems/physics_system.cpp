@@ -54,6 +54,11 @@ void PhysicsSystem::update(float ms) {
 
         move(ms, entity);
 
+        for (auto &e : *m_entities) {
+            if (e.collider) {
+                e.collider->reset();
+            }
+        }
         if (entity.collider) {
             tile_collisions(entity);
             entity_collisions(entity);
@@ -83,7 +88,6 @@ bool PhysicsSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>
 }
 
 void PhysicsSystem::tile_collisions(Entity& entity) {
-    entity.collider->reset();
     float e_height = entity.drawable->texture->height * entity.scale.x;
     float e_width = entity.drawable->texture->width * entity.scale.y;
 
@@ -105,6 +109,7 @@ void PhysicsSystem::tile_collisions(Entity& entity) {
 
 void PhysicsSystem::entity_collisions(Entity& entity) {
     // TODO: implement collisions between other entities
+    //      May need to add id to entities or something to make sure it doesn't check against itself
 }
 
 void PhysicsSystem::move(float ms, Entity& entity) {
