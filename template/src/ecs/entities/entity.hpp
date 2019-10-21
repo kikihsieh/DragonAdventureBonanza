@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ecs/components/airdash.hpp>
 #include "../components/collider.hpp"
 #include "../components/drawable.hpp"
 #include "../components/physics.hpp"
@@ -31,6 +32,7 @@ struct Entity {
 	Drawable* drawable;
 	Collider* collider;
     Input* input;
+	AirDash* airdash;
 
 	float radians;
 	vec2 position;
