@@ -4,6 +4,7 @@
 #include "../components/drawable.hpp"
 #include "../components/physics.hpp"
 #include "../components/input.hpp"
+#include "../components/health.hpp"
 
 struct Entity {
     Entity() :
@@ -31,6 +32,7 @@ struct Entity {
 	Drawable* drawable;
 	Collider* collider;
     Input* input;
+	Health* health;
 
 	float radians;
 	vec2 position;

@@ -1,4 +1,6 @@
 #pragma once
+
+#include <ecs/components/health.hpp>
 #include "entity.hpp"
 
 struct Player : public Entity {
@@ -18,6 +20,9 @@ struct Player : public Entity {
         drawable->fs_shader = shader_path("textured.fs.glsl");
         drawable->vs_shader = shader_path("textured.vs.glsl");
 
+        health = new Health();
+        health->health = 3;
+        
         collider = new Collider();
 		input = new Input();
         is_facing_forward = true;

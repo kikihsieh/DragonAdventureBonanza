@@ -8,7 +8,8 @@ Level::Level(bool unlocked) :
     m_tile_map(nullptr),
     m_x_boundaries{-200.f, 0},
     m_y_boundaries{0, 0},
-    m_physics_system(new PhysicsSystem()) {
+    m_physics_system(new PhysicsSystem()),
+    m_health_system(new HealthSystem()) {
 }
 
 Level::~Level() {
@@ -44,6 +45,7 @@ bool Level::init_scene(MapVector map, TexturePathMapping mapping) {
     m_y_boundaries.y = m_tile_map->get_map_dim().y;
     init_player();
     m_physics_system->init(&m_entities, m_tile_map->get_tiles());
+    m_health_system->init(&m_entities);
     return Scene::init();
 }
 
@@ -71,4 +73,5 @@ bool Level::is_forward(){
 
 void Level::update(float elapsed_ms) {
     m_physics_system->update(elapsed_ms);
+    m_health_system->update(elapsed_ms);
 }

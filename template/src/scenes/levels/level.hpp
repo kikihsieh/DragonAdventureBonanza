@@ -5,6 +5,7 @@
 #include <vector>
 #include <map>
 #include <memory>
+#include <ecs/systems/health_system.hpp>
 
 #include "../../ecs/systems/physics_system.hpp"
 #include "../../ecs/entities/tile.hpp"
@@ -58,6 +59,7 @@ protected:
     TextureMapping m_texture_mapping;
     TileMap* m_tile_map;
     PhysicsSystem* m_physics_system;
+    HealthSystem* m_health_system;
     Entity* m_player;
 
     bool m_unlocked;
