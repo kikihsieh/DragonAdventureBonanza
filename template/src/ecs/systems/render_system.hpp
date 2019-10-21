@@ -12,6 +12,7 @@ public:
 	bool init(std::list<Entity>* entities);
 	void destroy();
 	void draw(mat3 projection);
+	void update(float ms);
 
 private:
     bool load_from_file(Drawable::Effect& effect, const char* vs_path, const char* fs_path);

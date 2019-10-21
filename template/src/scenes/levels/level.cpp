@@ -2,6 +2,7 @@
 
 #include <utility>
 #include <ecs/entities/player.hpp>
+#include "common.hpp"
 
 Level::Level(bool unlocked) :
     m_unlocked(unlocked),
@@ -87,4 +88,7 @@ void Level::update(float elapsed_ms) {
     m_airdash_system->update(elapsed_ms);
     m_physics_system->update(elapsed_ms);
     m_enemy_motionsystem->update(elapsed_ms);
+    int index = m_player->animatable->index;
+    m_player->drawable->texture = m_player->animatable->m_texture_mapping[index];
+    Scene::update(elapsed_ms);
 }

@@ -15,11 +15,26 @@ void PhysicsSystem::update(float ms) {
             if (entity.input->right) {
                 entity.is_facing_forward = true;
                 entity.physics->velocity.x = entity.physics->walk_speed;
+                if (entity.animatable) {
+                    entity.animatable->index++;
+                    if (entity.animatable->index == 16) {
+                        entity.animatable->index = 0;
+                     }
+                }
             } else if (entity.input->left) {
                 entity.is_facing_forward = false;
                 entity.physics->velocity.x = -1 * entity.physics->walk_speed;
+                if (entity.animatable) {
+                    entity.animatable->index++;
+                    if (entity.animatable->index == 16) {
+                        entity.animatable->index = 0;
+                    }
+                }
             } else {
                 entity.physics->velocity.x = 0;
+                if (entity.animatable)
+                    entity.animatable->index = 0;
+
             }
             if (entity.input->up) {
                 if (entity.physics->jump_count < 2) {
