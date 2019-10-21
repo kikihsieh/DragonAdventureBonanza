@@ -93,23 +93,48 @@ void PhysicsSystem::collide(Entity &e1, Entity &e2) {
     float e2_height = e2.drawable->texture->height * e2.scale.x;
     float e2_width = e2.drawable->texture->width * e2.scale.y;
 
-    float e1_left = e1.position.x - e1_width*0.5f;
-    float e1_right = e1_left + e1_width;
-    float e1_top = e1.position.y - e1_height*0.5f;
-    float e1_bottom = e1_top + e1_height;
+    // TODO: Also update collider of e2 if != nullptr
+    //      Add buffer for floating point number rounding errors
 
-    float e2_left = e2.position.x - e2_width*0.5f;
-    float e2_top = e2.position.y - e2_height*0.5f;
-    float e2_right = e2_left + e2_width;
-    float e2_bottom = e2_top + e2_height;
+//    float e1_left = e1.position.x - e1_width*0.5f;
+//    float e1_right = e1.position.x + e1_width*0.5f;
+//    float e1_top = e1.position.y - e1_height*0.5f;
+//    float e1_bottom = e1.position.y + e1_height*0.5f;
+//
+//    float e2_left = e2.position.x - e2_width*0.5f;
+//    float e2_top = e2.position.y - e2_height*0.5f;
+//    float e2_right = e2.position.x + e2_width*0.5f;
+//    float e2_bottom = e2.position.y + e2_height*0.5f;
+//
+//    bool x_overlaps = (e1_left < e2_right) && (e1_right > e2_left);
+//    bool y_overlaps = (e1_top < e2_bottom) && (e1_bottom > e2_top);
+//    bool collision = x_overlaps && y_overlaps;
+//
+//    if (collision) {
 
-    bool x_overlaps = (e1_left < e2_right) && (e1_right > e2_left);
-    bool y_overlaps = (e1_top < e2_bottom) && (e1_bottom > e2_top);
-    bool collision = x_overlaps && y_overlaps;
+//    }
 
-    // TODO: check for side and bottom collisions
-    //  Update collider of e2 if != nullptr
-    if ((collision && (e1_bottom > e2_top || e1_top < e2_bottom))) {
-        e1.collider->vertical = true;
+//    https://stackoverflow.com/questions/29861096/detect-which-side-of-a-rectangle-is-colliding-with-another-rectangle
+    float dx = e1.position.x - e2.position.x;
+    float dy = e1.position.y - e2.position.y;
+    float width = (e1_width + e2_width)/2;
+    float height = (e1_height + e2_height)/2;
+    float crossWidth = width*dy;
+    float crossHeight = height*dx;
+
+    if (abs(dx) <= width && abs(dy) <= height){
+        if(crossWidth > crossHeight){
+            if (crossWidth > -crossHeight) {
+                e1.collider->bottom = true;
+            } else {
+                e1.collider->horizontal = true; // left
+            }
+        } else {
+            if (crossWidth > -crossHeight) {
+                e1.collider->horizontal = true; // right
+            } else {
+                e1.collider->top = true;
+            }
+        }
     }
 }
