@@ -30,7 +30,7 @@ void PhysicsSystem::update(float ms) {
         move(ms, entity);
 
         if (entity.collider) {
-            tile_collisions(entity, old_position);
+            tile_collisions(entity);
             entity_collisions(entity);
             if (entity.collider->horizontal) {
                 entity.position.x = old_position.x;
@@ -50,7 +50,7 @@ bool PhysicsSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>
     return true;
 }
 
-void PhysicsSystem::tile_collisions(Entity& entity, vec2 old_pos) {
+void PhysicsSystem::tile_collisions(Entity& entity) {
     entity.collider->reset();
     float e_height = entity.drawable->texture->height * entity.scale.x;
     float e_width = entity.drawable->texture->width * entity.scale.y;
@@ -66,7 +66,7 @@ void PhysicsSystem::tile_collisions(Entity& entity, vec2 old_pos) {
                 continue;
             }
             Tile* tile = m_tiles.at(TileMap::hash(col, row));
-            collide(entity, *tile, old_pos);
+            collide(entity, *tile);
         }
     }
 }
@@ -86,7 +86,7 @@ void PhysicsSystem::move(float ms, Entity& entity) {
     entity.position.y += y_step;
 }
 
-void PhysicsSystem::collide(Entity &e1, Entity &e2, vec2 old_pos) {
+void PhysicsSystem::collide(Entity &e1, Entity &e2) {
     float e1_height = e1.drawable->texture->height * e1.scale.x;
     float e1_width = e1.drawable->texture->width * e1.scale.y;
 
@@ -110,20 +110,7 @@ void PhysicsSystem::collide(Entity &e1, Entity &e2, vec2 old_pos) {
 //    bool collision = x_overlaps && y_overlaps;
 //
 //    if (collision) {
-//        float x_diff = old_pos.x - e1.position.x;
-//        float y_diff = old_pos.y - e1.position.y;
-//
-//        x_overlaps = (e1_left + x_diff < e2_right) && (e1_right + x_diff > e2_left);
-//        y_overlaps = (e1_top + y_diff < e2_bottom) && (e1_bottom + y_diff > e2_top);
-//        // If moving the x position back fixes the collision
-//        if (!x_overlaps) {
-//            e1.collider->horizontal = true;
-//        }
-//        // If moving the y position back fixes the collision
-//        if (!y_overlaps) {
-//            e1.collider->top = true;
-//            e1.collider->bottom = true;
-//        }
+
 //    }
 
 //    https://stackoverflow.com/questions/29861096/detect-which-side-of-a-rectangle-is-colliding-with-another-rectangle
