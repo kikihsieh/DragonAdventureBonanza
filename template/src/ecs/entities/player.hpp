@@ -45,6 +45,4 @@ struct Player : public Entity {
             };
         animatable = new Animatable(m_texture_map);
     }
-
-
 };
