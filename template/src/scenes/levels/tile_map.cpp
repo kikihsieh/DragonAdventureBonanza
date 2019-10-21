@@ -1,6 +1,7 @@
 #include <vector>
 #include <map>
 #include "tile_map.hpp"
+#include <iostream>
 
 vec2 TileMap::tile_size = {64, 64};
 vec2 TileMap::tile_scale = {0.75f, 0.75f };
@@ -17,6 +18,7 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
 
     int longest_row = 0;
     int col_index = 0;
+    int row_count = 0;
 
     for (row = map.begin(); row != map.end(); ++row) {
         int row_index = row - map.begin();
@@ -39,10 +41,12 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
             col_index ++;
         }
         longest_row = (row_index > longest_row) ? row_index : longest_row;
+        row_count ++;
     }
-    
-    m_map_dim.x = ((float) longest_row) * tile_size.x;
-    m_map_dim.y = ((float) (map.end() - map.begin())) * tile_size.y;
+
+    m_map_dim.x = (col_index - 1) * tile_screen_size.x;
+    m_map_dim.y = row_count * tile_screen_size.y;
+
     return true;
 }
 

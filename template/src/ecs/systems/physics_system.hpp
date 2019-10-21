@@ -7,7 +7,7 @@
 
 class PhysicsSystem {
 public:
-    bool init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles);
+    bool init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles, vec2 level_bounds);
 
     void update(float ms);
 
@@ -19,6 +19,9 @@ private:
 
     std::list<Entity>* m_entities;
     std::map<int, Tile*> m_tiles;
+
+    vec2 m_level_bounds_x;
+    vec2 m_level_bounds_y;
 };
 
 #endif //DAB_PHYSICS_SYSTEM_HPP
