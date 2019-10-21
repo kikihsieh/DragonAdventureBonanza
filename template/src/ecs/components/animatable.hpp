@@ -27,6 +27,7 @@ struct Animatable {
 
     TextureMapping m_texture_mapping;
     int index = 0;
-
+    float frame_switch_time = 80.f; // time in ms before frame should be switched
+    float countdown = frame_switch_time;
 };
 #endif //DAB_ANIMATABLE_HPP
