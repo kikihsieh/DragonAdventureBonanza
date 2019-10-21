@@ -8,6 +8,7 @@ Level::Level(bool unlocked) :
     m_tile_map(nullptr),
     m_physics_system(nullptr),
     m_airdash_system(nullptr),
+    m_enemy_motionsystem(nullptr),
     m_x_boundaries{-200.f, 0},
     m_y_boundaries{0, 0} {
 }
@@ -27,6 +28,7 @@ void Level::destroy() {
     delete m_airdash_system;
     delete m_tile_map;
     delete m_enemy_motionsystem;
+
     m_physics_system = nullptr;
     m_airdash_system = nullptr;
     m_tile_map = nullptr;
