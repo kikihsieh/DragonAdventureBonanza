@@ -1,20 +1,23 @@
 #include "scene.hpp"
 #include "ecs/entities/background.hpp"
 
-Scene::Scene() {
+Scene::Scene() : m_rendersystem(nullptr), m_inputsystem(nullptr) {
 }
 
 bool Scene::init() {
     m_inputsystem = new InputSystem();
+    m_rendersystem = new RenderSystem();
     Background background(get_bg_texture_path());
     m_entities.insert(m_entities.begin(), background);
-    return m_rendersystem.init(&m_entities) && m_inputsystem->init(&m_entities);
+    return m_rendersystem->init(&m_entities) && m_inputsystem->init(&m_entities);
 }
 
 // Releases all graphics resources
 void Scene::destroy() {
     delete m_inputsystem;
-    m_rendersystem.destroy();
+    delete m_rendersystem;
+    m_rendersystem = nullptr;
+    m_inputsystem = nullptr;
     for (auto &entity: m_entities) {
         entity.destroy();
     }
@@ -22,7 +25,7 @@ void Scene::destroy() {
 }
 
 void Scene::draw(const mat3& projection) {
-    m_rendersystem.draw(projection);
+    m_rendersystem->draw(projection);
 }
 
 bool Scene::is_level() {

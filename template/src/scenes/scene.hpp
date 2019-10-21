@@ -36,7 +36,7 @@ public:
 protected:
     virtual const char * get_bg_texture_path() = 0;
 
-	RenderSystem m_rendersystem;
+	RenderSystem* m_rendersystem;
     InputSystem *m_inputsystem;
 };
 #endif

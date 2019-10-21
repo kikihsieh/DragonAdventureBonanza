@@ -19,10 +19,6 @@ bool StartMenu::init() {
     return true;
 }
 
-void StartMenu::destroy() {
-    Scene::destroy();
-}
-
 void StartMenu::update(float elapsed_ms) {
 
 }
