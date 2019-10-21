@@ -26,9 +26,11 @@ void Level::destroy() {
     delete m_physics_system;
     delete m_airdash_system;
     delete m_tile_map;
+    delete m_enemy_motionsystem;
     m_physics_system = nullptr;
     m_airdash_system = nullptr;
     m_tile_map = nullptr;
+    m_enemy_motionsystem = nullptr;
 }
 
 bool Level::init_level(MapVector map, TexturePathMapping mapping) {
@@ -53,7 +55,7 @@ bool Level::init_level(MapVector map, TexturePathMapping mapping) {
 
     return init_player() &&
            m_physics_system->init(&m_entities, m_tile_map->get_tiles()) &&
-           m_airdash_system->init(&m_entities) &&
+           m_airdash_system->init(&m_entities) && m_enemy_motionsystem->init(&m_entities, m_tile_map->get_tiles()) &&
            Scene::init();
 }
 

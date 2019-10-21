@@ -30,6 +30,7 @@ struct Entity {
         delete collider;
         delete input;
         delete airdash;
+        delete enemyai;
         delete drawable;
     }
 

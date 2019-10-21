@@ -1,23 +1,13 @@
-//
-// Created by arden on 10/15/2019.
-//
-
 #include "help_menu.hpp"
 #include "ecs/entities/button.hpp"
 
-HelpMenu::HelpMenu(){
-}
+HelpMenu::HelpMenu()= default;
 
 HelpMenu::~HelpMenu() = default;
 
 bool HelpMenu::init() {
     Scene::init();
     return true;
-}
-
-void HelpMenu::destroy() {
-    Scene::destroy();
-    m_entities.clear();
 }
 
 void HelpMenu::update(float elapsed_ms) {
