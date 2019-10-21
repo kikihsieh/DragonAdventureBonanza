@@ -13,7 +13,7 @@ class Scene
 {
 public:
     Scene();
-    ~Scene();
+    virtual ~Scene() = default;
 
     // Creates all the associated render resources and default transform
     virtual bool init();

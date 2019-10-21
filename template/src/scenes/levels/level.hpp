@@ -14,7 +14,7 @@
 #include "scenes/scene.hpp"
 
 typedef std::map<int, const char*> TexturePathMapping;
-typedef std::map<int, Texture*> TextureMapping;
+typedef std::map<int, std::shared_ptr<Texture>> TextureMapping;
 typedef std::vector<std::vector<int>> MapVector;
 
 class TileMap; // forward declaration
@@ -24,9 +24,9 @@ class Level : public Scene
 
 public:
     explicit Level(bool unlocked);
-    ~Level();
+    virtual ~Level() = default;
 
-    virtual bool init() override = 0;
+    virtual bool init() override;
 
     void destroy() override;
     void update(float elapsed_ms) override;
@@ -55,7 +55,7 @@ public:
 protected:
     virtual bool init_walking_enemy(int type, vec2 initial_pos) = 0;
 
-    bool init_scene(MapVector map, TexturePathMapping mapping);
+    bool init_level(MapVector map, TexturePathMapping mapping);
 
     TextureMapping m_texture_mapping;
     TileMap* m_tile_map;
@@ -68,6 +68,10 @@ protected:
 
     vec2 m_x_boundaries;
     vec2 m_y_boundaries;
+
+private:
+    virtual MapVector get_map() = 0;
+    virtual TexturePathMapping get_mapping() = 0;
 };
 
 #endif //DAB_LEVEL_HPP

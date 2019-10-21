@@ -8,8 +8,6 @@
 StartMenu::StartMenu()  {
 }
 
-StartMenu::~StartMenu() = default;
-
 bool StartMenu::init() {
     Button start(textures_path("start.png"));
     start.position = {600.f,400.f};
@@ -23,7 +21,6 @@ bool StartMenu::init() {
 
 void StartMenu::destroy() {
     Scene::destroy();
-    m_entities.clear();
 }
 
 void StartMenu::update(float elapsed_ms) {
