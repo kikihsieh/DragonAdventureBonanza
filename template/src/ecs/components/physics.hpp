@@ -1,6 +1,6 @@
 struct Physics {
     Physics() :
-        gravity(10.f),
+        gravity(750.f),
         acceleration({0.f, 0.f}),
         velocity({0.f, 0.f}),
         jump_speed(50.f),

@@ -9,7 +9,7 @@ struct Player : public Entity {
         position = { 100.f, 550.f };
 
         physics = new Physics();
-        physics->gravity = 10.f;
+        physics->gravity = 750.f;
         physics->walk_speed = 250.f;
         physics->jump_speed = -530.f;
         physics->velocity = {physics->walk_speed, 0.f};
