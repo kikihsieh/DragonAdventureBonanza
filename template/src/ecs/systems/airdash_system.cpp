@@ -14,9 +14,13 @@ void AirDashSystem::update(float ms) {
 
         if (is_airdashing(entity)) {
             entity.physics->velocity.x = entity.airdash->cur_airdash_speed;
-            entity.airdash->cur_airdash_speed -= entity.is_facing_forward ? entity.airdash->airdash_friction : -1.f * entity.airdash->airdash_friction;
+            entity.airdash->cur_airdash_speed -=
+                    entity.is_facing_forward ?
+                    (ms / 1000.f) * entity.airdash->airdash_friction :
+                    (ms / -1000.f) * entity.airdash->airdash_friction;
 
-            if (abs(entity.airdash->cur_airdash_speed) <= 0) {
+            if ((entity.is_facing_forward && entity.airdash->cur_airdash_speed <= 0.f) ||
+                    (!entity.is_facing_forward && entity.airdash->cur_airdash_speed >= 0.f)) {
                 stop_airdash(entity);
             }
         }
