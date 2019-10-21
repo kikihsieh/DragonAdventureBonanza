@@ -33,17 +33,15 @@ bool EnemyMotionSystem::init(std::list<Entity> *entities, const std::map<int, Ti
 
 void EnemyMotionSystem::update(float ms) {
     for (auto &entity : *m_entities){
-        if (!entity.physics){
+        if (!entity.physics || !entity.collider || !entity.enemyai){
             continue;
         }
         //vec2 old_position = entity.position;
-        if(entity.collider){
-            if (entity.collider->left || entity.collider->right){
-                //entity.position.x = old_position.x;
-                entity.is_facing_forward = !(entity.is_facing_forward);
-                // change direction 
-                entity.physics->velocity.x = -1 * entity.physics->walk_speed;
-            }
+        if (entity.collider->left || entity.collider->right){
+            //entity.position.x = old_position.x;
+            entity.is_facing_forward = !(entity.is_facing_forward);
+            // change direction 
+            entity.physics->velocity.x = -1 * entity.physics->walk_speed;
         }
     }
     
