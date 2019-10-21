@@ -1,8 +1,5 @@
-#include <iostream>
 #include "airdash_system.hpp"
 #include <cmath>
-#include <utility>
-#include <stdlib.h>
 
 void AirDashSystem::update(float ms) {
 
@@ -24,7 +21,7 @@ void AirDashSystem::update(float ms) {
             }
         }
 
-        if (entity.collider->horizontal || entity.collider->bottom || entity.collider->top)
+        if (entity.collider->left || entity.collider->bottom || entity.collider->top || entity.collider->right)
             stop_airdash(entity);
     }
 }

@@ -5,7 +5,7 @@
 #include "entity.hpp"
 
 struct Tile : public Entity {
-    Tile(Texture* texture, vec2 pos, vec2 scale, vec2 size) {
+    Tile(std::shared_ptr<Texture> texture, vec2 pos, vec2 scale, vec2 size) {
         this->scale = scale;
 
         drawable = new Drawable();

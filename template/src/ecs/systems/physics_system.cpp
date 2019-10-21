@@ -34,7 +34,7 @@ void PhysicsSystem::update(float ms) {
         if (entity.collider) {
             tile_collisions(entity);
             entity_collisions(entity);
-            if (entity.collider->horizontal) {
+            if (entity.collider->left || entity.collider->right) {
                 entity.position.x = old_position.x;
             }
             if (entity.collider->top || entity.collider->bottom) {
@@ -94,26 +94,6 @@ void PhysicsSystem::collide(Entity &e1, Entity &e2) {
 
     float e2_height = e2.drawable->texture->height * e2.scale.x;
     float e2_width = e2.drawable->texture->width * e2.scale.y;
-    // TODO: Also update collider of e2 if != nullptr
-    //      Add buffer for floating point number rounding errors
-
-//    float e1_left = e1.position.x - e1_width*0.5f;
-//    float e1_right = e1.position.x + e1_width*0.5f;
-//    float e1_top = e1.position.y - e1_height*0.5f;
-//    float e1_bottom = e1.position.y + e1_height*0.5f;
-//
-//    float e2_left = e2.position.x - e2_width*0.5f;
-//    float e2_top = e2.position.y - e2_height*0.5f;
-//    float e2_right = e2.position.x + e2_width*0.5f;
-//    float e2_bottom = e2.position.y + e2_height*0.5f;
-//
-//    bool x_overlaps = (e1_left < e2_right) && (e1_right > e2_left);
-//    bool y_overlaps = (e1_top < e2_bottom) && (e1_bottom > e2_top);
-//    bool collision = x_overlaps && y_overlaps;
-//
-//    if (collision) {
-
-//    }
 
 //    https://stackoverflow.com/questions/29861096/detect-which-side-of-a-rectangle-is-colliding-with-another-rectangle
     float dx = e1.position.x - e2.position.x;
@@ -127,17 +107,30 @@ void PhysicsSystem::collide(Entity &e1, Entity &e2) {
         if(crossWidth > crossHeight){
             if (crossWidth > -crossHeight) {
                 e1.collider->bottom = true;
+                if (e2.collider) {
+                    e2.collider->top = true;
+                }
             } else {
-                e1.collider->horizontal = true; // left
+                e1.collider->left = true;
+                if (e2.collider) {
+                    e2.collider->right = true;
+                }
             }
         } else {
             if (crossWidth > -crossHeight) {
-                e1.collider->horizontal = true; // right
+                e1.collider->right = true;
+                if (e2.collider) {
+                    e2.collider->left = true;
+                }
             } else {
                 e1.collider->top = true;
 
                 if (e1.airdash)
                     e1.airdash->can_airdash = true;
+
+                if (e2.collider) {
+                    e2.collider->bottom = true;
+                }
             }
         }
     }

@@ -1,6 +1,5 @@
 #include "input_system.hpp"
 #include <list>
-// #include <iostream>
 
 bool InputSystem::init(std::list<Entity> *entities) {
     m_entities = entities;

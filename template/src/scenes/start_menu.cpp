@@ -8,8 +8,6 @@
 StartMenu::StartMenu()  {
 }
 
-StartMenu::~StartMenu() = default;
-
 bool StartMenu::init() {
     Button start;
     m_entities.emplace_back(start);
@@ -19,7 +17,6 @@ bool StartMenu::init() {
 
 void StartMenu::destroy() {
     Scene::destroy();
-    m_entities.clear();
 }
 
 void StartMenu::update(float elapsed_ms) {

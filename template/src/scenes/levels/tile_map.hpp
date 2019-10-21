@@ -9,7 +9,7 @@
 
 class Level; // forward declaration
 
-typedef std::map<int, Texture*> TextureMapping;
+typedef std::map<int, std::shared_ptr<Texture>> TextureMapping;
 typedef std::vector<std::vector<int>> MapVector;
 
 class TileMap {
@@ -48,7 +48,7 @@ private:
     std::map<int, Tile*> m_tiles;
 
     Level* m_level;
-    vec2 m_map_dim;
+    vec2 m_map_dim{};
 };
 
 #endif //DAB_TILE_MAP_HPP

@@ -12,7 +12,6 @@
 class StartMenu : public Scene {
 public:
     StartMenu();
-    ~StartMenu();
 
     bool init() override;
     void destroy() override;
