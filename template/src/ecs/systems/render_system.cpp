@@ -286,7 +286,7 @@ void RenderSystem::update(float ms) {
                 }
             } else {
                 entity.animatable->index--;
-                if (entity.animatable->index == -4) {
+                if (entity.animatable->index == -5) {
                     entity.animatable->index = -1;
                 }
             }
