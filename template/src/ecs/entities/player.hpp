@@ -30,6 +30,10 @@ struct Player : public Entity {
                     { 1, textures_path("move1.png")},
                     { 2, textures_path("move2.png")},
                     { 3, textures_path("move3.png")},
+                    { -1, textures_path("initial-1.png")},
+                    { -2, textures_path("move-1.png")},
+                    { -3, textures_path("move-2.png")},
+                    { -4, textures_path("move-3.png")},
             };
         animatable = new Animatable(m_texture_map);
     }

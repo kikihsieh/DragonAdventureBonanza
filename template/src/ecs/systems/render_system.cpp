@@ -266,10 +266,12 @@ void RenderSystem::update(float ms) {
         }
 
         if (entity.physics->velocity.x == 0) {
-            if (entity.animatable->index == 0) {
+            if (entity.animatable->index == 0 && entity.is_facing_forward) {
                 continue;
-            } else {
+            } else if (entity.is_facing_forward) {
                 entity.animatable->index = 0;
+            } else {
+				entity.animatable->index = -1;
             }
         } else {
             entity.animatable->countdown -= ms;
@@ -279,13 +281,13 @@ void RenderSystem::update(float ms) {
             entity.animatable->countdown = entity.animatable->frame_switch_time;
             if (entity.physics->velocity.x > 0) {
                 entity.animatable->index++;
-                if (entity.animatable->index == entity.animatable->m_texture_mapping.size()) {
+                if (entity.animatable->index == 4) {
                     entity.animatable->index = 0;
                 }
             } else {
                 entity.animatable->index--;
-                if (entity.animatable->index == -1) {
-                    entity.animatable->index = entity.animatable->m_texture_mapping.size() - 1;
+                if (entity.animatable->index == -4) {
+                    entity.animatable->index = -1;
                 }
             }
         }
