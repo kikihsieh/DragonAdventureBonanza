@@ -74,15 +74,9 @@ bool Level::is_forward(){
 }
 
 void Level::update(float elapsed_ms) {
-    printf("ms %d", elapsed_ms * 0.001);
     m_physics_system->update(elapsed_ms);
     m_enemy_motionsystem->update(elapsed_ms);
     int index = m_player->animatable->index;
-    if (index == 4) {
-        m_player->animatable->index = 0;
-        index = 0;
-    }
     m_player->drawable->texture = m_player->animatable->m_texture_mapping[index];
-    m_player->animatable->index++;
     Scene::update(elapsed_ms);
 }
