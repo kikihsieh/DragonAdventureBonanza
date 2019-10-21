@@ -39,3 +39,7 @@ template/src/project_path.hpp
 
 # VS Code settings
 *.vscode
+
+template/.idea/
+
+template/cmake-build-debug/

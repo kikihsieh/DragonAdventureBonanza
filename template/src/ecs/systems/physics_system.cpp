@@ -21,7 +21,15 @@ void PhysicsSystem::update(float ms) {
                 entity.physics->velocity.x = 0;
             }
             if (entity.input->up) {
-                entity.physics->velocity.y = entity.physics->jump_speed;
+                if (entity.physics->jump_count < 2) {
+                    entity.physics->velocity.y = entity.physics->jump_speed;
+                    entity.physics->jump_count++;
+
+                    // Holding down up arrow will cause the player to jump twice in very quick succession
+                    // This will appear as a single jump
+                    // Set up to false so this doesnt occur
+                    entity.input->up = false;
+                }
             }
         }
 
@@ -146,6 +154,9 @@ void PhysicsSystem::collide(Entity &e1, Entity &e2, vec2 old_pos) {
                 e1.collider->horizontal = true; // right
             } else {
                 e1.collider->top = true;
+                if (e1.physics) {
+                    e1.physics->jump_count = 0;
+                }
             }
         }
     }
