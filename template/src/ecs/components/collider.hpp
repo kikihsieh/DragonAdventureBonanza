@@ -5,16 +5,19 @@ struct Collider {
 
     Collider() :
             horizontal(false),
-            vertical(false) {
+            top(false),
+            bottom(false) {
     }
 
     void reset() {
-        vertical = false;
+        top = false;
+        bottom = false;
         horizontal = false;
     }
 
     bool horizontal;
-    bool vertical;
+    bool top;
+    bool bottom;
 };
 
 #endif //DAB_COLLIDER_HPP
