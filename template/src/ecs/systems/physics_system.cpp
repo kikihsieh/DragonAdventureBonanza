@@ -11,20 +11,28 @@ void PhysicsSystem::update(float ms) {
         }
 
         if (entity.input) {
-            if (!entity.airdash || !entity.airdash->airdashing) {
-                if (entity.input->right) {
-                    entity.is_facing_forward = true;
-                    entity.physics->velocity.x = entity.physics->walk_speed;
-                } else if (entity.input->left) {
-                    entity.is_facing_forward = false;
-                    entity.physics->velocity.x = -1 * entity.physics->walk_speed;
-                } else {
-                    entity.physics->velocity.x = 0;
-                }
-                if (entity.input->up) {
+          if (!entity.airdash || !entity.airdash->airdashing) {
+            if (entity.input->right) {
+                entity.is_facing_forward = true;
+                entity.physics->velocity.x = entity.physics->walk_speed;
+            } else if (entity.input->left) {
+                entity.is_facing_forward = false;
+                entity.physics->velocity.x = -1 * entity.physics->walk_speed;
+            } else {
+                entity.physics->velocity.x = 0;
+            }
+            if (entity.input->up) {
+                if (entity.physics->jump_count < 2) {
                     entity.physics->velocity.y = entity.physics->jump_speed;
+                    entity.physics->jump_count++;
+
+                    // Holding down up arrow will cause the player to jump twice in very quick succession
+                    // This will appear as a single jump
+                    // Set up to false so this doesnt occur
+                    entity.input->up = false;
                 }
             }
+          }
         }
 
         vec2 old_position = entity.position;
@@ -135,6 +143,10 @@ void PhysicsSystem::collide(Entity &e1, Entity &e2) {
                 e1.collider->horizontal = true; // right
             } else {
                 e1.collider->top = true;
+
+                if (e1.physics) {
+                    e1.physics->jump_count = 0;
+                }
 
                 if (e1.airdash)
                     e1.airdash->can_airdash = true;
