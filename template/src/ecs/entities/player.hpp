@@ -3,8 +3,8 @@
 
 struct Player : public Entity {
     Player() {
-        scale = {0.16f, 0.16f};
-        position = { 100.f, 450.f };
+        scale = {0.13f, 0.13f};
+        position = { 100.f, 550.f };
 
         physics = new Physics();
         physics->gravity = 10.f;
