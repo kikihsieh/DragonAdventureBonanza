@@ -34,6 +34,7 @@ bool Scene::is_level() {
 }
 
 void Scene::update(float elapsed_ms) {
+    m_rendersystem.update(elapsed_ms);
 }
 
 void Scene::on_key(int key, int action) {

@@ -5,6 +5,8 @@
 #include "../components/physics.hpp"
 #include "../components/input.hpp"
 #include "../components/enemyAI.hpp"
+#include "../components/animatable.hpp"
+
 
 struct Entity {
     Entity() :
@@ -13,6 +15,7 @@ struct Entity {
         drawable(nullptr),
         collider(nullptr),
         input(nullptr),
+        animatable(nullptr),
         radians(0.f),
         position({0.f, 0.f}),
         scale({1.f, 1.f}),
@@ -34,6 +37,7 @@ struct Entity {
 	Drawable* drawable;
 	Collider* collider;
     Input* input;
+    Animatable* animatable;
 
 	float radians;
 	vec2 position;
