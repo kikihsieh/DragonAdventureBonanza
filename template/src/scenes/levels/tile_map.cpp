@@ -50,6 +50,7 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
     return true;
 }
 
+//world coord on top left corner
 std::pair<int, int> TileMap::get_tile_pos_from_coord(float x, float y, vec2 size) {
     float x_pos = x - size.x*0.5f;
     float y_pos = y - size.y*0.5f;
