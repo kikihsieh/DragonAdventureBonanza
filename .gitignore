@@ -36,6 +36,8 @@
 # Build Files
 build/
 template/src/project_path.hpp
+template/cmake-build-debug/
 
 # VS Code settings
 *.vscode
+.idea/

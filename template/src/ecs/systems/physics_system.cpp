@@ -30,12 +30,12 @@ void PhysicsSystem::update(float ms) {
         move(ms, entity);
 
         if (entity.collider) {
-            tile_collisions(entity, old_position);
+            tile_collisions(entity);
             entity_collisions(entity);
             if (entity.collider->horizontal) {
                 entity.position.x = old_position.x;
             }
-            if (entity.collider->top || entity.collider->bottom) {
+            if (entity.collider->vertical) {
                 entity.position.y = old_position.y;
                 entity.physics->velocity.y = 0;
             }
@@ -50,7 +50,7 @@ bool PhysicsSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>
     return true;
 }
 
-void PhysicsSystem::tile_collisions(Entity& entity, vec2 old_pos) {
+void PhysicsSystem::tile_collisions(Entity& entity) {
     entity.collider->reset();
     float e_height = entity.drawable->texture->height * entity.scale.x;
     float e_width = entity.drawable->texture->width * entity.scale.y;
@@ -66,7 +66,7 @@ void PhysicsSystem::tile_collisions(Entity& entity, vec2 old_pos) {
                 continue;
             }
             Tile* tile = m_tiles.at(TileMap::hash(col, row));
-            collide(entity, *tile, old_pos);
+            collide(entity, *tile);
         }
     }
 }
@@ -86,67 +86,30 @@ void PhysicsSystem::move(float ms, Entity& entity) {
     entity.position.y += y_step;
 }
 
-void PhysicsSystem::collide(Entity &e1, Entity &e2, vec2 old_pos) {
+void PhysicsSystem::collide(Entity &e1, Entity &e2) {
     float e1_height = e1.drawable->texture->height * e1.scale.x;
     float e1_width = e1.drawable->texture->width * e1.scale.y;
 
     float e2_height = e2.drawable->texture->height * e2.scale.x;
     float e2_width = e2.drawable->texture->width * e2.scale.y;
-    // TODO: Also update collider of e2 if != nullptr
-    //      Add buffer for floating point number rounding errors
 
-//    float e1_left = e1.position.x - e1_width*0.5f;
-//    float e1_right = e1.position.x + e1_width*0.5f;
-//    float e1_top = e1.position.y - e1_height*0.5f;
-//    float e1_bottom = e1.position.y + e1_height*0.5f;
-//
-//    float e2_left = e2.position.x - e2_width*0.5f;
-//    float e2_top = e2.position.y - e2_height*0.5f;
-//    float e2_right = e2.position.x + e2_width*0.5f;
-//    float e2_bottom = e2.position.y + e2_height*0.5f;
-//
-//    bool x_overlaps = (e1_left < e2_right) && (e1_right > e2_left);
-//    bool y_overlaps = (e1_top < e2_bottom) && (e1_bottom > e2_top);
-//    bool collision = x_overlaps && y_overlaps;
-//
-//    if (collision) {
-//        float x_diff = old_pos.x - e1.position.x;
-//        float y_diff = old_pos.y - e1.position.y;
-//
-//        x_overlaps = (e1_left + x_diff < e2_right) && (e1_right + x_diff > e2_left);
-//        y_overlaps = (e1_top + y_diff < e2_bottom) && (e1_bottom + y_diff > e2_top);
-//        // If moving the x position back fixes the collision
-//        if (!x_overlaps) {
-//            e1.collider->horizontal = true;
-//        }
-//        // If moving the y position back fixes the collision
-//        if (!y_overlaps) {
-//            e1.collider->top = true;
-//            e1.collider->bottom = true;
-//        }
-//    }
+    float e1_left = e1.position.x - e1_width*0.5f;
+    float e1_right = e1_left + e1_width;
+    float e1_top = e1.position.y - e1_height*0.5f;
+    float e1_bottom = e1_top + e1_height;
 
-//    https://stackoverflow.com/questions/29861096/detect-which-side-of-a-rectangle-is-colliding-with-another-rectangle
-    float dx = e1.position.x - e2.position.x;
-    float dy = e1.position.y - e2.position.y;
-    float width = (e1_width + e2_width)/2;
-    float height = (e1_height + e2_height)/2;
-    float crossWidth = width*dy;
-    float crossHeight = height*dx;
+    float e2_left = e2.position.x - e2_width*0.5f;
+    float e2_top = e2.position.y - e2_height*0.5f;
+    float e2_right = e2_left + e2_width;
+    float e2_bottom = e2_top + e2_height;
 
-    if (abs(dx) <= width && abs(dy) <= height){
-        if(crossWidth > crossHeight){
-            if (crossWidth > -crossHeight) {
-                e1.collider->bottom = true;
-            } else {
-                e1.collider->horizontal = true; // left
-            }
-        } else {
-            if (crossWidth > -crossHeight) {
-                e1.collider->horizontal = true; // right
-            } else {
-                e1.collider->top = true;
-            }
-        }
+    bool x_overlaps = (e1_left < e2_right) && (e1_right > e2_left);
+    bool y_overlaps = (e1_top < e2_bottom) && (e1_bottom > e2_top);
+    bool collision = x_overlaps && y_overlaps;
+
+    // TODO: check for side and bottom collisions
+    //  Update collider of e2 if != nullptr
+    if ((collision && (e1_bottom > e2_top || e1_top < e2_bottom))) {
+        e1.collider->vertical = true;
     }
 }

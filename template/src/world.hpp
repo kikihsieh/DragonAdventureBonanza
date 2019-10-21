@@ -18,6 +18,7 @@ public:
         MAIN_MENU,
         FOREST,
         VOLCANO,
+        HELP,
         CAVE,
         SNOW_MOUNTAIN,
         NIGHT_SKY
