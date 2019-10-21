@@ -98,8 +98,8 @@ void PhysicsSystem::entity_collisions(Entity& entity) {
 }
 
 void PhysicsSystem::move(float ms, Entity& entity) {
-    entity.physics->velocity.x += entity.physics->acceleration.x;
-    entity.physics->velocity.y += entity.physics->acceleration.y;
+    entity.physics->velocity.x += (entity.physics->acceleration.x * ms / 1000);
+    entity.physics->velocity.y += (entity.physics->acceleration.y * ms / 1000);
 
     float x_step = entity.physics->velocity.x * (ms / 1000);
     float y_step = entity.physics->velocity.y * (ms / 1000);
