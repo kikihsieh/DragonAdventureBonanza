@@ -12,9 +12,9 @@ public:
     void update(float ms);
 
 private:
-    void tile_collisions(Entity& entity, vec2 old_pos);
+    void tile_collisions(Entity& entity);
     void entity_collisions(Entity& entity);
-    void collide(Entity& e1, Entity& e2, vec2 old_pos);
+    void collide(Entity& e1, Entity& e2);
     void move(float ms, Entity& entity);
 
     std::list<Entity>* m_entities;

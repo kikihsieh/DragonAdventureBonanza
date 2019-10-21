@@ -47,13 +47,13 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
 }
 
 std::pair<int, int> TileMap::get_tile_pos_from_coord(float x, float y, vec2 size) {
-    float x_pos = x - size.x*0.5f;
-    float y_pos = y - size.y*0.5f;
+    float x_pos = (x - size.x*0.5f + tile_screen_size.x*0.5f);
+    float y_pos = (y - size.y*0.5f - tile_screen_size.y*0.5f);
 
     float x_tiles = x_pos / tile_screen_size.x;
     float y_tiles = y_pos / tile_screen_size.y;
 
-    int col = floor(x_tiles);
-    int row = floor(y_tiles);
+    int col = ceil(x_tiles);
+    int row = ceil(y_tiles);
     return {col, row};
 }
