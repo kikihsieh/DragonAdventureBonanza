@@ -6,29 +6,39 @@
 Level::Level(bool unlocked) :
     m_unlocked(unlocked),
     m_tile_map(nullptr),
+    m_physics_system(nullptr),
+    m_airdash_system(nullptr),
+    m_enemy_motionsystem(nullptr),
     m_x_boundaries{-200.f, 0},
-    m_y_boundaries{0, 0},
-    m_enemy_motionsystem(new EnemyMotionSystem()),
-    m_physics_system(new PhysicsSystem()) {
+    m_y_boundaries{0, 0} {
 }
 
-Level::~Level() {
-    delete m_physics_system;
-    delete m_enemy_motionsystem;
-    destroy();
+bool Level::init() {
+    m_physics_system = new PhysicsSystem();
+    m_airdash_system = new AirDashSystem();
+    m_enemy_motionsystem = new EnemyMotionSystem();
+    init_level(get_map(), get_mapping());
+    return Scene::init();
 }
 
 /** destroys resources not needed when the scene is not active **/
 void Level::destroy() {
     Scene::destroy();
+    delete m_physics_system;
+    delete m_airdash_system;
     delete m_tile_map;
-    m_entities.clear();
+    delete m_enemy_motionsystem;
+
+    m_physics_system = nullptr;
+    m_airdash_system = nullptr;
+    m_tile_map = nullptr;
+    m_enemy_motionsystem = nullptr;
 }
 
-bool Level::init_scene(MapVector map, TexturePathMapping mapping) {
+bool Level::init_level(MapVector map, TexturePathMapping mapping) {
     m_tile_map = new TileMap(this);
     for (auto & iter : mapping) {
-        auto* texture = new Texture();
+        auto texture = std::make_shared<Texture>();
         if (!texture->is_valid()) {
             if (!texture->load_from_file(iter.second)) {
                 fprintf(stderr, "Failed to load tile texture!");
@@ -44,10 +54,11 @@ bool Level::init_scene(MapVector map, TexturePathMapping mapping) {
     
     m_x_boundaries.y = m_tile_map->get_map_dim().x;
     m_y_boundaries.y = m_tile_map->get_map_dim().y;
-    init_player();
-    m_physics_system->init(&m_entities, m_tile_map->get_tiles());
-    m_enemy_motionsystem->init(&m_entities, m_tile_map->get_tiles());
-    return Scene::init();
+
+    return init_player() &&
+           m_physics_system->init(&m_entities, m_tile_map->get_tiles()) &&
+           m_airdash_system->init(&m_entities) && m_enemy_motionsystem->init(&m_entities, m_tile_map->get_tiles()) &&
+           Scene::init();
 }
 
 bool Level::init_enemy(int type, vec2 initial_pos) {
@@ -73,6 +84,7 @@ bool Level::is_forward(){
 }
 
 void Level::update(float elapsed_ms) {
+    m_airdash_system->update(elapsed_ms);
     m_physics_system->update(elapsed_ms);
     m_enemy_motionsystem->update(elapsed_ms);
 }

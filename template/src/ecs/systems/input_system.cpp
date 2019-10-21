@@ -1,6 +1,5 @@
 #include "input_system.hpp"
 #include <list>
-// #include <iostream>
 
 bool InputSystem::init(std::list<Entity> *entities) {
     m_entities = entities;
@@ -33,6 +32,14 @@ void InputSystem::on_key_update(int key, int action) {
                 entity.input->right = true;
             } else if (action == GLFW_RELEASE) {
                 entity.input->right = false;
+            }
+        }
+
+        if (key == GLFW_KEY_LEFT_SHIFT || key == GLFW_KEY_RIGHT_SHIFT) {
+            if (action == GLFW_PRESS) {
+                entity.input->shift = true;
+            } else if (action == GLFW_RELEASE) {
+                entity.input->shift = false;
             }
         }
     }

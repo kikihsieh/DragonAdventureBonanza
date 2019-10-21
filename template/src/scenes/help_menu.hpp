@@ -1,7 +1,3 @@
-//
-// Created by arden on 10/15/2019.
-//
-
 #ifndef DAB_HELP_MENU_H
 #define DAB_HELP_MENU_H
 
@@ -12,10 +8,9 @@
 class HelpMenu : public Scene {
 public:
     HelpMenu();
-    ~HelpMenu();
+    ~HelpMenu() override;
 
     bool init() override;
-    void destroy() override;
     void update(float elapsed_ms) override;
     bool is_forward() override;
     vec2 get_player_position() override;

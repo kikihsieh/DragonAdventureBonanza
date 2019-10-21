@@ -12,10 +12,8 @@
 class StartMenu : public Scene {
 public:
     StartMenu();
-    ~StartMenu();
 
     bool init() override;
-    void destroy() override;
     void update(float elapsed_ms) override;
     bool is_forward() override;
     vec2 get_player_position() override;

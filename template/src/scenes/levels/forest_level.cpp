@@ -5,12 +5,6 @@ ForestLevel::ForestLevel(bool unlocked) :
     Level(unlocked) {
 }
 
-ForestLevel::~ForestLevel() = default;
-
-bool ForestLevel::init() {
-    return Level::init_scene(m_tile_vec, m_texture_map);
-}
-
 bool ForestLevel::init_walking_enemy(int type, vec2 initial_pos) {
 //    Spider spider = {};
 //    spider->texture = m_texture_mapping.at(type);

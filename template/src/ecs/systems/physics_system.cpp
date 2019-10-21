@@ -11,6 +11,7 @@ void PhysicsSystem::update(float ms) {
         }
 
         if (entity.input) {
+          if (!entity.airdash || !entity.airdash->airdashing) {
             if (entity.input->right) {
                 entity.is_facing_forward = true;
                 entity.physics->velocity.x = entity.physics->walk_speed;
@@ -21,8 +22,17 @@ void PhysicsSystem::update(float ms) {
                 entity.physics->velocity.x = 0;
             }
             if (entity.input->up) {
-                entity.physics->velocity.y = entity.physics->jump_speed;
+                if (entity.physics->jump_count < 2) {
+                    entity.physics->velocity.y = entity.physics->jump_speed;
+                    entity.physics->jump_count++;
+
+                    // Holding down up arrow will cause the player to jump twice in very quick succession
+                    // This will appear as a single jump
+                    // Set up to false so this doesnt occur
+                    entity.input->up = false;
+                }
             }
+          }
         }
 
         vec2 old_position = entity.position;
@@ -32,10 +42,10 @@ void PhysicsSystem::update(float ms) {
         if (entity.collider) {
             tile_collisions(entity);
             entity_collisions(entity);
-            if (entity.collider->horizontal) {
+            if (entity.collider->left || entity.collider->right) {
                 entity.position.x = old_position.x;
             }
-            if (entity.collider->vertical) {
+            if (entity.collider->top || entity.collider->bottom) {
                 entity.position.y = old_position.y;
                 entity.physics->velocity.y = 0;
             }
@@ -93,23 +103,51 @@ void PhysicsSystem::collide(Entity &e1, Entity &e2) {
     float e2_height = e2.drawable->texture->height * e2.scale.x;
     float e2_width = e2.drawable->texture->width * e2.scale.y;
 
-    float e1_left = e1.position.x - e1_width*0.5f;
-    float e1_right = e1_left + e1_width;
-    float e1_top = e1.position.y - e1_height*0.5f;
-    float e1_bottom = e1_top + e1_height;
+//    https://stackoverflow.com/questions/29861096/detect-which-side-of-a-rectangle-is-colliding-with-another-rectangle
+    float dx = e1.position.x - e2.position.x;
+    float dy = e1.position.y - e2.position.y;
+    float width = (e1_width + e2_width)/2;
+    float height = (e1_height + e2_height)/2;
+    float crossWidth = width*dy;
+    float crossHeight = height*dx;
 
-    float e2_left = e2.position.x - e2_width*0.5f;
-    float e2_top = e2.position.y - e2_height*0.5f;
-    float e2_right = e2_left + e2_width;
-    float e2_bottom = e2_top + e2_height;
+    if (abs(dx) <= width && abs(dy) <= height){
+        if(crossWidth > crossHeight){
+            if (crossWidth > -crossHeight) {
+                e1.collider->bottom = true;
+                if (e2.collider) {
+                    e2.collider->top = true;
+                }
+            } else {
+                e1.collider->left = true;
+                if (e2.collider) {
+                    e2.collider->right = true;
+                }
+            }
+        } else {
+            if (crossWidth > -crossHeight) {
+                e1.collider->right = true;
+                if (e2.collider) {
+                    e2.collider->left = true;
+                }
+            } else {
+                e1.collider->top = true;
 
-    bool x_overlaps = (e1_left < e2_right) && (e1_right > e2_left);
-    bool y_overlaps = (e1_top < e2_bottom) && (e1_bottom > e2_top);
-    bool collision = x_overlaps && y_overlaps;
+                if (e1.physics) {
+                    e1.physics->jump_count = 0;
+                }
 
-    // TODO: check for side and bottom collisions
-    //  Update collider of e2 if != nullptr
-    if ((collision && (e1_bottom > e2_top || e1_top < e2_bottom))) {
-        e1.collider->vertical = true;
+                if (e1.airdash)
+                    e1.airdash->can_airdash = true;
+
+                if (e2.collider) {
+                    e2.collider->bottom = true;
+                }
+
+                if (e1.physics) {
+                    e1.physics->jump_count = 0;
+                }
+            }
+        }
     }
 }

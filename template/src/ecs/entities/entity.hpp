@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ecs/components/airdash.hpp>
 #include "../components/collider.hpp"
 #include "../components/drawable.hpp"
 #include "../components/physics.hpp"
@@ -13,19 +14,24 @@ struct Entity {
         drawable(nullptr),
         collider(nullptr),
         input(nullptr),
+        airdash(nullptr),
         radians(0.f),
         position({0.f, 0.f}),
         scale({1.f, 1.f}),
         is_facing_forward(false) {
     }
 
-    ~Entity() {
-        // TODO Fix memory leaks. Cannot simply delete here because after inserting into list,
-        //  destructor is called and left with dangling pointer
-//        delete physics;
-//        delete drawable;
-//        delete collider;
-//        delete input;
+    ~Entity() {}
+
+    /** Before permanently deleting an enemy, you must call destroy!
+        Cannot be in destructor because we do not want these objects deleted when being moved or copied! **/
+    void destroy() {
+        delete physics;
+        delete collider;
+        delete input;
+        delete airdash;
+        delete enemyai;
+        delete drawable;
     }
 
     // Components
@@ -34,6 +40,7 @@ struct Entity {
 	Drawable* drawable;
 	Collider* collider;
     Input* input;
+	AirDash* airdash;
 
 	float radians;
 	vec2 position;

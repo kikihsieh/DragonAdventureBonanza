@@ -30,7 +30,7 @@ World::World() : m_camera(new CameraSystem()) {
 			(HELP, new HelpMenu());
 }
 
-World::~World() = default;
+World::~World() {}
 
 // World initialization
 bool World::init(vec2 screen)
@@ -94,9 +94,14 @@ bool World::init(vec2 screen)
 
 // Releases all the associated resources
 void World::destroy() {
-	delete m_camera;
 	glDeleteFramebuffers(1, &m_frame_buffer);
 	glfwDestroyWindow(m_window);
+    delete m_camera;
+    for (auto const &pair : m_scenes)
+    {
+        pair.second->destroy();
+        delete pair.second;
+    }
 }
 
 // Update our game world

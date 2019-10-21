@@ -38,7 +38,7 @@ void EnemyMotionSystem::update(float ms) {
         }
         //vec2 old_position = entity.position;
         if(entity.collider){
-            if (entity.collider->horizontal){
+            if (entity.collider->left || entity.collider->right){
                 //entity.position.x = old_position.x;
                 entity.is_facing_forward = !(entity.is_facing_forward);
                 // change direction 

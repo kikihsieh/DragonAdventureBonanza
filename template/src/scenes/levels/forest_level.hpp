@@ -6,9 +6,6 @@
 class ForestLevel: public Level {
 public:
     explicit ForestLevel(bool unlocked);
-    ~ForestLevel();
-
-    bool init() override;
 
     const char * get_bg_texture_path() override {
         return textures_path("background.png");
@@ -16,6 +13,14 @@ public:
 
 private:
     bool init_walking_enemy(int type, vec2 initial_pos) override;
+
+    MapVector get_map() override {
+        return m_tile_vec;
+    }
+
+    TexturePathMapping get_mapping() override {
+        return m_texture_map;
+    }
 
     /*
 1 platform  tile

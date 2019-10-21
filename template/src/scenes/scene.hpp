@@ -13,7 +13,7 @@ class Scene
 {
 public:
     Scene();
-    ~Scene();
+    virtual ~Scene() = default;
 
     // Creates all the associated render resources and default transform
     virtual bool init();
@@ -36,7 +36,7 @@ public:
 protected:
     virtual const char * get_bg_texture_path() = 0;
 
-	RenderSystem m_rendersystem;
+	RenderSystem* m_rendersystem;
     InputSystem *m_inputsystem;
 };
 #endif
