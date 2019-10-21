@@ -261,22 +261,33 @@ void RenderSystem::scale(mat3 &out, vec2 scale)
 
 void RenderSystem::update(float ms) {
     for (auto & entity : *m_entities) {
-        if (entity.drawable == nullptr || entity.animatable == nullptr) {
+        if (!entity.animatable) {
             continue;
         }
-        if (entity.animatable) {
-            if (entity.input->left) {
+
+        if (entity.physics->velocity.x == 0) {
+            if (entity.animatable->index == 0) {
+                continue;
+            } else {
+                entity.animatable->index = 0;
+            }
+        } else {
+            entity.animatable->countdown -= ms;
+            if (entity.animatable->countdown > 0) {
+                continue;
+            }
+            entity.animatable->countdown = entity.animatable->frame_switch_time;
+            if (entity.physics->velocity.x > 0) {
                 entity.animatable->index++;
-                if (entity.animatable->index == 16) {
-                    entity.animatable->index = 0;
-                }
-            } else if (entity.input->right) {
-                entity.animatable->index++;
-                if (entity.animatable->index == 16) {
+                // TODO : max index should be a variable
+                if (entity.animatable->index == 4) {
                     entity.animatable->index = 0;
                 }
             } else {
-                entity.animatable->index = 0;
+                entity.animatable->index--;
+                if (entity.animatable->index == -1) {
+                    entity.animatable->index = 3;
+                }
             }
         }
 

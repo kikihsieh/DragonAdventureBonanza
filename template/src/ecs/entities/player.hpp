@@ -27,21 +27,9 @@ struct Player : public Entity {
         is_facing_forward = true;
             const TexturePathMapping m_texture_map = {
                     { 0, textures_path("initial.png")},
-                    { 1, textures_path("initial.png")},
-                    { 2, textures_path("initial.png")},
-                    { 3, textures_path("initial.png")},
-                    { 4, textures_path("move1.png")},
-                    { 5, textures_path("move1.png")},
-                    { 6, textures_path("move1.png")},
-                    { 7, textures_path("move1.png")},
-                    { 8, textures_path("move2.png")},
-                    { 9, textures_path("move2.png")},
-                    { 10, textures_path("move2.png")},
-                    { 11, textures_path("move2.png")},
-                    { 12, textures_path("move3.png")},
-                    { 13, textures_path("move3.png")},
-                    { 14, textures_path("move3.png")},
-                    { 15, textures_path("move3.png")},
+                    { 1, textures_path("move1.png")},
+                    { 2, textures_path("move2.png")},
+                    { 3, textures_path("move3.png")},
             };
         animatable = new Animatable(m_texture_map);
     }
