@@ -30,19 +30,18 @@ void EnemyMotionSystem::update(float ms) {
         
         std::pair<int, int> enemy_tile_pos = TileMap::get_tile_pos_from_coord(entity.position.x, entity.position.y, {e_width, e_height});
         std::pair<int, int> platform_tile_pos = {enemy_tile_pos.first, enemy_tile_pos.second + 1};
-        
+
+        if (entity.collider->left || entity.collider->right){
+            entity.is_facing_forward = !(entity.is_facing_forward);
+            entity.physics->velocity.x *= -1;
+            continue;
+        }
         if (entity.is_facing_forward && m_tiles.count(TileMap::hash(platform_tile_pos.first+1, platform_tile_pos.second)) == 0) {
             entity.is_facing_forward = !(entity.is_facing_forward);
             entity.physics->velocity.x *= -1;
-        }
-        else if (!entity.is_facing_forward && m_tiles.count(TileMap::hash(platform_tile_pos.first, platform_tile_pos.second)) == 0) {
-            entity.is_facing_forward = !(entity.is_facing_forward);
-            entity.physics->velocity.x *= -1;
-        }
-        if (entity.collider->left || entity.collider->right){
+        } else if (!entity.is_facing_forward && m_tiles.count(TileMap::hash(platform_tile_pos.first, platform_tile_pos.second)) == 0) {
             entity.is_facing_forward = !(entity.is_facing_forward);
             entity.physics->velocity.x *= -1;
         }
     }
-    
 }
