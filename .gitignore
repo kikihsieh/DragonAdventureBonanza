@@ -41,3 +41,6 @@ template/cmake-build-debug/
 # VS Code settings
 *.vscode
 .idea/
+
+template/.idea/
+template/cmake-build-debug/

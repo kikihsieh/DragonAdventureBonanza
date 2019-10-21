@@ -9,12 +9,14 @@ Level::Level(bool unlocked) :
     m_x_boundaries{-200.f, 0},
     m_y_boundaries{0, 0},
     m_enemy_motionsystem(new EnemyMotionSystem()),
-    m_physics_system(new PhysicsSystem()) {
+    m_physics_system(new PhysicsSystem()),
+    m_airdash_system(new AirDashSystem()) {
 }
 
 Level::~Level() {
     delete m_physics_system;
     delete m_enemy_motionsystem;
+    delete m_airdash_system;
     destroy();
 }
 
@@ -44,10 +46,11 @@ bool Level::init_scene(MapVector map, TexturePathMapping mapping) {
     
     m_x_boundaries.y = m_tile_map->get_map_dim().x;
     m_y_boundaries.y = m_tile_map->get_map_dim().y;
-    init_player();
-    m_physics_system->init(&m_entities, m_tile_map->get_tiles());
-    m_enemy_motionsystem->init(&m_entities, m_tile_map->get_tiles());
-    return Scene::init();
+
+    return init_player() &&
+           m_physics_system->init(&m_entities, m_tile_map->get_tiles()) &&
+           m_airdash_system->init(&m_entities) &&
+           Scene::init();
 }
 
 bool Level::init_enemy(int type, vec2 initial_pos) {
@@ -73,6 +76,7 @@ bool Level::is_forward(){
 }
 
 void Level::update(float elapsed_ms) {
+    m_airdash_system->update(elapsed_ms);
     m_physics_system->update(elapsed_ms);
     m_enemy_motionsystem->update(elapsed_ms);
 }

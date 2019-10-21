@@ -5,6 +5,7 @@
 #include <vector>
 #include <map>
 #include <memory>
+#include "../../ecs/systems/airdash_system.hpp"
 
 #include "../../ecs/systems/physics_system.hpp"
 #include "../../ecs/systems/enemy_motion_system.hpp"
@@ -60,6 +61,7 @@ protected:
     TileMap* m_tile_map;
     PhysicsSystem* m_physics_system;
     EnemyMotionSystem* m_enemy_motionsystem;
+    AirDashSystem* m_airdash_system;
     Entity* m_player;
 
     bool m_unlocked;
