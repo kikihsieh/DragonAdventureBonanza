@@ -8,6 +8,7 @@
 #include "../../ecs/systems/airdash_system.hpp"
 
 #include "../../ecs/systems/physics_system.hpp"
+#include "../../ecs/systems/collision_system.hpp"
 #include "../../ecs/systems/enemy_motion_system.hpp"
 #include "../../ecs/entities/tile.hpp"
 #include "tile_map.hpp"
@@ -60,6 +61,7 @@ protected:
     TextureMapping m_texture_mapping;
     TileMap* m_tile_map;
     PhysicsSystem* m_physics_system;
+    CollisionSystem* m_collision_system;
     EnemyMotionSystem* m_enemy_motionsystem;
     AirDashSystem* m_airdash_system;
     Entity* m_player;

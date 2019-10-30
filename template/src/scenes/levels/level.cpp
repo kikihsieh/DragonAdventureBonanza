@@ -7,6 +7,7 @@
 Level::Level(bool unlocked) :
     m_unlocked(unlocked),
     m_tile_map(nullptr),
+    m_collision_system(nullptr),
     m_physics_system(nullptr),
     m_airdash_system(nullptr),
     m_enemy_motionsystem(nullptr),
@@ -15,6 +16,7 @@ Level::Level(bool unlocked) :
 }
 
 bool Level::init() {
+    m_collision_system = new CollisionSystem();
     m_physics_system = new PhysicsSystem();
     m_airdash_system = new AirDashSystem();
     m_enemy_motionsystem = new EnemyMotionSystem();
@@ -26,11 +28,13 @@ bool Level::init() {
 void Level::destroy() {
     Scene::destroy();
     delete m_physics_system;
+    delete m_collision_system;
     delete m_airdash_system;
     delete m_tile_map;
     delete m_enemy_motionsystem;
 
     m_physics_system = nullptr;
+    m_collision_system = nullptr;
     m_airdash_system = nullptr;
     m_tile_map = nullptr;
     m_enemy_motionsystem = nullptr;
@@ -57,9 +61,11 @@ bool Level::init_level(MapVector map, TexturePathMapping mapping) {
     m_y_boundaries.y = m_tile_map->get_map_dim().y;
 
     return init_player() &&
-            m_physics_system->init(&m_entities, m_tile_map->get_tiles(), m_tile_map->get_map_dim())&&
-           m_airdash_system->init(&m_entities) && m_enemy_motionsystem->init(&m_entities, m_tile_map->get_tiles()) &&
-           Scene::init();
+            m_physics_system->init(&m_entities, m_tile_map->get_map_dim()) &&
+            m_collision_system->init(&m_entities, m_tile_map->get_tiles()) &&
+            m_airdash_system->init(&m_entities) && 
+            m_enemy_motionsystem->init(&m_entities, m_tile_map->get_tiles()) &&
+            Scene::init();
 }
 
 bool Level::init_enemy(int type, vec2 initial_pos) {
@@ -87,6 +93,7 @@ bool Level::is_forward(){
 void Level::update(float elapsed_ms) {
     m_airdash_system->update(elapsed_ms);
     m_physics_system->update(elapsed_ms);
+    m_collision_system->update(elapsed_ms);
     m_enemy_motionsystem->update(elapsed_ms);
     int index = m_player->animatable->index;
     m_player->drawable->texture = m_player->animatable->m_texture_mapping[index];
