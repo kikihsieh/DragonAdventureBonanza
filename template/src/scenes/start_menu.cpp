@@ -20,7 +20,7 @@ bool StartMenu::init() {
 }
 
 void StartMenu::update(float elapsed_ms) {
-    printf("test");
+
 }
 
 bool StartMenu::is_forward() {
