@@ -37,7 +37,6 @@ if (IS_OS_MAC)
 endif()
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} src/scenes/help_menu.cpp src/scenes/help_menu.hpp)
-add_executable(${PROJECT_NAME} ${SOURCE_FILES} src/ecs/components/health.hpp src/ecs/systems/health_system.hpp src/ecs/systems/health_system.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC src/)
 
 # Added this so policy CMP0065 doesn't scream

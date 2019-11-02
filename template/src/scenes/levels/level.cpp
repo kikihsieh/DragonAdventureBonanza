@@ -11,10 +11,9 @@ Level::Level(bool unlocked) :
     m_physics_system(nullptr),
     m_airdash_system(nullptr),
     m_enemy_motionsystem(nullptr),
+    m_health_system(nullptr),
     m_x_boundaries{-200.f, 0},
-    m_y_boundaries{0, 0},
-    m_physics_system(new PhysicsSystem()),
-    m_health_system(new HealthSystem()) {
+    m_y_boundaries{0, 0} {
 }
 
 bool Level::init() {
@@ -22,6 +21,7 @@ bool Level::init() {
     m_physics_system = new PhysicsSystem();
     m_airdash_system = new AirDashSystem();
     m_enemy_motionsystem = new EnemyMotionSystem();
+    m_health_system = new HealthSystem();
     init_level(get_map(), get_mapping());
     return Scene::init();
 }
