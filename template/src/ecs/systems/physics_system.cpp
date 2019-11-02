@@ -2,7 +2,6 @@
 
 #include <cmath>
 #include <utility>
-#include <scenes/levels/tile_map.hpp>
 
 void PhysicsSystem::update(float ms) {
     for (auto &entity : *m_entities) {
@@ -11,6 +10,7 @@ void PhysicsSystem::update(float ms) {
         }
 
         if (entity.input) {
+          if (!entity.airdash || !entity.airdash->airdashing) {
             if (entity.input->right) {
                 entity.is_facing_forward = true;
                 entity.physics->velocity.x = entity.physics->walk_speed;
@@ -21,132 +21,54 @@ void PhysicsSystem::update(float ms) {
                 entity.physics->velocity.x = 0;
             }
             if (entity.input->up) {
-                entity.physics->velocity.y = entity.physics->jump_speed;
-            }
-        }
+                if (entity.physics->jump_count < 2) {
+                    entity.physics->velocity.y = entity.physics->jump_speed;
+                    entity.physics->jump_count++;
 
-        vec2 old_position = entity.position;
+                    // Holding down up arrow will cause the player to jump twice in very quick succession
+                    // This will appear as a single jump
+                    // Set up to false so this doesnt occur
+                    entity.input->up = false;
+                }
+            }
+          }
+        }
+        
+        entity.old_position = entity.position;
 
         move(ms, entity);
 
-        if (entity.collider) {
-            tile_collisions(entity, old_position);
-            entity_collisions(entity);
-            if (entity.collider->horizontal) {
-                entity.position.x = old_position.x;
-            }
-            if (entity.collider->top || entity.collider->bottom) {
-                entity.position.y = old_position.y;
-                entity.physics->velocity.y = 0;
-            }
+        if (entity.position.y > m_level_bounds_y.y) {
+            // Fall off screen handler. Requires health
         }
     }
 }
 
-bool PhysicsSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles) {
+bool PhysicsSystem::init(std::list<Entity> *entities, vec2 level_bounds) {
     m_entities = entities;
-    m_tiles = tiles;
+
+    m_level_bounds_x = {0, level_bounds.x};
+    m_level_bounds_y = {0, level_bounds.y};
 
     return true;
 }
 
-void PhysicsSystem::tile_collisions(Entity& entity, vec2 old_pos) {
-    entity.collider->reset();
-    float e_height = entity.drawable->texture->height * entity.scale.x;
-    float e_width = entity.drawable->texture->width * entity.scale.y;
-
-    float t_width = TileMap::tile_screen_size.x;
-    float t_height = TileMap::tile_screen_size.y;
-
-    std::pair<int, int> tile_pos = TileMap::get_tile_pos_from_coord(entity.position.x, entity.position.y, {e_width, e_height});
-
-    for (int col = tile_pos.first; col <= tile_pos.first + ceil(e_width / t_width); col++) {
-        for (int row = tile_pos.second; row <= tile_pos.second + ceil(e_height / t_height); row++) {
-            if (!m_tiles.count(TileMap::hash(col, row))) {
-                continue;
-            }
-            Tile* tile = m_tiles.at(TileMap::hash(col, row));
-            collide(entity, *tile, old_pos);
-        }
-    }
-}
-
-void PhysicsSystem::entity_collisions(Entity& entity) {
-    // TODO: implement collisions between other entities
-}
-
 void PhysicsSystem::move(float ms, Entity& entity) {
-    entity.physics->velocity.x += entity.physics->acceleration.x;
-    entity.physics->velocity.y += entity.physics->acceleration.y;
+    entity.physics->velocity.x += (entity.physics->acceleration.x * ms / 1000);
+    entity.physics->velocity.y += (entity.physics->acceleration.y * ms / 1000);
 
     float x_step = entity.physics->velocity.x * (ms / 1000);
     float y_step = entity.physics->velocity.y * (ms / 1000);
 
+    if (entity.physics->velocity.x < 0 && entity.position.x < m_level_bounds_x.x)
+        x_step = 0;
+    if (entity.physics->velocity.x > 0 && entity.position.x > m_level_bounds_x.y)
+        x_step = 0;
+    if (entity.physics->velocity.y < 0 && entity.position.y < m_level_bounds_y.x) {
+        y_step = 0;
+        entity.physics->velocity.y = 0;
+    }
+
     entity.position.x += x_step;
     entity.position.y += y_step;
-}
-
-void PhysicsSystem::collide(Entity &e1, Entity &e2, vec2 old_pos) {
-    float e1_height = e1.drawable->texture->height * e1.scale.x;
-    float e1_width = e1.drawable->texture->width * e1.scale.y;
-
-    float e2_height = e2.drawable->texture->height * e2.scale.x;
-    float e2_width = e2.drawable->texture->width * e2.scale.y;
-    // TODO: Also update collider of e2 if != nullptr
-    //      Add buffer for floating point number rounding errors
-
-//    float e1_left = e1.position.x - e1_width*0.5f;
-//    float e1_right = e1.position.x + e1_width*0.5f;
-//    float e1_top = e1.position.y - e1_height*0.5f;
-//    float e1_bottom = e1.position.y + e1_height*0.5f;
-//
-//    float e2_left = e2.position.x - e2_width*0.5f;
-//    float e2_top = e2.position.y - e2_height*0.5f;
-//    float e2_right = e2.position.x + e2_width*0.5f;
-//    float e2_bottom = e2.position.y + e2_height*0.5f;
-//
-//    bool x_overlaps = (e1_left < e2_right) && (e1_right > e2_left);
-//    bool y_overlaps = (e1_top < e2_bottom) && (e1_bottom > e2_top);
-//    bool collision = x_overlaps && y_overlaps;
-//
-//    if (collision) {
-//        float x_diff = old_pos.x - e1.position.x;
-//        float y_diff = old_pos.y - e1.position.y;
-//
-//        x_overlaps = (e1_left + x_diff < e2_right) && (e1_right + x_diff > e2_left);
-//        y_overlaps = (e1_top + y_diff < e2_bottom) && (e1_bottom + y_diff > e2_top);
-//        // If moving the x position back fixes the collision
-//        if (!x_overlaps) {
-//            e1.collider->horizontal = true;
-//        }
-//        // If moving the y position back fixes the collision
-//        if (!y_overlaps) {
-//            e1.collider->top = true;
-//            e1.collider->bottom = true;
-//        }
-//    }
-
-//    https://stackoverflow.com/questions/29861096/detect-which-side-of-a-rectangle-is-colliding-with-another-rectangle
-    float dx = e1.position.x - e2.position.x;
-    float dy = e1.position.y - e2.position.y;
-    float width = (e1_width + e2_width)/2;
-    float height = (e1_height + e2_height)/2;
-    float crossWidth = width*dy;
-    float crossHeight = height*dx;
-
-    if (abs(dx) <= width && abs(dy) <= height){
-        if(crossWidth > crossHeight){
-            if (crossWidth > -crossHeight) {
-                e1.collider->bottom = true;
-            } else {
-                e1.collider->horizontal = true; // left
-            }
-        } else {
-            if (crossWidth > -crossHeight) {
-                e1.collider->horizontal = true; // right
-            } else {
-                e1.collider->top = true;
-            }
-        }
-    }
 }

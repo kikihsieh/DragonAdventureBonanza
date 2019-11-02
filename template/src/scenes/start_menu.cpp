@@ -8,18 +8,15 @@
 StartMenu::StartMenu()  {
 }
 
-StartMenu::~StartMenu() = default;
-
 bool StartMenu::init() {
-    Button start;
+    Button start(textures_path("start.png"));
+    start.position = {600.f,400.f};
     m_entities.emplace_back(start);
+    Button help(textures_path("help.png"));
+    help.position = {600.f,600.f};
+    m_entities.emplace_back(help);
     Scene::init();
     return true;
-}
-
-void StartMenu::destroy() {
-    Scene::destroy();
-    m_entities.clear();
 }
 
 void StartMenu::update(float elapsed_ms) {

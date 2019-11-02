@@ -4,18 +4,21 @@
 struct Collider {
 
     Collider() :
-            horizontal(false),
+            left(false),
             top(false),
+            right(false),
             bottom(false) {
     }
 
     void reset() {
         top = false;
         bottom = false;
-        horizontal = false;
+        left = false;
+        right = false;
     }
 
-    bool horizontal;
+    bool right;
+    bool left;
     bool top;
     bool bottom;
 };

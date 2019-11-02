@@ -7,6 +7,7 @@
 #include <scenes/levels/forest_level.hpp>
 #include <scenes/levels/volcano_level.hpp>
 #include <scenes/start_menu.hpp>
+#include <scenes/help_menu.hpp>
 
 // Same as static in c, local to compilation unit
 namespace
@@ -25,10 +26,11 @@ World::World() : m_camera(new CameraSystem()) {
     map_init(m_scenes)
             (FOREST, new ForestLevel(true))
             (VOLCANO, new VolcanoLevel(true))
-			(MAIN_MENU, new StartMenu());
+			(MAIN_MENU, new StartMenu())
+			(HELP, new HelpMenu());
 }
 
-World::~World() = default;
+World::~World() {}
 
 // World initialization
 bool World::init(vec2 screen)
@@ -92,9 +94,14 @@ bool World::init(vec2 screen)
 
 // Releases all the associated resources
 void World::destroy() {
-	delete m_camera;
 	glDeleteFramebuffers(1, &m_frame_buffer);
 	glfwDestroyWindow(m_window);
+    delete m_camera;
+    for (auto const &pair : m_scenes)
+    {
+        pair.second->destroy();
+        delete pair.second;
+    }
 }
 
 // Update our game world
@@ -192,6 +199,10 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
         return;
     }
 
+	if (key == GLFW_KEY_H && action == GLFW_RELEASE) {
+		load_scene(m_scenes.at(HELP));
+		return;
+	}
     m_current_scene->on_key(key, action);
 }
 

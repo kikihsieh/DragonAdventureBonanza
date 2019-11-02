@@ -12,16 +12,14 @@ bool RenderSystem::init(std::list<Entity> *entities) {
 	m_effects = {};
     m_entities = entities;
 
-
     for (auto & entity : *entities){
         if (entity.drawable == nullptr) {
             continue;
         }
         Drawable * drawable = entity.drawable;
-
         if (!entity.drawable->texture->is_valid()) {
             if (!entity.drawable->texture->load_from_file(entity.drawable->texture_path)){
-                fprintf(stderr, "Failed to load player texture!");
+        		fprintf(stderr, "Failed to load %s texture!", entity.drawable->texture_path);
                 return false;
             }
         }
@@ -259,4 +257,72 @@ void RenderSystem::scale(mat3 &out, vec2 scale)
 {
     mat3 S = { { scale.x, 0.f, 0.f },{ 0.f, scale.y, 0.f },{ 0.f, 0.f, 1.f } };
     out = mul(out, S);
+}
+
+void RenderSystem::update(float ms) {
+    for (auto & entity : *m_entities) {
+        if (!entity.animatable) {
+            continue;
+        }
+
+        if (entity.physics->velocity.x == 0) {
+            if (entity.animatable->index == 0 && entity.is_facing_forward) {
+                continue;
+            } else if (entity.is_facing_forward) {
+                entity.animatable->index = 0;
+            } else {
+				entity.animatable->index = -1;
+            }
+        } else {
+            entity.animatable->countdown -= ms;
+            if (entity.animatable->countdown > 0) {
+                continue;
+            }
+            entity.animatable->countdown = entity.animatable->frame_switch_time;
+            if (entity.physics->velocity.x > 0) {
+                entity.animatable->index++;
+                if (entity.animatable->index == 4) {
+                    entity.animatable->index = 0;
+                }
+            } else {
+                entity.animatable->index--;
+                if (entity.animatable->index == -5) {
+                    entity.animatable->index = -1;
+                }
+            }
+        }
+
+        Drawable *drawable = entity.drawable;
+        if (!entity.drawable->texture->is_valid()) {
+            if (!entity.drawable->texture->load_from_file(entity.drawable->texture_path)) {
+                fprintf(stderr, "Failed to load %s texture!", entity.drawable->texture_path);
+                return;
+            }
+        }
+
+        // The position corresponds to the center of the texture
+        float wr = drawable->texture->width * 0.5f;
+        float hr = drawable->texture->height * 0.5f;
+
+        drawable->vertices[0].position = {-wr, +hr, -0.02f};
+        drawable->vertices[0].texcoord = {0.f, 1.f};
+        drawable->vertices[1].position = {+wr, +hr, -0.02f};
+        drawable->vertices[1].texcoord = {1.f, 1.f};
+        drawable->vertices[2].position = {+wr, -hr, -0.02f};
+        drawable->vertices[2].texcoord = {1.f, 0.f};
+        drawable->vertices[3].position = {-wr, -hr, -0.02f};
+        drawable->vertices[3].texcoord = {0.f, 0.f};
+
+        // Counterclockwise as it's the default opengl front winding direction
+        uint16_t indices[] = {0, 3, 1, 1, 3, 2};
+
+        // Clearing errors
+        gl_flush_errors();
+
+        // Vertex Buffer creation
+        glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, drawable->vertices, GL_STATIC_DRAW);
+
+        // Index Buffer creation
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_STATIC_DRAW);
+    }
 }

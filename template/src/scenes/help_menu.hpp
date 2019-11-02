@@ -1,17 +1,14 @@
-//
-// Created by arden on 10/15/2019.
-//
-
-#ifndef DAB_START_MENU_H
-#define DAB_START_MENU_H
+#ifndef DAB_HELP_MENU_H
+#define DAB_HELP_MENU_H
 
 #include <memory>
 
 #include "scene.hpp"
 
-class StartMenu : public Scene {
+class HelpMenu : public Scene {
 public:
-    StartMenu();
+    HelpMenu();
+    ~HelpMenu() override;
 
     bool init() override;
     void update(float elapsed_ms) override;
@@ -19,8 +16,8 @@ public:
     vec2 get_player_position() override;
 
     const char * get_bg_texture_path() override {
-        return textures_path("title.png");
+        return textures_path("help_menu.png");
     }
 };
 
-#endif //DAB_START_MENU_H
+#endif //DAB_HELP_MENU_H

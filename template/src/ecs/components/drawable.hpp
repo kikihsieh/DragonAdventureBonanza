@@ -2,16 +2,15 @@
 #define DAB_DRAWABLE_HPP
 
 #include <common.hpp>
+#include <memory>
 
 struct Drawable {
 
     Drawable() :
-        texture(new Texture()) {
+        texture(std::make_shared<Texture>()) {
     }
 
-    ~Drawable() {
-        delete texture;
-    }
+    ~Drawable() {}
 
     const char* texture_path;
     const char* vs_shader;
@@ -25,8 +24,7 @@ struct Drawable {
     GLuint ibo;
 
     TexturedVertex vertices[4];
-    Texture *texture;
-
+    std::shared_ptr<Texture> texture;
     mat3 transform;
 
     // Effect component of Entity for Vertex and Fragment shader, which are then put(linked) together in a

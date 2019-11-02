@@ -7,9 +7,6 @@ class VolcanoLevel: public Level {
 
 public:
     explicit VolcanoLevel(bool unlocked);
-    ~VolcanoLevel();
-
-    bool init() override;
 
     const char * get_bg_texture_path() override {
         return textures_path("platform-lg.png");
@@ -17,6 +14,14 @@ public:
 
 private:
     bool init_walking_enemy(int type, vec2 initial_pos) override;
+
+    MapVector get_map() override {
+        return m_tile_vec;
+    }
+
+    TexturePathMapping get_mapping() override {
+        return m_texture_map;
+    }
 
     const MapVector m_tile_vec = {
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},

@@ -1,5 +1,58 @@
 # Dragon Adventure Bonanza
 
+### Milestone 2: Minimal Playable Game
+
+#### Rendering: 
+* Added main dragon character sprite sheet.
+* 12 different tile assets to create the level 
+
+#### Gameplay:
+* Architecture
+   * Rewrote our code using ECS system and tile maps to generate levels
+* Walking and jumping
+   * The player is able to move forwards/backwards and jump based on keyboard controls
+   * Physics System which includes Gravity, acceleration, velocity etc..  
+   * The player is able to double jump
+   * The player is able to airdash in its given direction while airborne
+* Define our game space boundaries (boundary collision management)
+   * Boundaries are now defined by our tile system
+   * X boundaries are  by max number of columns
+   * Y boundaries are by max number of rows
+* Collisions with environment obstacles and enemies
+   * Player is able to collide with platforms from all directions
+* Collisions with enemies
+   * Enemies move back and forth within a defined area
+   * Enemies position is based on tile system
+   * When it is on a tile it moves based on its surrounds
+   * It knows when it's near the edge so it won't fall off and instead walk in the other direction
+* UI
+   * Provided basic main menu
+   * Provided basic help menu
+* Added level transitions between each level (currently pressing 1 switches to level 1, pressing 2 switches to level 2 etc)
+
+#### Creative Component: 
+* Air-dash physics
+* Tile system to define the location of platforms, enemies and general level design.
+* Main menu and button classes
+
+#### Robustness:
+* No severe lag
+* Resolution / ratio is consistent (1200 x 800) 
+* No crashes
+
+#### Items missing from development plan: 
+* Boss Level
+   * Due to the migration of all our game mechanics into the ECS system, a lot of these mechanics needed to be refactored and improved. This was vital before starting any boss level
+* Parallax scrolling
+   * Similar reason. Migration to ECS was more vital, this will be moved to the next sprint
+
+#### In progress: 
+* Collisions 
+   * With enemies, due to change into ECS, enemy collision lost functionality, it will continue to be worked on 
+   * With tiles, is slightly buggy, logic needs to be tweaked
+   * Clickable main menu
+
+
 ### Milestone 1: Skeletal Game
 
 #### Rendering: 
