@@ -25,7 +25,8 @@ struct Player : public Entity {
 
         health = new Health();
         health->health = 3;
-        
+        health->is_player = true;
+
         collider = new Collider();
         input = new Input();
         is_facing_forward = true;

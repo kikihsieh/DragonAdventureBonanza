@@ -46,15 +46,22 @@ void CollisionSystem::tile_collisions(Entity& entity) {
 
     std::pair<int, int> tile_pos = TileMap::get_tile_pos_from_coord(entity.position.x, entity.position.y, {e_width, e_height});
 
+    bool collided = false;
+
     for (int col = tile_pos.first; col <= tile_pos.first + ceil(e_width / t_width); col++) {
         for (int row = tile_pos.second; row <= tile_pos.second + ceil(e_height / t_height); row++) {
             if (!m_tiles.count(TileMap::hash(col, row))) {
                 continue;
             }
+
             Tile* tile = m_tiles.at(TileMap::hash(col, row));
-            collide(entity, *tile);
+            if(collide(entity, *tile))
+                collided = true;
         }
     }
+
+    if (!collided && entity.health && entity.health->is_player)
+        fall(entity);
 }
 
 void CollisionSystem::entity_collisions(Entity& entity) {
@@ -67,7 +74,7 @@ void CollisionSystem::entity_collisions(Entity& entity) {
  * @param e1 : a collidable entity
  * @param e2 : any entity
  */
-void CollisionSystem::collide(Entity &e1, Entity &e2) {
+bool CollisionSystem::collide(Entity &e1, Entity &e2) {
     float e1_height = e1.drawable->texture->height * e1.scale.x;
     float e1_width = e1.drawable->texture->width * e1.scale.y;
 
@@ -108,15 +115,27 @@ void CollisionSystem::collide(Entity &e1, Entity &e2) {
                     e2.collider->bottom = true;
                 }
 
-                // TODO: @Austin please move these two if statements out of this function
-                if (e1.airdash)
-                    e1.airdash->can_airdash = true;
-
-
-                if (e1.physics) {
-                    e1.physics->jump_count = 0;
-                }
+                land(e1);
+                return true;
             }
         }
+    }
+
+    return false;
+}
+
+void CollisionSystem::land(Entity &entity) {
+    if (entity.airdash)
+        entity.airdash->can_airdash = true;
+
+    if (entity.physics) {
+        entity.physics->jump_count = 0;
+        entity.physics->grounded = true;
+    }
+}
+
+void CollisionSystem::fall(Entity &entity) {
+    if (entity.physics) {
+        entity.physics->grounded = false;
     }
 }

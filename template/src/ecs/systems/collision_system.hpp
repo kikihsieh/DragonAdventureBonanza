@@ -14,8 +14,11 @@ public:
 private:
     void tile_collisions(Entity& entity);
     void entity_collisions(Entity& entity);
-    void collide(Entity& e1, Entity& e2);
+    bool collide(Entity& e1, Entity& e2);
     // void move(float ms, Entity& entity);
+
+    void land(Entity& entity);
+    void fall(Entity& entity);
 
     std::list<Entity>* m_entities;
     std::map<int, Tile*> m_tiles;

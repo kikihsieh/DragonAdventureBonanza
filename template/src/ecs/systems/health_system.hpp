@@ -3,17 +3,23 @@
 
 #include <ecs/entities/entity.hpp>
 #include <list>
+#include <ecs/entities/tile.hpp>
 
 class HealthSystem {
 public:
-    bool init(std::list<Entity> *entities);
+    bool init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles);
 
     void update(float ms);
 
+    void respawn_at_last_safe(Entity& entity);
+
+
 private:
     void die(Entity& entity);
+    void update_last_safe(Entity& entity);
 
     std::list<Entity>* m_entities;
+    std::map<int, Tile*> m_tiles;
 };
 
 
