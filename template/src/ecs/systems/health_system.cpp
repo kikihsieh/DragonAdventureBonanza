@@ -62,10 +62,6 @@ void HealthSystem::update_last_safe (Entity& entity) {
         else
             entity.health->last_safe = entity.position;
     }
-//    try {
-//        Tile *tile = m_tiles.at(TileMap::hash(tile_pos.first, tile_pos.second - 1));
-//        entity.health->last_safe = entity.position;
-//    } catch(const std::exception& e) {}
 
 }
 
