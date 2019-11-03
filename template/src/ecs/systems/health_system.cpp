@@ -58,7 +58,7 @@ void HealthSystem::update_last_safe (Entity& entity) {
         if (m_tiles.count(TileMap::hash(tile_pos.first - 1, tile_pos.second + ceil(e_height / t_height))) > 0)
             entity.health->last_safe = {entity.position.x - (e_width / 2.f), entity.position.y};
         else if (m_tiles.count(TileMap::hash(tile_pos.first + 1, tile_pos.second + ceil(e_height / t_height))) > 0)
-                entity.health->last_safe = {entity.position.x + (e_width / 2.f), entity.position.y};
+            entity.health->last_safe = {entity.position.x + (e_width / 2.f), entity.position.y};
         else
             entity.health->last_safe = entity.position;
     }
