@@ -29,9 +29,6 @@ void CameraSystem::update(float ms, Player* player){
         m_snap_threshold_b = false;
         if (m_snap_threshold_f) {
             m_center.x = fmin(m_center.x + m_snap_speed * (ms / 1000), player->position.x + m_offset_x);
-            if (m_center.x + m_screen_size.x*0.5f > m_level_dim.x) {
-                m_center.x = m_level_dim.x - m_screen_size.x*0.5f;
-            }
         } else if (player->position.x > (m_center.x + m_snap_dist)) {
             m_snap_threshold_f = true;
         }
@@ -39,12 +36,15 @@ void CameraSystem::update(float ms, Player* player){
         m_snap_threshold_f = false;
         if (m_snap_threshold_b) {
             m_center.x = fmax(m_center.x - m_snap_speed * (ms / 1000), player->position.x - m_offset_x);
-            if (m_center.x - m_screen_size.x*0.5f < 0) {
-                m_center.x = m_screen_size.x*0.5f;
-            }
         } else if (player->position.x < (m_center.x - m_snap_dist)) {
             m_snap_threshold_b = true;
         }
+    }
+
+    if (m_center.x + m_screen_size.x*0.5f > m_level_dim.x) {
+        m_center.x = m_level_dim.x - m_screen_size.x*0.5f;
+    } else if (m_center.x - m_screen_size.x*0.5f < 0) {
+        m_center.x = m_screen_size.x*0.5f;
     }
 
     if (!m_vertical_enabled) {
