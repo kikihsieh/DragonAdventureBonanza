@@ -14,7 +14,7 @@ bool CameraSystem::init(vec2 screen_size){
     m_offset_x = m_screen_size.x / 8.f;
 
     m_snap_speed = 750.f;
-    m_vertical_snap_speed = 750.f;
+    m_vertical_snap_speed = 600.f;
     m_snap_dist = m_screen_size.x / 4.f;
     m_vertical_snap_dist = m_screen_size.y / 5.f;
 
