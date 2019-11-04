@@ -35,6 +35,10 @@ public:
     bool init_enemy(int type, vec2 initial_pos);
     bool init_player();
 
+    virtual bool use_vertical_camera() {
+        return false;
+    }
+
     bool is_level() override {
         return true;
     }
@@ -43,16 +47,14 @@ public:
         return m_unlocked;
     }
 
-    vec2 get_x_boundaries() const {
-        return m_x_boundaries;
+    vec2 get_level_dim() const {
+        return m_level_dim;
     }
 
-    vec2 get_y_boundaries() const {
-        return m_y_boundaries;
+    Player* get_player() {
+        return (Player*) m_player;
     }
 
-    vec2 get_player_position() override;
-    bool is_forward() override;
 protected:
     virtual bool init_walking_enemy(int type, vec2 initial_pos) = 0;
 
@@ -67,10 +69,7 @@ protected:
     Entity* m_player;
 
     bool m_unlocked;
-
-    vec2 m_x_boundaries;
-    vec2 m_y_boundaries;
-
+    vec2 m_level_dim;
 private:
     virtual MapVector get_map() = 0;
     virtual TexturePathMapping get_mapping() = 0;
