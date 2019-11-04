@@ -108,9 +108,9 @@ void World::destroy() {
 bool World::update(float elapsed_ms)
 {
     m_current_scene->update(elapsed_ms);
-	vec2 pos = m_current_scene->get_player_position();
-	bool moving_forwards = m_current_scene->is_forward();
-	m_camera->update(pos, moving_forwards);
+    if (m_current_scene->is_level()) {
+        m_camera->update(((Level*) m_current_scene)->get_player());
+    }
 	return true;
 }
 

@@ -14,7 +14,9 @@ bool CameraSystem::init(vec2 screen_size){
     m_offset_x = m_screen_size.x / 8.f;
 
     m_snap_speed = 12.f;
+    m_vertical_snap_speed = 15.f;
     m_snap_dist = m_screen_size.x / 4.f;
+    m_vertical_snap_dist = m_screen_size.y / 5.f;
 
     m_snap_threshold_f = true;
     m_snap_threshold_b = false;
@@ -22,29 +24,39 @@ bool CameraSystem::init(vec2 screen_size){
 	return true;
 }
 
-void CameraSystem::update(vec2 player_pos, bool moving_forwards){
-    if (moving_forwards) {
+void CameraSystem::update(Player* player){
+    if (player->is_facing_forward) {
         m_snap_threshold_b = false;
         if (m_snap_threshold_f) {
-            m_center.x = fmin(m_center.x + m_snap_speed, player_pos.x + m_offset_x);
+            m_center.x = fmin(m_center.x + m_snap_speed, player->position.x + m_offset_x);
             if (m_center.x + m_screen_size.x*0.5f > m_level_dim.x) {
                 m_center.x = m_level_dim.x - m_screen_size.x*0.5f;
             }
-        } else if (player_pos.x > (m_center.x + m_snap_dist)) {
+        } else if (player->position.x > (m_center.x + m_snap_dist)) {
             m_snap_threshold_f = true;
         }
     } else {
         m_snap_threshold_f = false;
         if (m_snap_threshold_b) {
-            m_center.x = fmax(m_center.x - m_snap_speed, player_pos.x - m_offset_x);
+            m_center.x = fmax(m_center.x - m_snap_speed, player->position.x - m_offset_x);
             if (m_center.x - m_screen_size.x*0.5f < 0) {
                 m_center.x = m_screen_size.x*0.5f;
             }
-        } else if (player_pos.x < (m_center.x - m_snap_dist)) {
+        } else if (player->position.x < (m_center.x - m_snap_dist)) {
             m_snap_threshold_b = true;
         }
     }
-    m_center.y = player_pos.y;
+
+    if (player->collider->top && abs(player->position.y - m_center.y) > m_vertical_snap_dist
+        && abs(m_target_y_pos-player->position.y) > 10) {
+        m_target_y_pos = player->position.y;
+    }
+
+    if (m_center.y > m_target_y_pos) {
+        m_center.y = fmax(m_center.y - m_vertical_snap_speed, m_target_y_pos);
+    } else {
+        m_center.y = fmin(m_center.y + m_vertical_snap_speed, m_target_y_pos);
+    }
     if (m_center.y - m_screen_size.y*0.5f < 0) {
         m_center.y = m_screen_size.y*0.5f;
     } else if (m_center.y + m_screen_size.y*0.5f > m_level_dim.y) {

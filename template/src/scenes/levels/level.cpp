@@ -80,14 +80,6 @@ bool Level::init_player(){
     return true;
 }
 
-vec2 Level::get_player_position(){
-    return m_player->position;
-}
-
-bool Level::is_forward(){
-    return m_player->is_facing_forward;
-}
-
 void Level::update(float elapsed_ms) {
     m_airdash_system->update(elapsed_ms);
     m_physics_system->update(elapsed_ms);

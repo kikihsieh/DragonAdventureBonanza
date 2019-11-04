@@ -47,8 +47,10 @@ public:
         return m_level_dim;
     }
 
-    vec2 get_player_position() override;
-    bool is_forward() override;
+    Player* get_player() {
+        return (Player*) m_player;
+    }
+
 protected:
     virtual bool init_walking_enemy(int type, vec2 initial_pos) = 0;
 

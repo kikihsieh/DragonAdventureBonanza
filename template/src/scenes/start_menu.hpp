@@ -15,8 +15,6 @@ public:
 
     bool init() override;
     void update(float elapsed_ms) override;
-    bool is_forward() override;
-    vec2 get_player_position() override;
 
     const char * get_bg_texture_path() override {
         return textures_path("title.png");
