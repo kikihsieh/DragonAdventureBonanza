@@ -109,7 +109,7 @@ bool World::update(float elapsed_ms)
 {
     m_current_scene->update(elapsed_ms);
     if (m_current_scene->is_level()) {
-        m_camera->update(((Level*) m_current_scene)->get_player());
+        m_camera->update(elapsed_ms, ((Level*) m_current_scene)->get_player());
     }
 	return true;
 }
@@ -185,7 +185,7 @@ bool World::load_scene(Scene* scene) {
     m_current_scene->init();
     if (m_current_scene->is_level()) {
         auto level = (Level*) m_current_scene;
-        m_camera->reset(level->get_level_dim());
+        m_camera->reset(level->use_vertical_camera(), level->get_level_dim());
     }
 	return true;
 }

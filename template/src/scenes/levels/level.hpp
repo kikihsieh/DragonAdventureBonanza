@@ -35,6 +35,10 @@ public:
     bool init_enemy(int type, vec2 initial_pos);
     bool init_player();
 
+    virtual bool use_vertical_camera() {
+        return false;
+    }
+
     bool is_level() override {
         return true;
     }

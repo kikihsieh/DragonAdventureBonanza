@@ -8,8 +8,8 @@ public:
     ~CameraSystem();
     
     bool init(vec2 screen_size);
-    void update(Player* player);
-    void reset(vec2 level_dim);
+    void update(float elapsed_ms, Player* player);
+    void reset(bool enable_vertical, vec2 level_dim);
 
     float compute_translation_x();
     float compute_translation_y();
@@ -30,4 +30,5 @@ private:
     bool m_snap_threshold_f; // true if camera should snap to default forwards position
 
     vec2 m_level_dim;
+    bool m_vertical_enabled;
 };

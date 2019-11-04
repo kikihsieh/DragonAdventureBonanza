@@ -12,6 +12,10 @@ public:
         return textures_path("platform-lg.png");
     }
 
+    bool use_vertical_camera() override {
+        return true;
+    }
+
 private:
     bool init_walking_enemy(int type, vec2 initial_pos) override;
 
