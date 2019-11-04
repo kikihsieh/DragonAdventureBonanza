@@ -145,8 +145,8 @@ void World::draw() {
 
 	float sx = 2.f / (right - left);
 	float sy = 2.f / (top - bottom);
-	float tx = m_camera->compute_translation_x();
-	float ty = -(top + bottom) / (top - bottom);
+	float tx = (m_current_scene->is_level()) ? m_camera->compute_translation_x() : -(right + left) / (right - left);
+	float ty = (m_current_scene->is_level()) ? m_camera->compute_translation_y() : -(top + bottom) / (top - bottom);
 	mat3 projection_2D{ { sx, 0.f, 0.f },{ 0.f, sy, 0.f },{ tx, ty, 1.f } };
 
 	/////////////////////
@@ -180,10 +180,13 @@ bool World::load_scene(Scene* scene) {
     if (m_current_scene) {
         m_current_scene->destroy();
     }
-    m_camera->reset();
 
     m_current_scene = scene;
     m_current_scene->init();
+    if (m_current_scene->is_level()) {
+        auto level = (Level*) m_current_scene;
+        m_camera->reset(level->get_level_dim());
+    }
 	return true;
 }
 

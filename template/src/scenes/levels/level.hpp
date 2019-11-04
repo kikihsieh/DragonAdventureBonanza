@@ -43,12 +43,8 @@ public:
         return m_unlocked;
     }
 
-    vec2 get_x_boundaries() const {
-        return m_x_boundaries;
-    }
-
-    vec2 get_y_boundaries() const {
-        return m_y_boundaries;
+    vec2 get_level_dim() const {
+        return m_level_dim;
     }
 
     vec2 get_player_position() override;
@@ -67,10 +63,7 @@ protected:
     Entity* m_player;
 
     bool m_unlocked;
-
-    vec2 m_x_boundaries;
-    vec2 m_y_boundaries;
-
+    vec2 m_level_dim;
 private:
     virtual MapVector get_map() = 0;
     virtual TexturePathMapping get_mapping() = 0;
