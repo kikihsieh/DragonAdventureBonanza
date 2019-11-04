@@ -15,12 +15,12 @@ bool EnemyMotionSystem::init(std::list<Entity> *entities, const std::map<int, Ti
     int init_direction = (rand() > RAND_MAX/2) ? 1 : 0;
     m_tiles = tiles;
     m_entities = entities;
-    /*for (auto &entity : *m_entities){
-     if (entity.flyable){
-     center_c = entity.position;
-     //entity.flyable->flyable_enemy= true;
-     }
-     }*/
+    for (auto &entity : *m_entities){
+        if (entity.flyable){
+            center_c = entity.position;
+            //entity.flyable->flyable_enemy= true;
+        }
+    }
     
     return true;
 }
@@ -30,26 +30,26 @@ void EnemyMotionSystem::update(float ms) {
         if (entity.enemyai){
             move(ms, entity);
         }
-        //if (entity.flyable){
-        //fly(ms, entity);
-        //}
+        if (entity.flyable){
+            fly(ms, entity);
+        }
     }
 }
 
 
-/*void EnemyMotionSystem::fly(float ms, Entity& entity){
- center_c.x += velocity_c.x ;
- center_c.y += velocity_c.y ;
- angle_c += rotate_speed;
- vec2 off = {sin(angle_c), cos(angle_c)*radius};
- //angle_c += (clockwise ? rotate_speed : -rotate_speed) ;
- //float x = sin(angle_c)*radiusX;
- //float y = cos(angle_c)*radiusY;
- //vec2 xy = {x,y};
- //entity.position = {center_c.x + xy.x, center_c.y+ xy.y};
- entity.position.x = center_c.x + off.x;
- entity.position.y = center_c.y + off.y;
- }*/
+void EnemyMotionSystem::fly(float ms, Entity& entity){
+    center_c.x += velocity_c.x * (ms/1000);
+    center_c.y += velocity_c.y *(ms/1000) ;
+    angle_c += rotate_speed *(ms/1000);
+    vec2 off = {sin(angle_c)*radius, cos(angle_c)*radius};
+    //angle_c += (clockwise ? rotate_speed : -rotate_speed) ;
+    //float x = sin(angle_c)*radiusX;
+    //float y = cos(angle_c)*radiusY;
+    //vec2 xy = {x,y};
+    //entity.position = {center_c.x + xy.x, center_c.y+ xy.y};
+    entity.position.x = center_c.x + off.x;
+    entity.position.y = center_c.y + off.y;
+}
 
 /*void EnemyMotionSystem::fly(float ms, Entity& entity){
  for (auto &entity : *m_entities){
@@ -124,3 +124,4 @@ void EnemyMotionSystem::move(float ms, Entity& entity){
     
     
 }
+
