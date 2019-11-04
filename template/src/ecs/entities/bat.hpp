@@ -7,18 +7,20 @@ struct Bat : public Entity {
         scale = { 1.f, 1.f };
 
         drawable = new Drawable();
-        drawable->texture_path = textures_path("bat.png");
         drawable->fs_shader = shader_path("textured.fs.glsl");
         drawable->vs_shader = shader_path("textured.vs.glsl");
         drawable->texture = texture;
 
         position = pos;
-        
+        /*
         collider = new Collider();
         is_facing_forward = true;
-        
+        */
         flyable = new Flyable();
         flyable->flyable_enemy = true;
+        
+        enemyai = new EnemyAI();
+        
         
     }
 };

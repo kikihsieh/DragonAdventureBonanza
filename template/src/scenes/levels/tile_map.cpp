@@ -37,6 +37,10 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
                     Glob s(dict.at(*col), get_coord_from_tile_pos(col_index, row_index));
                     m_level->m_entities.emplace_back(s);
                 }
+                if (*col == -3){
+                    Bat s(dict.at(*col), get_coord_from_tile_pos(col_index, row_index));
+                    m_level->m_entities.emplace_back(s);
+                }
             } else {
                 Tile tile(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), tile_scale, tile_size);
                 auto it = m_level->m_entities.emplace(m_level->m_entities.end(), tile);
