@@ -51,6 +51,8 @@ private:
 };
 
     const TexturePathMapping m_texture_map = {
+            { -3, textures_path("bat.png")},
+            { -2, textures_path("spider-old.png")},
             { -1, textures_path("spider-old.png")},
             { 1, textures_path("tiles/tile.png")},
             { 2, textures_path("tiles/tile1_left_end.png")},
@@ -63,8 +65,7 @@ private:
             { 9, textures_path("tiles/tile2_right.png")},
             { 10, textures_path("tiles/tile3.png")},
             { 11, textures_path("tiles/tile3_left.png")},
-            { 12, textures_path("tiles/tile3_right.png")},
-            { -3, textures_path("bat.png")}
+            { 12, textures_path("tiles/tile3_right.png")}
     };
 };
 
