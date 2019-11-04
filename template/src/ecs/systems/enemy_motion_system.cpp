@@ -38,17 +38,24 @@ void EnemyMotionSystem::update(float ms) {
 
 
 void EnemyMotionSystem::fly(float ms, Entity& entity){
-    center_c.x += velocity_c.x * (ms/1000);
-    center_c.y += velocity_c.y *(ms/1000) ;
-    angle_c += rotate_speed *(ms/1000);
-    vec2 off = {sin(angle_c)*radius, cos(angle_c)*radius};
-    //angle_c += (clockwise ? rotate_speed : -rotate_speed) ;
-    //float x = sin(angle_c)*radiusX;
-    //float y = cos(angle_c)*radiusY;
-    //vec2 xy = {x,y};
-    //entity.position = {center_c.x + xy.x, center_c.y+ xy.y};
-    entity.position.x = center_c.x + off.x;
-    entity.position.y = center_c.y + off.y;
+    for (auto &entity : *m_entities){
+        if ( !entity.flyable || !entity.enemyai){
+            continue;
+        }
+        
+        center_c.x += velocity_c.x * (ms/1000.f);
+        center_c.y += velocity_c.y *(ms/1000.f) ;
+        angle_c += rotate_speed *(ms/1000.f);
+        vec2 off = {sin(angle_c)*radius, cos(angle_c)*radius};
+        //angle_c += (clockwise ? rotate_speed : -rotate_speed) ;
+        //float x = sin(angle_c)*radiusX;
+        //float y = cos(angle_c)*radiusY;
+        //vec2 xy = {x,y};
+        //entity.position = {center_c.x + xy.x, center_c.y+ xy.y};
+        entity.position.x = center_c.x + off.x;
+        entity.position.y = center_c.y + off.y;
+    }
+    
 }
 
 /*void EnemyMotionSystem::fly(float ms, Entity& entity){

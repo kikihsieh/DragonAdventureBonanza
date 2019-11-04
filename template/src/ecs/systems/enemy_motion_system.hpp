@@ -12,10 +12,9 @@ public:
 
     void update(float ms);
     
-    
     vec2 velocity_c = {1,0};
-    float rotate_speed = 1.f;
-    float radius = 1.f;
+    float rotate_speed = 3.f;
+    float radius = 50.f;
 
 private:
     //void tile_collisions(Entity& entity);

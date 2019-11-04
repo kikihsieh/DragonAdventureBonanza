@@ -5,6 +5,7 @@
 
 #include <ecs/entities/tile.hpp>
 #include <ecs/entities/spider.hpp>
+#include <ecs/entities/bat.hpp>
 #include "level.hpp"
 
 class Level; // forward declaration
