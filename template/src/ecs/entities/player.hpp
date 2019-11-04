@@ -11,7 +11,7 @@ struct Player : public Entity {
         physics = new Physics();
         physics->gravity = 750.f;
         physics->walk_speed = 250.f;
-        physics->jump_speed = -530.f;
+        physics->jump_speed = -430.f;
         physics->velocity = {physics->walk_speed, 0.f};
         physics->acceleration = {0.f, physics->gravity};
 
