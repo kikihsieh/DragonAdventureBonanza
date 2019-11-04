@@ -44,6 +44,12 @@ void CameraSystem::update(vec2 player_pos, bool moving_forwards){
             m_snap_threshold_b = true;
         }
     }
+    m_center.y = player_pos.y;
+    if (m_center.y - m_screen_size.y*0.5f < 0) {
+        m_center.y = m_screen_size.y*0.5f;
+    } else if (m_center.y + m_screen_size.y*0.5f > m_level_dim.y) {
+        m_center.y = m_level_dim.y - m_screen_size.y*0.5f;
+    }
 }
 
 void CameraSystem::reset(vec2 level_dim){
