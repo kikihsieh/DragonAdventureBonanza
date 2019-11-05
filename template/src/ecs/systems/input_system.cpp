@@ -63,7 +63,7 @@ void InputSystem::on_mouse_update(int key, int action, double xpos, double ypos)
                 if (xpos > left && xpos < right &&
                     ypos < top && ypos > bottom)
                     entity.input->mouse_left = true;
-                printf("left mouse click");
+                printf("left mouse click\n");
             } else {
                 entity.input->mouse_left = false;
             }

@@ -97,12 +97,12 @@ bool World::init(vec2 screen)
 	//TODO: temporary settings, change to number of levels once determine
     int l = load();
     if (l < 0) {
-        m_unlocked_levels.insert(std::pair<int, bool>(1, true));
-        m_unlocked_levels.insert(std::pair<int, bool>(2, false));
-        m_unlocked_levels.insert(std::pair<int, bool>(3, false));
-        m_unlocked_levels.insert(std::pair<int, bool>(4, false));
-        m_unlocked_levels.insert(std::pair<int, bool>(5, false));
-        std::cout << "Error loading save" << std::endl;
+        m_unlocked_levels.insert(std::pair<Scene_names, bool>(FOREST, true));
+        m_unlocked_levels.insert(std::pair<Scene_names, bool>(VOLCANO, false));
+        m_unlocked_levels.insert(std::pair<Scene_names, bool>(CAVE, false));
+        m_unlocked_levels.insert(std::pair<Scene_names, bool>(SNOW_MOUNTAIN, false));
+        m_unlocked_levels.insert(std::pair<Scene_names, bool>(NIGHT_SKY, false));
+        std::cout << "No existing save file" << std::endl;
     } else
         std::cout << "Loaded save!" << std::endl;
 
@@ -208,14 +208,14 @@ bool World::load_scene(Scene* scene) {
 // On key callback
 void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
     if (key == GLFW_KEY_1 && action == GLFW_RELEASE) {
-        if (m_unlocked_levels[1]) {
+        if (m_unlocked_levels[FOREST]) {
             load_scene(m_scenes.at(FOREST));
             return;
         }
     }
 
     if (key == GLFW_KEY_2 && action == GLFW_RELEASE) {
-        if (m_unlocked_levels[2]) {
+        if (m_unlocked_levels[VOLCANO]) {
             load_scene(m_scenes.at(VOLCANO));
             return;
         }
@@ -252,15 +252,24 @@ void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos) {
 int World::save() {
     int count = 0;
     if (m_unlocked_levels.empty())
-        return 0;
+        return -1;
 
     FILE *fp = fopen(m_save_path.c_str(), "w");
     if (!fp)
         return -errno;
 
+    std::map<Scene_names, std::string> scenes;
+    scenes.insert(std::pair<Scene_names, std::string>(FOREST, "FOREST"));
+    scenes.insert(std::pair<Scene_names, std::string>(VOLCANO, "VOLCANO"));
+    scenes.insert(std::pair<Scene_names, std::string>(CAVE, "CAVE"));
+    scenes.insert(std::pair<Scene_names, std::string>(SNOW_MOUNTAIN, "SNOW_MOUNTAIN"));
+    scenes.insert(std::pair<Scene_names, std::string>(NIGHT_SKY, "NIGHT_SKY"));
+
     for(auto & it : m_unlocked_levels) {
-        fprintf(fp, "%s=%s\n", std::to_string(it.first).c_str(), std::to_string(it.second).c_str());
-        count++;
+        if (scenes.count(it.first) > 0) {
+            fprintf(fp, "%s=%s\n", scenes.at(it.first).c_str(), std::to_string(it.second).c_str());
+            count++;
+        }
     }
 
     fclose(fp);
@@ -282,6 +291,13 @@ int World::load() {
     char *buf = 0;
     size_t buflen = 0;
 
+    std::map<std::string, Scene_names> scenes;
+    scenes.insert(std::pair<std::string, Scene_names>("FOREST", FOREST));
+    scenes.insert(std::pair<std::string, Scene_names>("VOLCANO", VOLCANO));
+    scenes.insert(std::pair<std::string, Scene_names>("CAVE", CAVE));
+    scenes.insert(std::pair<std::string, Scene_names>("SNOW_MOUNTAIN", SNOW_MOUNTAIN));
+    scenes.insert(std::pair<std::string, Scene_names>("NIGHT_SKY", NIGHT_SKY));
+
     while(getline(&buf, &buflen, fp) > 0) {
         char *nl = strchr(buf, '\n');
         if (nl == NULL)
@@ -294,12 +310,13 @@ int World::load() {
         *sep = 0;
         sep++;
 
-        int s1 = atoi(buf);
-        bool s2 = sep;
+        if(scenes.count(buf) > 0) {
+            Scene_names s1 = scenes.at(buf);
+            bool s2 = *sep == '1';
 
-        (m_unlocked_levels)[s1] = s2;
-
-        count++;
+            (m_unlocked_levels)[s1] = s2;
+            count++;
+        }
     }
 
     if (buf)

@@ -70,5 +70,5 @@ private:
     Scene* m_current_scene;
     std::map<Scene_names, Scene*> m_scenes;
 
-    std::map<int, bool> m_unlocked_levels;
+    std::map<Scene_names, bool> m_unlocked_levels;
 };
