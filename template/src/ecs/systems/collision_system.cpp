@@ -11,20 +11,22 @@ void CollisionSystem::update(float ms) {
             continue;
         }
 
-        for (auto &e : *m_entities) {
-            if (e.collider) {
-                e.collider->reset();
-            }
-        }
+        collider_reset();
+
         if (entity.collider) {
             tile_collisions(entity);
-            entity_collisions(entity);
+
             if (entity.collider->left || entity.collider->right) {
                 entity.position.x = entity.old_position.x;
             }
             if (entity.collider->top || entity.collider->bottom) {
+				
                 entity.position.y = entity.old_position.y;
                 entity.physics->velocity.y = 0;
+            }
+
+            if(entity.player_tag) {
+                player_enemy_collision(entity);
             }
         }
     }
@@ -52,29 +54,70 @@ void CollisionSystem::tile_collisions(Entity& entity) {
                 continue;
             }
             Tile* tile = m_tiles.at(TileMap::hash(col, row));
-            collide(entity, *tile);
+            collide_with_tile(entity, *tile);
         }
     }
 }
 
-void CollisionSystem::entity_collisions(Entity& entity) {
-    // TODO: implement collisions between other entities
-    //      May need to add id to entities or something to make sure it doesn't check against itself
+void CollisionSystem::player_enemy_collision(Entity& player) {
+    auto entity_it = m_entities->begin();
+    while (entity_it != m_entities->end()) {
+        if(entity_it->collider && !entity_it->player_tag) {
+            // TODO: Existing bug: when enemy is inside player, player kills it.
+            CollisionSystem::Side side = detect_collision(*entity_it, player);
+
+            if (side == CollisionSystem::BOTTOM) {
+                player.physics->velocity.y = -200.f;
+                entity_it = m_entities->erase(entity_it);
+            } else if (side != NONE) {
+                // TODO: update some component so that the health can be updated correctly
+                std::cout << "Collision!\n";
+            }
+        }
+        ++entity_it;
+    }
 }
 
 /**
  * This function expects that the first entity is collidable
- * @param e1 : a collidable entity
- * @param e2 : any entity
+ * @param e1 : a collid-able entity
+ * @param tile : a tile
  */
-void CollisionSystem::collide(Entity &e1, Entity &e2) {
+void CollisionSystem::collide_with_tile(Entity& e1, Tile &tile) {
+
+    switch (detect_collision(e1, tile)) {
+        case TOP:
+            e1.collider->top = true;
+            // TODO: @Austin please move these two if statements out of this function
+            if (e1.airdash)
+                e1.airdash->can_airdash = true;
+
+            if (e1.physics) {
+                e1.physics->jump_count = 0;
+            }
+            break;
+        case BOTTOM:
+            e1.collider->bottom = true;
+            break;
+        case LEFT:
+            e1.collider->left = true;
+            break;
+        case RIGHT:
+            e1.collider->right = true;
+            break;
+        case NONE:
+            break;
+    }
+}
+
+CollisionSystem::Side CollisionSystem::detect_collision(Entity &e1, Entity &e2) {
     float e1_height = e1.drawable->texture->height * e1.scale.x;
     float e1_width = e1.drawable->texture->width * e1.scale.y;
 
     float e2_height = e2.drawable->texture->height * e2.scale.x;
     float e2_width = e2.drawable->texture->width * e2.scale.y;
 
-//    https://stackoverflow.com/questions/29861096/detect-which-side-of-a-rectangle-is-colliding-with-another-rectangle
+    // https://stackoverflow.com/questions/29861096/detect-which-side-of-a-rectangle-is-colliding-with-another-rectangle
     float dx = e1.position.x - e2.position.x;
     float dy = e1.position.y - e2.position.y;
     float width = (e1_width + e2_width)/2;
@@ -85,38 +128,25 @@ void CollisionSystem::collide(Entity &e1, Entity &e2) {
     if (abs(dx) <= width && abs(dy) <= height){
         if(crossWidth > crossHeight){
             if (crossWidth > -crossHeight) {
-                e1.collider->bottom = true;
-                if (e2.collider) {
-                    e2.collider->top = true;
-                }
+                return Side::BOTTOM;
             } else {
-                e1.collider->left = true;
-                if (e2.collider) {
-                    e2.collider->right = true;
-                }
+                return Side::RIGHT;
             }
         } else {
             if (crossWidth > -crossHeight) {
-                e1.collider->right = true;
-                if (e2.collider) {
-                    e2.collider->left = true;
-                }
+                return Side::LEFT;
             } else {
-                e1.collider->top = true;
-
-                if (e2.collider) {
-                    e2.collider->bottom = true;
-                }
-
-                // TODO: @Austin please move these two if statements out of this function
-                if (e1.airdash)
-                    e1.airdash->can_airdash = true;
-
-
-                if (e1.physics) {
-                    e1.physics->jump_count = 0;
-                }
+                return Side::TOP;
             }
+        }
+    }
+    return Side::NONE;
+}
+
+void CollisionSystem::collider_reset() {
+    for (auto &e : *m_entities) {
+        if (e.collider) {
+            e.collider->reset();
         }
     }
 }

@@ -14,7 +14,7 @@ public:
 private:
     //void tile_collisions(Entity& entity);
     //void entity_collisions(Entity& entity);
-    //void collide(Entity& e1, Entity& e2);
+    //void collide_with_tile(Entity& e1, Entity& e2);
     void move(float ms, Entity& entity);
 
     std::list<Entity>* m_entities;
