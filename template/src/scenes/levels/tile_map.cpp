@@ -27,7 +27,6 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
                 col_index ++;
                 continue;
             }
-
             if (*col < 0) {
                 if (*col == -1) {
                     Spider s(dict.at(*col), get_coord_from_tile_pos(col_index, row_index));
