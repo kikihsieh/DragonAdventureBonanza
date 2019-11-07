@@ -1,8 +1,10 @@
 #include "enemy_motion_system.hpp"
+#include "common.hpp"
 
 #include <cmath>
 #include <utility>
 #include <scenes/levels/tile_map.hpp>
+#include <iostream>
 
 
 bool EnemyMotionSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles) {
@@ -12,15 +14,21 @@ bool EnemyMotionSystem::init(std::list<Entity> *entities, const std::map<int, Ti
     //float countDown = (rand()%(max_waitTime - min_waitTime + 1) + min_waitTime) *10;
     
     // pick 1 or 0
-    int init_direction = (rand() > RAND_MAX/2) ? 1 : 0;
+    //int init_direction = (rand() > RAND_MAX/2) ? 1 : 0;
     m_tiles = tiles;
     m_entities = entities;
     for (auto &entity : *m_entities){
         if (entity.flyable){
             center_c = entity.position;
+            t =0.f;
+            intial_pos1 = entity.position;
+            final_pos2 = {entity.position.x+100,entity.position.y};
+            mid_p ={entity.position.x+2,entity.position.y +100};
+            
             //entity.flyable->flyable_enemy= true;
         }
     }
+    
     
     return true;
 }
@@ -31,8 +39,20 @@ void EnemyMotionSystem::update(float ms) {
             move(ms, entity);
         }
         if (entity.flyable){
-            fly(ms, entity);
+            //fly(ms, entity);
+            if (flag){
+                fly2(t,entity);
+            t += (ms/1000);
+            } else {
+                fly3(t,entity);
+                t+= (ms/1000);
+            }
         }
+        if (t >=1){
+            t=0;
+            flag = !flag;
+        }
+        
     }
 }
 
@@ -58,49 +78,73 @@ void EnemyMotionSystem::fly(float ms, Entity& entity){
     
 }
 
-/*void EnemyMotionSystem::fly(float ms, Entity& entity){
- for (auto &entity : *m_entities){
- if (!entity.enemyai){
- continue;
- }
- vec2 p0 ={entity.position.x-2,entity.position.y};
- vec2 p1={entity.position.x-1,entity.position.y-1};
- vec2 p2 = {entity.position.x+1,entity.position.y-1};
- vec2 p3 = {entity.position.x+2,entity.position.y};
- QuadraticBezierPts(ms, p0, p1, p2, p3);
- 
- if (entity.position.x < p3.x && entity.position.y < p3.y && entity.is_facing_forward){
- //entity.is_facing_forward = true;
- entity.position.x += QuadraticBezierPts(ms, p0, p1, p2, p3).x;
- entity.position.y += QuadraticBezierPts(ms, p0, p1, p2, p3).y;
- } else if (entity.position.x == p3.x && entity.position.y == p3.y && entity.is_facing_forward){
- entity.is_facing_forward = !entity.is_facing_forward;
- 
- }
- */
-/*vec2 QuadraticBezierPts(float t, vec2 p0, vec2 p1, vec2 p2, vec2 p3){
- //return: (1-t)2 p0 + 2(1-t)tp1 + t2p2
+void EnemyMotionSystem::fly2(float t, Entity& entity){
+   /*if (t >=1){
+        t=0;
+        //entity.is_facing_forward = !entity.is_facing_forward;
+    }*/
+    if (entity.is_facing_forward){
+        if (entity.position.x < final_pos2.x){
+            entity.position.x = QuadraticBezierPts(t, intial_pos1, mid_p, final_pos2).x;
+            entity.position.y = QuadraticBezierPts(t, intial_pos1, mid_p, final_pos2).y;
+            //std::cout << entity.position.x << ", " << entity.position.y << std::endl;
+        }
+        if (entity.position.x >= final_pos2.x){
+            entity.is_facing_forward = !entity.is_facing_forward;
+            //std::cout << "face backward" << std::endl;
+            //t=0;
+        }
+        
+    }/*else {
+       
+        if (intial_pos1.x < entity.position.x){
+            entity.position.x = QuadraticBezierPts(t, final_pos2, mid_p, intial_pos1).x;
+            entity.position.y = QuadraticBezierPts(t, final_pos2, mid_p, intial_pos1).y;
+            //std::cout << entity.position.x << ", " << entity.position.y << std::endl;
+        } else if (entity.position.x <= intial_pos1.x){
+            entity.is_facing_forward = !entity.is_facing_forward;
+            //std::cout << "face forward" << std::endl;
+            //t=0;
+            
+        }
+    }
+    //std::cout << t << std::endl;*/
+}
+
+void EnemyMotionSystem::fly3(float t, Entity& entity){
+if (entity.is_facing_forward){
+        if (intial_pos1.x < entity.position.x){
+            entity.position.x = QuadraticBezierPts(t, final_pos2, mid_p, intial_pos1).x;
+            entity.position.y = QuadraticBezierPts(t, final_pos2, mid_p, intial_pos1).y;
+            //std::cout << entity.position.x << ", " << entity.position.y << std::endl;
+        } else if (entity.position.x <= intial_pos1.x){
+            entity.is_facing_forward = !entity.is_facing_forward;
+            //std::cout << "face forward" << std::endl;
+            //t=0;
+            
+        }
+    
+}
+}
+
+vec2 EnemyMotionSystem::QuadraticBezierPts( float t, vec2 p0, vec2 p1, vec2 p2){
+ //return: (1-t)^2 p0 + 2(1-t)tp1 + t^2 p2
  //            u            u       tt
  //            uu*p0 + 2*u*t*p1 + tt*p2
  //
- float u = 1.0f - t;
- float uu = u*u;
- float uuu = uu*u;
- float tt = t*t;
- float ttt = tt*t;
+    float u = 1.0f - t;
+    float uu = u*u;
+    //float uuu = uu*u;
+    float tt = t*t;
+    //float ttt = tt*t;
+    
+  
+    vec2 p = mul(p0,uu);
+    vec2 pp = mul(p1,2*u*t );
+    vec2 ppp = mul(p2,tt);
+    return add(add(p,pp),ppp);
  
- vec2 p = {uu*p0.x, uu*p0.y};
- vec2 pp = {2*u*t*p1.x,2*u*t*p1.y};
- vec2 ppp = {tt*p2.x, tt*p2.y};
- return {p.x+pp.x+ppp.x,p.y+pp.y+ppp.y} ;(
- 
- vec2 p = {(uuu*p0.x) + (3*uu*t *p1.x)+ (3*u*tt*p2.x)+ (ttt*p3.x), (uuu*p0.y) + (3*uu*t *p1.y)+ (3*u*tt*p2.y)+ (ttt*p3.y)};
- p.x = round(p.x);
- p.y = round(p.y);
- return p;
- 
- 
- }*/
+ }
 
 void EnemyMotionSystem::move(float ms, Entity& entity){
     
