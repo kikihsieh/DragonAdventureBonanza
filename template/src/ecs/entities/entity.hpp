@@ -23,6 +23,7 @@ struct Entity {
         position({0.f, 0.f}),
         scale({1.f, 1.f}),
         is_facing_forward(false),
+        player_tag(false),
         old_position(position) {
     }
 
@@ -55,5 +56,6 @@ struct Entity {
 	vec2 scale;
     vec2 old_position;
 
+    bool player_tag;
     bool is_facing_forward;
 };

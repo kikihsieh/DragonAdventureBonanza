@@ -11,6 +11,7 @@ Level::Level(bool unlocked) :
     m_physics_system(nullptr),
     m_airdash_system(nullptr),
     m_enemy_motionsystem(nullptr),
+    m_level_dim({0, 0}),
     m_health_system(nullptr),
     m_x_boundaries{-200.f, 0},
     m_y_boundaries{0, 0} {
@@ -58,9 +59,8 @@ bool Level::init_level(MapVector map, TexturePathMapping mapping) {
         fprintf(stderr, "Failed to initialize tile map!");
         return false;
     }
-    
-    m_x_boundaries.y = m_tile_map->get_map_dim().x;
-    m_y_boundaries.y = m_tile_map->get_map_dim().y;
+
+    m_level_dim = m_tile_map->get_map_dim();
 
     return init_player() &&
             m_physics_system->init(&m_entities, m_tile_map->get_map_dim()) &&
@@ -83,14 +83,6 @@ bool Level::init_player(){
     m_entities.emplace_back(player);
     m_player = &m_entities.back();
     return true;
-}
-
-vec2 Level::get_player_position(){
-    return m_player->position;
-}
-
-bool Level::is_forward(){
-    return m_player->is_facing_forward;
 }
 
 void Level::update(float elapsed_ms) {
