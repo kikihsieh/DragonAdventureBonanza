@@ -21,14 +21,19 @@ public:
     vec2 intial_pos1;
     vec2 final_pos2;
     vec2 mid_p;
+    float boundary;
+    int speed;
+    int flying_style;
+    
 private:
     //void tile_collisions(Entity& entity);
     //void entity_collisions(Entity& entity);
     //void collide_with_tile(Entity& e1, Entity& e2);
     void move(float ms, Entity& entity);
-    void fly(float ms, Entity& entity);
-    void fly2(float ms, Entity& entity);
-    void fly3(float ms, Entity& entity);
+    void fly_in_circle(float ms, Entity& entity);
+    void fly_wave(float ms, Entity& entity);
+    void fly_forward1(float ms, Entity& entity);
+    void fly_backward1(float ms, Entity& entity);
     
 
     std::list<Entity>* m_entities;

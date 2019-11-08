@@ -8,13 +8,13 @@
 
 
 bool EnemyMotionSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles) {
-    //srand( time(0));
+    srand( time(0));
     //int max_waitTime = 10;
     //int min_waitTime = 4;
     //float countDown = (rand()%(max_waitTime - min_waitTime + 1) + min_waitTime) *10;
     
     // pick 1 or 0
-    //int init_direction = (rand() > RAND_MAX/2) ? 1 : 0;
+    flying_style = (rand()% 3);
     m_tiles = tiles;
     m_entities = entities;
     for (auto &entity : *m_entities){
@@ -23,9 +23,9 @@ bool EnemyMotionSystem::init(std::list<Entity> *entities, const std::map<int, Ti
             t =0.f;
             intial_pos1 = entity.position;
             final_pos2 = {entity.position.x+100,entity.position.y};
-            mid_p ={entity.position.x+2,entity.position.y +100};
-            
-            //entity.flyable->flyable_enemy= true;
+            mid_p ={entity.position.x+5,entity.position.y +100};
+            speed = 3;
+            boundary = entity.position.x +100;
         }
     }
     
@@ -39,14 +39,19 @@ void EnemyMotionSystem::update(float ms) {
             move(ms, entity);
         }
         if (entity.flyable){
-            //fly(ms, entity);
-            if (flag){
-                fly2(t,entity);
-            t += (ms/1000);
-            } else {
-                fly3(t,entity);
-                t+= (ms/1000);
-            }
+            if (flying_style ==0 ){
+                if (flag){
+                    fly_forward1(t,entity);
+                    t += (ms/1000);
+                    
+                } else {
+                    fly_backward1(t,entity);
+                    t+= (ms/1000);
+                    
+                }
+                
+            } else if (flying_style ==1){fly_wave(ms, entity);}
+            else if (flying_style ==2){fly_in_circle(ms, entity);}
         }
         if (t >=1){
             t=0;
@@ -56,33 +61,38 @@ void EnemyMotionSystem::update(float ms) {
     }
 }
 
-
-void EnemyMotionSystem::fly(float ms, Entity& entity){
-    for (auto &entity : *m_entities){
-        if ( !entity.flyable || !entity.enemyai){
-            continue;
+void EnemyMotionSystem::fly_in_circle(float ms, Entity& entity){
+    center_c.x += velocity_c.x * (ms/1000.f);
+    center_c.y += velocity_c.y *(ms/1000.f) ;
+    angle_c += rotate_speed *(ms/1000.f);
+    vec2 off = {sin(angle_c)*radius, cos(angle_c)*radius};
+    entity.position.x = center_c.x + off.x;
+    entity.position.y = center_c.y + off.y;
+}
+void EnemyMotionSystem::fly_wave(float ms, Entity& entity){
+    center_c.y += velocity_c.y *(ms/1000.f) ;
+    angle_c += rotate_speed *(ms/1000.f);
+    float off =  cos(angle_c)*radius;
+    entity.position.y = center_c.y + off;
+    
+    if (entity.is_facing_forward){
+        entity.position.x += speed;
+        if  (entity.position.x >= boundary ){
+            entity.is_facing_forward = !entity.is_facing_forward;
         }
         
-        center_c.x += velocity_c.x * (ms/1000.f);
-        center_c.y += velocity_c.y *(ms/1000.f) ;
-        angle_c += rotate_speed *(ms/1000.f);
-        vec2 off = {sin(angle_c)*radius, cos(angle_c)*radius};
-        //angle_c += (clockwise ? rotate_speed : -rotate_speed) ;
-        //float x = sin(angle_c)*radiusX;
-        //float y = cos(angle_c)*radiusY;
-        //vec2 xy = {x,y};
-        //entity.position = {center_c.x + xy.x, center_c.y+ xy.y};
-        entity.position.x = center_c.x + off.x;
-        entity.position.y = center_c.y + off.y;
+    } else {
+        entity.position.x -= speed;
+        if (entity.position.x <= -1*boundary){
+            entity.is_facing_forward = !entity.is_facing_forward;
+        }
     }
     
 }
 
-void EnemyMotionSystem::fly2(float t, Entity& entity){
-   /*if (t >=1){
-        t=0;
-        //entity.is_facing_forward = !entity.is_facing_forward;
-    }*/
+
+void EnemyMotionSystem::fly_forward1(float t, Entity& entity){
+
     if (entity.is_facing_forward){
         if (entity.position.x < final_pos2.x){
             entity.position.x = QuadraticBezierPts(t, intial_pos1, mid_p, final_pos2).x;
@@ -91,40 +101,22 @@ void EnemyMotionSystem::fly2(float t, Entity& entity){
         }
         if (entity.position.x >= final_pos2.x){
             entity.is_facing_forward = !entity.is_facing_forward;
-            //std::cout << "face backward" << std::endl;
-            //t=0;
+    
         }
-        
-    }/*else {
-       
+    }
+}
+
+void EnemyMotionSystem::fly_backward1(float t, Entity& entity){
+    if (entity.is_facing_forward){
         if (intial_pos1.x < entity.position.x){
             entity.position.x = QuadraticBezierPts(t, final_pos2, mid_p, intial_pos1).x;
             entity.position.y = QuadraticBezierPts(t, final_pos2, mid_p, intial_pos1).y;
-            //std::cout << entity.position.x << ", " << entity.position.y << std::endl;
+            
         } else if (entity.position.x <= intial_pos1.x){
             entity.is_facing_forward = !entity.is_facing_forward;
-            //std::cout << "face forward" << std::endl;
-            //t=0;
             
         }
     }
-    //std::cout << t << std::endl;*/
-}
-
-void EnemyMotionSystem::fly3(float t, Entity& entity){
-if (entity.is_facing_forward){
-        if (intial_pos1.x < entity.position.x){
-            entity.position.x = QuadraticBezierPts(t, final_pos2, mid_p, intial_pos1).x;
-            entity.position.y = QuadraticBezierPts(t, final_pos2, mid_p, intial_pos1).y;
-            //std::cout << entity.position.x << ", " << entity.position.y << std::endl;
-        } else if (entity.position.x <= intial_pos1.x){
-            entity.is_facing_forward = !entity.is_facing_forward;
-            //std::cout << "face forward" << std::endl;
-            //t=0;
-            
-        }
-    
-}
 }
 
 vec2 EnemyMotionSystem::QuadraticBezierPts( float t, vec2 p0, vec2 p1, vec2 p2){
@@ -138,7 +130,6 @@ vec2 EnemyMotionSystem::QuadraticBezierPts( float t, vec2 p0, vec2 p1, vec2 p2){
     float tt = t*t;
     //float ttt = tt*t;
     
-  
     vec2 p = mul(p0,uu);
     vec2 pp = mul(p1,2*u*t );
     vec2 ppp = mul(p2,tt);
