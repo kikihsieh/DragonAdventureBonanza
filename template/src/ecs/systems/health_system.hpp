@@ -13,10 +13,17 @@ public:
 
     void respawn_at_last_safe(Entity& entity);
 
+    bool entities_changed();
+    bool player_died();
+
+    std::list<Entity>* get_entities();
 
 private:
-    void die(Entity& entity);
+    void die(Entity& entity, int index);
     void update_last_safe(Entity& entity);
+
+    bool m_entities_changed;
+    bool m_player_died;
 
     std::list<Entity>* m_entities;
     std::map<int, Tile*> m_tiles;

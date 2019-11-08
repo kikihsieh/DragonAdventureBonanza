@@ -8,13 +8,23 @@
 #include <iostream>
 
 void HealthSystem::update(float ms) {
+    int index = 0;
+
     for (auto &entity : *m_entities) {
+
         if (!entity.health || !entity.physics) {
+            index++;
             continue;
         }
 
-//        if(entity.health->is_player)
-//            std::cout << entity.physics->grounded << std::endl;
+        if (entity.health->is_player && entity.health->invincible) {
+            entity.health->invincible_timer += ms;
+
+            if (entity.health->invincible_timer > entity.health->invincibility_duration) {
+                entity.health->invincible = false;
+                entity.health->invincible_timer = 0;
+            }
+        }
 
         if(entity.health->is_player && entity.physics->grounded) {
             entity.health->update_last_safe_timer += ms;
@@ -30,19 +40,28 @@ void HealthSystem::update(float ms) {
         }
 
         if (entity.health->health <= 0)
-            die(entity);
+            die(entity, index);
+
+        index++;
     }
 }
 
 bool HealthSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles) {
     m_entities = entities;
     m_tiles = tiles;
+    m_entities_changed = false;
     return true;
 }
 
-
-void HealthSystem::die(Entity& entity) {
-    //TODO death
+void HealthSystem::die(Entity& entity, int index) {
+    if (entity.health->is_player)
+        m_player_died = true;
+    else {
+        auto it = m_entities->begin();
+        advance(it, index);
+        m_entities->erase(it);
+        m_entities_changed = true;
+    }
 }
 
 void HealthSystem::update_last_safe (Entity& entity) {
@@ -68,4 +87,17 @@ void HealthSystem::update_last_safe (Entity& entity) {
 void HealthSystem::respawn_at_last_safe(Entity &entity) {
     entity.physics->off_screen = false;
     entity.position = entity.health->last_safe;
+}
+
+bool HealthSystem::entities_changed() {
+    return m_entities_changed;
+}
+
+bool HealthSystem::player_died() {
+    return m_player_died;
+}
+
+std::list<Entity>* HealthSystem::get_entities() {
+    m_entities_changed = false;
+    return m_entities;
 }

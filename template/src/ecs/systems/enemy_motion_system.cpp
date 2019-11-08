@@ -45,3 +45,7 @@ void EnemyMotionSystem::update(float ms) {
         }
     }
 }
+
+void EnemyMotionSystem::update_entities(std::list<Entity>* entities) {
+    m_entities = entities;
+}

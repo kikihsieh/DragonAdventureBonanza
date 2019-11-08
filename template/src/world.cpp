@@ -105,8 +105,12 @@ void World::destroy() {
 }
 
 // Update our game world
-bool World::update(float elapsed_ms)
-{
+bool World::update(float elapsed_ms) {
+
+    if (m_current_scene->player_died()) {
+        return load_scene(m_current_scene);
+    }
+
     m_current_scene->update(elapsed_ms);
     if (m_current_scene->is_level()) {
         m_camera->update(elapsed_ms, ((Level*) m_current_scene)->get_player());

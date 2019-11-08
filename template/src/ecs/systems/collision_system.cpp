@@ -57,7 +57,8 @@ void CollisionSystem::tile_collisions(Entity& entity) {
             }
 
             Tile* tile = m_tiles.at(TileMap::hash(col, row));
-            collide_with_tile(entity, *tile);
+            if (collide_with_tile(entity, *tile))
+                collided = true;
         }
     }
 
@@ -66,6 +67,9 @@ void CollisionSystem::tile_collisions(Entity& entity) {
 }
 
 void CollisionSystem::player_enemy_collision(Entity& player) {
+    if (player.health->invincible)
+        return;;
+
     auto entity_it = m_entities->begin();
     while (entity_it != m_entities->end()) {
         if(entity_it->collider && !entity_it->player_tag) {
@@ -74,10 +78,10 @@ void CollisionSystem::player_enemy_collision(Entity& player) {
 
             if (side == CollisionSystem::BOTTOM) {
                 player.physics->velocity.y = -200.f;
-                entity_it = m_entities->erase(entity_it);
+                if (entity_it->health)
+                    entity_it->health->decrease_health();
             } else if (side != NONE) {
-                // TODO: update some component so that the health can be updated correctly
-                std::cout << "Collision!\n";
+                player.health->decrease_health();
             }
         }
         ++entity_it;
@@ -89,30 +93,24 @@ void CollisionSystem::player_enemy_collision(Entity& player) {
  * @param e1 : a collid-able entity
  * @param tile : a tile
  */
-void CollisionSystem::collide_with_tile(Entity& e1, Tile &tile) {
+bool CollisionSystem::collide_with_tile(Entity& e1, Tile &tile) {
 
     switch (detect_collision(e1, tile)) {
         case TOP:
             e1.collider->top = true;
-            // TODO: @Austin please move these two if statements out of this function
-            if (e1.airdash)
-                e1.airdash->can_airdash = true;
-
-            if (e1.physics) {
-                e1.physics->jump_count = 0;
-            }
-            break;
+            land(e1);
+            return true;
         case BOTTOM:
             e1.collider->bottom = true;
-            break;
+            return true;
         case LEFT:
             e1.collider->left = true;
-            break;
+            return true;
         case RIGHT:
             e1.collider->right = true;
-            break;
+            return true;
         case NONE:
-            break;
+            return false;
     }
 }
 
@@ -133,7 +131,8 @@ CollisionSystem::Side CollisionSystem::detect_collision(Entity &e1, Entity &e2) 
 
     if (abs(dx) <= width && abs(dy) <= height){
         if(crossWidth > crossHeight){
-            if (crossWidth > -crossHeight) {
+            if (crossWidth > -crossHeight &&
+                    (e2.position.y + (e2_height / 2.f)) < (e1.position.y - (e1_height / 2.5f))) {
                 return Side::BOTTOM;
             } else {
                 return Side::RIGHT;
@@ -171,4 +170,8 @@ void CollisionSystem::fall(Entity &entity) {
     if (entity.physics) {
         entity.physics->grounded = false;
     }
+}
+
+void CollisionSystem::update_entities(std::list<Entity>* entities) {
+    m_entities = entities;
 }

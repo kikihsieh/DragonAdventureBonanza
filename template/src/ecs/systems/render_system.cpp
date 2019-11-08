@@ -326,3 +326,7 @@ void RenderSystem::update(float ms) {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_STATIC_DRAW);
     }
 }
+
+void RenderSystem::update_entities(std::list<Entity>* entities) {
+    m_entities = entities;
+}

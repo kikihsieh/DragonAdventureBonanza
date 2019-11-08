@@ -72,3 +72,7 @@ void PhysicsSystem::move(float ms, Entity& entity) {
     entity.position.x += x_step;
     entity.position.y += y_step;
 }
+
+void PhysicsSystem::update_entities(std::list<Entity>* entities) {
+    m_entities = entities;
+}
