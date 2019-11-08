@@ -9,6 +9,7 @@ bool Scene::init() {
     m_rendersystem = new RenderSystem();
     Background background(get_bg_texture_path());
     m_entities.insert(m_entities.begin(), background);
+    m_player_died = false;
     return m_rendersystem->init(&m_entities) && m_inputsystem->init(&m_entities);
 }
 

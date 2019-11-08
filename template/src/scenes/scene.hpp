@@ -30,11 +30,12 @@ public:
     void on_key(int key, int action);
     void on_mouse(int key, int action, double xpos, double ypos);
 
-    bool player_died() const {
+    bool player_died() {
         return m_player_died;
     }
 
     std::list<Entity> m_entities; // TODO: should probably be a protected member
+
 protected:
     virtual const char * get_bg_texture_path() = 0;
 

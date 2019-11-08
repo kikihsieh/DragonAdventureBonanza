@@ -34,13 +34,16 @@ void HealthSystem::update(float ms) {
             }
         }
 
-        if (entity.physics->off_screen) {
+        if (entity.physics->off_screen && entity.health->is_player) {
             entity.health->health -= 1;
-            respawn_at_last_safe(entity);
         }
 
         if (entity.health->health <= 0)
             die(entity, index);
+
+        if (entity.physics->off_screen && entity.health->is_player) {
+            respawn_at_last_safe(entity);
+        }
 
         index++;
     }
@@ -50,6 +53,7 @@ bool HealthSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>&
     m_entities = entities;
     m_tiles = tiles;
     m_entities_changed = false;
+    m_player_died = false;
     return true;
 }
 
@@ -65,6 +69,7 @@ void HealthSystem::die(Entity& entity, int index) {
 }
 
 void HealthSystem::update_last_safe (Entity& entity) {
+
     float e_height = entity.drawable->texture->height * entity.scale.x;
     float e_width = entity.drawable->texture->width * entity.scale.y;
 
@@ -85,6 +90,9 @@ void HealthSystem::update_last_safe (Entity& entity) {
 }
 
 void HealthSystem::respawn_at_last_safe(Entity &entity) {
+    if (m_player_died)
+        return;
+
     entity.physics->off_screen = false;
     entity.position = entity.health->last_safe;
 }

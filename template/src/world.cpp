@@ -108,7 +108,7 @@ void World::destroy() {
 bool World::update(float elapsed_ms) {
 
     if (m_current_scene->player_died()) {
-        return load_scene(m_current_scene);
+        return load_scene(m_scenes.at(m_current_scene_name));
     }
 
     m_current_scene->update(elapsed_ms);
@@ -197,11 +197,13 @@ bool World::load_scene(Scene* scene) {
 // On key callback
 void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
     if (key == GLFW_KEY_1 && action == GLFW_RELEASE) {
+        m_current_scene_name = FOREST;
         load_scene(m_scenes.at(FOREST));
         return;
     }
 
     if (key == GLFW_KEY_2 && action == GLFW_RELEASE) {
+        m_current_scene_name = VOLCANO;
         load_scene(m_scenes.at(VOLCANO));
         return;
     }
