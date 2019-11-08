@@ -51,7 +51,7 @@ private:
 };
 
     const TexturePathMapping m_texture_map = {
-            { -3, textures_path("bat1.png")},
+            { -3, textures_path("bat/sleepyb2.png")},
             { -2, textures_path("spider-old.png")},
             { -1, textures_path("spider-old.png")},
             { 1, textures_path("tiles/tile.png")},
