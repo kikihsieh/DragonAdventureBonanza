@@ -7,6 +7,7 @@ struct Input
             right(false),
             up(false),
             shift(false),
+            space(false),
             mouse_left(false) {
     }
 
@@ -14,5 +15,6 @@ struct Input
     bool right;
     bool up;
     bool shift;
+    bool space;
     bool mouse_left;
 };

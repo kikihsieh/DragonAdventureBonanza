@@ -5,6 +5,8 @@
 
 #include <ecs/entities/tile.hpp>
 #include <ecs/entities/spider.hpp>
+#include <ecs/entities/glob.hpp>
+#include <ecs/entities/projectile.hpp>
 #include "level.hpp"
 
 class Level; // forward declaration
@@ -46,8 +48,6 @@ public:
 
 private:
     std::map<int, Tile*> m_tiles;
-
-    float m_jump_buffer;
 
     Level* m_level;
     vec2 m_map_dim{};

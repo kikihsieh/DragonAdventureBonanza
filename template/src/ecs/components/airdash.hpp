@@ -1,6 +1,6 @@
 struct AirDash {
 	AirDash() :
-		base_airdash_speed(1000.f),
+		base_airdash_speed(750.f),
 		cur_airdash_speed(0.f),
 		airdash_friction(1500.f),
 		airdashing(false),
