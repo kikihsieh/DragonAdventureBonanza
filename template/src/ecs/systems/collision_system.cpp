@@ -17,15 +17,6 @@ void CollisionSystem::update(float ms) {
         if (entity.collider && !entity.is_player_proj && !entity.is_enemy_proj) {
             tile_collisions(entity);
 
-            if (entity.collider->left || entity.collider->right) {
-                entity.position.x = entity.old_position.x;
-            }
-            if (entity.collider->top || entity.collider->bottom) {
-				
-                entity.position.y = entity.old_position.y;
-                entity.physics->velocity.y = 0;
-            }
-
             if(entity.player_tag) {
                 player_enemy_collision(entity);
                 player_projectile_collision(entity);
@@ -144,11 +135,17 @@ void CollisionSystem::enemy_projectile_collision(Entity& enemy) {
  * @param tile : a tile
  */
 void CollisionSystem::collide_with_tile(Entity& e1, Tile &tile) {
+    float e1_height = e1.drawable->texture->height * e1.scale.x * 0.5f;
+    float e1_width = e1.drawable->texture->width * e1.scale.y * 0.5f;
+
+    float t_height = tile.drawable->texture->height * tile.scale.x * 0.5f;
+    float t_width = tile.drawable->texture->width * tile.scale.y * 0.5f;
 
     switch (detect_collision(e1, tile)) {
         case TOP:
             e1.collider->top = true;
-            // TODO: @Austin please move these two if statements out of this function
+            e1.position.y = tile.position.y - t_height - e1_height - padding;
+            e1.physics->velocity.y = fmin(e1.physics->velocity.y, 0);
             if (e1.airdash)
                 e1.airdash->can_airdash = true;
 
@@ -158,12 +155,16 @@ void CollisionSystem::collide_with_tile(Entity& e1, Tile &tile) {
             break;
         case BOTTOM:
             e1.collider->bottom = true;
+            e1.physics->velocity.y = 0;
+            e1.position.y = tile.position.y + t_height + e1_height + padding;
             break;
         case LEFT:
             e1.collider->left = true;
+            e1.position.x = tile.position.x + t_width + e1_width + padding;
             break;
         case RIGHT:
             e1.collider->right = true;
+            e1.position.x = tile.position.x - t_width - e1_width - padding;
             break;
         case NONE:
             break;

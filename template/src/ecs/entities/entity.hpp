@@ -25,7 +25,6 @@ struct Entity {
         scale({1.f, 1.f}),
         is_facing_forward(false),
         player_tag(false),
-        old_position(position),
         is_player_proj(false),
         is_enemy_proj(false){
     }
@@ -58,7 +57,6 @@ struct Entity {
 	float radians;
 	vec2 position;
 	vec2 scale;
-    vec2 old_position;
 
     bool player_tag;
     bool is_facing_forward;

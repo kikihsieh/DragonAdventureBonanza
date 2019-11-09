@@ -34,8 +34,6 @@ void PhysicsSystem::update(float ms) {
             }
           }
         }
-        
-        entity.old_position = entity.position;
 
         move(ms, entity);
 
