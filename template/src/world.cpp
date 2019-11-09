@@ -203,7 +203,7 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
     }
 
 	if (key == GLFW_KEY_H && action == GLFW_RELEASE) {
-		load_scene(m_scenes.at(HELP));
+		m_current_scene->drawHelp = !m_current_scene->drawHelp;
 		return;
 	}
     m_current_scene->on_key(key, action);

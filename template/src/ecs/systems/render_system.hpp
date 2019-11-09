@@ -16,6 +16,7 @@ public:
     void destroyEntity(Entity& entity);
     
 	void draw(mat3 projection);
+	void drawModal(mat3 projection, Entity& entity);
 	void update(float ms);
 
 private:
