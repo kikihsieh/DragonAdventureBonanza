@@ -21,7 +21,7 @@ struct Bat : public Entity {
         flyable->flyable_enemy = true;
         flyable->fly_mode = fly_mode;
         
-        
+        collider = new Collider();
     }
 };
 
