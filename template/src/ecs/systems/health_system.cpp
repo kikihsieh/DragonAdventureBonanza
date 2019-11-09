@@ -52,7 +52,6 @@ void HealthSystem::update(float ms) {
 bool HealthSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles) {
     m_entities = entities;
     m_tiles = tiles;
-    m_entities_changed = false;
     m_player_died = false;
     return true;
 }
@@ -64,7 +63,6 @@ void HealthSystem::die(Entity& entity, int index) {
         auto it = m_entities->begin();
         advance(it, index);
         m_entities->erase(it);
-        m_entities_changed = true;
     }
 }
 
@@ -97,15 +95,6 @@ void HealthSystem::respawn_at_last_safe(Entity &entity) {
     entity.position = entity.health->last_safe;
 }
 
-bool HealthSystem::entities_changed() {
-    return m_entities_changed;
-}
-
 bool HealthSystem::player_died() {
     return m_player_died;
-}
-
-std::list<Entity>* HealthSystem::get_entities() {
-    m_entities_changed = false;
-    return m_entities;
 }

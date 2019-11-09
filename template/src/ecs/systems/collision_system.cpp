@@ -132,7 +132,7 @@ CollisionSystem::Side CollisionSystem::detect_collision(Entity &e1, Entity &e2) 
     if (abs(dx) <= width && abs(dy) <= height){
         if(crossWidth > crossHeight){
             if (crossWidth > -crossHeight &&
-                    (e2.position.y + (e2_height / 2.f)) < (e1.position.y - (e1_height / 2.5f))) {
+                    (e2.position.y + (e2_height / 2.f)) < (e1.position.y - (e1_height / 3.f))) {
                 return Side::BOTTOM;
             } else {
                 return Side::RIGHT;

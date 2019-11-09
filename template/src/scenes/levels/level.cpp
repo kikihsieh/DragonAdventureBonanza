@@ -85,14 +85,6 @@ bool Level::init_player(){
 }
 
 void Level::update(float elapsed_ms) {
-    if (m_health_system->entities_changed()) {
-        m_entities = *m_health_system->get_entities();
-        m_airdash_system->update_entities(&m_entities);
-        m_physics_system->update_entities(&m_entities);
-        m_collision_system->update_entities(&m_entities);
-        m_enemy_motionsystem->update_entities(&m_entities);
-        m_rendersystem->update_entities(&m_entities);
-    }
 
     m_airdash_system->update(elapsed_ms);
     m_physics_system->update(elapsed_ms);
@@ -103,6 +95,8 @@ void Level::update(float elapsed_ms) {
     Scene::update(elapsed_ms);
     m_health_system->update(elapsed_ms);
 
-    if (m_health_system->player_died())
-        m_player_died = true;
+    if (m_health_system->player_died()) {
+        destroy();
+        init();
+    }
 }

@@ -63,7 +63,6 @@ private:
 
     // Game entities
     Scene* m_current_scene;
-    Scene_names m_current_scene_name;
 
     std::map<Scene_names, Scene*> m_scenes;
 };

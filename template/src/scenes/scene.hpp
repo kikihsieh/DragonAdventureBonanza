@@ -30,10 +30,6 @@ public:
     void on_key(int key, int action);
     void on_mouse(int key, int action, double xpos, double ypos);
 
-    bool player_died() {
-        return m_player_died;
-    }
-
     std::list<Entity> m_entities; // TODO: should probably be a protected member
 
 protected:
@@ -41,7 +37,5 @@ protected:
 
 	RenderSystem* m_rendersystem;
     InputSystem *m_inputsystem;
-
-    bool m_player_died;
 };
 #endif
