@@ -5,7 +5,7 @@
 
 struct Bat : public Entity {
     Bat(std::shared_ptr<Texture> texture, vec2 pos) {
-        scale = { 1.f, 1.f };
+        scale = { 0.5f, 0.5f };
 
         drawable = new Drawable();
         drawable->fs_shader = shader_path("textured.fs.glsl");
