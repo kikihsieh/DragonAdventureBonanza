@@ -30,6 +30,7 @@ private:
 
     std::list<Entity>* m_entities;
     std::map<int, Tile*> m_tiles;
+    float padding = 0.1;
 };
 
 #endif //DAB_COLLISION_SYSTEM_HPP
