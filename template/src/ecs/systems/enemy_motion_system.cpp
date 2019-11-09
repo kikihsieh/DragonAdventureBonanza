@@ -18,7 +18,6 @@ bool EnemyMotionSystem::init(std::list<Entity> *entities, const std::map<int, Ti
     m_tiles = tiles;
     m_entities = entities;
     for (auto &entity : *m_entities){
-     
         if (!entity.flyable) {
             continue;
         } else{
@@ -27,10 +26,9 @@ bool EnemyMotionSystem::init(std::list<Entity> *entities, const std::map<int, Ti
             entity.flyable->final_pos2 = {entity.position.x+100,entity.position.y};
             entity.flyable->mid_p ={entity.position.x+5,entity.position.y +100};
             entity.flyable->boundary = entity.position.x +100;
-            
+            //std::cout << entity.position.x << ", " << entity.position.y << std::endl;
         }
     }
-    
     
     return true;
 }
@@ -41,7 +39,7 @@ void EnemyMotionSystem::update(float ms) {
         if (entity.enemyai){
             move(ms, entity);
         }
-        if (entity.flyable){
+        else if (entity.flyable){
            
             if (entity.flyable->fly_mode ==1 ){
                 if (entity.flyable->flag){

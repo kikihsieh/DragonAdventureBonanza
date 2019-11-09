@@ -4,7 +4,7 @@
 #include <list>
 
 struct Bat : public Entity {
-    Bat(std::shared_ptr<Texture> texture, vec2 pos) {
+    Bat(std::shared_ptr<Texture> texture, vec2 pos, int fly_mode) {
         scale = { 0.5f, 0.5f };
 
         drawable = new Drawable();
@@ -19,7 +19,7 @@ struct Bat : public Entity {
         
         flyable = new Flyable();
         flyable->flyable_enemy = true;
-        flyable->fly_mode = 1;
+        flyable->fly_mode = fly_mode;
         
         
     }
