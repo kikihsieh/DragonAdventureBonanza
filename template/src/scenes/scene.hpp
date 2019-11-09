@@ -23,10 +23,22 @@ public:
     // Releases all associated resources
     virtual void destroy();
 
-    virtual void update(float elapsed_ms);
+    virtual void update(float elapsed_ms, vec2 screen_size);
 
     virtual void draw(const mat3& projection);
     virtual bool is_level();
+
+    virtual float get_translation_x(vec2 screen_size) {
+        float left = 0;
+        float right = screen_size.x;
+        return -(right + left) / (right - left);
+    }
+
+    virtual float get_translation_y(vec2 screen_size) {
+        float top = 0;
+        float bottom = screen_size.y;
+        return -(top + bottom) / (top - bottom);
+    }
 
     void on_key(int key, int action);
     void on_mouse(int key, int action, double xpos, double ypos);
