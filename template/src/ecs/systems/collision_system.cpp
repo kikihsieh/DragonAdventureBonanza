@@ -155,7 +155,7 @@ void CollisionSystem::collide_with_tile(Entity& e1, Tile &tile) {
             break;
         case BOTTOM:
             e1.collider->bottom = true;
-            e1.physics->velocity.y = 0;
+            e1.physics->velocity.y = fmax(e1.physics->velocity.y, 0);
             e1.position.y = tile.position.y + t_height + e1_height + padding;
             break;
         case LEFT:
