@@ -8,6 +8,8 @@
 #include <ecs/entities/glob.hpp>
 #include <ecs/entities/projectile.hpp>
 #include <ecs/entities/bat.hpp>
+#include <ecs/entities/bat_wave.hpp>
+#include <ecs/entities/bat_circle.hpp>
 #include "level.hpp"
 
 class Level; // forward declaration
