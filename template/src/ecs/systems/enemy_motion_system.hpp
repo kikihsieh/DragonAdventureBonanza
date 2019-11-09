@@ -12,18 +12,14 @@ public:
     vec2 QuadraticBezierPts(float t, vec2 p0, vec2 p1, vec2 p2);
 
     void update(float ms);
-    
-    vec2 velocity_c = {1,0};
+     float t;
+    /*vec2 velocity_c = {1,0};
     float rotate_speed = 3.f;
     float radius = 50.f;
-    float t;
+   
     bool flag= true;
-    vec2 intial_pos1;
-    vec2 final_pos2;
-    vec2 mid_p;
-    float boundary;
     int speed;
-    int flying_style;
+    int flying_style;*/
     
 private:
     //void tile_collisions(Entity& entity);
@@ -38,10 +34,7 @@ private:
 
     std::list<Entity>* m_entities;
     std::map<int, Tile*> m_tiles;
-    
-    vec2 center_c;
-    float angle_c;
-    
+  
 };
 
 #endif //DAB_ENEMY_MOTION_SYSTEM_HPP
