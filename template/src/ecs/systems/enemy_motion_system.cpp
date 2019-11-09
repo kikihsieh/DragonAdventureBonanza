@@ -8,24 +8,26 @@
 
 
 bool EnemyMotionSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles) {
-    srand( time(0));
+    //srand( time(0));
     //int max_waitTime = 10;
     //int min_waitTime = 4;
     //float countDown = (rand()%(max_waitTime - min_waitTime + 1) + min_waitTime) *10;
     
     // pick 1 or 0
-    flying_style = (rand()% 3);
+    //flying_style = (rand()% 3);
     m_tiles = tiles;
     m_entities = entities;
     for (auto &entity : *m_entities){
-        if (entity.flyable){
-            center_c = entity.position;
-            t =0.f;
-            intial_pos1 = entity.position;
-            final_pos2 = {entity.position.x+100,entity.position.y};
-            mid_p ={entity.position.x+5,entity.position.y +100};
-            speed = 3;
-            boundary = entity.position.x +100;
+     
+        if (!entity.flyable) {
+            continue;
+        } else{
+            entity.flyable->center_c = entity.position;
+            entity.flyable->initial_pos1 = entity.position;
+            entity.flyable->final_pos2 = {entity.position.x+100,entity.position.y};
+            entity.flyable->mid_p ={entity.position.x+5,entity.position.y +100};
+            entity.flyable->boundary = entity.position.x +100;
+            
         }
     }
     
@@ -33,57 +35,67 @@ bool EnemyMotionSystem::init(std::list<Entity> *entities, const std::map<int, Ti
     return true;
 }
 
+
 void EnemyMotionSystem::update(float ms) {
     for (auto &entity : *m_entities){
         if (entity.enemyai){
             move(ms, entity);
         }
         if (entity.flyable){
-            if (flying_style ==0 ){
-                if (flag){
-                    fly_forward1(t,entity);
-                    t += (ms/1000);
+           
+            if (entity.flyable->fly_mode ==1 ){
+                if (entity.flyable->flag){
+                    fly_forward1(entity.flyable->t,entity);
+                    entity.flyable->t += (ms/1000);
+                   
+                   
                     
                 } else {
-                    fly_backward1(t,entity);
-                    t+= (ms/1000);
+                    fly_backward1(entity.flyable->t,entity);
+                    entity.flyable->t+= (ms/1000);
+                    
                     
                 }
+                if (entity.flyable->t >=1.f){
+                    entity.flyable->t=0.f;
+                    entity.flyable->flag = !entity.flyable->flag;
+                }
                 
-            } else if (flying_style ==1){fly_wave(ms, entity);}
-            else if (flying_style ==2){fly_in_circle(ms, entity);}
+                
+            }
+            
+            else if (entity.flyable->fly_mode ==2){fly_wave(ms, entity);}
+            else if (entity.flyable->fly_mode ==3){fly_in_circle(ms, entity);}
+        
         }
-        if (t >=1){
-            t=0;
-            flag = !flag;
-        }
+        
         
     }
 }
 
 void EnemyMotionSystem::fly_in_circle(float ms, Entity& entity){
-    center_c.x += velocity_c.x * (ms/1000.f);
-    center_c.y += velocity_c.y *(ms/1000.f) ;
-    angle_c += rotate_speed *(ms/1000.f);
-    vec2 off = {sin(angle_c)*radius, cos(angle_c)*radius};
-    entity.position.x = center_c.x + off.x;
-    entity.position.y = center_c.y + off.y;
+    entity.flyable->center_c.x += entity.flyable->velocity_c.x * (ms/1000.f);
+    entity.flyable->center_c.y += entity.flyable->velocity_c.y *(ms/1000.f) ;
+    entity.flyable->angle_c += entity.flyable->rotate_speed *(ms/1000.f);
+    vec2 off = {sin( entity.flyable->angle_c)*entity.flyable->radius, cos( entity.flyable->angle_c)*entity.flyable->radius};
+    entity.position.x = entity.flyable->center_c.x + off.x;
+    entity.position.y = entity.flyable->center_c.y + off.y;
 }
 void EnemyMotionSystem::fly_wave(float ms, Entity& entity){
-    center_c.y += velocity_c.y *(ms/1000.f) ;
-    angle_c += rotate_speed *(ms/1000.f);
-    float off =  cos(angle_c)*radius;
-    entity.position.y = center_c.y + off;
+    entity.flyable->center_c.y += entity.flyable->velocity_c.y *(ms/1000.f) ;
+    entity.flyable->angle_c += entity.flyable->rotate_speed *(ms/1000.f);
+    float off =  cos( entity.flyable->angle_c)*entity.flyable->radius;
+    entity.position.y = entity.flyable->center_c.y + off;
     
     if (entity.is_facing_forward){
-        entity.position.x += speed;
-        if  (entity.position.x >= boundary ){
+        entity.position.x += entity.flyable->speed;
+        if  (entity.position.x >=   entity.flyable->boundary ){
             entity.is_facing_forward = !entity.is_facing_forward;
         }
         
     } else {
-        entity.position.x -= speed;
-        if (entity.position.x <= -1*boundary){
+        entity.position.x -= entity.flyable->speed;
+        if (entity.position.x <= -1*  entity.flyable->boundary){
             entity.is_facing_forward = !entity.is_facing_forward;
         }
     }
@@ -93,30 +105,31 @@ void EnemyMotionSystem::fly_wave(float ms, Entity& entity){
 
 void EnemyMotionSystem::fly_forward1(float t, Entity& entity){
 
-    if (entity.is_facing_forward){
-        if (entity.position.x < final_pos2.x){
-            entity.position.x = QuadraticBezierPts(t, intial_pos1, mid_p, final_pos2).x;
-            entity.position.y = QuadraticBezierPts(t, intial_pos1, mid_p, final_pos2).y;
+    //if (entity.is_facing_forward){
+        if (entity.position.x < entity.flyable->final_pos2.x){
+            entity.position.x = QuadraticBezierPts(t, entity.flyable->initial_pos1, entity.flyable->mid_p, entity.flyable->final_pos2).x;
+            entity.position.y = QuadraticBezierPts(t, entity.flyable->initial_pos1, entity.flyable->mid_p, entity.flyable->final_pos2 ).y;
             //std::cout << entity.position.x << ", " << entity.position.y << std::endl;
         }
-        if (entity.position.x >= final_pos2.x){
+        /*if (entity.position.x >= entity.flyable->final_pos2.x){
             entity.is_facing_forward = !entity.is_facing_forward;
     
         }
-    }
+    }*/
 }
 
 void EnemyMotionSystem::fly_backward1(float t, Entity& entity){
-    if (entity.is_facing_forward){
-        if (intial_pos1.x < entity.position.x){
-            entity.position.x = QuadraticBezierPts(t, final_pos2, mid_p, intial_pos1).x;
-            entity.position.y = QuadraticBezierPts(t, final_pos2, mid_p, intial_pos1).y;
+    //if (entity.is_facing_forward){
+        if (entity.flyable->initial_pos1.x < entity.position.x){
+            entity.position.x = QuadraticBezierPts(t, entity.flyable->final_pos2 ,  entity.flyable->mid_p, entity.flyable->initial_pos1).x;
+            entity.position.y = QuadraticBezierPts(t, entity.flyable->final_pos2 ,  entity.flyable->mid_p, entity.flyable->initial_pos1).y;
             
-        } else if (entity.position.x <= intial_pos1.x){
+       /* } else if (entity.position.x <= entity.flyable->initial_pos1.x){
             entity.is_facing_forward = !entity.is_facing_forward;
             
-        }
+        }*/
     }
+    
 }
 
 vec2 EnemyMotionSystem::QuadraticBezierPts( float t, vec2 p0, vec2 p1, vec2 p2){

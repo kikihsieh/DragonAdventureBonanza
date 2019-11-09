@@ -19,7 +19,9 @@ struct Bat : public Entity {
         
         flyable = new Flyable();
         flyable->flyable_enemy = true;
+        flyable->fly_mode = 2;
         
         
     }
 };
+
