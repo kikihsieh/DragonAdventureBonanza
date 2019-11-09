@@ -26,6 +26,7 @@ bool EnemyMotionSystem::init(std::list<Entity> *entities, const std::map<int, Ti
             entity.flyable->final_pos2 = {entity.position.x+100,entity.position.y};
             entity.flyable->mid_p ={entity.position.x+5,entity.position.y +100};
             entity.flyable->boundary = entity.position.x +100;
+            //TODO
             //std::cout << entity.position.x << ", " << entity.position.y << std::endl;
         }
     }
