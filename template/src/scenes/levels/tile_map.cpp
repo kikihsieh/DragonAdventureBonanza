@@ -35,7 +35,15 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
                 
                 Bat b(dict.at(*col), get_coord_from_tile_pos(col_index, row_index));
                  m_level->m_entities.emplace_back(b);
-            } else {
+            } else if (*col == -4){
+                
+                BatWave bw(dict.at(*col), get_coord_from_tile_pos(col_index, row_index));
+                m_level->m_entities.emplace_back(bw);
+            }else if (*col == -5){
+                BatCircle bc(dict.at(*col), get_coord_from_tile_pos(col_index, row_index));
+                m_level->m_entities.emplace_back(bc);
+            }
+            else {
                 Tile tile(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), tile_scale, tile_size);
                 auto it = m_level->m_entities.emplace(m_level->m_entities.end(), tile);
                 m_tiles.insert(std::map<int, Tile*>::value_type(

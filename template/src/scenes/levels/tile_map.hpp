@@ -6,6 +6,8 @@
 #include <ecs/entities/tile.hpp>
 #include <ecs/entities/spider.hpp>
 #include <ecs/entities/bat.hpp>
+#include <ecs/entities/bat_wave.hpp>
+#include <ecs/entities/bat_circle.hpp>
 #include "level.hpp"
 
 class Level; // forward declaration
