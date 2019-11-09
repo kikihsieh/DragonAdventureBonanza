@@ -54,7 +54,6 @@ private:
 	// Window handle
 	GLFWwindow* m_window;
 	float m_screen_scale; // Screen to pixel coordinates scale factor
-    CameraSystem* m_camera;
 
 	// Screen texture
 	// The draw loop first renders to this texture, then it is used for the water shader

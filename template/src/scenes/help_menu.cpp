@@ -9,7 +9,3 @@ bool HelpMenu::init() {
     Scene::init();
     return true;
 }
-
-void HelpMenu::update(float elapsed_ms) {
-
-}
