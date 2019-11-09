@@ -5,6 +5,8 @@
 
 #include <ecs/entities/tile.hpp>
 #include <ecs/entities/spider.hpp>
+#include <ecs/entities/glob.hpp>
+#include <ecs/entities/projectile.hpp>
 #include "level.hpp"
 
 class Level; // forward declaration

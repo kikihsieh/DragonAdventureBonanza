@@ -22,6 +22,8 @@ public:
 private:
     void tile_collisions(Entity& entity);
     void player_enemy_collision(Entity& entity);
+    void player_projectile_collision(Entity& player);
+    void enemy_projectile_collision(Entity& enemy);
     void collide_with_tile(Entity& e1, Tile &tile);
     Side detect_collision(Entity& e1, Entity &e2);
     void collider_reset();

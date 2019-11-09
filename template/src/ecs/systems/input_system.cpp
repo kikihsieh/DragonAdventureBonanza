@@ -34,6 +34,14 @@ void InputSystem::on_key_update(int key, int action) {
                 entity.input->right = false;
             }
         }
+        
+        if (key == GLFW_KEY_SPACE) {
+            if (action == GLFW_PRESS) {
+                entity.input->space = true;
+            } else if (action == GLFW_RELEASE) {
+                entity.input->space = false;
+            }
+        }
 
         if (key == GLFW_KEY_LEFT_SHIFT || key == GLFW_KEY_RIGHT_SHIFT) {
             if (action == GLFW_PRESS) {
