@@ -10,8 +10,13 @@ public:
 	~RenderSystem();
 
 	bool init(std::list<Entity>* entities);
+    bool initEntity(Entity& entity);
+    
 	void destroy();
+    void destroyEntity(Entity& entity);
+    
 	void draw(mat3 projection);
+	void drawModal(mat3 projection, Entity& entity);
 	void update(float ms);
     void update_entities(std::list<Entity>* entities);
 

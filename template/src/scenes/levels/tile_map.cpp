@@ -18,7 +18,7 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
     int longest_row = 0;
     int col_index = 0;
     int row_count = 0;
-
+    
     for (row = map.begin(); row != map.end(); ++row) {
         int row_index = row - map.begin();
         col_index = 0;
@@ -28,9 +28,17 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
                 continue;
             }
 
-            if (*col < 0) {
-                Spider s(dict.at(*col), get_coord_from_tile_pos(col_index, row_index));
-                m_level->m_entities.emplace_back(s);
+            if (*col == P) {
+                m_level->get_player()->position = get_coord_from_tile_pos(col_index, row_index);
+            } else if (*col < 0) {
+                if (*col == -1) {
+                    Spider s(dict.at(*col), get_coord_from_tile_pos(col_index, row_index));
+                    m_level->m_entities.emplace_back(s);
+                }
+                if (*col == -2) {
+                    Glob s(dict.at(*col), get_coord_from_tile_pos(col_index, row_index));
+                    m_level->m_entities.emplace_back(s);
+                }
             } else {
                 Tile tile(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), tile_scale, tile_size);
                 auto it = m_level->m_entities.emplace(m_level->m_entities.end(), tile);

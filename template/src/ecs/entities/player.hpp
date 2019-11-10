@@ -22,6 +22,7 @@ struct Player : public Entity {
         drawable->vs_shader = shader_path("textured.vs.glsl");
 
         airdash = new AirDash();
+        shooting = new Shooting();
 
         health = new Health();
         health->health = 3;
@@ -33,6 +34,8 @@ struct Player : public Entity {
 
         player_tag = true;
         is_facing_forward = true;
+        is_player_proj = false;
+        is_enemy_proj = false;
 
         const TexturePathMapping m_texture_map = {
                 { 0, textures_path("initial.png")},

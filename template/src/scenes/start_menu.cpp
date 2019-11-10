@@ -18,7 +18,3 @@ bool StartMenu::init() {
     Scene::init();
     return true;
 }
-
-void StartMenu::update(float elapsed_ms) {
-
-}

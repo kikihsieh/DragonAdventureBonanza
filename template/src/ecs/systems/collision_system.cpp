@@ -4,6 +4,7 @@
 #include <utility>
 #include <scenes/levels/tile_map.hpp>
 #include "iostream"
+#include <cstdint>
 
 void CollisionSystem::update(float ms) {
     for (auto &entity : *m_entities) {
@@ -13,20 +14,15 @@ void CollisionSystem::update(float ms) {
 
         collider_reset();
 
-        if (entity.collider) {
+        if (entity.collider && !entity.is_player_proj && !entity.is_enemy_proj) {
             tile_collisions(entity);
-
-            if (entity.collider->left || entity.collider->right) {
-                entity.position.x = entity.old_position.x;
-            }
-            if (entity.collider->top || entity.collider->bottom) {
-				
-                entity.position.y = entity.old_position.y;
-                entity.physics->velocity.y = 0;
-            }
 
             if(entity.player_tag) {
                 player_enemy_collision(entity);
+                player_projectile_collision(entity);
+            }
+            if (entity.enemyai) {
+                enemy_projectile_collision(entity);
             }
         }
     }
@@ -72,7 +68,7 @@ void CollisionSystem::player_enemy_collision(Entity& player) {
 
     auto entity_it = m_entities->begin();
     while (entity_it != m_entities->end()) {
-        if(entity_it->collider && !entity_it->player_tag) {
+        if(entity_it->collider && !entity_it->player_tag && !entity_it->is_player_proj && !entity_it->is_enemy_proj) {
             // TODO: Existing bug: when enemy is inside player, player kills it.
             CollisionSystem::Side side = detect_collision(*entity_it, player);
 
@@ -88,26 +84,88 @@ void CollisionSystem::player_enemy_collision(Entity& player) {
     }
 }
 
+void CollisionSystem::player_projectile_collision(Entity& player) {
+    auto entity_it = m_entities->begin();
+    while (entity_it != m_entities->end()) {
+        if(entity_it->collider && !entity_it->player_tag && !entity_it->enemyai && entity_it->is_enemy_proj) {
+            CollisionSystem::Side side = detect_collision(*entity_it, player);
+            
+            if (side == CollisionSystem::TOP || side == CollisionSystem::BOTTOM ||
+                side == CollisionSystem::LEFT || side == CollisionSystem::RIGHT) {
+                //if projectile hits anyside of player, remove projectile
+                entity_it->destroy();
+                entity_it = m_entities->erase(entity_it);
+                
+                // TODO @Austin: update/deplete player health
+            }
+			else {
+				++entity_it;
+			}
+		}
+		else {
+			++entity_it;
+		}
+    }
+}
+
+void CollisionSystem::enemy_projectile_collision(Entity& enemy) {
+    auto entity_it = m_entities->begin();
+    while (entity_it != m_entities->end()) {
+        if (entity_it->collider && !entity_it->player_tag && !entity_it->enemyai && entity_it->is_player_proj) {
+            CollisionSystem::Side side = detect_collision(*entity_it, enemy);
+
+            if (side == CollisionSystem::TOP || side == CollisionSystem::BOTTOM ||
+                side == CollisionSystem::LEFT || side == CollisionSystem::RIGHT) {
+                // if projectile hits anyside of enemy, remove projectile
+                // TODO: theres a bug when trying to shooting left and hit right
+
+                entity_it->destroy();
+                entity_it = m_entities->erase(entity_it);
+                
+                // TODO @Austin: update/deplete enemy health and remove enemy ai in health system
+			}
+			else {
+				++entity_it;
+			}
+		}
+		else {
+			++entity_it;
+		}
+    }
+}
+
 /**
  * This function expects that the first entity is collidable
  * @param e1 : a collid-able entity
  * @param tile : a tile
  */
 bool CollisionSystem::collide_with_tile(Entity& e1, Tile &tile) {
+  
+    float e1_height = e1.drawable->texture->height * e1.scale.x * 0.5f;
+    float e1_width = e1.drawable->texture->width * e1.scale.y * 0.5f;
+
+    float t_height = tile.drawable->texture->height * tile.scale.x * 0.5f;
+    float t_width = tile.drawable->texture->width * tile.scale.y * 0.5f;
 
     switch (detect_collision(e1, tile)) {
         case TOP:
             e1.collider->top = true;
+            e1.position.y = tile.position.y - t_height - e1_height - padding;
+            e1.physics->velocity.y = fmin(e1.physics->velocity.y, 0);
             land(e1);
             return true;
         case BOTTOM:
             e1.collider->bottom = true;
+            e1.physics->velocity.y = fmax(e1.physics->velocity.y, 0);
+            e1.position.y = tile.position.y + t_height + e1_height + padding;
             return true;
         case LEFT:
             e1.collider->left = true;
+            e1.position.x = tile.position.x + t_width + e1_width + padding;
             return true;
         case RIGHT:
             e1.collider->right = true;
+            e1.position.x = tile.position.x - t_width - e1_width - padding;
             return true;
         case NONE:
             return false;

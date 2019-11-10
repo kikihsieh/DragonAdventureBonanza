@@ -7,10 +7,11 @@
 #include <memory>
 #include "../../ecs/systems/airdash_system.hpp"
 #include <ecs/systems/health_system.hpp>
-
+#include "../../ecs/systems/shooting_system.hpp"
 #include "../../ecs/systems/physics_system.hpp"
 #include "../../ecs/systems/collision_system.hpp"
 #include "../../ecs/systems/enemy_motion_system.hpp"
+#include "../../ecs/systems/camera_system.hpp"
 #include "../../ecs/entities/tile.hpp"
 #include "tile_map.hpp"
 #include "scenes/scene.hpp"
@@ -31,7 +32,7 @@ public:
     virtual bool init() override;
 
     void destroy() override;
-    void update(float elapsed_ms) override;
+    void update(float elapsed_ms, vec2 screen_size) override;
 
     bool init_enemy(int type, vec2 initial_pos);
     bool init_player();
@@ -48,11 +49,15 @@ public:
         return m_unlocked;
     }
 
-    vec2 get_level_dim() const {
-        return m_level_dim;
+    float get_translation_x(vec2 screen_size) override {
+        return m_camera_system->compute_translation_x(screen_size);
     }
 
-    Player* get_player() {
+    float get_translation_y(vec2 screen_size) override {
+        return m_camera_system->compute_translation_y(screen_size);
+    }
+
+    Player* get_player() const {
         return (Player*) m_player;
     }
 
@@ -65,10 +70,14 @@ protected:
     TileMap* m_tile_map;
     PhysicsSystem* m_physics_system;
     CollisionSystem* m_collision_system;
-    EnemyMotionSystem* m_enemy_motionsystem;
+    EnemyMotionSystem* m_enemy_motion_system;
     AirDashSystem* m_airdash_system;
     HealthSystem* m_health_system;
+    ShootingSystem* m_shooting_system;
+    CameraSystem* m_camera_system;
     Entity* m_player;
+
+protected:
 
     bool m_unlocked;
     vec2 m_level_dim;

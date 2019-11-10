@@ -8,6 +8,8 @@
 #include "../components/enemyAI.hpp"
 #include "../components/animatable.hpp"
 #include "../components/health.hpp"
+#include "../components/shooting.hpp"
+
 
 
 struct Entity {
@@ -20,12 +22,14 @@ struct Entity {
         airdash(nullptr),
         animatable(nullptr),
         health(nullptr),
+        shooting(nullptr),
         radians(0.f),
         position({0.f, 0.f}),
         scale({1.f, 1.f}),
         is_facing_forward(false),
         player_tag(false),
-        old_position(position) {
+        is_player_proj(false),
+        is_enemy_proj(false){
     }
 
     ~Entity() {}
@@ -41,6 +45,7 @@ struct Entity {
         delete drawable;
         delete animatable;
         delete health;
+        delete shooting;
     }
 
     // Components
@@ -52,12 +57,14 @@ struct Entity {
 	AirDash* airdash;
     Animatable* animatable;
 	Health* health;
+    Shooting* shooting;
 
 	float radians;
 	vec2 position;
 	vec2 scale;
-    vec2 old_position;
 
     bool player_tag;
     bool is_facing_forward;
+    bool is_player_proj;
+    bool is_enemy_proj;
 };
