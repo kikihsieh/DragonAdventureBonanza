@@ -23,6 +23,7 @@ void Scene::destroy() {
         entity.destroy();
     }
     m_entities.clear();
+    drawHelp = false;
 }
 
 void Scene::draw(const mat3& projection) {
