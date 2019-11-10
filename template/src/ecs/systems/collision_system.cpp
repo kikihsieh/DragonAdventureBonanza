@@ -96,7 +96,7 @@ void CollisionSystem::player_projectile_collision(Entity& player) {
                 entity_it->destroy();
                 entity_it = m_entities->erase(entity_it);
                 
-                if (player.health)
+                if (player.health && !player.health->invincible)
                     player.health->decrease_health();
             }
 			else {
