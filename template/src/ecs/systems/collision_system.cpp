@@ -15,13 +15,15 @@ void CollisionSystem::update(float ms) {
         collider_reset();
 
         if (entity.collider && !entity.is_player_proj && !entity.is_enemy_proj) {
-            tile_collisions(entity);
+            if (!entity.flyable) {
+                tile_collisions(entity);
+            }
 
-            if(entity.player_tag) {
+            if (entity.player_tag) {
                 player_enemy_collision(entity);
                 player_projectile_collision(entity);
             }
-            if (entity.enemyai) {
+            if (entity.enemyai || entity.flyable) {
                 enemy_projectile_collision(entity);
             }
         }
@@ -58,7 +60,8 @@ void CollisionSystem::tile_collisions(Entity& entity) {
 void CollisionSystem::player_enemy_collision(Entity& player) {
     auto entity_it = m_entities->begin();
     while (entity_it != m_entities->end()) {
-        if(entity_it->collider && !entity_it->player_tag && !entity_it->is_player_proj && !entity_it->is_enemy_proj) {
+        if(entity_it->collider && !entity_it->player_tag && !entity_it->is_player_proj && !entity_it->is_enemy_proj &&
+           ((entity_it->enemyai || entity_it->flyable))) {
             // TODO: Existing bug: when enemy is inside player, player kills it.
             CollisionSystem::Side side = detect_collision(*entity_it, player);
 
@@ -69,7 +72,7 @@ void CollisionSystem::player_enemy_collision(Entity& player) {
             } else if (side != NONE) {
                 ++entity_it;
                 // TODO: update some component so that the health can be updated correctly
-                //std::cout << "Collision!\n";
+                // std::cout << "Collision!\n";
             } else {
                 ++entity_it;
             }
@@ -85,9 +88,9 @@ void CollisionSystem::player_projectile_collision(Entity& player) {
         if(entity_it->collider && !entity_it->player_tag && !entity_it->enemyai && entity_it->is_enemy_proj) {
             CollisionSystem::Side side = detect_collision(*entity_it, player);
             
+            //if projectile hits anyside of player, remove projectile
             if (side == CollisionSystem::TOP || side == CollisionSystem::BOTTOM ||
                 side == CollisionSystem::LEFT || side == CollisionSystem::RIGHT) {
-                //if projectile hits anyside of player, remove projectile
                 entity_it->destroy();
                 entity_it = m_entities->erase(entity_it);
                 
@@ -108,15 +111,15 @@ void CollisionSystem::enemy_projectile_collision(Entity& enemy) {
     while (entity_it != m_entities->end()) {
         if (entity_it->collider && !entity_it->player_tag && !entity_it->enemyai && entity_it->is_player_proj) {
             CollisionSystem::Side side = detect_collision(*entity_it, enemy);
-
+            
+            // if projectile hits anyside of enemy, remove projectile
             if (side == CollisionSystem::TOP || side == CollisionSystem::BOTTOM ||
                 side == CollisionSystem::LEFT || side == CollisionSystem::RIGHT) {
-                // if projectile hits anyside of enemy, remove projectile
-                // TODO: theres a bug when trying to shooting left and hit right
 
                 entity_it->destroy();
                 entity_it = m_entities->erase(entity_it);
                 
+                // TODO: theres a bug when trying to shooting left and hit right
                 // TODO @Austin: update/deplete enemy health and remove enemy ai in health system
 			}
 			else {

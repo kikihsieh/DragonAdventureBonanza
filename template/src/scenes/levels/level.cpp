@@ -78,6 +78,7 @@ bool Level::init_enemy(int type, vec2 initial_pos) {
     if (type == -1) {
         return init_walking_enemy(type, initial_pos);
     }
+
     return false;
 }
 
