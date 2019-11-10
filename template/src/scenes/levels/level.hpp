@@ -81,6 +81,7 @@ protected:
 
     bool m_unlocked;
     vec2 m_level_dim;
+
 private:
     virtual MapVector get_map() = 0;
     virtual TexturePathMapping get_mapping() = 0;

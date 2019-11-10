@@ -9,7 +9,6 @@ class AirDashSystem {
 public:
 	bool init(std::list<Entity> *entities);
 	void update(float ms);
-    void update_entities(std::list<Entity>* entities);
 
 private:
 	void airdash(Entity& entity);

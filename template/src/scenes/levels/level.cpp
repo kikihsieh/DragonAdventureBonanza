@@ -12,9 +12,8 @@ Level::Level(bool unlocked) :
     m_collision_system(nullptr),
     m_physics_system(nullptr),
     m_airdash_system(nullptr),
-    m_enemy_motionsystem(nullptr),
-    m_level_dim({0, 0}),
-    m_health_system(nullptr) {
+    m_enemy_motion_system(nullptr),
+    m_health_system(nullptr),
     m_camera_system(nullptr),
     m_shooting_system(nullptr) {
 }
@@ -24,7 +23,7 @@ bool Level::init() {
     m_physics_system = new PhysicsSystem();
     m_airdash_system = new AirDashSystem();
 
-    m_enemy_motionsystem = new EnemyMotionSystem();
+    m_enemy_motion_system = new EnemyMotionSystem();
     m_health_system = new HealthSystem();
 
     m_shooting_system = new ShootingSystem();
@@ -75,7 +74,7 @@ bool Level::init_level(MapVector map, TexturePathMapping mapping) {
             m_collision_system->init(&m_entities, m_tile_map->get_tiles()) &&
             m_airdash_system->init(&m_entities) && 
 
-            m_enemy_motionsystem->init(&m_entities, m_tile_map->get_tiles()) &&
+            m_enemy_motion_system->init(&m_entities, m_tile_map->get_tiles()) &&
             m_health_system->init(&m_entities, m_tile_map->get_tiles()) &&
 
             m_shooting_system->init(&m_entities, m_texture_mapping, m_player, m_level_dim) &&

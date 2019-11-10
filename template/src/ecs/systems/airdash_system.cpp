@@ -64,7 +64,3 @@ bool AirDashSystem::is_airdashing(Entity& entity) {
     return entity.airdash->airdashing;
 }
 
-void AirDashSystem::update_entities(std::list<Entity>* entities) {
-    m_entities = entities;
-}
-

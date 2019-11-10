@@ -175,10 +175,4 @@ void EnemyMotionSystem::move(float ms, Entity& entity){
             entity.physics->velocity.x *= -1;
         }
     }
-    
-    
-}
-
-void EnemyMotionSystem::update_entities(std::list<Entity>* entities) {
-    m_entities = entities;
 }

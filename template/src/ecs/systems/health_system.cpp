@@ -60,6 +60,7 @@ void HealthSystem::die(Entity& entity, int index) {
     if (entity.health->is_player)
         m_player_died = true;
     else {
+        entity.destroy();
         auto it = m_entities->begin();
         advance(it, index);
         m_entities->erase(it);

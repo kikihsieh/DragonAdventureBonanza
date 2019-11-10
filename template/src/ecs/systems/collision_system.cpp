@@ -99,7 +99,8 @@ void CollisionSystem::player_projectile_collision(Entity& player) {
                 entity_it->destroy();
                 entity_it = m_entities->erase(entity_it);
                 
-                // TODO @Austin: update/deplete player health
+                if (player.health)
+                    player.health->decrease_health();
             }
 			else {
 				++entity_it;
@@ -123,9 +124,8 @@ void CollisionSystem::enemy_projectile_collision(Entity& enemy) {
 
                 entity_it->destroy();
                 entity_it = m_entities->erase(entity_it);
-                
-                // TODO: theres a bug when trying to shooting left and hit right
-                // TODO @Austin: update/deplete enemy health and remove enemy ai in health system
+                if (enemy.health)
+                    enemy.health->decrease_health();
 			}
 			else {
 				++entity_it;
@@ -231,8 +231,4 @@ void CollisionSystem::fall(Entity &entity) {
     if (entity.physics) {
         entity.physics->grounded = false;
     }
-}
-
-void CollisionSystem::update_entities(std::list<Entity>* entities) {
-    m_entities = entities;
 }
