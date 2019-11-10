@@ -22,7 +22,7 @@ namespace
 }
 
 
-World::World() : m_camera(new CameraSystem()) {
+World::World() {
     map_init(m_scenes)
             (FOREST, new ForestLevel(true))
             (VOLCANO, new VolcanoLevel(true))
@@ -87,7 +87,6 @@ bool World::init(vec2 screen)
 
 	// Initialize the screen texture
 	m_screen_tex.create_from_screen(m_window);
-	m_camera->init(screen);
 
 	return load_scene(m_scenes.at(MAIN_MENU));
 }
@@ -96,7 +95,6 @@ bool World::init(vec2 screen)
 void World::destroy() {
 	glDeleteFramebuffers(1, &m_frame_buffer);
 	glfwDestroyWindow(m_window);
-    delete m_camera;
     for (auto const &pair : m_scenes)
     {
         pair.second->destroy();
@@ -107,10 +105,10 @@ void World::destroy() {
 // Update our game world
 bool World::update(float elapsed_ms)
 {
-    m_current_scene->update(elapsed_ms);
-    if (m_current_scene->is_level()) {
-        m_camera->update(elapsed_ms, ((Level*) m_current_scene)->get_player());
-    }
+    int w, h;
+    glfwGetFramebufferSize(m_window, &w, &h);
+
+    m_current_scene->update(elapsed_ms, {w / m_screen_scale, h / m_screen_scale});
 	return true;
 }
 
@@ -145,8 +143,9 @@ void World::draw() {
 
 	float sx = 2.f / (right - left);
 	float sy = 2.f / (top - bottom);
-	float tx = (m_current_scene->is_level()) ? m_camera->compute_translation_x() : -(right + left) / (right - left);
-	float ty = (m_current_scene->is_level()) ? m_camera->compute_translation_y() : -(top + bottom) / (top - bottom);
+	vec2 screen_size = {(right - left) , (bottom - top)};
+	float tx = m_current_scene->get_translation_x(screen_size);
+	float ty = m_current_scene->get_translation_y(screen_size);
 	mat3 projection_2D{ { sx, 0.f, 0.f },{ 0.f, sy, 0.f },{ tx, ty, 1.f } };
 
 	/////////////////////
@@ -183,10 +182,6 @@ bool World::load_scene(Scene* scene) {
 
     m_current_scene = scene;
     m_current_scene->init();
-    if (m_current_scene->is_level()) {
-        auto level = (Level*) m_current_scene;
-        m_camera->reset(level->use_vertical_camera(), level->get_level_dim());
-    }
 	return true;
 }
 
@@ -203,7 +198,7 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
     }
 
 	if (key == GLFW_KEY_H && action == GLFW_RELEASE) {
-		load_scene(m_scenes.at(HELP));
+		m_current_scene->drawHelp = !m_current_scene->drawHelp;
 		return;
 	}
     m_current_scene->on_key(key, action);

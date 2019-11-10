@@ -5,54 +5,65 @@ CameraSystem::CameraSystem(){}
 
 CameraSystem::~CameraSystem() = default;
 
-bool CameraSystem::init(vec2 screen_size){
-    m_screen_size = screen_size;
-    m_level_dim = screen_size;
+bool CameraSystem::init(vec2 level_dim, bool vertical_enabled){
+    m_level_dim = level_dim;
 
-    m_center = {0,0};
+    m_center = {-1,-1};
 
-    m_offset_x = m_screen_size.x / 8.f;
-
-    m_snap_speed = 750.f;
+    m_horizontal_snap_speed = 750.f;
     m_vertical_snap_speed = 600.f;
-    m_snap_dist = m_screen_size.x / 4.f;
-    m_vertical_snap_dist = m_screen_size.y / 5.f;
 
     m_snap_threshold_f = true;
     m_snap_threshold_b = false;
-	
+
+    m_vertical_enabled = vertical_enabled;
+
 	return true;
 }
 
-void CameraSystem::update(float ms, Player* player){
+void CameraSystem::update(float ms, Player* player, vec2 screen_size) {
+    update_x(ms, player, screen_size);
+
+    if (!m_vertical_enabled) {
+        m_center.y = m_level_dim.y - (screen_size.y * 0.5f);
+    } else if (m_center.y == -1) {
+        m_center.y = player->position.y;
+    } else {
+         update_y(ms, player, screen_size);
+    }
+}
+
+void CameraSystem::update_x(float ms, Player *player, vec2 screen_size) {
+    m_offset_x = screen_size.x / 8.f;
+    m_horizontal_snap_dist = screen_size.x / 4.f;
+
     if (player->is_facing_forward) {
         m_snap_threshold_b = false;
         if (m_snap_threshold_f) {
-            m_center.x = fmin(m_center.x + m_snap_speed * (ms / 1000), player->position.x + m_offset_x);
-        } else if (player->position.x > (m_center.x + m_snap_dist)) {
+            m_center.x = fmin(m_center.x + m_horizontal_snap_speed * (ms / 1000), player->position.x + m_offset_x);
+        } else if (player->position.x > (m_center.x + m_horizontal_snap_dist)) {
             m_snap_threshold_f = true;
         }
     } else {
         m_snap_threshold_f = false;
         if (m_snap_threshold_b) {
-            m_center.x = fmax(m_center.x - m_snap_speed * (ms / 1000), player->position.x - m_offset_x);
-        } else if (player->position.x < (m_center.x - m_snap_dist)) {
+            m_center.x = fmax(m_center.x - m_horizontal_snap_speed * (ms / 1000), player->position.x - m_offset_x);
+        } else if (player->position.x < (m_center.x - m_horizontal_snap_dist)) {
             m_snap_threshold_b = true;
         }
     }
 
-    if (m_center.x + m_screen_size.x*0.5f > m_level_dim.x) {
-        m_center.x = m_level_dim.x - m_screen_size.x*0.5f;
-    } else if (m_center.x - m_screen_size.x*0.5f < 0) {
-        m_center.x = m_screen_size.x*0.5f;
+    if (m_center.x + screen_size.x * 0.5f > m_level_dim.x) {
+        m_center.x = m_level_dim.x - screen_size.x * 0.5f;
+    } else if (m_center.x - screen_size.x * 0.5f < 0) {
+        m_center.x = screen_size.x * 0.5f;
     }
+}
 
-    if (!m_vertical_enabled) {
-        return;
-    }
+void CameraSystem::update_y(float ms, Player *player, vec2 screen_size) {
+    m_vertical_snap_dist = screen_size.y / 5.f;
 
-    if (player->collider->top && abs(player->position.y - m_center.y) > m_vertical_snap_dist
-        && abs(m_target_y_pos-player->position.y) > 10) {
+    if (player->physics->jump_count == 0 && abs(player->position.y - m_center.y) > m_vertical_snap_dist) {
         m_target_y_pos = player->position.y;
     }
 
@@ -61,31 +72,17 @@ void CameraSystem::update(float ms, Player* player){
     } else {
         m_center.y = fmin(m_center.y + m_vertical_snap_speed * (ms / 1000), m_target_y_pos);
     }
-    if (m_center.y - m_screen_size.y*0.5f < 0) {
-        m_center.y = m_screen_size.y*0.5f;
-    } else if (m_center.y + m_screen_size.y*0.5f > m_level_dim.y) {
-        m_center.y = m_level_dim.y - m_screen_size.y*0.5f;
+    if (m_center.y - screen_size.y * 0.5f < 0) {
+        m_center.y = screen_size.y * 0.5f;
+    } else if (m_center.y + screen_size.y * 0.5f > m_level_dim.y) {
+        m_center.y = m_level_dim.y - screen_size.y * 0.5f;
     }
 }
 
-void CameraSystem::reset(bool enable_vertical, vec2 level_dim) {
-    m_level_dim = level_dim;
-    m_vertical_enabled = enable_vertical;
-
-    // Always reset to bottom left corner of map
-    m_center.y = m_level_dim.y - m_screen_size.y*0.5f;
-    m_center.x = m_screen_size.x*0.5f;
-
-    m_target_y_pos = m_center.y;
-
-    m_snap_threshold_f = true;
-    m_snap_threshold_b = false;
+float CameraSystem::compute_translation_x(vec2 screen_size){
+    return -2.0f * m_center.x / screen_size.x;
 }
 
-float CameraSystem::compute_translation_x(){
-    return -2.0f * m_center.x / m_screen_size.x;
-}
-
-float CameraSystem::compute_translation_y(){
-    return 2.0f * m_center.y / m_screen_size.y;
+float CameraSystem::compute_translation_y(vec2 screen_size){
+    return 2.0f * m_center.y / screen_size.y;
 }

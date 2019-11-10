@@ -7,22 +7,23 @@ public:
     CameraSystem();
     ~CameraSystem();
     
-    bool init(vec2 screen_size);
-    void update(float elapsed_ms, Player* player);
-    void reset(bool enable_vertical, vec2 level_dim);
+    bool init(vec2 level_dim, bool vertical_enabled);
+    void update(float elapsed_ms, Player* player, vec2 screen_size);
+    void update_x(float elapsed_ms, Player* player, vec2 screen_size);
+    void update_y(float elapsed_ms, Player* player, vec2 screen_size);
 
-    float compute_translation_x();
-    float compute_translation_y();
+    float compute_translation_x(vec2 screen_size);
+    float compute_translation_y(vec2 screen_size);
+    vec2 get_center() {return m_center;};
 
 private:
     vec2 m_center;
-    vec2 m_screen_size;
 
     float m_offset_x; // the default amount the camera center is offset from the player
 
-    float m_snap_speed;
+    float m_horizontal_snap_speed;
     float m_vertical_snap_speed;
-    float m_snap_dist; // when player exceeds this distance from the camera center, camera will snap to default position
+    float m_horizontal_snap_dist; // when player exceeds this distance from the camera center, camera will snap to default position
     float m_vertical_snap_dist;
     float m_target_y_pos;
 
