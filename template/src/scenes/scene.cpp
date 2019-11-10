@@ -24,11 +24,13 @@ void Scene::destroy() {
     }
     m_entities.clear();
     drawHelp = false;
+    paused = false;
 }
 
 void Scene::draw(const mat3& projection) {
     m_rendersystem->draw(projection);
     if (drawHelp) {
+        paused = true;
         m_rendersystem->drawModal(projection, help);
     }
 }
@@ -38,7 +40,8 @@ bool Scene::is_level() {
 }
 
 void Scene::update(float elapsed_ms, vec2 screen_size) {
-    m_rendersystem->update(elapsed_ms);
+    if (!paused)
+        m_rendersystem->update(elapsed_ms);
 }
 
 void Scene::on_key(int key, int action) {

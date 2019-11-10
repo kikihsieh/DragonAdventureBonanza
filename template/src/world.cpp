@@ -199,6 +199,12 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
 
 	if (key == GLFW_KEY_H && action == GLFW_RELEASE) {
 		m_current_scene->drawHelp = !m_current_scene->drawHelp;
+		m_current_scene->paused = !m_current_scene->paused;
+		return;
+	}
+	if (key == GLFW_KEY_P && action == GLFW_RELEASE) {
+		if (!m_current_scene->drawHelp)
+			m_current_scene->paused = !m_current_scene->paused;
 		return;
 	}
     m_current_scene->on_key(key, action);
