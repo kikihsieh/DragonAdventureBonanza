@@ -126,13 +126,8 @@ void CollisionSystem::enemy_projectile_collision(Entity& enemy) {
                 if (enemy.health)
                     enemy.health->decrease_health();
 			}
-			else {
-				++entity_it;
-			}
 		}
-		else {
-			++entity_it;
-		}
+        ++entity_it;
     }
 }
 
