@@ -9,7 +9,7 @@
 #include <ecs/systems/render_system.hpp>
 #include <ecs/systems/input_system.hpp>
 #include <ecs/entities/player.hpp>
-#include <ecs/entities/modal.h>
+#include <ecs/entities/modal.hpp>
 
 class Scene
 {
