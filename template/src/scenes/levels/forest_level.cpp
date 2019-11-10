@@ -18,3 +18,5 @@ bool ForestLevel::init_walking_enemy(int type, vec2 initial_pos) {
 //    }
     return true;
 }
+
+
