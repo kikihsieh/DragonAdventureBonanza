@@ -63,3 +63,4 @@ bool AirDashSystem::can_airdash(Entity& entity) {
 bool AirDashSystem::is_airdashing(Entity& entity) {
     return entity.airdash->airdashing;
 }
+

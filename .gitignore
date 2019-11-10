@@ -81,3 +81,7 @@ template/cmake-build-debug/CMakeFiles/progress.marks
 template/cmake-build-debug/CMakeFiles/TargetDirectories.txt
 template/cmake-build-debug/dab.cbp
 template/cmake-build-debug/Makefile
+
+template/.idea/
+
+template/cmake-build-debug/
