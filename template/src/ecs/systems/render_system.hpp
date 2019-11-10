@@ -18,7 +18,6 @@ public:
 	void draw(mat3 projection);
 	void drawModal(mat3 projection, Entity& entity);
 	void update(float ms);
-    void update_entities(std::list<Entity>* entities);
 
 private:
     bool load_from_file(Drawable::Effect& effect, const char* vs_path, const char* fs_path);

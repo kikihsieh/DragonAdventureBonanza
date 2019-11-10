@@ -9,7 +9,6 @@ public:
     bool init(std::list<Entity> *entities, vec2 level_bounds);
 
     void update(float ms);
-    void update_entities(std::list<Entity>* entities);
 
 private:
     void move(float ms, Entity& entity);

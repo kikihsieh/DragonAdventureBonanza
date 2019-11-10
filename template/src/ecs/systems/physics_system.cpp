@@ -75,7 +75,3 @@ void PhysicsSystem::move(float ms, Entity& entity) {
     
     //std::cout << entity.position.x << ", " << entity.position.y << std::endl;
 }
-
-void PhysicsSystem::update_entities(std::list<Entity>* entities) {
-    m_entities = entities;
-}

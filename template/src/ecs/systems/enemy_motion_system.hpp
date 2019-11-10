@@ -10,7 +10,6 @@ public:
     bool init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles);
 
     void update(float ms);
-    void update_entities(std::list<Entity>* entities);
 
 private:
     //void tile_collisions(Entity& entity);
