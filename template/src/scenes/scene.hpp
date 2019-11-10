@@ -45,6 +45,7 @@ public:
 
     std::list<Entity> m_entities; // TODO: should probably be a protected member
     bool drawHelp = false;
+
 protected:
     virtual const char * get_bg_texture_path() = 0;
 

@@ -38,7 +38,7 @@ void PhysicsSystem::update(float ms) {
         move(ms, entity);
 
         if (entity.position.y > m_level_bounds_y.y) {
-            // Fall off screen handler. Requires health
+            entity.physics->off_screen = true;
         }
     }
 }
@@ -74,4 +74,8 @@ void PhysicsSystem::move(float ms, Entity& entity) {
     entity.position.y += y_step;
     
     //std::cout << entity.position.x << ", " << entity.position.y << std::endl;
+}
+
+void PhysicsSystem::update_entities(std::list<Entity>* entities) {
+    m_entities = entities;
 }

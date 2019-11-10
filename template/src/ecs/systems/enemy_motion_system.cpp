@@ -179,3 +179,6 @@ void EnemyMotionSystem::move(float ms, Entity& entity){
     
 }
 
+void EnemyMotionSystem::update_entities(std::list<Entity>* entities) {
+    m_entities = entities;
+}
