@@ -32,7 +32,7 @@ bool Scene::is_level() {
     return false;
 }
 
-void Scene::update(float elapsed_ms) {
+void Scene::update(float elapsed_ms, vec2 screen_size) {
     m_rendersystem->update(elapsed_ms);
 }
 
