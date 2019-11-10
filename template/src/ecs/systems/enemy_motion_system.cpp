@@ -26,7 +26,11 @@ bool EnemyMotionSystem::init(std::list<Entity> *entities, const std::map<int, Ti
             entity.flyable->final_pos2 = {entity.position.x+100,entity.position.y};
             entity.flyable->mid_p ={entity.position.x+5,entity.position.y +100};
             entity.flyable->boundary = entity.position.x +100;
-            //std::cout << entity.position.x << ", " << entity.position.y << std::endl;
+
+            //TODO @Kiki
+            // i think the boundary is the issue becauses its huge like 1180 for exampele
+            // and it makes the bat flying range really high
+            // changing to +50 wont do anything I think its the logic of the method
         }
     }
     

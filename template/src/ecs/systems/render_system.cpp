@@ -3,6 +3,7 @@
 #include <list>
 #include <sstream>
 #include <cmath>
+#include <iostream>
 
 RenderSystem::RenderSystem(){}
 
@@ -16,67 +17,76 @@ bool RenderSystem::init(std::list<Entity> *entities) {
         if (entity.drawable == nullptr) {
             continue;
         }
-        Drawable * drawable = entity.drawable;
-        if (!entity.drawable->texture->is_valid()) {
-            if (!entity.drawable->texture->load_from_file(entity.drawable->texture_path)){
-        		fprintf(stderr, "Failed to load %s texture!", entity.drawable->texture_path);
-                return false;
-            }
-        }
-
-	// The position corresponds to the center of the texture
-    	float wr = drawable->texture->width * 0.5f;
-    	float hr = drawable->texture->height * 0.5f;
-
-        drawable->vertices[0].position = { -wr, +hr, -0.02f };
-        drawable->vertices[0].texcoord = { 0.f, 1.f };
-        drawable->vertices[1].position = { +wr, +hr, -0.02f };
-        drawable->vertices[1].texcoord = { 1.f, 1.f };
-        drawable->vertices[2].position = { +wr, -hr, -0.02f };
-        drawable->vertices[2].texcoord = { 1.f, 0.f };
-        drawable->vertices[3].position = { -wr, -hr, -0.02f };
-        drawable->vertices[3].texcoord = { 0.f, 0.f };
-    
-    	// Counterclockwise as it's the default opengl front winding direction
-    	uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
-    
-    	// Clearing errors
-    	gl_flush_errors();
-
-    	// Vertex Buffer creation
-    	glGenBuffers(1, &drawable->vbo);
-    	glBindBuffer(GL_ARRAY_BUFFER, drawable->vbo);
-    	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, drawable->vertices, GL_STATIC_DRAW);
-
-    	// Index Buffer creation
-    	glGenBuffers(1, &drawable->ibo);
-    	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawable->ibo);
-    	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_STATIC_DRAW);
-    
-    	// Vertex Array (Container for Vertex + Index buffer)
-    	glGenVertexArrays(1, &drawable->vao);
-    	if (gl_has_errors())
-    		return false;
-
-    	// Loading shaders: check if it's already in memory
-		if (m_effects.find(drawable->vs_shader) == m_effects.end()){
-			if (!load_from_file(drawable->effect, drawable->vs_shader, drawable->fs_shader))
-    			return false;
-			m_effects[drawable->vs_shader] = drawable->effect;
-		}else{
-			drawable->effect = m_effects[drawable->vs_shader];
-		};
+        initEntity(entity);
     };
 	return true;
 }
 
+bool RenderSystem::initEntity(Entity& entity) {
+    Drawable * drawable = entity.drawable;
+    if (!entity.drawable->texture->is_valid()) {
+        if (!entity.drawable->texture->load_from_file(entity.drawable->texture_path)){
+            fprintf(stderr, "Failed to load %s texture!", entity.drawable->texture_path);
+            return false;
+        }
+    }
+    
+    // The position corresponds to the center of the texture
+    float wr = drawable->texture->width * 0.5f;
+    float hr = drawable->texture->height * 0.5f;
+    
+    drawable->vertices[0].position = { -wr, +hr, -0.02f };
+    drawable->vertices[0].texcoord = { 0.f, 1.f };
+    drawable->vertices[1].position = { +wr, +hr, -0.02f };
+    drawable->vertices[1].texcoord = { 1.f, 1.f };
+    drawable->vertices[2].position = { +wr, -hr, -0.02f };
+    drawable->vertices[2].texcoord = { 1.f, 0.f };
+    drawable->vertices[3].position = { -wr, -hr, -0.02f };
+    drawable->vertices[3].texcoord = { 0.f, 0.f };
+    
+    // Counterclockwise as it's the default opengl front winding direction
+    uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
+    
+    // Clearing errors
+    gl_flush_errors();
+    
+    // Vertex Buffer creation
+    glGenBuffers(1, &drawable->vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, drawable->vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, drawable->vertices, GL_STATIC_DRAW);
+    
+    // Index Buffer creation
+    glGenBuffers(1, &drawable->ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawable->ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_STATIC_DRAW);
+    
+    // Vertex Array (Container for Vertex + Index buffer)
+    glGenVertexArrays(1, &drawable->vao);
+    if (gl_has_errors())
+        return false;
+    
+    // Loading shaders: check if it's already in memory
+    if (m_effects.find(drawable->vs_shader) == m_effects.end()){
+        if (!load_from_file(drawable->effect, drawable->vs_shader, drawable->fs_shader))
+            return false;
+        m_effects[drawable->vs_shader] = drawable->effect;
+    }else{
+        drawable->effect = m_effects[drawable->vs_shader];
+    };
+    return true;
+}
+
 void RenderSystem::destroy() {
 	for(auto & entity: *m_entities){
-        glDeleteBuffers(1, &entity.drawable->vbo);
-	    glDeleteShader(entity.drawable->effect.vertex);
-	    glDeleteShader(entity.drawable->effect.fragment);
-	    glDeleteShader(entity.drawable->effect.program);
+        initEntity(entity);
     }
+}
+
+void RenderSystem::destroyEntity(Entity& entity) {
+    glDeleteBuffers(1, &entity.drawable->vbo);
+    glDeleteShader(entity.drawable->effect.vertex);
+    glDeleteShader(entity.drawable->effect.fragment);
+    glDeleteShader(entity.drawable->effect.program);
 }
 
 void RenderSystem::draw(mat3 projection)
@@ -85,6 +95,7 @@ void RenderSystem::draw(mat3 projection)
         if (entity.drawable == nullptr) {
             continue;
         }
+        
         Drawable * drawable = entity.drawable;
 
         transform(entity);
@@ -126,6 +137,11 @@ void RenderSystem::draw(mat3 projection)
 
 	    // Drawing!
 	    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+        
+        glDisableVertexAttribArray(in_position_loc);
+        glDisableVertexAttribArray(in_texcoord_loc);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        //reset uniform transform
     };
 }
 
@@ -303,6 +319,7 @@ void RenderSystem::update(float ms) {
         }
         
 
+        /*
         Drawable *drawable = entity.drawable;
         if (!entity.drawable->texture->is_valid()) {
             if (!entity.drawable->texture->load_from_file(entity.drawable->texture_path)) {
@@ -310,7 +327,7 @@ void RenderSystem::update(float ms) {
                 return;
             }
         }
-
+        
         // The position corresponds to the center of the texture
         float wr = drawable->texture->width * 0.5f;
         float hr = drawable->texture->height * 0.5f;
@@ -335,5 +352,6 @@ void RenderSystem::update(float ms) {
 
         // Index Buffer creation
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_STATIC_DRAW);
+        */
     }
 }

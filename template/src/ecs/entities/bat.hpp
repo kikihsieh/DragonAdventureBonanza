@@ -20,8 +20,8 @@ struct Bat : public Entity {
         flyable = new Flyable();
         flyable->flyable_enemy = true;
         flyable->fly_mode = fly_mode;
-        
-        
+
+        collider = new Collider();
     }
 };
 

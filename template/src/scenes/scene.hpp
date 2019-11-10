@@ -8,6 +8,7 @@
 #include <map>
 #include <ecs/systems/render_system.hpp>
 #include <ecs/systems/input_system.hpp>
+#include <ecs/entities/player.hpp>
 
 class Scene
 {
@@ -25,9 +26,6 @@ public:
 
     virtual void draw(const mat3& projection);
     virtual bool is_level();
-
-    virtual vec2 get_player_position() = 0;
-    virtual bool is_forward() = 0;
 
     void on_key(int key, int action);
     void on_mouse(int key, int action, double xpos, double ypos);

@@ -8,7 +8,7 @@ public:
     explicit ForestLevel(bool unlocked);
 
     const char * get_bg_texture_path() override {
-        return textures_path("background.png");
+        return textures_path("forest/background.png");
     }
 
 private:
