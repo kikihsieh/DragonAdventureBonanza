@@ -6,7 +6,8 @@ struct Flyable {
         initial_pos1({0,0}),
         final_pos2({0,0}),
         mid_p({0,0}),
-        boundary(0.f),
+        boundary_x0(0.f),
+        boundary_x1(0.f),
         flag(true),
         angle_c(0.f),
         rotate_speed(3.f),
@@ -24,12 +25,15 @@ struct Flyable {
     vec2 initial_pos1; //= entity.position;
     vec2 final_pos2;// = {entity.position.x+100,entity.position.y};
     vec2 mid_p;// ={entity.position.x+5,entity.position.y +100};
-    float boundary;// = entity.position.x +100;
+    float boundary_x0;// = entity.position.x +100;
+    float boundary_x1;
     bool flag;
     float angle_c;
     float rotate_speed;
     vec2 velocity_c;
     float radius;
     int fly_mode;
+    
+    
     
 };

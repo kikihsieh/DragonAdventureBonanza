@@ -25,12 +25,9 @@ bool EnemyMotionSystem::init(std::list<Entity> *entities, const std::map<int, Ti
             entity.flyable->initial_pos1 = entity.position;
             entity.flyable->final_pos2 = {entity.position.x+100,entity.position.y};
             entity.flyable->mid_p ={entity.position.x+5,entity.position.y +100};
-            entity.flyable->boundary = entity.position.x +100;
+            entity.flyable->boundary_x0 = entity.position.x +200;
+            entity.flyable->boundary_x1 = entity.position.x -200;
 
-            //TODO @Kiki
-            // i think the boundary is the issue becauses its huge like 1180 for exampele
-            // and it makes the bat flying range really high
-            // changing to +50 wont do anything I think its the logic of the method
         }
     }
     
@@ -91,13 +88,13 @@ void EnemyMotionSystem::fly_wave(float ms, Entity& entity){
     
     if (entity.is_facing_forward){
         entity.position.x += entity.flyable->speed;
-        if  (entity.position.x >=   entity.flyable->boundary ){
+        if  (entity.position.x >=   entity.flyable->boundary_x0 ){
             entity.is_facing_forward = !entity.is_facing_forward;
         }
         
     } else {
         entity.position.x -= entity.flyable->speed;
-        if (entity.position.x <= -1*  entity.flyable->boundary){
+        if (entity.position.x <= entity.flyable->boundary_x1){
             entity.is_facing_forward = !entity.is_facing_forward;
         }
     }
