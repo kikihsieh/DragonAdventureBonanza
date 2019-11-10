@@ -8,7 +8,6 @@
 #include "../components/enemyAI.hpp"
 #include "../components/animatable.hpp"
 #include "../components/shooting.hpp"
-#include "../components/flyable.hpp"
 
 
 struct Entity {
@@ -21,7 +20,6 @@ struct Entity {
         airdash(nullptr),
         animatable(nullptr),
         shooting(nullptr),
-        flyable(nullptr),
         radians(0.f),
         position({0.f, 0.f}),
         scale({1.f, 1.f}),
@@ -44,7 +42,6 @@ struct Entity {
         delete drawable;
         delete animatable;
         delete shooting;
-        delete flyable;
     }
 
     // Components
@@ -56,7 +53,6 @@ struct Entity {
 	AirDash* airdash;
     Animatable* animatable;
     Shooting* shooting;
-    Flyable* flyable;
 
 	float radians;
 	vec2 position;
