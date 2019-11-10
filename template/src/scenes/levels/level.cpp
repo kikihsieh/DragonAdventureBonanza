@@ -23,8 +23,7 @@ bool Level::init() {
     m_enemy_motion_system = new EnemyMotionSystem();
     m_shooting_system = new ShootingSystem();
     m_camera_system = new CameraSystem();
-    init_level(get_map(), get_mapping());
-    return Scene::init();
+    return init_player() && init_level(get_map(), get_mapping()) && Scene::init();
 }
 
 /** destroys resources not needed when the scene is not active **/
@@ -66,8 +65,7 @@ bool Level::init_level(MapVector map, TexturePathMapping mapping) {
 
     m_level_dim = m_tile_map->get_map_dim();
 
-    return init_player() &&
-            m_physics_system->init(&m_entities, m_tile_map->get_map_dim()) &&
+    return m_physics_system->init(&m_entities, m_tile_map->get_map_dim()) &&
             m_collision_system->init(&m_entities, m_tile_map->get_tiles()) &&
             m_airdash_system->init(&m_entities) && 
             m_enemy_motion_system->init(&m_entities, m_tile_map->get_tiles()) &&

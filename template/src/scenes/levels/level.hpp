@@ -56,6 +56,10 @@ public:
         return m_camera_system->compute_translation_y(screen_size);
     }
 
+    Player* get_player() const {
+        return (Player*) m_player;
+    }
+
 protected:
     virtual bool init_walking_enemy(int type, vec2 initial_pos) = 0;
 
@@ -70,6 +74,8 @@ protected:
     ShootingSystem* m_shooting_system;
     CameraSystem* m_camera_system;
     Entity* m_player;
+
+protected:
 
     bool m_unlocked;
     vec2 m_level_dim;
