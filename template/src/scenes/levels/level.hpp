@@ -6,6 +6,7 @@
 #include <map>
 #include <memory>
 #include "../../ecs/systems/airdash_system.hpp"
+#include <ecs/systems/health_system.hpp>
 #include "../../ecs/systems/shooting_system.hpp"
 #include "../../ecs/systems/physics_system.hpp"
 #include "../../ecs/systems/collision_system.hpp"
@@ -71,6 +72,7 @@ protected:
     CollisionSystem* m_collision_system;
     EnemyMotionSystem* m_enemy_motion_system;
     AirDashSystem* m_airdash_system;
+    HealthSystem* m_health_system;
     ShootingSystem* m_shooting_system;
     CameraSystem* m_camera_system;
     Entity* m_player;
@@ -79,6 +81,7 @@ protected:
 
     bool m_unlocked;
     vec2 m_level_dim;
+
 private:
     virtual MapVector get_map() = 0;
     virtual TexturePathMapping get_mapping() = 0;

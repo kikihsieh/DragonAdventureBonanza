@@ -175,7 +175,4 @@ void EnemyMotionSystem::move(float ms, Entity& entity){
             entity.physics->velocity.x *= -1;
         }
     }
-    
-    
 }
-

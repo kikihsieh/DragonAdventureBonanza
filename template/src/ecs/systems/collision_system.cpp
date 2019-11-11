@@ -46,18 +46,28 @@ void CollisionSystem::tile_collisions(Entity& entity) {
 
     std::pair<int, int> tile_pos = TileMap::get_tile_pos_from_coord(entity.position.x, entity.position.y, {e_width, e_height});
 
+    bool collided = false;
+
     for (int col = tile_pos.first; col <= tile_pos.first + ceil(e_width / t_width); col++) {
         for (int row = tile_pos.second; row <= tile_pos.second + ceil(e_height / t_height); row++) {
             if (!m_tiles.count(TileMap::hash(col, row))) {
                 continue;
             }
+
             Tile* tile = m_tiles.at(TileMap::hash(col, row));
-            collide_with_tile(entity, *tile);
+            if (collide_with_tile(entity, *tile))
+                collided = true;
         }
     }
+
+    if (!collided && entity.health && entity.health->is_player)
+        fall(entity);
 }
 
 void CollisionSystem::player_enemy_collision(Entity& player) {
+    if (player.health->invincible)
+        return;;
+
     auto entity_it = m_entities->begin();
     while (entity_it != m_entities->end()) {
         if(entity_it->collider && !entity_it->player_tag && !entity_it->is_player_proj && !entity_it->is_enemy_proj &&
@@ -67,18 +77,13 @@ void CollisionSystem::player_enemy_collision(Entity& player) {
 
             if (side == CollisionSystem::BOTTOM) {
                 player.physics->velocity.y = -200.f;
-                entity_it->destroy();
-                entity_it = m_entities->erase(entity_it);
+                if (entity_it->health)
+                    entity_it->health->decrease_health();
             } else if (side != NONE) {
-                ++entity_it;
-                // TODO: update some component so that the health can be updated correctly
-                // std::cout << "Collision!\n";
-            } else {
-                ++entity_it;
+                player.health->decrease_health();
             }
-        } else {
-            ++entity_it;
         }
+        ++entity_it;
     }
 }
 
@@ -94,7 +99,8 @@ void CollisionSystem::player_projectile_collision(Entity& player) {
                 entity_it->destroy();
                 entity_it = m_entities->erase(entity_it);
                 
-                // TODO @Austin: update/deplete player health
+                if (player.health && !player.health->invincible)
+                    player.health->decrease_health();
             }
 			else {
 				++entity_it;
@@ -112,23 +118,19 @@ void CollisionSystem::enemy_projectile_collision(Entity& enemy) {
         if (entity_it->collider && !entity_it->player_tag && !entity_it->enemyai && entity_it->is_player_proj) {
             CollisionSystem::Side side = detect_collision(*entity_it, enemy);
             
-            // if projectile hits anyside of enemy, remove projectile
             if (side == CollisionSystem::TOP || side == CollisionSystem::BOTTOM ||
                 side == CollisionSystem::LEFT || side == CollisionSystem::RIGHT) {
-
+                // if projectile hits any side of enemy, remove projectile
+                // TODO: theres a bug when trying to shooting left and hit right
+                
                 entity_it->destroy();
                 entity_it = m_entities->erase(entity_it);
                 
-                // TODO: theres a bug when trying to shooting left and hit right
-                // TODO @Austin: update/deplete enemy health and remove enemy ai in health system
-			}
-			else {
-				++entity_it;
+                if (enemy.health)
+                    enemy.health->decrease_health();
 			}
 		}
-		else {
-			++entity_it;
-		}
+        ++entity_it;
     }
 }
 
@@ -137,7 +139,8 @@ void CollisionSystem::enemy_projectile_collision(Entity& enemy) {
  * @param e1 : a collid-able entity
  * @param tile : a tile
  */
-void CollisionSystem::collide_with_tile(Entity& e1, Tile &tile) {
+bool CollisionSystem::collide_with_tile(Entity& e1, Tile &tile) {
+  
     float e1_height = e1.drawable->texture->height * e1.scale.x * 0.5f;
     float e1_width = e1.drawable->texture->width * e1.scale.y * 0.5f;
 
@@ -149,28 +152,23 @@ void CollisionSystem::collide_with_tile(Entity& e1, Tile &tile) {
             e1.collider->top = true;
             e1.position.y = tile.position.y - t_height - e1_height - padding;
             e1.physics->velocity.y = fmin(e1.physics->velocity.y, 0);
-            if (e1.airdash)
-                e1.airdash->can_airdash = true;
-
-            if (e1.physics) {
-                e1.physics->jump_count = 0;
-            }
-            break;
+            land(e1);
+            return true;
         case BOTTOM:
             e1.collider->bottom = true;
             e1.physics->velocity.y = fmax(e1.physics->velocity.y, 0);
             e1.position.y = tile.position.y + t_height + e1_height + padding;
-            break;
+            return true;
         case LEFT:
             e1.collider->left = true;
             e1.position.x = tile.position.x + t_width + e1_width + padding;
-            break;
+            return true;
         case RIGHT:
             e1.collider->right = true;
             e1.position.x = tile.position.x - t_width - e1_width - padding;
-            break;
+            return true;
         case NONE:
-            break;
+            return false;
     }
 }
 
@@ -191,7 +189,8 @@ CollisionSystem::Side CollisionSystem::detect_collision(Entity &e1, Entity &e2) 
 
     if (abs(dx) <= width && abs(dy) <= height){
         if(crossWidth > crossHeight){
-            if (crossWidth > -crossHeight) {
+            if (crossWidth > -crossHeight &&
+                    (e2.position.y + (e2_height / 2.f)) < (e1.position.y - (e1_height / 3.f))) {
                 return Side::BOTTOM;
             } else {
                 return Side::RIGHT;
@@ -212,5 +211,21 @@ void CollisionSystem::collider_reset() {
         if (e.collider) {
             e.collider->reset();
         }
+    }
+}
+
+void CollisionSystem::land(Entity &entity) {
+    if (entity.airdash)
+        entity.airdash->can_airdash = true;
+
+    if (entity.physics) {
+        entity.physics->jump_count = 0;
+        entity.physics->grounded = true;
+    }
+}
+
+void CollisionSystem::fall(Entity &entity) {
+    if (entity.physics) {
+        entity.physics->grounded = false;
     }
 }
