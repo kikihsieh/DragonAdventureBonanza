@@ -8,6 +8,7 @@ struct Player : public Entity {
     Player() {
         scale = {0.5f, 0.5f};
         position = { 100.f, 550.f };
+        texture_size = {131.f, 181.f};
 
         physics = new Physics();
         physics->gravity = 750.f;

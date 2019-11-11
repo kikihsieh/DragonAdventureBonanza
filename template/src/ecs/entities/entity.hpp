@@ -66,6 +66,7 @@ struct Entity {
 	float radians;
 	vec2 position;
 	vec2 scale;
+	vec2 texture_size;
 
     bool player_tag;
     bool is_facing_forward;

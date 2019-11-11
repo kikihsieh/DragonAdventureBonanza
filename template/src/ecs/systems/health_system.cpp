@@ -69,8 +69,8 @@ void HealthSystem::die(Entity& entity, int index) {
 
 void HealthSystem::update_last_safe (Entity& entity) {
 
-    float e_height = entity.drawable->texture->height * entity.scale.x;
-    float e_width = entity.drawable->texture->width * entity.scale.y;
+    float e_height = entity.texture_size.y * entity.scale.y;
+    float e_width = entity.texture_size.x * entity.scale.x;
 
     float t_height = TileMap::tile_screen_size.y;
     float t_width = TileMap::tile_screen_size.x;

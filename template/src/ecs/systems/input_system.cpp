@@ -58,8 +58,8 @@ void InputSystem::on_mouse_update(int key, int action, double xpos, double ypos)
         if (!entity.input) {
             continue;
         }
-        float width = entity.drawable->texture->width * 0.5f * entity.scale.x;
-        float height = entity.drawable->texture->height * 0.5f * entity.scale.y;
+        float width = entity.texture_size.x * entity.scale.x;
+        float height = entity.texture_size.y * entity.scale.y;
 
         float top = entity.position.y + height;
         float bottom = entity.position.y - height;

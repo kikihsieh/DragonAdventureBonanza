@@ -30,15 +30,15 @@ bool RenderSystem::initEntity(Entity &entity) {
             return false;
         }
     }
-
-    // The position corresponds to the center of the texture
-    float wr = drawable->texture->width * 0.5f;
-    float hr = drawable->texture->height * 0.5f;
+    entity.texture_size = {drawable->texture->width * 1.f, drawable->texture->height * 1.f};
 
     if (entity.animatable) {
-        wr = 131 * 0.5f;
-        hr = 181 * 0.5f;
+        entity.texture_size = mul(entity.texture_size, {1.f/entity.animatable->num_columns, 1.f/entity.animatable->num_rows });
     }
+
+    // The position corresponds to the center of the texture
+    float wr = entity.texture_size.x * 0.5f;
+    float hr = entity.texture_size.y * 0.5f;
 
     drawable->vertices[0].position = {-wr, +hr, -0.02f};
     drawable->vertices[0].texcoord = {0.f, 1.f};

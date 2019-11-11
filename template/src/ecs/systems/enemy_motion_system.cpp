@@ -156,8 +156,8 @@ void EnemyMotionSystem::move(float ms, Entity& entity){
             continue;
         }
         
-        float e_height = entity.drawable->texture->height * entity.scale.x;
-        float e_width = entity.drawable->texture->width * entity.scale.y;
+        float e_height = entity.texture_size.y * entity.scale.y;
+        float e_width = entity.texture_size.x * entity.scale.x;
         
         std::pair<int, int> enemy_tile_pos = TileMap::get_tile_pos_from_coord(entity.position.x, entity.position.y, {e_width, e_height});
         std::pair<int, int> platform_tile_pos = {enemy_tile_pos.first, enemy_tile_pos.second + 1};
