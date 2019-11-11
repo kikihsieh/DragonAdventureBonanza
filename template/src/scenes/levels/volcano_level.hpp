@@ -93,7 +93,7 @@ private:
     };
 
     const TilePropertyMapping m_property_map = {
-            {1, std::make_shared<Properties>(1.f, 3.f)}
+            {1, std::make_shared<Properties>(0.f, 0.3f)}
     };
 };
 #endif //DAB_VOLCANO_LEVEL_H

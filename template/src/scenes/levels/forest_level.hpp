@@ -78,7 +78,9 @@ private:
     };
 
     const TilePropertyMapping m_property_map = {
-            {2, std::make_shared<Properties>(0.f, 2.f)}
+            {1, std::make_shared<Properties>(1.f, 0.f)},
+            {3, std::make_shared<Properties>(0.f, 0.2f)},
+            {5, std::make_shared<Properties>(0.f, 0.2f)}
     };
 };
 

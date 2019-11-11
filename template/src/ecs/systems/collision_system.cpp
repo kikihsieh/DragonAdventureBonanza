@@ -156,7 +156,7 @@ bool CollisionSystem::collide_with_tile(Entity& e1, Tile &tile) {
             e1.position.y = tile.position.y - t_height - e1_height - padding;
 
             if (tile.properties)  {
-                e1.physics->velocity.x = e1.physics->velocity.x * tile.properties->friction;
+                e1.physics->velocity.x = e1.physics->velocity.x + e1.physics->velocity.x * tile.properties->friction;
             }
             e1.physics->velocity.x = (e1.physics->velocity.x > 0) ?
                                         fmin(350, e1.physics->velocity.x) :

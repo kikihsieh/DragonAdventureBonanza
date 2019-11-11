@@ -2,7 +2,7 @@
 #define DAB_PROPERTIES_HPP
 
 struct Properties {
-    Properties() : bounce(0.f), friction(1.f) {}
+    Properties() : bounce(0.f), friction(0.f) {}
     Properties(float bounce, float friction) : bounce(bounce), friction(friction) {}
 
     float bounce;
