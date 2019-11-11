@@ -117,6 +117,7 @@ void RenderSystem::draw(mat3 projection) {
         GLint color_uloc = glGetUniformLocation(drawable->effect.program, "fcolor");
         GLint projection_uloc = glGetUniformLocation(drawable->effect.program, "projection");
         GLint offset_uloc = glGetUniformLocation(drawable->effect.program, "offset");
+        GLint frames_uloc= glGetUniformLocation(drawable->effect.program, "frames");
 
         // Setting vertices and indices
         glBindVertexArray(drawable->vao);
@@ -142,8 +143,10 @@ void RenderSystem::draw(mat3 projection) {
         if (entity.animatable) {
             int rows = entity.animatable->num_rows;
             int cols = entity.animatable->num_columns;
+            float frames[] = {(float) cols, (float) rows};
             float offset[] = {entity.animatable->frame_index.x / cols, entity.animatable->frame_index.y / rows};
             glUniform2fv(offset_uloc, 1, offset);
+            glUniform2fv(frames_uloc, 1, frames);
         }
         glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *) &projection);
 
@@ -345,9 +348,9 @@ void RenderSystem::update(float ms) {
                 continue;
             }
             entity.animatable->countdown = entity.animatable->frame_switch_time;
-            entity.animatable->index++;
-            if (entity.animatable->index >= 3){
-                entity.animatable->index = 0;
+            entity.animatable->frame_index.x++;
+            if (entity.animatable->frame_index.x == 6){
+                entity.animatable->frame_index.x = 0;
             }
         } else if (entity.physics->velocity.x == 0) {
             if(entity.is_facing_forward) {
