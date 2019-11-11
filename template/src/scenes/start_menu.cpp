@@ -12,7 +12,7 @@ bool StartMenu::init() {
     Button start(textures_path("start.png"));
     start.position = {600.f,400.f};
     start.function = "level";
-    start.scene_name = "FOREST";
+    start.scene_index = 1;
     m_buttons.emplace_back(start);
     m_entities.emplace_back(start);
     Button help(textures_path("help.png"));

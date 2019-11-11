@@ -50,5 +50,11 @@ void Scene::on_key(int key, int action) {
 }
 
 Button* Scene::on_mouse(int key, int action, double xpos, double ypos) {
-    return m_inputsystem ->on_mouse_update(key, action, xpos, ypos);
+    Button* b = m_inputsystem ->on_mouse_update(key, action, xpos, ypos);
+    if (b != nullptr) {
+        Button btn = *b;
+        if (btn.function == "help")
+            drawHelp = !drawHelp;
+    }
+    return b;
 }

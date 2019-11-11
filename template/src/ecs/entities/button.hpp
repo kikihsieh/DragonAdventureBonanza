@@ -16,7 +16,8 @@ struct Button : public Entity {
 
 public:
     std::string function;
-    std::string scene_name;
+    int scene_index;
+    const std::array<std::string, 4> scenes = {"FOREST", "MOUNTAIN", "MOUNTAIN", "BOSS"};
 
 };
 

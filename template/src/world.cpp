@@ -25,7 +25,7 @@ namespace
 World::World() {
     map_init(m_scenes)
             ("FOREST", new ForestLevel(true))
-            ("VOLCANO", new VolcanoLevel(true))
+            ("MOUNTAIN", new VolcanoLevel(true))
 			("MAIN_MENU", new StartMenu())
 			("HELP", new HelpMenu());
 }
@@ -217,9 +217,7 @@ void World::on_mouse_click(GLFWwindow* window, int key, int action, int mod) {
 	if (b != nullptr) {
 		Button btn = *b;
 		if (btn.function == "level")
-			load_scene(m_scenes.at(btn.scene_name));
-		else if (btn.function == "help")
-			m_current_scene->drawHelp = !m_current_scene->drawHelp;
+			load_scene(m_scenes.at(btn.scenes[btn.scene_index]));
 	}
 }
 
