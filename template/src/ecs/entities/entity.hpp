@@ -9,6 +9,7 @@
 #include "../components/animatable.hpp"
 #include "../components/health.hpp"
 #include "../components/shooting.hpp"
+#include "../components/flyable.hpp"
 
 
 
@@ -23,6 +24,7 @@ struct Entity {
         animatable(nullptr),
         health(nullptr),
         shooting(nullptr),
+        flyable(nullptr),
         radians(0.f),
         position({0.f, 0.f}),
         scale({1.f, 1.f}),
@@ -46,6 +48,7 @@ struct Entity {
         delete animatable;
         delete health;
         delete shooting;
+        delete flyable;
     }
 
     // Components
@@ -58,6 +61,7 @@ struct Entity {
     Animatable* animatable;
 	Health* health;
     Shooting* shooting;
+    Flyable* flyable;
 
 	float radians;
 	vec2 position;
