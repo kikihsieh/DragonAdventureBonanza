@@ -147,6 +147,11 @@ bool CollisionSystem::collide_with_tile(Entity& e1, Tile &tile) {
     float e1_height = e1.drawable->texture->height * e1.scale.x * 0.5f;
     float e1_width = e1.drawable->texture->width * e1.scale.y * 0.5f;
 
+    if (e1.animatable) {
+        e1_height = 181 * 0.5f * 0.5f;
+        e1_width = 131 * 0.5f * 0.5f;
+    }
+
     float t_height = tile.drawable->texture->height * tile.scale.x * 0.5f;
     float t_width = tile.drawable->texture->width * tile.scale.y * 0.5f;
 
@@ -173,6 +178,7 @@ bool CollisionSystem::collide_with_tile(Entity& e1, Tile &tile) {
         case NONE:
             return false;
     }
+    return false;
 }
 
 CollisionSystem::Side CollisionSystem::detect_collision(Entity &e1, Entity &e2) {
@@ -181,6 +187,16 @@ CollisionSystem::Side CollisionSystem::detect_collision(Entity &e1, Entity &e2) 
 
     float e2_height = e2.drawable->texture->height * e2.scale.x;
     float e2_width = e2.drawable->texture->width * e2.scale.y;
+
+    if (e1.animatable) {
+        e1_height = 181 * 0.5f;
+        e1_width = 131 * 0.5f;
+    }
+
+    if (e2.animatable) {
+        e2_height = 181 * 0.5f;
+        e2_width = 131 * 0.5f;
+    }
 
     // https://stackoverflow.com/questions/29861096/detect-which-side-of-a-rectangle-is-colliding-with-another-rectangle
     float dx = e1.position.x - e2.position.x;

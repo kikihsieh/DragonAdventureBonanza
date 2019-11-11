@@ -17,9 +17,9 @@ struct Player : public Entity {
         physics->acceleration = {0.f, physics->gravity};
 
         drawable = new Drawable();
-        drawable->texture_path = textures_path("initial.png");
-        drawable->fs_shader = shader_path("textured.fs.glsl");
-        drawable->vs_shader = shader_path("textured.vs.glsl");
+        drawable->texture_path = textures_path("dragon_sprite.png");
+        drawable->fs_shader = shader_path("animated.fs.glsl");
+        drawable->vs_shader = shader_path("animated.vs.glsl");
 
         airdash = new AirDash();
         shooting = new Shooting();
@@ -37,16 +37,8 @@ struct Player : public Entity {
         is_player_proj = false;
         is_enemy_proj = false;
 
-        const TexturePathMapping m_texture_map = {
-                { 0, textures_path("initial.png")},
-                { 1, textures_path("move1.png")},
-                { 2, textures_path("move2.png")},
-                { 3, textures_path("move3.png")},
-                { -1, textures_path("initial-1.png")},
-                { -2, textures_path("move-1.png")},
-                { -3, textures_path("move-2.png")},
-                { -4, textures_path("move-3.png")},
-        };
-        animatable = new Animatable(m_texture_map);
+        animatable = new Animatable();
+        animatable->num_rows = 2;
+        animatable->num_columns = 6;
     }
 };
