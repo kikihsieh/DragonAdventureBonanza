@@ -148,26 +148,28 @@ bool CollisionSystem::collide_with_tile(Entity& e1, Tile &tile) {
     float t_width = tile.drawable->texture->width * tile.scale.y * 0.5f;
 
     switch (detect_collision(e1, tile)) {
-        case TOP:
+        case TOP: {
             e1.collider->top = true;
+//            -1.f*e1.physics->velocity.y*tile.properties->bounce
+            e1.physics->velocity.y = fmin(e1.physics->velocity.y,-1.f*e1.physics->velocity.y* ((Tile) tile).properties->bounce);
             e1.position.y = tile.position.y - t_height - e1_height - padding;
-            e1.physics->velocity.y = fmin(e1.physics->velocity.y, 0);
             land(e1);
             return true;
-        case BOTTOM:
+        } case BOTTOM: {
             e1.collider->bottom = true;
+//            -1.f*e1.physics->velocity.y * tile.properties->bounce
             e1.physics->velocity.y = fmax(e1.physics->velocity.y, 0);
             e1.position.y = tile.position.y + t_height + e1_height + padding;
             return true;
-        case LEFT:
+        } case LEFT: {
             e1.collider->left = true;
             e1.position.x = tile.position.x + t_width + e1_width + padding;
             return true;
-        case RIGHT:
+        } case RIGHT: {
             e1.collider->right = true;
             e1.position.x = tile.position.x - t_width - e1_width - padding;
             return true;
-        case NONE:
+        } case NONE:
             return false;
     }
 }

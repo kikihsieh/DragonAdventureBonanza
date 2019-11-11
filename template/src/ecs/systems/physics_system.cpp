@@ -72,6 +72,4 @@ void PhysicsSystem::move(float ms, Entity& entity) {
 
     entity.position.x += x_step;
     entity.position.y += y_step;
-    
-    //std::cout << entity.position.x << ", " << entity.position.y << std::endl;
 }

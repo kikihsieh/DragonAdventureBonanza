@@ -87,5 +87,9 @@ private:
         { 1, textures_path("mountain/tiles/tile.png")},
         { 2, textures_path("mountain/tiles/tile1.png")}
     };
+
+    const TilePropertyMapping m_property_map = {
+            {1, new Tile::Properties()}
+    };
 };
 #endif //DAB_VOLCANO_LEVEL_H

@@ -72,6 +72,11 @@ private:
         { 11, textures_path("forest/tiles/tile3_left.png")},
         { 12, textures_path("forest/tiles/tile3_right.png")}
     };
+
+    const TilePropertyMapping m_property_map = {
+            {1, new Tile::Properties(2.f, 3.f)}
+    };
+
 };
 
 

@@ -38,7 +38,7 @@ struct Entity {
 
     /** Before permanently deleting an enemy, you must call destroy!
         Cannot be in destructor because we do not want these objects deleted when being moved or copied! **/
-    void destroy() {
+    virtual void destroy() {
         delete physics;
         delete collider;
         delete input;
