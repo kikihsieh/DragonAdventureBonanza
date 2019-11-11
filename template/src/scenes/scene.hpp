@@ -9,7 +9,7 @@
 #include <ecs/systems/render_system.hpp>
 #include <ecs/systems/input_system.hpp>
 #include <ecs/entities/player.hpp>
-#include <ecs/entities/modal.h>
+#include <ecs/entities/modal.hpp>
 #include <ecs/entities/button.hpp>
 
 class Scene
@@ -45,7 +45,7 @@ public:
     Button* on_mouse(int key, int action, double xpos, double ypos);
 
     std::list<Entity> m_entities;
-    std::list<Button> m_buttons; // TODO: should probably be a protected member// TODO: should probably be a protected member
+    std::list<Button> m_buttons;
     bool drawHelp = false;
     bool paused = false;
 protected:
