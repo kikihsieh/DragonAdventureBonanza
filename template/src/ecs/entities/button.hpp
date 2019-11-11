@@ -17,7 +17,7 @@ struct Button : public Entity {
 public:
     std::string function;
     int scene_index;
-    const std::array<std::string, 4> scenes = {"FOREST", "MOUNTAIN", "MOUNTAIN", "BOSS"};
+    std::string scenes[4] = {"FOREST", "MOUNTAIN", "MOUNTAIN", "BOSS"};
 
 };
 
