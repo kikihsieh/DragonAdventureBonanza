@@ -24,10 +24,10 @@ namespace
 
 World::World() {
     map_init(m_scenes)
-            (FOREST, new ForestLevel(true))
-            (VOLCANO, new VolcanoLevel(true))
-			(MAIN_MENU, new StartMenu())
-			(HELP, new HelpMenu());
+            ("FOREST", new ForestLevel(true))
+            ("VOLCANO", new VolcanoLevel(true))
+			("MAIN_MENU", new StartMenu())
+			("HELP", new HelpMenu());
 }
 
 World::~World() {}
@@ -88,7 +88,7 @@ bool World::init(vec2 screen)
 	// Initialize the screen texture
 	m_screen_tex.create_from_screen(m_window);
 
-	return load_scene(m_scenes.at(MAIN_MENU));
+	return load_scene(m_scenes.at("MAIN_MENU"));
 }
 
 // Releases all the associated resources
@@ -188,12 +188,12 @@ bool World::load_scene(Scene* scene) {
 // On key callback
 void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
     if (key == GLFW_KEY_1 && action == GLFW_RELEASE) {
-        load_scene(m_scenes.at(FOREST));
+        load_scene(m_scenes.at("FOREST"));
         return;
     }
 
     if (key == GLFW_KEY_2 && action == GLFW_RELEASE) {
-        load_scene(m_scenes.at(VOLCANO));
+        load_scene(m_scenes.at("VOLCANO"));
         return;
     }
 
@@ -213,7 +213,14 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
 void World::on_mouse_click(GLFWwindow* window, int key, int action, int mod) {
 	double xposition, yposition;
     glfwGetCursorPos(window, &xposition, &yposition);
-	m_current_scene->on_mouse(key,action, xposition, yposition);
+	Button* b = m_current_scene->on_mouse(key,action, xposition, yposition);
+	if (b != nullptr) {
+		Button btn = *b;
+		if (btn.function == "level")
+			load_scene(m_scenes.at(btn.scene_name));
+		else if (btn.function == "help")
+			m_current_scene->drawHelp = !m_current_scene->drawHelp;
+	}
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
