@@ -99,7 +99,7 @@ void CollisionSystem::player_projectile_collision(Entity& player) {
                 entity_it->destroy();
                 entity_it = m_entities->erase(entity_it);
                 
-                if (player.health)
+                if (player.health && !player.health->invincible)
                     player.health->decrease_health();
             }
 			else {
@@ -118,22 +118,18 @@ void CollisionSystem::enemy_projectile_collision(Entity& enemy) {
         if (entity_it->collider && !entity_it->player_tag && !entity_it->enemyai && entity_it->is_player_proj) {
             CollisionSystem::Side side = detect_collision(*entity_it, enemy);
             
-            // if projectile hits anyside of enemy, remove projectile
             if (side == CollisionSystem::TOP || side == CollisionSystem::BOTTOM ||
                 side == CollisionSystem::LEFT || side == CollisionSystem::RIGHT) {
-
+                // if projectile hits any side of enemy, remove projectile
+                // TODO: theres a bug when trying to shooting left and hit right
+                
                 entity_it->destroy();
                 entity_it = m_entities->erase(entity_it);
                 if (enemy.health)
                     enemy.health->decrease_health();
 			}
-			else {
-				++entity_it;
-			}
 		}
-		else {
-			++entity_it;
-		}
+        ++entity_it;
     }
 }
 

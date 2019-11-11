@@ -20,9 +20,7 @@ public:
     bool flag= true;
     int speed;
     int flying_style;*/
-
-    void update_entities(std::list<Entity>* entities);
-
+    
 private:
     //void tile_collisions(Entity& entity);
     //void entity_collisions(Entity& entity);

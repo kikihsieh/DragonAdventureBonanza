@@ -16,17 +16,22 @@ struct Bat : public Entity {
         
         //collider = new Collider();
         is_facing_forward = true;
-        
+
         flyable = new Flyable();
         flyable->flyable_enemy = true;
         flyable->fly_mode = fly_mode;
 
         collider = new Collider();
 
+
         animatable = new Animatable();
         animatable->num_rows = 1;
         animatable->num_columns = 6;
         animatable->frame_index = {0, 0};
+        physics = new Physics();
+
+        health = new Health();
+        health->health = 1;
     }
 };
 

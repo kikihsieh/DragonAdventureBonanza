@@ -54,8 +54,8 @@ private:
     const TexturePathMapping m_texture_map = {
         { -7, textures_path("fire.png")},
         { -6, textures_path("forest/projectiles/ice.png")},
-        { -5, textures_path("forest/enemies/bat/bat_spritesheet1.png")},
-        { -4, textures_path("forest/enemies/bat/bat_spritesheet1.png")},
+        { -5, textures_path("bat/bat_spritesheet1.png")},
+        { -4, textures_path("bat/bat_spritesheet1.png")},
         { -3, textures_path("bat/bat_spritesheet1.png")},
         { -2, textures_path("forest/enemies/glob.png")},
         { -1, textures_path("forest/enemies/spider.png")},

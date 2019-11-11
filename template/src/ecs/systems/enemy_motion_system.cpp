@@ -76,7 +76,9 @@ void EnemyMotionSystem::fly_in_circle(float ms, Entity& entity){
     entity.flyable->center_c.x += entity.flyable->velocity_c.x * (ms/1000.f);
     entity.flyable->center_c.y += entity.flyable->velocity_c.y *(ms/1000.f) ;
     entity.flyable->angle_c += entity.flyable->rotate_speed *(ms/1000.f);
-    vec2 off = {(float) sin( entity.flyable->angle_c)*entity.flyable->radius, (float) cos( entity.flyable->angle_c)*entity.flyable->radius};
+   
+    vec2 off = {sin( entity.flyable->angle_c)*entity.flyable->radius, cos( entity.flyable->angle_c)*entity.flyable->radius};
+
     entity.position.x = entity.flyable->center_c.x + off.x;
     entity.position.y = entity.flyable->center_c.y + off.y;
 }
