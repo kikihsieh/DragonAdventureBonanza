@@ -38,8 +38,8 @@ bool CollisionSystem::init(std::list<Entity> *entities, const std::map<int, Tile
 }
 
 void CollisionSystem::tile_collisions(Entity& entity) {
-    float e_height = entity.drawable->texture->height * entity.scale.x;
-    float e_width = entity.drawable->texture->width * entity.scale.y;
+    float e_height = entity.drawable->texture->height * entity.scale.y;
+    float e_width = entity.drawable->texture->width * entity.scale.x;
 
     float t_width = TileMap::tile_screen_size.x;
     float t_height = TileMap::tile_screen_size.y;
@@ -141,24 +141,32 @@ void CollisionSystem::enemy_projectile_collision(Entity& enemy) {
  */
 bool CollisionSystem::collide_with_tile(Entity& e1, Tile &tile) {
   
-    float e1_height = e1.drawable->texture->height * e1.scale.x * 0.5f;
-    float e1_width = e1.drawable->texture->width * e1.scale.y * 0.5f;
+    float e1_height = e1.drawable->texture->height * e1.scale.y * 0.5f;
+    float e1_width = e1.drawable->texture->width * e1.scale.x * 0.5f;
 
-    float t_height = tile.drawable->texture->height * tile.scale.x * 0.5f;
-    float t_width = tile.drawable->texture->width * tile.scale.y * 0.5f;
+    float t_height = tile.drawable->texture->height * tile.scale.y * 0.5f;
+    float t_width = tile.drawable->texture->width * tile.scale.x * 0.5f;
+
+    float hit_vel_y = (tile.properties) ? -1.f * e1.physics->velocity.y * tile.properties->bounce : 0;
 
     switch (detect_collision(e1, tile)) {
         case TOP: {
             e1.collider->top = true;
-//            -1.f*e1.physics->velocity.y*tile.properties->bounce
-            e1.physics->velocity.y = fmin(e1.physics->velocity.y,-1.f*e1.physics->velocity.y* ((Tile) tile).properties->bounce);
+            e1.physics->velocity.y = fmin(e1.physics->velocity.y, hit_vel_y);
             e1.position.y = tile.position.y - t_height - e1_height - padding;
+
+            if (tile.properties)  {
+                e1.physics->velocity.x = e1.physics->velocity.x * tile.properties->friction;
+            }
+            e1.physics->velocity.x = (e1.physics->velocity.x > 0) ?
+                                        fmin(350, e1.physics->velocity.x) :
+                                        fmax(-350, e1.physics->velocity.x);
+
             land(e1);
             return true;
         } case BOTTOM: {
             e1.collider->bottom = true;
-//            -1.f*e1.physics->velocity.y * tile.properties->bounce
-            e1.physics->velocity.y = fmax(e1.physics->velocity.y, 0);
+            e1.physics->velocity.y = fmax(e1.physics->velocity.y, hit_vel_y);
             e1.position.y = tile.position.y + t_height + e1_height + padding;
             return true;
         } case LEFT: {
@@ -175,11 +183,11 @@ bool CollisionSystem::collide_with_tile(Entity& e1, Tile &tile) {
 }
 
 CollisionSystem::Side CollisionSystem::detect_collision(Entity &e1, Entity &e2) {
-    float e1_height = e1.drawable->texture->height * e1.scale.x;
-    float e1_width = e1.drawable->texture->width * e1.scale.y;
+    float e1_height = e1.drawable->texture->height * e1.scale.y;
+    float e1_width = e1.drawable->texture->width * e1.scale.x;
 
-    float e2_height = e2.drawable->texture->height * e2.scale.x;
-    float e2_width = e2.drawable->texture->width * e2.scale.y;
+    float e2_height = e2.drawable->texture->height * e2.scale.y;
+    float e2_width = e2.drawable->texture->width * e2.scale.x;
 
     // https://stackoverflow.com/questions/29861096/detect-which-side-of-a-rectangle-is-colliding-with-another-rectangle
     float dx = e1.position.x - e2.position.x;

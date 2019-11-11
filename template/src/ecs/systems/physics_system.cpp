@@ -14,12 +14,16 @@ void PhysicsSystem::update(float ms) {
           if (!entity.airdash || !entity.airdash->airdashing) {
             if (entity.input->right) {
                 entity.is_facing_forward = true;
-                entity.physics->velocity.x = entity.physics->walk_speed;
+                entity.physics->velocity.x = fmax(entity.physics->walk_speed, entity.physics->velocity.x);
             } else if (entity.input->left) {
                 entity.is_facing_forward = false;
-                entity.physics->velocity.x = -1 * entity.physics->walk_speed;
+                entity.physics->velocity.x = fmin(-1 * entity.physics->walk_speed, entity.physics->velocity.x);
             } else {
-                entity.physics->velocity.x = 0;
+                if (entity.physics->velocity.x > 0) {
+                    entity.physics->velocity.x = fmax(0, entity.physics->velocity.x - 50);
+                } else {
+                    entity.physics->velocity.x = fmin(0, entity.physics->velocity.x + 50);
+                }
             }
             if (entity.input->up) {
                 if (entity.physics->jump_count < 2) {

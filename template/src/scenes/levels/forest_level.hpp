@@ -14,12 +14,16 @@ public:
 private:
     bool init_walking_enemy(int type, vec2 initial_pos) override;
 
-    MapVector get_map() override {
+    const MapVector get_map() const override {
         return m_tile_vec;
     }
 
-    TexturePathMapping get_mapping() override {
+    const TexturePathMapping get_mapping() const override {
         return m_texture_map;
+    }
+
+    const TilePropertyMapping get_property_map() const override {
+        return m_property_map;
     }
 
     /*
@@ -74,9 +78,8 @@ private:
     };
 
     const TilePropertyMapping m_property_map = {
-            {1, new Tile::Properties(2.f, 3.f)}
+            {2, std::make_shared<Properties>(0.f, 2.f)}
     };
-
 };
 
 

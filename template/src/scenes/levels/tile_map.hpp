@@ -13,7 +13,7 @@
 class Level; // forward declaration
 
 typedef std::map<int, std::shared_ptr<Texture>> TextureMapping;
-typedef std::map<int, Tile::Properties*> TilePropertyMapping;
+typedef std::map<int, std::shared_ptr<Properties>> TilePropertyMapping;
 typedef std::vector<std::vector<int>> MapVector;
 
 const int P = 1000;

@@ -19,12 +19,16 @@ public:
 private:
     bool init_walking_enemy(int type, vec2 initial_pos) override;
 
-    MapVector get_map() override {
+    const MapVector get_map() const override {
         return m_tile_vec;
     }
 
-    TexturePathMapping get_mapping() override {
+    const TexturePathMapping get_mapping() const override {
         return m_texture_map;
+    }
+
+    const TilePropertyMapping get_property_map() const override {
+        return m_property_map;
     }
     
     const MapVector m_tile_vec = {
@@ -89,7 +93,7 @@ private:
     };
 
     const TilePropertyMapping m_property_map = {
-            {1, new Tile::Properties()}
+            {1, std::make_shared<Properties>(1.f, 3.f)}
     };
 };
 #endif //DAB_VOLCANO_LEVEL_H

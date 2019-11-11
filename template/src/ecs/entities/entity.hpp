@@ -1,6 +1,7 @@
 #pragma once
 
-#include <ecs/components/airdash.hpp>
+#include "../components/airdash.hpp"
+#include "../components/properties.hpp"
 #include "../components/collider.hpp"
 #include "../components/drawable.hpp"
 #include "../components/physics.hpp"
@@ -25,6 +26,7 @@ struct Entity {
         health(nullptr),
         shooting(nullptr),
         flyable(nullptr),
+        properties(nullptr),
         radians(0.f),
         position({0.f, 0.f}),
         scale({1.f, 1.f}),
@@ -62,6 +64,8 @@ struct Entity {
 	Health* health;
     Shooting* shooting;
     Flyable* flyable;
+
+    std::shared_ptr<Properties> properties;
 
 	float radians;
 	vec2 position;
