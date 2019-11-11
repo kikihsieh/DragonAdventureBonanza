@@ -1,6 +1,5 @@
 #pragma once
 
-#include <ecs/components/health.hpp>
 #include "entity.hpp"
 #include <list>
 
@@ -23,10 +22,6 @@ struct Player : public Entity {
 
         airdash = new AirDash();
         shooting = new Shooting();
-
-        health = new Health();
-        health->health = 3;
-        health->is_player = true;
 
         collider = new Collider();
 

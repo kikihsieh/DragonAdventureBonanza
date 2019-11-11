@@ -24,8 +24,8 @@ bool ShootingSystem::init(std::list<Entity> *entities, TextureMapping mapping, E
 }
 
 // texture Mapping KEY:
-// -7 is player projectile: fireball
-// -6 is enemy projectile: depends on scene
+// -4 is player projectile: fireball
+// -5 is enemy projectile: depends on scene
 
 void ShootingSystem::update(float ms) {
     for (auto &entity : *m_entities){
@@ -44,7 +44,7 @@ void ShootingSystem::update(float ms) {
             
             m_next_player_projectile -= ms;
             if (m_next_player_projectile < 0.f) {
-                Projectile p(m_texture_mapping.at(-7), pos, shoot_direction, texture_scale, false);
+                Projectile p(m_texture_mapping.at(-4), pos, shoot_direction, texture_scale, false);
                 if (initEntity(p)) {
                     m_entities->emplace_back(p);
                 }
@@ -60,7 +60,7 @@ void ShootingSystem::update(float ms) {
             float hor_dist = abs(entity.position.x - m_player->position.x);
             float vert_dist = abs(entity.position.y - m_player->position.y);
             if (hor_dist < 300.f && vert_dist < 300.f && m_next_enemy_projectile < 0.f) {
-                Projectile p(m_texture_mapping.at(-6), pos, shoot_direction, texture_scale, true);
+                Projectile p(m_texture_mapping.at(-5), pos, shoot_direction, texture_scale, true);
                 if (initEntity(p)) {
                     m_entities->emplace_back(p);
                 }

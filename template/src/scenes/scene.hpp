@@ -9,7 +9,7 @@
 #include <ecs/systems/render_system.hpp>
 #include <ecs/systems/input_system.hpp>
 #include <ecs/entities/player.hpp>
-#include <ecs/entities/modal.hpp>
+#include <ecs/entities/modal.h>
 
 class Scene
 {
@@ -46,7 +46,6 @@ public:
     std::list<Entity> m_entities; // TODO: should probably be a protected member
     bool drawHelp = false;
     bool paused = false;
-
 protected:
     virtual const char * get_bg_texture_path() = 0;
 

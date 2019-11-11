@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
 		float elapsed_sec = (float)(std::chrono::duration_cast<std::chrono::microseconds>(now - t)).count() / 1000;
 		t = now;
 
-        world.update(elapsed_sec);
+		world.update(elapsed_sec);
 		world.draw();
 	}
 

@@ -7,15 +7,12 @@
 #include <ecs/entities/spider.hpp>
 #include <ecs/entities/glob.hpp>
 #include <ecs/entities/projectile.hpp>
-#include <ecs/entities/bat.hpp>
 #include "level.hpp"
 
 class Level; // forward declaration
 
 typedef std::map<int, std::shared_ptr<Texture>> TextureMapping;
 typedef std::vector<std::vector<int>> MapVector;
-
-const int P = 1000;
 
 class TileMap {
 public:
