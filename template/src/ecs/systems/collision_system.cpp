@@ -38,8 +38,8 @@ bool CollisionSystem::init(std::list<Entity> *entities, const std::map<int, Tile
 }
 
 void CollisionSystem::tile_collisions(Entity& entity) {
-    float e_height = entity.drawable->texture->height * entity.scale.x;
-    float e_width = entity.drawable->texture->width * entity.scale.y;
+    float e_height = entity.drawable->texture->height * entity.scale.y;
+    float e_width = entity.drawable->texture->width * entity.scale.x;
 
     float t_width = TileMap::tile_screen_size.x;
     float t_height = TileMap::tile_screen_size.y;
@@ -141,11 +141,11 @@ void CollisionSystem::enemy_projectile_collision(Entity& enemy) {
  */
 bool CollisionSystem::collide_with_tile(Entity& e1, Tile &tile) {
   
-    float e1_height = e1.drawable->texture->height * e1.scale.x * 0.5f;
-    float e1_width = e1.drawable->texture->width * e1.scale.y * 0.5f;
+    float e1_height = e1.drawable->texture->height * e1.scale.y * 0.5f;
+    float e1_width = e1.drawable->texture->width * e1.scale.x * 0.5f;
 
-    float t_height = tile.drawable->texture->height * tile.scale.x * 0.5f;
-    float t_width = tile.drawable->texture->width * tile.scale.y * 0.5f;
+    float t_height = tile.drawable->texture->height * tile.scale.y * 0.5f;
+    float t_width = tile.drawable->texture->width * tile.scale.x * 0.5f;
 
     switch (detect_collision(e1, tile)) {
         case TOP:
@@ -173,11 +173,11 @@ bool CollisionSystem::collide_with_tile(Entity& e1, Tile &tile) {
 }
 
 CollisionSystem::Side CollisionSystem::detect_collision(Entity &e1, Entity &e2) {
-    float e1_height = e1.drawable->texture->height * e1.scale.x;
-    float e1_width = e1.drawable->texture->width * e1.scale.y;
+    float e1_height = e1.drawable->texture->height * e1.scale.y;
+    float e1_width = e1.drawable->texture->width * e1.scale.x;
 
-    float e2_height = e2.drawable->texture->height * e2.scale.x;
-    float e2_width = e2.drawable->texture->width * e2.scale.y;
+    float e2_height = e2.drawable->texture->height * e2.scale.y;
+    float e2_width = e2.drawable->texture->width * e2.scale.x;
 
     // https://stackoverflow.com/questions/29861096/detect-which-side-of-a-rectangle-is-colliding-with-another-rectangle
     float dx = e1.position.x - e2.position.x;
