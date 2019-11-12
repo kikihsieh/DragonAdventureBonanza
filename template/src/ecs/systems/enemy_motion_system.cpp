@@ -75,7 +75,7 @@ void EnemyMotionSystem::fly_in_circle(float ms, Entity& entity){
     entity.flyable->center_c.x += entity.flyable->velocity_c.x * (ms/1000.f);
     entity.flyable->center_c.y += entity.flyable->velocity_c.y *(ms/1000.f) ;
     entity.flyable->angle_c += entity.flyable->rotate_speed *(ms/1000.f);
-   
+
     vec2 off = {sin( entity.flyable->angle_c)*entity.flyable->radius, cos( entity.flyable->angle_c)*entity.flyable->radius};
 
     entity.position.x = entity.flyable->center_c.x + off.x;
@@ -156,7 +156,7 @@ void EnemyMotionSystem::move(float ms, Entity& entity){
         if (!entity.physics || !entity.collider || !entity.enemyai){
             continue;
         }
-        
+
         float e_height = entity.texture_size.y * entity.scale.y;
         float e_width = entity.texture_size.x * entity.scale.x;
         

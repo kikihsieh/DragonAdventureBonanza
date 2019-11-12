@@ -125,6 +125,7 @@ void CollisionSystem::enemy_projectile_collision(Entity& enemy) {
                 
                 entity_it->destroy();
                 entity_it = m_entities->erase(entity_it);
+
                 if (enemy.health)
                     enemy.health->decrease_health();
 			}
@@ -139,6 +140,7 @@ void CollisionSystem::enemy_projectile_collision(Entity& enemy) {
  * @param tile : a tile
  */
 bool CollisionSystem::collide_with_tile(Entity& e1, Tile &tile) {
+
     float e1_height = e1.texture_size.y * e1.scale.y * 0.5f;
     float e1_width = e1.texture_size.x * e1.scale.x * 0.5f;
 

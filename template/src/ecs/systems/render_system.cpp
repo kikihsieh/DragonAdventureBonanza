@@ -340,7 +340,6 @@ void RenderSystem::update(float ms) {
         if (!entity.animatable) {
             continue;
         }
-
         if (entity.flyable){
             entity.animatable->countdown -= ms;
             if (entity.animatable->countdown > 0) {

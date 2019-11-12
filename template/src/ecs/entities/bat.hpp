@@ -22,12 +22,11 @@ struct Bat : public Entity {
         flyable->fly_mode = fly_mode;
 
         collider = new Collider();
-
-
         animatable = new Animatable();
         animatable->num_rows = 1;
         animatable->num_columns = 6;
         animatable->frame_index = {0, 0};
+
         physics = new Physics();
 
         health = new Health();
