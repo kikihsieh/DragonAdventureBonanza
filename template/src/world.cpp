@@ -109,7 +109,7 @@ bool World::update(float elapsed_ms)
     glfwGetFramebufferSize(m_window, &w, &h);
 
     m_current_scene->update(elapsed_ms, {w / m_screen_scale, h / m_screen_scale});
-	return true;
+  	return true;
 }
 
 // Render our game world

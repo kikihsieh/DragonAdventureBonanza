@@ -22,11 +22,17 @@ public:
 private:
     void tile_collisions(Entity& entity);
     void player_enemy_collision(Entity& entity);
+
+    bool collide_with_tile(Entity& e1, Tile &tile);
+
     void player_projectile_collision(Entity& player);
     void enemy_projectile_collision(Entity& enemy);
-    void collide_with_tile(Entity& e1, Tile &tile);
+
     Side detect_collision(Entity& e1, Entity &e2);
     void collider_reset();
+
+    void land(Entity& entity);
+    void fall(Entity& entity);
 
     std::list<Entity>* m_entities;
     std::map<int, Tile*> m_tiles;

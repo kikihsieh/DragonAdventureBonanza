@@ -48,6 +48,7 @@ public:
     std::list<Button> m_buttons;
     bool drawHelp = false;
     bool paused = false;
+
 protected:
     virtual const char * get_bg_texture_path() = 0;
 
