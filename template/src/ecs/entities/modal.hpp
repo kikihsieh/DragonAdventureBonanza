@@ -1,7 +1,6 @@
 #pragma once
 
 #include "entity.hpp"
-#include "button.hpp"
 
 struct Modal : public Entity {
 

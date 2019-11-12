@@ -145,7 +145,7 @@ void RenderSystem::draw(mat3 projection) {
     };
 }
 
-void RenderSystem::drawModal(mat3 projection, Modal &entity) {
+void RenderSystem::drawModal(mat3 projection, Entity &entity) {
     Drawable *drawable = entity.drawable;
 
     transform(entity);
@@ -326,8 +326,18 @@ void RenderSystem::update(float ms) {
         if (!entity.animatable) {
             continue;
         }
-
-        if (entity.physics->velocity.x == 0) {
+       
+        if (entity.flyable){
+            entity.animatable->countdown -= ms;
+            if (entity.animatable->countdown > 0) {
+                continue;
+            }
+            entity.animatable->countdown = entity.animatable->frame_switch_time;
+            entity.animatable->index++;
+            if (entity.animatable->index >= 3){
+                entity.animatable->index = 0;
+            }
+        } else if (entity.physics->velocity.x == 0) {
             if (entity.animatable->index == 0 && entity.is_facing_forward) {
                 continue;
             } else if (entity.is_facing_forward) {
@@ -353,6 +363,7 @@ void RenderSystem::update(float ms) {
                 }
             }
         }
+        
 
         /*
         Drawable *drawable = entity.drawable;

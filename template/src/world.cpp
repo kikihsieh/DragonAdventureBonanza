@@ -24,10 +24,10 @@ namespace
 
 World::World() {
     map_init(m_scenes)
-            ("FOREST", new ForestLevel(true))
-            ("MOUNTAIN", new VolcanoLevel(true))
-			("MAIN_MENU", new StartMenu())
-			("HELP", new HelpMenu());
+            (FOREST, new ForestLevel(true))
+            (VOLCANO, new VolcanoLevel(true))
+			(MAIN_MENU, new StartMenu())
+			(HELP, new HelpMenu());
 }
 
 World::~World() {}
@@ -88,7 +88,7 @@ bool World::init(vec2 screen)
 	// Initialize the screen texture
 	m_screen_tex.create_from_screen(m_window);
 
-	return load_scene(m_scenes.at("MAIN_MENU"));
+	return load_scene(m_scenes.at(MAIN_MENU));
 }
 
 // Releases all the associated resources
@@ -109,7 +109,7 @@ bool World::update(float elapsed_ms)
     glfwGetFramebufferSize(m_window, &w, &h);
 
     m_current_scene->update(elapsed_ms, {w / m_screen_scale, h / m_screen_scale});
-	return true;
+  	return true;
 }
 
 // Render our game world
@@ -188,27 +188,17 @@ bool World::load_scene(Scene* scene) {
 // On key callback
 void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
     if (key == GLFW_KEY_1 && action == GLFW_RELEASE) {
-        load_scene(m_scenes.at("FOREST"));
+        load_scene(m_scenes.at(FOREST));
         return;
     }
 
     if (key == GLFW_KEY_2 && action == GLFW_RELEASE) {
-        load_scene(m_scenes.at("VOLCANO"));
+        load_scene(m_scenes.at(VOLCANO));
         return;
     }
 
 	if (key == GLFW_KEY_H && action == GLFW_RELEASE) {
 		m_current_scene->drawHelp = !m_current_scene->drawHelp;
-		m_current_scene->paused = !m_current_scene->paused;
-		return;
-	}
-	if (key == GLFW_KEY_P && action == GLFW_RELEASE) {
-		if (!m_current_scene->drawHelp)
-			m_current_scene->paused = !m_current_scene->paused;
-		return;
-	}
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
-		load_scene(m_scenes.at("MAIN_MENU"));
 		return;
 	}
     m_current_scene->on_key(key, action);
@@ -217,14 +207,7 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
 void World::on_mouse_click(GLFWwindow* window, int key, int action, int mod) {
 	double xposition, yposition;
     glfwGetCursorPos(window, &xposition, &yposition);
-	Button* b = m_current_scene->on_mouse(key,action, xposition, yposition);
-	if (b != nullptr) {
-		Button btn = *b;
-		if (btn.function == "level")
-			load_scene(m_scenes.at(btn.scenes[btn.scene_index]));
-		else if (btn.function == "close")
-			destroy();
-	}
+	m_current_scene->on_mouse(key,action, xposition, yposition);
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)

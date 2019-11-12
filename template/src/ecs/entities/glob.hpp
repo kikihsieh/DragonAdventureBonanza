@@ -26,5 +26,8 @@ struct Glob : public Entity {
         shooting = new Shooting();
         
         enemyai = new EnemyAI();
+
+        health = new Health();
+        health->health = 1;
     }
 };
