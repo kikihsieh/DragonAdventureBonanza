@@ -223,7 +223,7 @@ void World::on_mouse_click(GLFWwindow* window, int key, int action, int mod) {
 		if (btn.function == "level")
 			load_scene(m_scenes.at(btn.scenes[btn.scene_index]));
 		else if (btn.function == "close")
-			destroy();
+            glfwSetWindowShouldClose(m_window, true);
 	}
 }
 
