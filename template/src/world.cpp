@@ -97,7 +97,7 @@ bool World::init(vec2 screen)
     if (l < 0) {
         m_unlocked_levels.insert(std::pair<std::string, bool>("FOREST", true));
         m_unlocked_levels.insert(std::pair<std::string, bool>("CAVE", false));
-        m_unlocked_levels.insert(std::pair<std::string, bool>("SNOW_MOUNTAIN", false));
+        m_unlocked_levels.insert(std::pair<std::string, bool>("SNOW_MOUNTAIN", true));
         m_unlocked_levels.insert(std::pair<std::string, bool>("NIGHT_SKY", false));
         std::cout << "No existing save file" << std::endl;
     } else
