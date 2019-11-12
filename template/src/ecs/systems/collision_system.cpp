@@ -12,7 +12,7 @@ void CollisionSystem::update(float ms) {
             continue;
         }
 
-        collider_reset();
+        entity.collider->reset();
 
         if (entity.collider && !entity.is_player_proj && !entity.is_enemy_proj) {
             if (!entity.flyable) {
@@ -46,8 +46,6 @@ void CollisionSystem::tile_collisions(Entity& entity) {
 
     std::pair<int, int> tile_pos = TileMap::get_tile_pos_from_coord(entity.position.x, entity.position.y, {e_width, e_height});
 
-    bool collided = false;
-
     for (int col = tile_pos.first; col <= tile_pos.first + ceil(e_width / t_width); col++) {
         for (int row = tile_pos.second; row <= tile_pos.second + ceil(e_height / t_height); row++) {
             if (!m_tiles.count(TileMap::hash(col, row))) {
@@ -55,18 +53,17 @@ void CollisionSystem::tile_collisions(Entity& entity) {
             }
 
             Tile* tile = m_tiles.at(TileMap::hash(col, row));
-            if (collide_with_tile(entity, *tile))
-                collided = true;
+            collide_with_tile(entity, *tile);
         }
     }
 
-    if (!collided && entity.health && entity.health->is_player)
+    if (entity.health && entity.health->is_player && !entity.collider->top)
         fall(entity);
 }
 
 void CollisionSystem::player_enemy_collision(Entity& player) {
     if (player.health->invincible)
-        return;;
+        return;
 
     auto entity_it = m_entities->begin();
     while (entity_it != m_entities->end()) {
@@ -204,14 +201,6 @@ CollisionSystem::Side CollisionSystem::detect_collision(Entity &e1, Entity &e2) 
         }
     }
     return Side::NONE;
-}
-
-void CollisionSystem::collider_reset() {
-    for (auto &e : *m_entities) {
-        if (e.collider) {
-            e.collider->reset();
-        }
-    }
 }
 
 void CollisionSystem::land(Entity &entity) {

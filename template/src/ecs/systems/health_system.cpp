@@ -8,44 +8,44 @@
 #include <iostream>
 
 void HealthSystem::update(float ms) {
-    int index = 0;
 
-    for (auto &entity : *m_entities) {
-
-        if (!entity.health || !entity.physics) {
-            index++;
+    auto entity_it = m_entities->begin();
+    while (entity_it != m_entities->end()) {
+        if (!entity_it->health || !entity_it->physics) {
+            entity_it++;
             continue;
         }
 
-        if (entity.health->is_player && entity.health->invincible) {
-            entity.health->invincible_timer += ms;
+        if (entity_it->health->is_player && entity_it->health->invincible) {
+            entity_it->health->invincible_timer += ms;
 
-            if (entity.health->invincible_timer > entity.health->invincibility_duration) {
-                entity.health->invincible = false;
-                entity.health->invincible_timer = 0;
+            if (entity_it->health->invincible_timer > entity_it->health->invincibility_duration) {
+                entity_it->health->invincible = false;
+                entity_it->health->invincible_timer = 0;
             }
         }
 
-        if(entity.health->is_player && entity.physics->grounded) {
-            entity.health->update_last_safe_timer += ms;
-            if (entity.health->update_last_safe_timer >= entity.health->update_last_safe_frequency) {
-                update_last_safe(entity);
-                entity.health->update_last_safe_timer = 0;
+        if(entity_it->health->is_player && entity_it->physics->grounded) {
+            entity_it->health->update_last_safe_timer += ms;
+            if (entity_it->health->update_last_safe_timer >= entity_it->health->update_last_safe_frequency) {
+                update_last_safe(*entity_it);
+                entity_it->health->update_last_safe_timer = 0;
             }
         }
 
-        if (entity.physics->off_screen && entity.health->is_player) {
-            entity.health->health -= 1;
+        if (entity_it->physics->off_screen && entity_it->health->is_player) {
+            entity_it->health->health -= 1;
         }
 
-        if (entity.health->health <= 0)
-            die(entity, index);
-
-        if (entity.physics->off_screen && entity.health->is_player) {
-            respawn_at_last_safe(entity);
+        if (entity_it->health->health <= 0) {
+            entity_it = die(entity_it);
+            continue;
         }
 
-        index++;
+        if (entity_it->physics->off_screen && entity_it->health->is_player) {
+            respawn_at_last_safe(*entity_it);
+        }
+        entity_it++;
     }
 }
 
@@ -56,14 +56,13 @@ bool HealthSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>&
     return true;
 }
 
-void HealthSystem::die(Entity& entity, int index) {
-    if (entity.health->is_player)
+std::list<Entity>::iterator HealthSystem::die(std::list<Entity>::iterator it) {
+    if (it->health->is_player) {
         m_player_died = true;
-    else {
-        entity.destroy();
-        auto it = m_entities->begin();
-        advance(it, index);
-        m_entities->erase(it);
+        return it++;
+    } else {
+        it->destroy();
+        return m_entities->erase(it);
     }
 }
 
