@@ -32,8 +32,6 @@ private:
     vec2 m_bounds;
     TextureMapping m_texture_mapping;
     Entity* m_player;
-    float m_next_player_projectile = 0.f;
-    float m_next_enemy_projectile = 0.f;
     
     std::default_random_engine m_rng;
     std::uniform_real_distribution<float> m_dist; // default 0..1
