@@ -8,10 +8,7 @@
 #include <scenes/levels/volcano_level.hpp>
 #include <scenes/start_menu.hpp>
 #include <scenes/help_menu.hpp>
-//#include <sys/file.h>
-//#include <zconf.h>
 #include <iostream>
-#include <fstream>
 
 
 // Same as static in c, local to compilation unit
@@ -295,23 +292,19 @@ int World::load() {
 
     m_unlocked_levels.clear();
 
-    char *buf = 0;
-    size_t buflen = 0;
-
     std::ifstream save;
     save.open(m_save_path);
-    std::string STRING;
+    std::string s;
     if (save.is_open()) {
         while (!save.eof()) {
 
 
-            getline(save, STRING); // Saves the line in STRING.
-            STRING += "\n";
-            std::cout<<STRING; // Prints our STRING.
+            getline(save, s);
+            s += "\n";
 
-            int n = STRING.length();
+            int n = s.length();
             char char_array[n + 1];
-            strcpy(char_array, STRING.c_str());
+            strcpy(char_array, s.c_str());
 
             char *nl = strchr(char_array, '\n');
             if (nl == NULL)
@@ -332,29 +325,6 @@ int World::load() {
             count++;
         }
     }
-
-//    while(getline(&buf, &buflen, fp) > 0) {
-//        char *nl = strchr(buf, '\n');
-//        if (nl == NULL)
-//            continue;
-//        *nl = 0;
-//
-//        char *sep = strchr(buf, '=');
-//        if (sep == NULL)
-//            continue;
-//        *sep = 0;
-//        sep++;
-//
-//
-//        std::string s1 = (const char *) buf;
-//        bool s2 = *sep == '1';
-//
-//        (m_unlocked_levels)[s1] = s2;
-//        count++;
-//    }
-
-    if (buf)
-        free(buf);
 
     fclose(fp);
     return count;
