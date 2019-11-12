@@ -14,7 +14,7 @@ void CollisionSystem::update(float ms) {
 
         entity.collider->reset();
 
-        if (entity.collider && !entity.is_player_proj && !entity.is_enemy_proj) {
+        if (entity.collider) {
             if (!entity.flyable) {
                 tile_collisions(entity);
             }
@@ -141,19 +141,22 @@ bool CollisionSystem::collide_with_tile(Entity& e1, Tile &tile) {
     float t_height = tile.texture_size.y * tile.scale.y * 0.5f;
     float t_width = tile.texture_size.x * tile.scale.x * 0.5f;
 
-    float hit_vel_y = (tile.properties) ? -1.f * e1.physics->velocity.y * tile.properties->bounce : 0;
+    float hit_vel_y = (e1.properties) ? -1.f * e1.physics->velocity.y * e1.properties->bounce : 0;
 
     switch (detect_collision(e1, tile)) {
         case TOP: {
             e1.collider->top = true;
             e1.physics->velocity.y = fmin(e1.physics->velocity.y, hit_vel_y);
             e1.position.y = tile.position.y - t_height - e1_height - padding;
-            if (tile.properties)  {
-                e1.physics->velocity.x = e1.physics->velocity.x + e1.physics->velocity.x * tile.properties->friction;
+//            if (tile.properties)  {
+//                e1.physics->velocity.x = e1.physics->velocity.x + e1.physics->velocity.x * tile.properties->friction;
+//            }
+            if (e1.properties)  {
+                e1.physics->velocity.x = e1.physics->velocity.x + e1.physics->velocity.x * e1.properties->friction;
             }
             e1.physics->velocity.x = (e1.physics->velocity.x > 0) ?
-                                        fmin(350, e1.physics->velocity.x) :
-                                        fmax(-350, e1.physics->velocity.x);
+                                        fmin(e1.physics->walk_speed, e1.physics->velocity.x) :
+                                        fmax(-e1.physics->walk_speed, e1.physics->velocity.x);
 
             land(e1);
             e1.physics->velocity.y = fmin(e1.physics->velocity.y, 0);
