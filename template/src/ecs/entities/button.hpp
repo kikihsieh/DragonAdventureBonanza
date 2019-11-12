@@ -18,7 +18,6 @@ public:
     std::string function;
     int scene_index;
     std::string scenes[4] = {"FOREST", "MOUNTAIN", "MOUNTAIN", "BOSS"};
-
 };
 
 
