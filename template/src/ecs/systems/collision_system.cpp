@@ -98,14 +98,10 @@ void CollisionSystem::player_projectile_collision(Entity& player) {
                 
                 if (player.health && !player.health->invincible)
                     player.health->decrease_health();
+                continue;
             }
-			else {
-				++entity_it;
-			}
 		}
-		else {
-			++entity_it;
-		}
+        ++entity_it;
     }
 }
 
@@ -125,6 +121,7 @@ void CollisionSystem::enemy_projectile_collision(Entity& enemy) {
                 
                 if (enemy.health)
                     enemy.health->decrease_health();
+                continue;
 			}
 		}
         ++entity_it;

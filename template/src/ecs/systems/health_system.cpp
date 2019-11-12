@@ -4,11 +4,8 @@
 #include <cmath>
 #include <utility>
 #include <scenes/levels/tile_map.hpp>
-#include <ecs/components/health.hpp>
-#include <iostream>
 
 void HealthSystem::update(float ms) {
-
     auto entity_it = m_entities->begin();
     while (entity_it != m_entities->end()) {
         if (!entity_it->health || !entity_it->physics) {
@@ -25,7 +22,7 @@ void HealthSystem::update(float ms) {
             }
         }
 
-        if(entity_it->health->is_player && entity_it->physics->grounded) {
+        if (entity_it->health->is_player && entity_it->physics->grounded) {
             entity_it->health->update_last_safe_timer += ms;
             if (entity_it->health->update_last_safe_timer >= entity_it->health->update_last_safe_frequency) {
                 update_last_safe(*entity_it);
@@ -45,6 +42,7 @@ void HealthSystem::update(float ms) {
         if (entity_it->physics->off_screen && entity_it->health->is_player) {
             respawn_at_last_safe(*entity_it);
         }
+
         entity_it++;
     }
 }
@@ -59,6 +57,7 @@ bool HealthSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>&
 std::list<Entity>::iterator HealthSystem::die(std::list<Entity>::iterator it) {
     if (it->health->is_player) {
         m_player_died = true;
+        it++;
         return it++;
     } else {
         it->destroy();
