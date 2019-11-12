@@ -60,6 +60,7 @@ Button* InputSystem::on_mouse_update(int key, int action, double xpos, double yp
         if (!entity.input) {
             continue;
         }
+        entity.texture_size = {entity.drawable->texture->width * 1.f , entity.drawable->texture->height * 1.f};
         float width = entity.texture_size.x * entity.scale.x;
         float height = entity.texture_size.y * entity.scale.y;
 
