@@ -17,8 +17,8 @@ struct Projectile : public Entity {
         is_enemy_proj = isEnemy;
         
         physics = new Physics();
-        physics->gravity = 650.f;
-        physics->walk_speed = 450.f;
+        physics->gravity = (isEnemy) ? 650.f : 0.f;
+        physics->walk_speed = 350.f;
         physics->jump_speed = 0.f;
         
         physics->velocity = { dir.x * physics->walk_speed, dir.y * physics->walk_speed};

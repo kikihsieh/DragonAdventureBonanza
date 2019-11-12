@@ -3,8 +3,7 @@
 struct Shooting
 {
     Shooting() :
-    
-    time(20) {
+        time(20) {
     }
     
     int time;

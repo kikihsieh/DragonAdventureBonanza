@@ -45,6 +45,7 @@ void ShootingSystem::update(float ms) {
             m_next_player_projectile -= ms;
             if (m_next_player_projectile < 0.f) {
                 Projectile p(m_texture_mapping.at(-7), pos, shoot_direction, texture_scale, false);
+                p.properties->count = 1;
                 if (initEntity(p)) {
                     m_entities->emplace_back(p);
                 }

@@ -63,7 +63,7 @@ void PhysicsSystem::move(float ms, Entity& entity) {
     float x_step = entity.physics->velocity.x * (ms / 1000);
     float y_step = entity.physics->velocity.y * (ms / 1000);
 
-    if (!entity.is_player_proj || !entity.is_enemy_proj) {
+    if (!entity.is_player_proj && !entity.is_enemy_proj) {
         if (entity.physics->velocity.x < 0 && entity.position.x < m_level_bounds_x.x)
             x_step = 0;
         if (entity.physics->velocity.x > 0 && entity.position.x > m_level_bounds_x.y)
