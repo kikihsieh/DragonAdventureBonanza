@@ -20,6 +20,12 @@ bool StartMenu::init() {
     help.function = "help";
     m_entities.emplace_back(help);
     m_buttons.emplace_back(help);
+    Button exit(textures_path("exit.png"));
+    exit.position = {50.f,750.f};
+    exit.scale = {0.35f, 0.35f};
+    exit.function = "close";
+    m_entities.emplace_back(exit);
+    m_buttons.emplace_back(exit);
     Scene::init();
     return true;
 }

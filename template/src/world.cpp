@@ -207,6 +207,10 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
 			m_current_scene->paused = !m_current_scene->paused;
 		return;
 	}
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
+		load_scene(m_scenes.at("MAIN_MENU"));
+		return;
+	}
     m_current_scene->on_key(key, action);
 }
 
@@ -218,6 +222,8 @@ void World::on_mouse_click(GLFWwindow* window, int key, int action, int mod) {
 		Button btn = *b;
 		if (btn.function == "level")
 			load_scene(m_scenes.at(btn.scenes[btn.scene_index]));
+		else if (btn.function == "close")
+			destroy();
 	}
 }
 
