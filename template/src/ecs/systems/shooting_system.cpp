@@ -105,7 +105,7 @@ bool ShootingSystem::initEntity(Entity& entity) {
             return false;
         }
     }
-    
+    entity.texture_size = {drawable->texture->width * 1.f, drawable->texture->height * 1.f};
     // The position corresponds to the center of the texture
     float wr = drawable->texture->width * 0.5f;
     float hr = drawable->texture->height * 0.5f;

@@ -106,9 +106,6 @@ void Level::update(float elapsed_ms, vec2 screen_size) {
         m_enemy_motion_system->update(elapsed_ms);
         m_shooting_system->update(elapsed_ms);
         m_camera_system->update(elapsed_ms, (Player *) m_player, screen_size);
-        int index = m_player->animatable->index;
-        m_player->drawable->texture = m_player->animatable->m_texture_mapping[index];
-
         help.position = m_camera_system->get_center();
         Scene::update(elapsed_ms, screen_size);
 

@@ -49,7 +49,7 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
                 auto it = m_level->m_entities.emplace(m_level->m_entities.end(), tile);
                 m_tiles.insert(std::map<int, Tile*>::value_type(
                         TileMap::hash(col_index, row_index), (Tile*) &(*it)));
-                }
+            }
             col_index ++;
         }
         longest_row = (row_index > longest_row) ? row_index : longest_row;
