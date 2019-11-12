@@ -68,6 +68,6 @@ private:
 
     // Game entities
     Scene* m_current_scene;
-    std::map<Scene_names, bool> m_unlocked_levels;
+    std::map<std::string, bool> m_unlocked_levels;
     std::map<std::string, Scene*> m_scenes;
 };

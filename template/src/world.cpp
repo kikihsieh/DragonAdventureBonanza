@@ -96,11 +96,10 @@ bool World::init(vec2 screen)
 	//TODO: temporary settings, change to number of levels once determine
     int l = load();
     if (l < 0) {
-        m_unlocked_levels.insert(std::pair<Scene_names, bool>(FOREST, true));
-        m_unlocked_levels.insert(std::pair<Scene_names, bool>(VOLCANO, false));
-        m_unlocked_levels.insert(std::pair<Scene_names, bool>(CAVE, false));
-        m_unlocked_levels.insert(std::pair<Scene_names, bool>(SNOW_MOUNTAIN, false));
-        m_unlocked_levels.insert(std::pair<Scene_names, bool>(NIGHT_SKY, false));
+        m_unlocked_levels.insert(std::pair<std::string, bool>("FOREST", true));
+        m_unlocked_levels.insert(std::pair<std::string, bool>("CAVE", false));
+        m_unlocked_levels.insert(std::pair<std::string, bool>("MOUNTAIN", false));
+        m_unlocked_levels.insert(std::pair<std::string, bool>("NIGHT_SKY", false));
         std::cout << "No existing save file" << std::endl;
     } else
         std::cout << "Loaded save!" << std::endl;
@@ -273,18 +272,9 @@ int World::save() {
     if (!fp)
         return -errno;
 
-    std::map<Scene_names, std::string> scenes;
-    scenes.insert(std::pair<Scene_names, std::string>(FOREST, "FOREST"));
-    scenes.insert(std::pair<Scene_names, std::string>(VOLCANO, "VOLCANO"));
-    scenes.insert(std::pair<Scene_names, std::string>(CAVE, "CAVE"));
-    scenes.insert(std::pair<Scene_names, std::string>(SNOW_MOUNTAIN, "SNOW_MOUNTAIN"));
-    scenes.insert(std::pair<Scene_names, std::string>(NIGHT_SKY, "NIGHT_SKY"));
-
     for(auto & it : m_unlocked_levels) {
-        if (scenes.count(it.first) > 0) {
-            fprintf(fp, "%s=%s\n", scenes.at(it.first).c_str(), std::to_string(it.second).c_str());
-            count++;
-        }
+        fprintf(fp, "%s=%s\n", it.first.c_str(), std::to_string(it.second).c_str());
+        count++;
     }
 
     fclose(fp);
@@ -306,13 +296,6 @@ int World::load() {
     char *buf = 0;
     size_t buflen = 0;
 
-    std::map<std::string, Scene_names> scenes;
-    scenes.insert(std::pair<std::string, Scene_names>("FOREST", FOREST));
-    scenes.insert(std::pair<std::string, Scene_names>("VOLCANO", VOLCANO));
-    scenes.insert(std::pair<std::string, Scene_names>("CAVE", CAVE));
-    scenes.insert(std::pair<std::string, Scene_names>("SNOW_MOUNTAIN", SNOW_MOUNTAIN));
-    scenes.insert(std::pair<std::string, Scene_names>("NIGHT_SKY", NIGHT_SKY));
-
     while(getline(&buf, &buflen, fp) > 0) {
         char *nl = strchr(buf, '\n');
         if (nl == NULL)
@@ -325,13 +308,12 @@ int World::load() {
         *sep = 0;
         sep++;
 
-        if(scenes.count(buf) > 0) {
-            Scene_names s1 = scenes.at(buf);
-            bool s2 = *sep == '1';
 
-            (m_unlocked_levels)[s1] = s2;
-            count++;
-        }
+        std::string s1 = (const char *) buf;
+        bool s2 = *sep == '1';
+
+        (m_unlocked_levels)[s1] = s2;
+        count++;
     }
 
     if (buf)
