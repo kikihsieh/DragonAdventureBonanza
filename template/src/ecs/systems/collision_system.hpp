@@ -20,16 +20,15 @@ public:
     void update(float ms);
 
 private:
-    void tile_collisions(Entity& entity);
+    void tile_collisions(Entity& entity, float ms);
     void player_enemy_collision(Entity& entity);
 
-    bool collide_with_tile(Entity& e1, Tile &tile);
+    bool collide_with_tile(Entity& e1, Tile &tile, float ms);
 
     void player_projectile_collision(Entity& player);
     void enemy_projectile_collision(Entity& enemy);
 
     Side detect_collision(Entity& e1, Entity &e2);
-    void collider_reset();
 
     void land(Entity& entity);
     void grounded(Entity& entity);

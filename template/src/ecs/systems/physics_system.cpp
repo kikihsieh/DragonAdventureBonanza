@@ -5,41 +5,57 @@
 #include <iostream>
 
 void PhysicsSystem::update(float ms) {
-    for (auto &entity : *m_entities) {
-        if (!entity.physics) {
+    auto entity_it = m_entities->begin();
+    while (entity_it != m_entities->end()) {
+        if (!entity_it->physics) {
+            entity_it++;
             continue;
         }
 
-        if (entity.input) {
-          if (!entity.airdash || !entity.airdash->airdashing) {
-            if (entity.input->right) {
-                entity.is_facing_forward = true;
-                entity.physics->velocity.x = entity.physics->walk_speed;
-            } else if (entity.input->left) {
-                entity.is_facing_forward = false;
-                entity.physics->velocity.x = -1 * entity.physics->walk_speed;
+        if (entity_it->input) {
+          if (!entity_it->airdash || !entity_it->airdash->airdashing) {
+            if (entity_it->input->right) {
+                entity_it->is_facing_forward = true;
+                entity_it->physics->velocity.x = fmax(entity_it->physics->walk_speed, entity_it->physics->velocity.x);
+            } else if (entity_it->input->left) {
+                entity_it->is_facing_forward = false;
+                entity_it->physics->velocity.x = fmin(-1 * entity_it->physics->walk_speed, entity_it->physics->velocity.x);
             } else {
-                entity.physics->velocity.x = 0;
+                if (entity_it->physics->velocity.x > 0) {
+                    entity_it->physics->velocity.x = fmax(0, entity_it->physics->velocity.x - 50);
+                } else {
+                    entity_it->physics->velocity.x = fmin(0, entity_it->physics->velocity.x + 50);
+                }
             }
-            if (entity.input->up) {
-                if (entity.physics->jump_count < 2) {
-                    entity.physics->velocity.y = entity.physics->jump_speed;
-                    entity.physics->jump_count++;
+            if (entity_it->input->up) {
+                if (entity_it->physics->jump_count < 2) {
+                    entity_it->physics->velocity.y = entity_it->physics->jump_speed;
+                    entity_it->physics->jump_count++;
 
                     // Holding down up arrow will cause the player to jump twice in very quick succession
                     // This will appear as a single jump
                     // Set up to false so this doesnt occur
-                    entity.input->up = false;
+                    entity_it->input->up = false;
                 }
             }
           }
         }
 
-        move(ms, entity);
+        move(ms, *entity_it);
 
-        if (entity.position.y > m_level_bounds_y.y) {
-            entity.physics->off_screen = true;
+        if (entity_it->position.y > m_level_bounds_y.y) {
+            entity_it->physics->off_screen = true;
         }
+        // TODO: This is already checked for. Re-factor so the check doesn't need to be performed multiple times
+        if ((entity_it->is_player_proj || entity_it->is_enemy_proj) &&
+                ((entity_it->physics->velocity.x < 0 && entity_it->position.x < m_level_bounds_x.x) ||
+                (entity_it->physics->velocity.x > 0 && entity_it->position.x > m_level_bounds_x.y) ||
+                (entity_it->physics->velocity.y < 0 && entity_it->position.y < m_level_bounds_y.x))) {
+            entity_it->destroy();
+            entity_it = m_entities->erase(entity_it);
+            continue;
+        }
+        entity_it++;
     }
 }
 
@@ -59,18 +75,14 @@ void PhysicsSystem::move(float ms, Entity& entity) {
     float x_step = entity.physics->velocity.x * (ms / 1000);
     float y_step = entity.physics->velocity.y * (ms / 1000);
 
-    if (!entity.is_player_proj || !entity.is_enemy_proj) {
-        if (entity.physics->velocity.x < 0 && entity.position.x < m_level_bounds_x.x)
-            x_step = 0;
-        if (entity.physics->velocity.x > 0 && entity.position.x > m_level_bounds_x.y)
-            x_step = 0;
-        if (entity.physics->velocity.y < 0 && entity.position.y < m_level_bounds_y.x) {
-            y_step = 0;
-        }
+    if (entity.physics->velocity.x < 0 && entity.position.x < m_level_bounds_x.x)
+        x_step = 0;
+    if (entity.physics->velocity.x > 0 && entity.position.x > m_level_bounds_x.y)
+        x_step = 0;
+    if (entity.physics->velocity.y < 0 && entity.position.y < m_level_bounds_y.x) {
+        y_step = 0;
     }
 
     entity.position.x += x_step;
     entity.position.y += y_step;
-    
-    //std::cout << entity.position.x << ", " << entity.position.y << std::endl;
 }

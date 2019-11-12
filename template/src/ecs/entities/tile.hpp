@@ -5,6 +5,7 @@
 #include "entity.hpp"
 
 struct Tile : public Entity {
+
     Tile(std::shared_ptr<Texture> texture, vec2 pos, vec2 scale, vec2 size) {
         this->scale = scale;
 
@@ -16,5 +17,10 @@ struct Tile : public Entity {
         texture->height = size.y;
         texture->width = size.x;
         position = pos;
+    }
+
+    Tile(std::shared_ptr<Texture> texture, vec2 pos, vec2 scale, vec2 size, std::shared_ptr<Properties> properties)
+        : Tile(texture, pos, scale, size) {
+        this->properties = properties;
     }
 };

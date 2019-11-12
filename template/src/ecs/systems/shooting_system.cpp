@@ -10,14 +10,12 @@
 #include <sstream>
 
 const size_t PLAYER_PROJ_DELAY_MS = 400; //around 5 clicks
-const size_t ENEMY_PROJ_DELAY_MS = 80000;
+const size_t ENEMY_PROJ_DELAY_MS = 3000;
 
 bool ShootingSystem::init(std::list<Entity> *entities, TextureMapping mapping, Entity *player, vec2 bounds) {
     m_entities = entities;
     m_texture_mapping = mapping;
     m_player = player;
-    m_next_player_projectile = 0.f;
-    m_next_enemy_projectile = 0.f;
     m_rng = std::default_random_engine(std::random_device()());
     m_bounds = bounds;
     return true;
@@ -42,29 +40,34 @@ void ShootingSystem::update(float ms) {
                 texture_scale = { -1.0f, 1.0f };
             }
             
-            m_next_player_projectile -= ms;
-            if (m_next_player_projectile < 0.f) {
+            entity.shooting->m_next_projectile -= ms;
+            if (entity.shooting->m_next_projectile < 0.f) {
                 Projectile p(m_texture_mapping.at(-7), pos, shoot_direction, texture_scale, false);
+                p.properties->count = 1;
                 if (initEntity(p)) {
                     m_entities->emplace_back(p);
                 }
-                m_next_player_projectile = ((PLAYER_PROJ_DELAY_MS)/2) + m_dist(m_rng) * ((PLAYER_PROJ_DELAY_MS)/2);
+                entity.shooting->m_next_projectile = ((PLAYER_PROJ_DELAY_MS)/2) + m_dist(m_rng) * ((PLAYER_PROJ_DELAY_MS)/2);
             }
         }
         else if (entity.enemyai) {
             vec2 pos = entity.position;
-            vec2 shoot_direction = normalize({-1.f*(entity.position.x - m_player->position.x), -1.f*(entity.position.y - m_player->position.y)});
+            vec2 shoot_direction; // = normalize({-1.f*(entity.position.x - m_player->position.x), -1.f*(entity.position.y - m_player->position.y)});
             vec2 texture_scale = { 1.0f, 1.0f };
-            
-            m_next_enemy_projectile -= ms;
+            float vertical_offset = (rand() % 50) / 100.f;
+            if (pos.x < m_player->position.x)
+                shoot_direction = normalize({1.f, -vertical_offset});
+            else
+                shoot_direction = normalize({-1.f, -vertical_offset});
+            entity.shooting->m_next_projectile -= ms;
             float hor_dist = abs(entity.position.x - m_player->position.x);
             float vert_dist = abs(entity.position.y - m_player->position.y);
-            if (hor_dist < 300.f && vert_dist < 300.f && m_next_enemy_projectile < 0.f) {
+            if (hor_dist < 300.f && vert_dist < 300.f && entity.shooting->m_next_projectile < 0.f) {
                 Projectile p(m_texture_mapping.at(-6), pos, shoot_direction, texture_scale, true);
                 if (initEntity(p)) {
                     m_entities->emplace_back(p);
                 }
-                m_next_enemy_projectile = ((ENEMY_PROJ_DELAY_MS) / 2) + m_dist(m_rng) * ((ENEMY_PROJ_DELAY_MS)/2);
+                entity.shooting->m_next_projectile = ((ENEMY_PROJ_DELAY_MS) / 2) + m_dist(m_rng) * ((ENEMY_PROJ_DELAY_MS)/2);
             }
         }
     }

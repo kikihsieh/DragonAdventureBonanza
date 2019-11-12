@@ -63,7 +63,7 @@ bool Level::init_level(MapVector map, TexturePathMapping mapping) {
         }
         m_texture_mapping.insert(TextureMapping::value_type(iter.first, texture));
     }
-    if (!m_tile_map->init(std::move(map), m_texture_mapping)) {
+    if (!m_tile_map->init(std::move(map), m_texture_mapping, get_property_map())) {
         fprintf(stderr, "Failed to initialize tile map!");
         return false;
     }

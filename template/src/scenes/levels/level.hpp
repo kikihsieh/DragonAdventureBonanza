@@ -6,7 +6,7 @@
 #include <map>
 #include <memory>
 #include "../../ecs/systems/airdash_system.hpp"
-#include <ecs/systems/health_system.hpp>
+#include "../../ecs/systems/health_system.hpp"
 #include "../../ecs/systems/shooting_system.hpp"
 #include "../../ecs/systems/physics_system.hpp"
 #include "../../ecs/systems/collision_system.hpp"
@@ -17,6 +17,7 @@
 #include "scenes/scene.hpp"
 
 typedef std::map<int, const char*> TexturePathMapping;
+typedef std::map<int, std::shared_ptr<Properties>> TilePropertyMapping;
 typedef std::map<int, std::shared_ptr<Texture>> TextureMapping;
 typedef std::vector<std::vector<int>> MapVector;
 
@@ -66,8 +67,9 @@ protected:
 
     bool init_level(MapVector map, TexturePathMapping mapping);
 
-    TextureMapping m_texture_mapping;
     TileMap* m_tile_map;
+    TextureMapping m_texture_mapping;
+
     PhysicsSystem* m_physics_system;
     CollisionSystem* m_collision_system;
     EnemyMotionSystem* m_enemy_motion_system;
@@ -77,14 +79,13 @@ protected:
     CameraSystem* m_camera_system;
     Entity* m_player;
 
-protected:
-
     bool m_unlocked;
     vec2 m_level_dim;
 
 private:
-    virtual MapVector get_map() = 0;
-    virtual TexturePathMapping get_mapping() = 0;
+    virtual const MapVector get_map() const = 0;
+    virtual const TexturePathMapping get_mapping() const = 0;
+    virtual const TilePropertyMapping get_property_map() const = 0;
 };
 
 #endif //DAB_LEVEL_HPP

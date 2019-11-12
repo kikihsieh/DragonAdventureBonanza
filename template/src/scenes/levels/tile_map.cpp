@@ -12,7 +12,7 @@ TileMap::TileMap(Level* level) : m_level(level) {
 
 TileMap::~TileMap() = default;
 
-bool TileMap::init(MapVector map, TextureMapping dict) {
+bool TileMap::init(MapVector map, TextureMapping dict, TilePropertyMapping property_map) {
     std::vector< std::vector<int> >::const_iterator row;
     std::vector<int>::const_iterator col;
 
@@ -48,8 +48,15 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
                     // TODO: init heart(health 1) here
                 }
             } else {
-                Tile tile(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), tile_scale, tile_size);
-                auto it = m_level->m_entities.emplace(m_level->m_entities.end(), tile);
+                Tile* tile = nullptr;
+                if (property_map.find(*col) == property_map.end()) {
+                    Tile t(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), tile_scale, tile_size);
+                    tile = &t;
+                } else {
+                    Tile t(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), tile_scale, tile_size, property_map.at(*col));
+                    tile = &t;
+                }
+                auto it = m_level->m_entities.emplace(m_level->m_entities.end(), *tile);
                 m_tiles.insert(std::map<int, Tile*>::value_type(
                         TileMap::hash(col_index, row_index), (Tile*) &(*it)));
             }

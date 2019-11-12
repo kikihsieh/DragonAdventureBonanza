@@ -13,6 +13,7 @@
 class Level; // forward declaration
 
 typedef std::map<int, std::shared_ptr<Texture>> TextureMapping;
+typedef std::map<int, std::shared_ptr<Properties>> TilePropertyMapping;
 typedef std::vector<std::vector<int>> MapVector;
 
 const int P = 1000;
@@ -39,7 +40,7 @@ public:
         return {x, y};
     }
 
-    bool init(MapVector map, TextureMapping mapping);
+    bool init(MapVector map, TextureMapping mapping, TilePropertyMapping property_map);
 
     vec2 get_map_dim() {
         return m_map_dim;

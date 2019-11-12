@@ -14,12 +14,16 @@ public:
 private:
     bool init_walking_enemy(int type, vec2 initial_pos) override;
 
-    MapVector get_map() override {
+    const MapVector get_map() const override {
         return m_tile_vec;
     }
 
-    TexturePathMapping get_mapping() override {
+    const TexturePathMapping get_mapping() const override {
         return m_texture_map;
+    }
+
+    const TilePropertyMapping get_property_map() const override {
+        return m_property_map;
     }
 
     /*
@@ -72,6 +76,8 @@ private:
         { 11, textures_path("forest/tiles/tile3_left.png")},
         { 12, textures_path("forest/tiles/tile3_right.png")}
     };
+
+    const TilePropertyMapping m_property_map = {};
 };
 
 
