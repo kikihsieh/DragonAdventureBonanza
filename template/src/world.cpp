@@ -5,7 +5,7 @@
 #include <sstream>
 
 #include <scenes/levels/forest_level.hpp>
-#include <scenes/levels/volcano_level.hpp>
+#include <scenes/levels/snow_mountain_level.hpp>
 #include <scenes/start_menu.hpp>
 #include <scenes/help_menu.hpp>
 #include <iostream>
@@ -27,7 +27,7 @@ namespace
 World::World() {
     map_init(m_scenes)
             ("FOREST", new ForestLevel(true))
-            ("MOUNTAIN", new VolcanoLevel(true))
+            ("SNOW_MOUNTAIN", new SnowMountainLeve(true))
 			("MAIN_MENU", new StartMenu())
 			("HELP", new HelpMenu());
 }
@@ -89,20 +89,6 @@ bool World::init(vec2 screen)
 
 	// Initialize the screen texture
 	m_screen_tex.create_from_screen(m_window);
-
-	m_save_path = "save.txt";
-
-	//TODO: temporary settings, change to number of levels once determine
-    int l = load();
-    if (l < 0) {
-        m_unlocked_levels.insert(std::pair<std::string, bool>("FOREST", true));
-        m_unlocked_levels.insert(std::pair<std::string, bool>("CAVE", false));
-        m_unlocked_levels.insert(std::pair<std::string, bool>("MOUNTAIN", false));
-        m_unlocked_levels.insert(std::pair<std::string, bool>("NIGHT_SKY", false));
-        std::cout << "No existing save file" << std::endl;
-    } else
-        std::cout << "Loaded save!" << std::endl;
-
 
 	return load_scene(m_scenes.at("MAIN_MENU"));
 }
@@ -204,17 +190,13 @@ bool World::load_scene(Scene* scene) {
 // On key callback
 void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
     if (key == GLFW_KEY_1 && action == GLFW_RELEASE) {
-        if (m_unlocked_levels["FOREST"]) {
-            load_scene(m_scenes.at("FOREST"));
-            return;
-        }
+        load_scene(m_scenes.at("FOREST"));
+        return;
     }
 
     if (key == GLFW_KEY_2 && action == GLFW_RELEASE) {
-        if (m_unlocked_levels["MOUNTAIN"]) {
-            load_scene(m_scenes.at("MOUNTAIN"));
-            return;
-        }
+        load_scene(m_scenes.at("SNOW_MOUNTAIN"));
+        return;
     }
 
 	if (key == GLFW_KEY_H && action == GLFW_RELEASE) {
@@ -231,17 +213,6 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
 		load_scene(m_scenes.at("MAIN_MENU"));
 		return;
 	}
-
-
-    if (key == GLFW_KEY_O && action == GLFW_RELEASE) {
-        int s = save();
-        if (s < 0)
-            std::cout << "Error saving game" << std::endl;
-        else
-            std::cout << "Saved game!" << std::endl;
-        return;
-    }
-
     m_current_scene->on_key(key, action);
 }
 
@@ -258,9 +229,11 @@ void World::on_mouse_click(GLFWwindow* window, int key, int action, int mod) {
 	}
 }
 
-void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos) {
+void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
+{
 	
 }
+
 
 int World::save() {
     int count = 0;

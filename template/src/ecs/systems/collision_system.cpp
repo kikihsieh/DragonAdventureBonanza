@@ -69,7 +69,6 @@ void CollisionSystem::player_enemy_collision(Entity& player) {
     while (entity_it != m_entities->end()) {
         if(entity_it->collider && !entity_it->player_tag && !entity_it->is_player_proj && !entity_it->is_enemy_proj &&
            ((entity_it->enemyai || entity_it->flyable))) {
-            // TODO: Existing bug: when enemy is inside player, player kills it.
             CollisionSystem::Side side = detect_collision(*entity_it, player);
 
             if (side == CollisionSystem::BOTTOM) {

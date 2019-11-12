@@ -10,7 +10,7 @@
 #include <sstream>
 
 const size_t PLAYER_PROJ_DELAY_MS = 400; //around 5 clicks
-const size_t ENEMY_PROJ_DELAY_MS = 6000;
+const size_t ENEMY_PROJ_DELAY_MS = 80000;
 
 bool ShootingSystem::init(std::list<Entity> *entities, TextureMapping mapping, Entity *player, vec2 bounds) {
     m_entities = entities;

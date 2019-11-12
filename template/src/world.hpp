@@ -18,7 +18,6 @@ public:
     enum Scene_names {
         MAIN_MENU,
         FOREST,
-        VOLCANO,
         HELP,
         CAVE,
         SNOW_MOUNTAIN,
@@ -52,14 +51,9 @@ private:
 	void on_mouse_click(GLFWwindow* window, int key, int action, int mod);
 
 private:
-    int save();
-    int load();
-
 	// Window handle
 	GLFWwindow* m_window;
 	float m_screen_scale; // Screen to pixel coordinates scale factor
-
-	std::string m_save_path;
 
 	// Screen texture
 	// The draw loop first renders to this texture, then it is used for the water shader
@@ -68,6 +62,6 @@ private:
 
     // Game entities
     Scene* m_current_scene;
-    std::map<std::string, bool> m_unlocked_levels;
+
     std::map<std::string, Scene*> m_scenes;
 };
