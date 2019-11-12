@@ -31,6 +31,7 @@ float dot(vec2 l, vec2 r);
 float dot(vec3 l, vec3 r);
 mat3 mul(const mat3& l, const mat3& r);
 vec2 mul(vec2 a, float b);
+vec2 mul(vec2 a, vec2 b);
 vec3 mul(mat3 m, vec3 v);
 vec2 normalize(vec2 v);
 vec2 add(vec2 a, vec2 b);

@@ -25,12 +25,12 @@ namespace
 }
 
 
-World::World() : m_camera(new CameraSystem()) {
+World::World() {
     map_init(m_scenes)
-            (FOREST, new ForestLevel(true))
-            (VOLCANO, new VolcanoLevel(true))
-			(MAIN_MENU, new StartMenu())
-			(HELP, new HelpMenu());
+            ("FOREST", new ForestLevel(true))
+            ("MOUNTAIN", new VolcanoLevel(true))
+			("MAIN_MENU", new StartMenu())
+			("HELP", new HelpMenu());
 }
 
 World::~World() {}
@@ -90,7 +90,6 @@ bool World::init(vec2 screen)
 
 	// Initialize the screen texture
 	m_screen_tex.create_from_screen(m_window);
-	m_camera->init(screen);
 
 	m_save_path = "save.txt";
 
@@ -107,14 +106,13 @@ bool World::init(vec2 screen)
         std::cout << "Loaded save!" << std::endl;
 
 
-    return load_scene(m_scenes.at(MAIN_MENU));
+	return load_scene(m_scenes.at("MAIN_MENU"));
 }
 
 // Releases all the associated resources
 void World::destroy() {
 	glDeleteFramebuffers(1, &m_frame_buffer);
 	glfwDestroyWindow(m_window);
-    delete m_camera;
     for (auto const &pair : m_scenes)
     {
         pair.second->destroy();
@@ -125,11 +123,11 @@ void World::destroy() {
 // Update our game world
 bool World::update(float elapsed_ms)
 {
-    m_current_scene->update(elapsed_ms);
-	vec2 pos = m_current_scene->get_player_position();
-	bool moving_forwards = m_current_scene->is_forward();
-	m_camera->update(pos, moving_forwards);
-	return true;
+    int w, h;
+    glfwGetFramebufferSize(m_window, &w, &h);
+
+    m_current_scene->update(elapsed_ms, {w / m_screen_scale, h / m_screen_scale});
+  	return true;
 }
 
 // Render our game world
@@ -163,8 +161,9 @@ void World::draw() {
 
 	float sx = 2.f / (right - left);
 	float sy = 2.f / (top - bottom);
-	float tx = m_camera->compute_translation_x();
-	float ty = -(top + bottom) / (top - bottom);
+	vec2 screen_size = {(right - left) , (bottom - top)};
+	float tx = m_current_scene->get_translation_x(screen_size);
+	float ty = m_current_scene->get_translation_y(screen_size);
 	mat3 projection_2D{ { sx, 0.f, 0.f },{ 0.f, sy, 0.f },{ tx, ty, 1.f } };
 
 	/////////////////////
@@ -198,7 +197,6 @@ bool World::load_scene(Scene* scene) {
     if (m_current_scene) {
         m_current_scene->destroy();
     }
-    m_camera->reset();
 
     m_current_scene = scene;
     m_current_scene->init();
@@ -208,21 +206,31 @@ bool World::load_scene(Scene* scene) {
 // On key callback
 void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
     if (key == GLFW_KEY_1 && action == GLFW_RELEASE) {
-        if (m_unlocked_levels[FOREST]) {
-            load_scene(m_scenes.at(FOREST));
+        if (m_unlocked_levels["FOREST"]) {
+            load_scene(m_scenes.at("FOREST"));
             return;
         }
     }
 
     if (key == GLFW_KEY_2 && action == GLFW_RELEASE) {
-        if (m_unlocked_levels[VOLCANO]) {
-            load_scene(m_scenes.at(VOLCANO));
+        if (m_unlocked_levels["MOUNTAIN"]) {
+            load_scene(m_scenes.at("MOUNTAIN"));
             return;
         }
     }
 
 	if (key == GLFW_KEY_H && action == GLFW_RELEASE) {
-		load_scene(m_scenes.at(HELP));
+		m_current_scene->drawHelp = !m_current_scene->drawHelp;
+		m_current_scene->paused = !m_current_scene->paused;
+		return;
+	}
+	if (key == GLFW_KEY_P && action == GLFW_RELEASE) {
+		if (!m_current_scene->drawHelp)
+			m_current_scene->paused = !m_current_scene->paused;
+		return;
+	}
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
+		load_scene(m_scenes.at("MAIN_MENU"));
 		return;
 	}
 
@@ -242,7 +250,14 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
 void World::on_mouse_click(GLFWwindow* window, int key, int action, int mod) {
 	double xposition, yposition;
     glfwGetCursorPos(window, &xposition, &yposition);
-	m_current_scene->on_mouse(key,action, xposition, yposition);
+	Button* b = m_current_scene->on_mouse(key,action, xposition, yposition);
+	if (b != nullptr) {
+		Button btn = *b;
+		if (btn.function == "level")
+			load_scene(m_scenes.at(btn.scenes[btn.scene_index]));
+		else if (btn.function == "close")
+            glfwSetWindowShouldClose(m_window, true);
+	}
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos) {

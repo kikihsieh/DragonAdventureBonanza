@@ -1,6 +1,4 @@
-#ifndef DAB_BUTTON_H
-#define DAB_BUTTON_H
-
+#pragma once
 #include "entity.hpp"
 
 struct Button : public Entity {
@@ -15,8 +13,12 @@ struct Button : public Entity {
 
 		input = new Input();
     }
+
+public:
+    std::string function;
+    int scene_index;
+    std::string scenes[4] = {"FOREST", "MOUNTAIN", "MOUNTAIN", "BOSS"};
 };
 
-#endif //DAB_BUTTON_H
 
 

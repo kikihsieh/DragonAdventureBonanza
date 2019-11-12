@@ -4,6 +4,7 @@
 #include "common.hpp"
 #include "ecs/systems/camera_system.hpp"
 #include <scenes/levels/level.hpp>
+#include <ecs/entities/button.hpp>
 
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
@@ -41,8 +42,7 @@ public:
 
 	// Should the game be over ?
 	bool is_over()const;
-
-	CameraSystem* m_camera;
+	
 private:
     bool load_scene(Scene* scene);
     
@@ -68,7 +68,6 @@ private:
 
     // Game entities
     Scene* m_current_scene;
-    std::map<Scene_names, Scene*> m_scenes;
-
     std::map<Scene_names, bool> m_unlocked_levels;
+    std::map<std::string, Scene*> m_scenes;
 };

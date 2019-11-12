@@ -1,12 +1,13 @@
 #include <vector>
 #include <map>
 #include "tile_map.hpp"
+#include <iostream>
 
 vec2 TileMap::tile_size = {64, 64};
 vec2 TileMap::tile_scale = {0.75f, 0.75f };
 vec2 TileMap::tile_screen_size = {tile_size.x * tile_scale.x, tile_size.y * tile_scale.y};
 
-TileMap::TileMap(Level* level) : m_level(level), m_jump_buffer(2.f) {
+TileMap::TileMap(Level* level) : m_level(level) {
 }
 
 TileMap::~TileMap() = default;
@@ -18,7 +19,7 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
     int longest_row = 0;
     int col_index = 0;
     int row_count = 0;
-
+    
     for (row = map.begin(); row != map.end(); ++row) {
         int row_index = row - map.begin();
         col_index = 0;
@@ -27,16 +28,28 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
                 col_index ++;
                 continue;
             }
-
-            if (*col < 0) {
-                Spider s(dict.at(*col), get_coord_from_tile_pos(col_index, row_index));
-                m_level->m_entities.emplace_back(s);
+            if (*col == P) {
+                m_level->get_player()->position = get_coord_from_tile_pos(col_index, row_index);
+            } else if (*col < 0) {
+                if (*col == -1) {
+                    Spider s(dict.at(*col), get_coord_from_tile_pos(col_index, row_index));
+                    m_level->m_entities.emplace_back(s);
+                }
+                if (*col == -2) {
+                    Glob s(dict.at(*col), get_coord_from_tile_pos(col_index, row_index));
+                    m_level->m_entities.emplace_back(s);
+                }
+                if (*col <= -3 && *col >= -5) {
+                    int fly_mode = (-1 * *col) % 3 + 1;
+                    Bat b(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), fly_mode);
+                    m_level->m_entities.emplace_back(b);
+                }
             } else {
                 Tile tile(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), tile_scale, tile_size);
                 auto it = m_level->m_entities.emplace(m_level->m_entities.end(), tile);
                 m_tiles.insert(std::map<int, Tile*>::value_type(
                         TileMap::hash(col_index, row_index), (Tile*) &(*it)));
-                }
+            }
             col_index ++;
         }
         longest_row = (row_index > longest_row) ? row_index : longest_row;
@@ -44,7 +57,7 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
     }
 
     m_map_dim.x = (col_index - 1) * tile_screen_size.x;
-    m_map_dim.y = row_count * tile_screen_size.y + m_jump_buffer;
+    m_map_dim.y = row_count * tile_screen_size.y;
 
     return true;
 }

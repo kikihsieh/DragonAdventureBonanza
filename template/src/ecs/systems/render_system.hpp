@@ -2,6 +2,7 @@
 #include "common.hpp"
 #include <list>
 #include <map>
+#include <ecs/entities/modal.hpp>
 #include "../entities/entity.hpp"
 
 class RenderSystem {
@@ -10,8 +11,12 @@ public:
 	~RenderSystem();
 
 	bool init(std::list<Entity>* entities);
+    bool initEntity(Entity& entity);
+    
 	void destroy();
+    
 	void draw(mat3 projection);
+	void drawModal(mat3 projection, Modal& entity);
 	void update(float ms);
 
 private:

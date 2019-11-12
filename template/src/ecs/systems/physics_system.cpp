@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <utility>
+#include <iostream>
 
 void PhysicsSystem::update(float ms) {
     for (auto &entity : *m_entities) {
@@ -33,13 +34,11 @@ void PhysicsSystem::update(float ms) {
             }
           }
         }
-        
-        entity.old_position = entity.position;
 
         move(ms, entity);
 
         if (entity.position.y > m_level_bounds_y.y) {
-            // Fall off screen handler. Requires health
+            entity.physics->off_screen = true;
         }
     }
 }
@@ -60,15 +59,19 @@ void PhysicsSystem::move(float ms, Entity& entity) {
     float x_step = entity.physics->velocity.x * (ms / 1000);
     float y_step = entity.physics->velocity.y * (ms / 1000);
 
-    if (entity.physics->velocity.x < 0 && entity.position.x < m_level_bounds_x.x)
-        x_step = 0;
-    if (entity.physics->velocity.x > 0 && entity.position.x > m_level_bounds_x.y)
-        x_step = 0;
-    if (entity.physics->velocity.y < 0 && entity.position.y < m_level_bounds_y.x) {
-        y_step = 0;
-        entity.physics->velocity.y = 0;
+    if (!entity.is_player_proj || !entity.is_enemy_proj) {
+        if (entity.physics->velocity.x < 0 && entity.position.x < m_level_bounds_x.x)
+            x_step = 0;
+        if (entity.physics->velocity.x > 0 && entity.position.x > m_level_bounds_x.y)
+            x_step = 0;
+        if (entity.physics->velocity.y < 0 && entity.position.y < m_level_bounds_y.x) {
+            y_step = 0;
+            entity.physics->velocity.y = 0;
+        }
     }
 
     entity.position.x += x_step;
     entity.position.y += y_step;
+    
+    //std::cout << entity.position.x << ", " << entity.position.y << std::endl;
 }
