@@ -25,7 +25,6 @@ struct Bat : public Entity {
 
         health = new Health();
         health->health = 1;
-
     }
 };
 

@@ -1,8 +1,10 @@
 #include "enemy_motion_system.hpp"
+#include "common.hpp"
 
 #include <cmath>
 #include <utility>
 #include <scenes/levels/tile_map.hpp>
+#include <iostream>
 
 
 bool EnemyMotionSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles) {
@@ -12,7 +14,7 @@ bool EnemyMotionSystem::init(std::list<Entity> *entities, const std::map<int, Ti
     //float countDown = (rand()%(max_waitTime - min_waitTime + 1) + min_waitTime) *10;
     
     // pick 1 or 0
-    int init_direction = (rand() > RAND_MAX/2) ? 1 : 0;
+    //flying_style = (rand()% 3);
     m_tiles = tiles;
     m_entities = entities;
     for (auto &entity : *m_entities){
@@ -28,9 +30,9 @@ bool EnemyMotionSystem::init(std::list<Entity> *entities, const std::map<int, Ti
 
         }
     }
-
     return true;
 }
+
 
 void EnemyMotionSystem::update(float ms) {
     for (auto &entity : *m_entities){
@@ -152,13 +154,13 @@ void EnemyMotionSystem::move(float ms, Entity& entity){
         if (!entity.physics || !entity.collider || !entity.enemyai){
             continue;
         }
-
+        
         float e_height = entity.drawable->texture->height * entity.scale.x;
         float e_width = entity.drawable->texture->width * entity.scale.y;
         
         std::pair<int, int> enemy_tile_pos = TileMap::get_tile_pos_from_coord(entity.position.x, entity.position.y, {e_width, e_height});
         std::pair<int, int> platform_tile_pos = {enemy_tile_pos.first, enemy_tile_pos.second + 1};
-
+        
         if (entity.collider->left || entity.collider->right){
             entity.is_facing_forward = !(entity.is_facing_forward);
             entity.physics->velocity.x *= -1;
@@ -172,4 +174,7 @@ void EnemyMotionSystem::move(float ms, Entity& entity){
             entity.physics->velocity.x *= -1;
         }
     }
+    
+    
 }
+

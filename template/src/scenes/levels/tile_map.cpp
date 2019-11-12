@@ -1,6 +1,7 @@
 #include <vector>
 #include <map>
 #include "tile_map.hpp"
+#include <iostream>
 
 vec2 TileMap::tile_size = {64, 64};
 vec2 TileMap::tile_scale = {0.75f, 0.75f };
@@ -44,6 +45,13 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
                     m_level->m_entities.emplace_back(b);
                 }
             } else {
+                if (*col <= -3 && *col >= -5) {
+                    int fly_mode = (-1 * *col) % 3 + 1;
+                    Bat b(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), fly_mode);
+                    m_level->m_entities.emplace_back(b);
+                }
+            }
+            else {
                 Tile tile(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), tile_scale, tile_size);
                 auto it = m_level->m_entities.emplace(m_level->m_entities.end(), tile);
                 m_tiles.insert(std::map<int, Tile*>::value_type(
