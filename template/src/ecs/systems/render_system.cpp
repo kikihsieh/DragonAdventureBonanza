@@ -78,15 +78,14 @@ bool RenderSystem::initEntity(Entity &entity) {
 
 void RenderSystem::destroy() {
     for (auto &entity: *m_entities) {
-        initEntity(entity);
-    }
-}
+        glDeleteBuffers(1, &entity.drawable->vbo);
+        glDeleteBuffers(1, &entity.drawable->ibo);
+        glDeleteBuffers(1, &entity.drawable->vao);
 
-void RenderSystem::destroyEntity(Entity &entity) {
-    glDeleteBuffers(1, &entity.drawable->vbo);
-    glDeleteShader(entity.drawable->effect.vertex);
-    glDeleteShader(entity.drawable->effect.fragment);
-    glDeleteShader(entity.drawable->effect.program);
+        glDeleteShader(entity.drawable->effect.vertex);
+        glDeleteShader(entity.drawable->effect.fragment);
+        glDeleteShader(entity.drawable->effect.program);
+    }
 }
 
 void RenderSystem::draw(mat3 projection) {
