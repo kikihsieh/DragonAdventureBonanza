@@ -2,6 +2,7 @@
 #include "common.hpp"
 #include <list>
 #include <map>
+#include <ecs/entities/modal.hpp>
 #include "../entities/entity.hpp"
 
 class RenderSystem {
@@ -15,7 +16,7 @@ public:
 	void destroy();
     
 	void draw(mat3 projection);
-	void drawModal(mat3 projection, Entity& entity);
+	void drawModal(mat3 projection, Modal& entity);
 	void update(float ms);
 
 private:

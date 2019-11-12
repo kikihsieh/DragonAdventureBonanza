@@ -12,7 +12,6 @@
 #include "../components/flyable.hpp"
 
 
-
 struct Entity {
     Entity() :
         physics(nullptr),

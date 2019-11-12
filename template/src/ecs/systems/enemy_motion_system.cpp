@@ -30,7 +30,6 @@ bool EnemyMotionSystem::init(std::list<Entity> *entities, const std::map<int, Ti
 
         }
     }
-    
     return true;
 }
 
@@ -175,4 +174,7 @@ void EnemyMotionSystem::move(float ms, Entity& entity){
             entity.physics->velocity.x *= -1;
         }
     }
+    
+    
 }
+

@@ -144,7 +144,7 @@ void RenderSystem::draw(mat3 projection) {
     };
 }
 
-void RenderSystem::drawModal(mat3 projection, Entity &entity) {
+void RenderSystem::drawModal(mat3 projection, Modal &entity) {
     Drawable *drawable = entity.drawable;
 
     transform(entity);
