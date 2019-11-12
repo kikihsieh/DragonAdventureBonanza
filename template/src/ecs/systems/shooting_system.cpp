@@ -54,9 +54,13 @@ void ShootingSystem::update(float ms) {
         }
         else if (entity.enemyai) {
             vec2 pos = entity.position;
-            vec2 shoot_direction = normalize({-1.f*(entity.position.x - m_player->position.x), -1.f*(entity.position.y - m_player->position.y)});
+            vec2 shoot_direction; // = normalize({-1.f*(entity.position.x - m_player->position.x), -1.f*(entity.position.y - m_player->position.y)});
             vec2 texture_scale = { 1.0f, 1.0f };
-            
+            float vertical_offset = (rand() % 50) / 100.f;
+            if (pos.x < m_player->position.x)
+                shoot_direction = normalize({1.f, -vertical_offset});
+            else
+                shoot_direction = normalize({-1.f, -vertical_offset});
             m_next_enemy_projectile -= ms;
             float hor_dist = abs(entity.position.x - m_player->position.x);
             float vert_dist = abs(entity.position.y - m_player->position.y);
