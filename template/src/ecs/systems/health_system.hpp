@@ -16,7 +16,7 @@ public:
     bool player_died();
 
 private:
-    void die(Entity& entity, int index);
+    std::list<Entity>::iterator die(std::list<Entity>::iterator it);
     void update_last_safe(Entity& entity);
 
     bool m_player_died;

@@ -68,27 +68,6 @@ void ShootingSystem::update(float ms) {
             }
         }
     }
-    
-    // REMOVE PROJECTILES
-    auto e = m_entities->begin();
-    while (e != m_entities->end()) {
-        if(e->is_player_proj || e->is_enemy_proj) {
-            if (e->position.x < 0 || e->position.x > m_bounds.x ||
-                e->position.y < 0 || e->position.y > m_bounds.y) {
-                 // TODO: OpenGL resources need to be deleted when level gets deleted and not here, otherwise
-                 //     player cannot shoot again
-                 // destroyEntity(*e);
-                e->destroy();
-                e = m_entities->erase(e);
-            } else {
-                ++e;
-                // advance(e,1);
-            }
-        } else {
-            ++e;
-			// advance(e, 1);
-        }
-     }
 }
 
 //RENDERING PROJECTILE ENTITIES
