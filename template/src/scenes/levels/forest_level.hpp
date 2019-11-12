@@ -58,9 +58,9 @@ private:
     const TexturePathMapping m_texture_map = {
         { -7, textures_path("fire.png")},
         { -6, textures_path("forest/projectiles/ice.png")},
-        { -5, textures_path("forest/enemies/bat/sleepyb2.png")},
-        { -4, textures_path("forest/enemies/bat/sleepyb2.png")},
-        { -3, textures_path("bat/sleepyb2.png")},
+        { -5, textures_path("bat/bat_spritesheet1.png")},
+        { -4, textures_path("bat/bat_spritesheet1.png")},
+        { -3, textures_path("bat/bat_spritesheet1.png")},
         { -2, textures_path("forest/enemies/glob.png")},
         { -1, textures_path("forest/enemies/spider.png")},
         { 1, textures_path("forest/tiles/tile.png")},
@@ -77,11 +77,7 @@ private:
         { 12, textures_path("forest/tiles/tile3_right.png")}
     };
 
-    const TilePropertyMapping m_property_map = {
-            {1, std::make_shared<Properties>(1.f, 0.f)},
-            {3, std::make_shared<Properties>(0.f, 0.2f)},
-            {5, std::make_shared<Properties>(0.f, 0.2f)}
-    };
+    const TilePropertyMapping m_property_map = {};
 };
 
 
