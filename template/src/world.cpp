@@ -283,8 +283,6 @@ int World::save() {
 
 int World::load() {
     int count = 0;
-//    if (access(m_save_path.c_str(), R_OK) < 0)
-//        return -errno;
 
     FILE *fp = fopen(m_save_path.c_str(), "r");
     if (!fp)
@@ -297,7 +295,6 @@ int World::load() {
     std::string s;
     if (save.is_open()) {
         while (!save.eof()) {
-
 
             getline(save, s);
             s += "\n";
