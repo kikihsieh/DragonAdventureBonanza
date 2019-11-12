@@ -38,7 +38,7 @@ void PhysicsSystem::update(float ms) {
         move(ms, entity);
 
         if (entity.position.y > m_level_bounds_y.y) {
-            entity.physics->off_screen = true;
+            // Fall off screen handler. Requires health
         }
     }
 }

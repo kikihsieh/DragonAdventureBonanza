@@ -14,6 +14,4 @@ struct Physics {
     float jump_speed;
     float walk_speed;
     int jump_count;
-    bool grounded = false;
-    bool off_screen = false;
 };
