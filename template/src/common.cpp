@@ -59,7 +59,6 @@ float dot(vec3 l, vec3 r)
 vec2 add(vec2 a, vec2 b) { return { a.x+b.x, a.y+b.y }; }
 vec2 sub(vec2 a, vec2 b) { return { a.x-b.x, a.y-b.y }; }
 vec2 mul(vec2 a, float b) { return { a.x*b, a.y*b }; }
-vec2 mul(vec2 a, vec2 b) { return { a.x*b.x, a.y*b.y }; }
 vec3 mul(mat3 m, vec3 v) { return {
   dot(vec3{m.c0.x, m.c1.x, m.c2.x}, v),
   dot(vec3{m.c0.y, m.c1.y, m.c2.y}, v),

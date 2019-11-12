@@ -30,15 +30,10 @@ bool RenderSystem::initEntity(Entity &entity) {
             return false;
         }
     }
-    entity.texture_size = {drawable->texture->width * 1.f, drawable->texture->height * 1.f};
-
-    if (entity.animatable) {
-        entity.texture_size = mul(entity.texture_size, {1.f/entity.animatable->num_columns, 1.f/entity.animatable->num_rows });
-    }
 
     // The position corresponds to the center of the texture
-    float wr = entity.texture_size.x * 0.5f;
-    float hr = entity.texture_size.y * 0.5f;
+    float wr = drawable->texture->width * 0.5f;
+    float hr = drawable->texture->height * 0.5f;
 
     drawable->vertices[0].position = {-wr, +hr, -0.02f};
     drawable->vertices[0].texcoord = {0.f, 1.f};
@@ -115,8 +110,6 @@ void RenderSystem::draw(mat3 projection) {
         GLint transform_uloc = glGetUniformLocation(drawable->effect.program, "transform");
         GLint color_uloc = glGetUniformLocation(drawable->effect.program, "fcolor");
         GLint projection_uloc = glGetUniformLocation(drawable->effect.program, "projection");
-        GLint offset_uloc = glGetUniformLocation(drawable->effect.program, "offset");
-        GLint frames_uloc= glGetUniformLocation(drawable->effect.program, "frames");
 
         // Setting vertices and indices
         glBindVertexArray(drawable->vao);
@@ -139,14 +132,6 @@ void RenderSystem::draw(mat3 projection) {
         glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float *) &drawable->transform);
         float color[] = {1.f, 1.f, 1.f};
         glUniform3fv(color_uloc, 1, color);
-        if (entity.animatable) {
-            int rows = entity.animatable->num_rows;
-            int cols = entity.animatable->num_columns;
-            float frames[] = {(float) cols, (float) rows};
-            float offset[] = {entity.animatable->frame_index.x / cols, entity.animatable->frame_index.y / rows};
-            glUniform2fv(offset_uloc, 1, offset);
-            glUniform2fv(frames_uloc, 1, frames);
-        }
         glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *) &projection);
 
         // Drawing!
@@ -340,22 +325,24 @@ void RenderSystem::update(float ms) {
         if (!entity.animatable) {
             continue;
         }
-
+       
         if (entity.flyable){
             entity.animatable->countdown -= ms;
             if (entity.animatable->countdown > 0) {
                 continue;
             }
             entity.animatable->countdown = entity.animatable->frame_switch_time;
-            entity.animatable->frame_index.x++;
-            if (entity.animatable->frame_index.x == 6){
-                entity.animatable->frame_index.x = 0;
+            entity.animatable->index++;
+            if (entity.animatable->index >= 3){
+                entity.animatable->index = 0;
             }
         } else if (entity.physics->velocity.x == 0) {
-            if(entity.is_facing_forward) {
-                entity.animatable->frame_index = {0 , 1};
+            if (entity.animatable->index == 0 && entity.is_facing_forward) {
+                continue;
+            } else if (entity.is_facing_forward) {
+                entity.animatable->index = 0;
             } else {
-                entity.animatable->frame_index = {0, 0};
+                entity.animatable->index = -1;
             }
         } else {
             entity.animatable->countdown -= ms;
@@ -364,13 +351,52 @@ void RenderSystem::update(float ms) {
             }
             entity.animatable->countdown = entity.animatable->frame_switch_time;
             if (entity.physics->velocity.x > 0) {
-                entity.animatable->frame_index.y = 1;
+                entity.animatable->index++;
+                if (entity.animatable->index == 4) {
+                    entity.animatable->index = 0;
+                }
             } else {
-                entity.animatable->frame_index.y = 0;
+                entity.animatable->index--;
+                if (entity.animatable->index == -5) {
+                    entity.animatable->index = -1;
+                }
             }
-            entity.animatable->frame_index.x++;
-            if (entity.animatable->frame_index.x == 4)
-                entity.animatable->frame_index.x = 0;
         }
+        
+
+        /*
+        Drawable *drawable = entity.drawable;
+        if (!entity.drawable->texture->is_valid()) {
+            if (!entity.drawable->texture->load_from_file(entity.drawable->texture_path)) {
+                fprintf(stderr, "Failed to load %s texture!", entity.drawable->texture_path);
+                return;
+            }
+        }
+        
+        // The position corresponds to the center of the texture
+        float wr = drawable->texture->width * 0.5f;
+        float hr = drawable->texture->height * 0.5f;
+
+        drawable->vertices[0].position = {-wr, +hr, -0.02f};
+        drawable->vertices[0].texcoord = {0.f, 1.f};
+        drawable->vertices[1].position = {+wr, +hr, -0.02f};
+        drawable->vertices[1].texcoord = {1.f, 1.f};
+        drawable->vertices[2].position = {+wr, -hr, -0.02f};
+        drawable->vertices[2].texcoord = {1.f, 0.f};
+        drawable->vertices[3].position = {-wr, -hr, -0.02f};
+        drawable->vertices[3].texcoord = {0.f, 0.f};
+
+        // Counterclockwise as it's the default opengl front winding direction
+        uint16_t indices[] = {0, 3, 1, 1, 3, 2};
+
+        // Clearing errors
+        gl_flush_errors();
+
+        // Vertex Buffer creation
+        glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, drawable->vertices, GL_STATIC_DRAW);
+
+        // Index Buffer creation
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_STATIC_DRAW);
+        */
     }
 }
