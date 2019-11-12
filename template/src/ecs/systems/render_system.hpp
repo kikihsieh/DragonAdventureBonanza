@@ -13,7 +13,6 @@ public:
     bool initEntity(Entity& entity);
     
 	void destroy();
-    void destroyEntity(Entity& entity);
     
 	void draw(mat3 projection);
 	void drawModal(mat3 projection, Entity& entity);
