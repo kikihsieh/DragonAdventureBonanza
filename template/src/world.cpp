@@ -290,14 +290,13 @@ int World::load() {
     std::ifstream save;
     save.open(m_save_path);
     std::string s;
+    char char_array[20]; // TODO: def don't actually need this much space
     if (save.is_open()) {
         while (!save.eof()) {
 
             getline(save, s);
             s += "\n";
-
-            int n = s.length();
-            char char_array[n + 1];
+            
             strcpy(char_array, s.c_str());
 
             char *nl = strchr(char_array, '\n');
@@ -310,7 +309,6 @@ int World::load() {
                 continue;
             *sep = 0;
             sep++;
-
 
             std::string s1 = (const char *) char_array;
             bool s2 = *sep == '1';
