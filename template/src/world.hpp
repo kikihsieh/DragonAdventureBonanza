@@ -4,7 +4,6 @@
 #include "common.hpp"
 #include "ecs/systems/camera_system.hpp"
 #include <scenes/levels/level.hpp>
-#include <ecs/entities/button.hpp>
 
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
@@ -63,5 +62,6 @@ private:
 
     // Game entities
     Scene* m_current_scene;
-    std::map<std::string, Scene*> m_scenes;
+
+    std::map<Scene_names, Scene*> m_scenes;
 };

@@ -1,9 +1,8 @@
 #include "input_system.hpp"
 #include <list>
 
-bool InputSystem::init(std::list<Entity> *entities, std::list<Button> *buttons) {
+bool InputSystem::init(std::list<Entity> *entities) {
     m_entities = entities;
-    m_buttons = buttons;
     return true;
 }
 
@@ -54,9 +53,8 @@ void InputSystem::on_key_update(int key, int action) {
     }
 }
 
-Button* InputSystem::on_mouse_update(int key, int action, double xpos, double ypos) {
-    Button* r = nullptr;
-    for (auto &entity : *m_buttons) {
+void InputSystem::on_mouse_update(int key, int action, double xpos, double ypos) {
+    for (auto &entity : *m_entities) {
         if (!entity.input) {
             continue;
         }
@@ -71,14 +69,12 @@ Button* InputSystem::on_mouse_update(int key, int action, double xpos, double yp
         if (key == GLFW_MOUSE_BUTTON_LEFT) {
             if (action == GLFW_PRESS) {
                 if (xpos > left && xpos < right &&
-                    ypos < top && ypos > bottom) {
+                    ypos < top && ypos > bottom)
                     entity.input->mouse_left = true;
-                    r = &entity;
-                }
+                printf("left mouse click");
             } else {
                 entity.input->mouse_left = false;
             }
         }
     }
-    return r;
 }
