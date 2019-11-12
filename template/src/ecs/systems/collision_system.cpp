@@ -77,6 +77,7 @@ void CollisionSystem::player_enemy_collision(Entity& player) {
 
             if (side == CollisionSystem::BOTTOM) {
                 player.physics->velocity.y = -200.f;
+                land(player);
                 if (entity_it->health)
                     entity_it->health->decrease_health();
             } else if (side != NONE) {
@@ -152,7 +153,7 @@ bool CollisionSystem::collide_with_tile(Entity& e1, Tile &tile) {
             e1.collider->top = true;
             e1.position.y = tile.position.y - t_height - e1_height - padding;
             e1.physics->velocity.y = fmin(e1.physics->velocity.y, 0);
-            land(e1);
+            grounded(e1);
             return true;
         case BOTTOM:
             e1.collider->bottom = true;
@@ -220,6 +221,13 @@ void CollisionSystem::land(Entity &entity) {
 
     if (entity.physics) {
         entity.physics->jump_count = 0;
+    }
+}
+
+void CollisionSystem::grounded(Entity &entity) {
+
+    if (entity.physics) {
+        land(entity);
         entity.physics->grounded = true;
     }
 }
