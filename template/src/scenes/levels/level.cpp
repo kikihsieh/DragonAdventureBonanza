@@ -70,7 +70,7 @@ bool Level::init_level(MapVector map, TexturePathMapping mapping) {
 
     m_level_dim = m_tile_map->get_map_dim();
 
-    return m_physics_system->init(&m_entities, m_tile_map->get_map_dim()) &&
+    if (m_physics_system->init(&m_entities, m_tile_map->get_map_dim()) &&
            m_collision_system->init(&m_entities, m_tile_map->get_tiles()) &&
            m_airdash_system->init(&m_entities) &&
 
@@ -80,7 +80,12 @@ bool Level::init_level(MapVector map, TexturePathMapping mapping) {
            m_shooting_system->init(&m_entities, m_texture_mapping, m_player, m_level_dim) &&
            m_camera_system->init(m_level_dim, use_vertical_camera()) &&
 
-           Scene::init();
+           Scene::init()) {
+        paused = false;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 bool Level::init_enemy(int type, vec2 initial_pos) {

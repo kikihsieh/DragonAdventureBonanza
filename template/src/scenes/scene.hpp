@@ -47,7 +47,7 @@ public:
     std::list<Entity> m_entities;
     std::list<Button> m_buttons;
     bool drawHelp = false;
-    bool paused = false;
+    bool paused = true;
 
 protected:
     virtual const char * get_bg_texture_path() = 0;
