@@ -80,7 +80,7 @@ void RenderSystem::destroy() {
     for (auto &entity: *m_entities) {
         glDeleteBuffers(1, &entity.drawable->vbo);
         glDeleteBuffers(1, &entity.drawable->ibo);
-        glDeleteBuffers(1, &entity.drawable->vao);
+        glDeleteVertexArrays(1, &entity.drawable->vao);
 
         glDeleteShader(entity.drawable->effect.vertex);
         glDeleteShader(entity.drawable->effect.fragment);
