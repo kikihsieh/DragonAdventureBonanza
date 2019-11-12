@@ -5,6 +5,7 @@
 struct Glob : public Entity {
     Glob(std::shared_ptr<Texture> texture, vec2 pos) {
         scale = { 0.2f, 0.2f };
+        texture_size = {(float) texture->width, (float) texture->height};
         
         drawable = new Drawable();
         drawable->fs_shader = shader_path("textured.fs.glsl");

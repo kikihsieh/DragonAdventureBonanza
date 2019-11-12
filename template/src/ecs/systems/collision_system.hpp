@@ -32,6 +32,7 @@ private:
     void collider_reset();
 
     void land(Entity& entity);
+    void grounded(Entity& entity);
     void fall(Entity& entity);
 
     std::list<Entity>* m_entities;

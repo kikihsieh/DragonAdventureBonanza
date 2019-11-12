@@ -5,9 +5,12 @@
 #include <sstream>
 
 #include <scenes/levels/forest_level.hpp>
-#include <scenes/levels/volcano_level.hpp>
+#include <scenes/levels/snow_mountain_level.hpp>
 #include <scenes/start_menu.hpp>
 #include <scenes/help_menu.hpp>
+#include <sys/file.h>
+#include <zconf.h>
+#include <iostream>
 
 // Same as static in c, local to compilation unit
 namespace
@@ -24,10 +27,10 @@ namespace
 
 World::World() {
     map_init(m_scenes)
-            (FOREST, new ForestLevel(true))
-            (VOLCANO, new VolcanoLevel(true))
-			(MAIN_MENU, new StartMenu())
-			(HELP, new HelpMenu());
+            ("FOREST", new ForestLevel(true))
+            ("SNOW_MOUNTAIN", new SnowMountainLeve(true))
+			("MAIN_MENU", new StartMenu())
+			("HELP", new HelpMenu());
 }
 
 World::~World() {}
@@ -88,7 +91,21 @@ bool World::init(vec2 screen)
 	// Initialize the screen texture
 	m_screen_tex.create_from_screen(m_window);
 
-	return load_scene(m_scenes.at(MAIN_MENU));
+	m_save_path = "save.txt";
+
+	//TODO: temporary settings, change to number of levels once determine
+    int l = load();
+    if (l < 0) {
+        m_unlocked_levels.insert(std::pair<std::string, bool>("FOREST", true));
+        m_unlocked_levels.insert(std::pair<std::string, bool>("CAVE", false));
+        m_unlocked_levels.insert(std::pair<std::string, bool>("MOUNTAIN", false));
+        m_unlocked_levels.insert(std::pair<std::string, bool>("NIGHT_SKY", false));
+        std::cout << "No existing save file" << std::endl;
+    } else
+        std::cout << "Loaded save!" << std::endl;
+
+
+	return load_scene(m_scenes.at("MAIN_MENU"));
 }
 
 // Releases all the associated resources
@@ -188,29 +205,120 @@ bool World::load_scene(Scene* scene) {
 // On key callback
 void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
     if (key == GLFW_KEY_1 && action == GLFW_RELEASE) {
-        load_scene(m_scenes.at(FOREST));
-        return;
+        if (m_unlocked_levels["FOREST"]) {
+            load_scene(m_scenes.at("FOREST"));
+            return;
+        }
     }
 
     if (key == GLFW_KEY_2 && action == GLFW_RELEASE) {
-        load_scene(m_scenes.at(VOLCANO));
-        return;
+        if (m_unlocked_levels["SNOW_MOUNTAIN"]) {
+            load_scene(m_scenes.at("SNOW_MOUNTAIN"));
+            return;
+        }
     }
 
 	if (key == GLFW_KEY_H && action == GLFW_RELEASE) {
 		m_current_scene->drawHelp = !m_current_scene->drawHelp;
+		m_current_scene->paused = !m_current_scene->paused;
 		return;
 	}
+	if (key == GLFW_KEY_P && action == GLFW_RELEASE) {
+		if (!m_current_scene->drawHelp)
+			m_current_scene->paused = !m_current_scene->paused;
+		return;
+	}
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
+		load_scene(m_scenes.at("MAIN_MENU"));
+		return;
+	}
+
+
+    if (key == GLFW_KEY_O && action == GLFW_RELEASE) {
+        int s = save();
+        if (s < 0)
+            std::cout << "Error saving game" << std::endl;
+        else
+            std::cout << "Saved game!" << std::endl;
+        return;
+    }
+
     m_current_scene->on_key(key, action);
 }
 
 void World::on_mouse_click(GLFWwindow* window, int key, int action, int mod) {
 	double xposition, yposition;
     glfwGetCursorPos(window, &xposition, &yposition);
-	m_current_scene->on_mouse(key,action, xposition, yposition);
+	Button* b = m_current_scene->on_mouse(key,action, xposition, yposition);
+	if (b != nullptr) {
+		Button btn = *b;
+		if (btn.function == "level")
+			load_scene(m_scenes.at(btn.scenes[btn.scene_index]));
+		else if (btn.function == "close")
+            glfwSetWindowShouldClose(m_window, true);
+	}
 }
 
-void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
-{
+void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos) {
 	
+}
+
+int World::save() {
+    int count = 0;
+    if (m_unlocked_levels.empty())
+        return -1;
+
+    FILE *fp = fopen(m_save_path.c_str(), "w");
+    if (!fp)
+        return -errno;
+
+    for(auto & it : m_unlocked_levels) {
+        fprintf(fp, "%s=%s\n", it.first.c_str(), std::to_string(it.second).c_str());
+        count++;
+    }
+
+    fclose(fp);
+    return count;
+}
+
+
+int World::load() {
+    int count = 0;
+    if (access(m_save_path.c_str(), R_OK) < 0)
+        return -errno;
+
+    FILE *fp = fopen(m_save_path.c_str(), "r");
+    if (!fp)
+        return -errno;
+
+    m_unlocked_levels.clear();
+
+    char *buf = 0;
+    size_t buflen = 0;
+
+    while(getline(&buf, &buflen, fp) > 0) {
+        char *nl = strchr(buf, '\n');
+        if (nl == NULL)
+            continue;
+        *nl = 0;
+
+        char *sep = strchr(buf, '=');
+        if (sep == NULL)
+            continue;
+        *sep = 0;
+        sep++;
+
+
+        std::string s1 = (const char *) buf;
+        bool s2 = *sep == '1';
+
+        (m_unlocked_levels)[s1] = s2;
+        count++;
+    }
+
+    if (buf)
+        free(buf);
+
+    fclose(fp);
+    return count;
 }

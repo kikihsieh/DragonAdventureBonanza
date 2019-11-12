@@ -44,6 +44,9 @@ bool TileMap::init(MapVector map, TextureMapping dict, TilePropertyMapping prope
                     Bat b(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), fly_mode);
                     m_level->m_entities.emplace_back(b);
                 }
+                if (*col == -8){
+                    // TODO: init heart(health 1) here
+                }
             } else {
                 Tile* tile = nullptr;
                 if (property_map.find(*col) == property_map.end()) {
@@ -56,14 +59,14 @@ bool TileMap::init(MapVector map, TextureMapping dict, TilePropertyMapping prope
                 auto it = m_level->m_entities.emplace(m_level->m_entities.end(), *tile);
                 m_tiles.insert(std::map<int, Tile*>::value_type(
                         TileMap::hash(col_index, row_index), (Tile*) &(*it)));
-                }
+            }
             col_index ++;
         }
         longest_row = (row_index > longest_row) ? row_index : longest_row;
         row_count ++;
     }
 
-    m_map_dim.x = (col_index - 1) * tile_screen_size.x;
+    m_map_dim.x = col_index * tile_screen_size.x;
     m_map_dim.y = row_count * tile_screen_size.y;
 
     return true;

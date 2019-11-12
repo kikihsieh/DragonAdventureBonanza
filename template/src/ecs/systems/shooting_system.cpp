@@ -10,7 +10,7 @@
 #include <sstream>
 
 const size_t PLAYER_PROJ_DELAY_MS = 400; //around 5 clicks
-const size_t ENEMY_PROJ_DELAY_MS = 6000;
+const size_t ENEMY_PROJ_DELAY_MS = 80000;
 
 bool ShootingSystem::init(std::list<Entity> *entities, TextureMapping mapping, Entity *player, vec2 bounds) {
     m_entities = entities;
@@ -68,27 +68,6 @@ void ShootingSystem::update(float ms) {
             }
         }
     }
-    
-    // REMOVE PROJECTILES
-    auto e = m_entities->begin();
-    while (e != m_entities->end()) {
-        if(e->is_player_proj || e->is_enemy_proj) {
-            if (e->position.x < 0 || e->position.x > m_bounds.x ||
-                e->position.y < 0 || e->position.y > m_bounds.y) {
-                 // TODO: OpenGL resources need to be deleted when level gets deleted and not here, otherwise
-                 //     player cannot shoot again
-                 // destroyEntity(*e);
-                e->destroy();
-                e = m_entities->erase(e);
-            } else {
-                ++e;
-                // advance(e,1);
-            }
-        } else {
-            ++e;
-			// advance(e, 1);
-        }
-     }
 }
 
 //RENDERING PROJECTILE ENTITIES
@@ -105,7 +84,7 @@ bool ShootingSystem::initEntity(Entity& entity) {
             return false;
         }
     }
-    
+    entity.texture_size = {drawable->texture->width * 1.f, drawable->texture->height * 1.f};
     // The position corresponds to the center of the texture
     float wr = drawable->texture->width * 0.5f;
     float hr = drawable->texture->height * 0.5f;
