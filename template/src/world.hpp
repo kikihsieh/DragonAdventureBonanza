@@ -50,6 +50,9 @@ private:
 	void on_mouse_move(GLFWwindow* window, double xpos, double ypos);
 	void on_mouse_click(GLFWwindow* window, int key, int action, int mod);
 
+	int save();
+	int load();
+
 private:
 	// Window handle
 	GLFWwindow* m_window;
@@ -64,4 +67,7 @@ private:
     Scene* m_current_scene;
 
     std::map<std::string, Scene*> m_scenes;
+    std::map<std::string, bool> m_unlocked_levels;
+
+    std::string m_save_path;
 };
