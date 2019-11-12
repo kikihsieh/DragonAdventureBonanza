@@ -33,7 +33,5 @@ struct Flyable {
     vec2 velocity_c;
     float radius;
     int fly_mode;
-    
-    
-    
+
 };

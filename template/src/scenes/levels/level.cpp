@@ -6,16 +6,16 @@
 #include "common.hpp"
 
 Level::Level(bool unlocked) :
-    m_unlocked(unlocked),
-    m_tile_map(nullptr),
-    m_level_dim({0, 0}),
-    m_collision_system(nullptr),
-    m_physics_system(nullptr),
-    m_airdash_system(nullptr),
-    m_enemy_motion_system(nullptr),
-    m_health_system(nullptr),
-    m_camera_system(nullptr),
-    m_shooting_system(nullptr) {
+        m_unlocked(unlocked),
+        m_tile_map(nullptr),
+        m_level_dim({0, 0}),
+        m_collision_system(nullptr),
+        m_physics_system(nullptr),
+        m_airdash_system(nullptr),
+        m_enemy_motion_system(nullptr),
+        m_health_system(nullptr),
+        m_camera_system(nullptr),
+        m_shooting_system(nullptr) {
 }
 
 bool Level::init() {
@@ -53,7 +53,7 @@ void Level::destroy() {
 
 bool Level::init_level(MapVector map, TexturePathMapping mapping) {
     m_tile_map = new TileMap(this);
-    for (auto & iter : mapping) {
+    for (auto &iter : mapping) {
         auto texture = std::make_shared<Texture>();
         if (!texture->is_valid()) {
             if (!texture->load_from_file(iter.second)) {
@@ -71,16 +71,16 @@ bool Level::init_level(MapVector map, TexturePathMapping mapping) {
     m_level_dim = m_tile_map->get_map_dim();
 
     return m_physics_system->init(&m_entities, m_tile_map->get_map_dim()) &&
-            m_collision_system->init(&m_entities, m_tile_map->get_tiles()) &&
-            m_airdash_system->init(&m_entities) && 
+           m_collision_system->init(&m_entities, m_tile_map->get_tiles()) &&
+           m_airdash_system->init(&m_entities) &&
 
-            m_enemy_motion_system->init(&m_entities, m_tile_map->get_tiles()) &&
-            m_health_system->init(&m_entities, m_tile_map->get_tiles()) &&
+           m_enemy_motion_system->init(&m_entities, m_tile_map->get_tiles()) &&
+           m_health_system->init(&m_entities, m_tile_map->get_tiles()) &&
 
-            m_shooting_system->init(&m_entities, m_texture_mapping, m_player, m_level_dim) &&
-            m_camera_system->init(m_level_dim, use_vertical_camera()) &&
+           m_shooting_system->init(&m_entities, m_texture_mapping, m_player, m_level_dim) &&
+           m_camera_system->init(m_level_dim, use_vertical_camera()) &&
 
-            Scene::init();
+           Scene::init();
 }
 
 bool Level::init_enemy(int type, vec2 initial_pos) {
@@ -91,7 +91,7 @@ bool Level::init_enemy(int type, vec2 initial_pos) {
     return false;
 }
 
-bool Level::init_player(){
+bool Level::init_player() {
     Player player;
     m_entities.emplace_back(player);
     m_player = &m_entities.back();
@@ -99,20 +99,22 @@ bool Level::init_player(){
 }
 
 void Level::update(float elapsed_ms, vec2 screen_size) {
+    if (!paused) {
+        m_airdash_system->update(elapsed_ms);
+        m_physics_system->update(elapsed_ms);
+        m_collision_system->update(elapsed_ms);
+        m_enemy_motion_system->update(elapsed_ms);
+        m_shooting_system->update(elapsed_ms);
+        m_camera_system->update(elapsed_ms, (Player *) m_player, screen_size);
 
-    m_airdash_system->update(elapsed_ms);
-    m_physics_system->update(elapsed_ms);
-    m_collision_system->update(elapsed_ms);
-    m_enemy_motion_system->update(elapsed_ms);
-    m_shooting_system->update(elapsed_ms);
-    m_camera_system->update(elapsed_ms, (Player*) m_player, screen_size);
-    help.position = m_camera_system->get_center();
-    Scene::update(elapsed_ms, screen_size);
-  
-    m_health_system->update(elapsed_ms);
+        help.position = m_camera_system->get_center();
+        Scene::update(elapsed_ms, screen_size);
 
-    if (m_health_system->player_died()) {
-        destroy();
-        init();
+        m_health_system->update(elapsed_ms);
+
+        if (m_health_system->player_died()) {
+            destroy();
+            init();
+        }
     }
 }
