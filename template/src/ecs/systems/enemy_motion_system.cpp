@@ -75,7 +75,9 @@ void EnemyMotionSystem::fly_in_circle(float ms, Entity& entity){
     entity.flyable->center_c.x += entity.flyable->velocity_c.x * (ms/1000.f);
     entity.flyable->center_c.y += entity.flyable->velocity_c.y *(ms/1000.f) ;
     entity.flyable->angle_c += entity.flyable->rotate_speed *(ms/1000.f);
+   
     vec2 off = {sin( entity.flyable->angle_c)*entity.flyable->radius, cos( entity.flyable->angle_c)*entity.flyable->radius};
+
     entity.position.x = entity.flyable->center_c.x + off.x;
     entity.position.y = entity.flyable->center_c.y + off.y;
 }
@@ -155,8 +157,8 @@ void EnemyMotionSystem::move(float ms, Entity& entity){
             continue;
         }
         
-        float e_height = entity.drawable->texture->height * entity.scale.x;
-        float e_width = entity.drawable->texture->width * entity.scale.y;
+        float e_height = entity.texture_size.y * entity.scale.y;
+        float e_width = entity.texture_size.x * entity.scale.x;
         
         std::pair<int, int> enemy_tile_pos = TileMap::get_tile_pos_from_coord(entity.position.x, entity.position.y, {e_width, e_height});
         std::pair<int, int> platform_tile_pos = {enemy_tile_pos.first, enemy_tile_pos.second + 1};
