@@ -8,6 +8,8 @@
 #include <scenes/levels/snow_mountain_level.hpp>
 #include <scenes/start_menu.hpp>
 #include <scenes/help_menu.hpp>
+#include <iostream>
+
 
 // Same as static in c, local to compilation unit
 namespace
@@ -230,4 +232,70 @@ void World::on_mouse_click(GLFWwindow* window, int key, int action, int mod) {
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
 	
+}
+
+
+int World::save() {
+    int count = 0;
+    if (m_unlocked_levels.empty())
+        return -1;
+
+    FILE *fp = fopen(m_save_path.c_str(), "w");
+    if (!fp)
+        return -errno;
+
+    for(auto & it : m_unlocked_levels) {
+        fprintf(fp, "%s=%s\n", it.first.c_str(), std::to_string(it.second).c_str());
+        count++;
+    }
+
+    fclose(fp);
+    return count;
+}
+
+
+int World::load() {
+    int count = 0;
+
+    FILE *fp = fopen(m_save_path.c_str(), "r");
+    if (!fp)
+        return -errno;
+
+    m_unlocked_levels.clear();
+
+    std::ifstream save;
+    save.open(m_save_path);
+    std::string s;
+    if (save.is_open()) {
+        while (!save.eof()) {
+
+            getline(save, s);
+            s += "\n";
+
+            int n = s.length();
+            char char_array[n + 1];
+            strcpy(char_array, s.c_str());
+
+            char *nl = strchr(char_array, '\n');
+            if (nl == NULL)
+                continue;
+            *nl = 0;
+
+            char *sep = strchr(char_array, '=');
+            if (sep == NULL)
+                continue;
+            *sep = 0;
+            sep++;
+
+
+            std::string s1 = (const char *) char_array;
+            bool s2 = *sep == '1';
+
+            (m_unlocked_levels)[s1] = s2;
+            count++;
+        }
+    }
+
+    fclose(fp);
+    return count;
 }
