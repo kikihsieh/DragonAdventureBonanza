@@ -8,9 +8,11 @@
 #include <scenes/levels/volcano_level.hpp>
 #include <scenes/start_menu.hpp>
 #include <scenes/help_menu.hpp>
-#include <sys/file.h>
-#include <zconf.h>
+//#include <sys/file.h>
+//#include <zconf.h>
 #include <iostream>
+#include <fstream>
+
 
 // Same as static in c, local to compilation unit
 namespace
@@ -284,8 +286,8 @@ int World::save() {
 
 int World::load() {
     int count = 0;
-    if (access(m_save_path.c_str(), R_OK) < 0)
-        return -errno;
+//    if (access(m_save_path.c_str(), R_OK) < 0)
+//        return -errno;
 
     FILE *fp = fopen(m_save_path.c_str(), "r");
     if (!fp)
@@ -296,25 +298,60 @@ int World::load() {
     char *buf = 0;
     size_t buflen = 0;
 
-    while(getline(&buf, &buflen, fp) > 0) {
-        char *nl = strchr(buf, '\n');
-        if (nl == NULL)
-            continue;
-        *nl = 0;
-
-        char *sep = strchr(buf, '=');
-        if (sep == NULL)
-            continue;
-        *sep = 0;
-        sep++;
+    std::ifstream save;
+    save.open(m_save_path);
+    std::string STRING;
+    if (save.is_open()) {
+        while (!save.eof()) {
 
 
-        std::string s1 = (const char *) buf;
-        bool s2 = *sep == '1';
+            getline(save, STRING); // Saves the line in STRING.
+            STRING += "\n";
+            std::cout<<STRING; // Prints our STRING.
 
-        (m_unlocked_levels)[s1] = s2;
-        count++;
+            int n = STRING.length();
+            char char_array[n + 1];
+            strcpy(char_array, STRING.c_str());
+
+            char *nl = strchr(char_array, '\n');
+            if (nl == NULL)
+                continue;
+            *nl = 0;
+
+            char *sep = strchr(char_array, '=');
+            if (sep == NULL)
+                continue;
+            *sep = 0;
+            sep++;
+
+
+            std::string s1 = (const char *) char_array;
+            bool s2 = *sep == '1';
+
+            (m_unlocked_levels)[s1] = s2;
+            count++;
+        }
     }
+
+//    while(getline(&buf, &buflen, fp) > 0) {
+//        char *nl = strchr(buf, '\n');
+//        if (nl == NULL)
+//            continue;
+//        *nl = 0;
+//
+//        char *sep = strchr(buf, '=');
+//        if (sep == NULL)
+//            continue;
+//        *sep = 0;
+//        sep++;
+//
+//
+//        std::string s1 = (const char *) buf;
+//        bool s2 = *sep == '1';
+//
+//        (m_unlocked_levels)[s1] = s2;
+//        count++;
+//    }
 
     if (buf)
         free(buf);
