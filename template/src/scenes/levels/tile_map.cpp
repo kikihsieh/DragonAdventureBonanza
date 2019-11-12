@@ -44,6 +44,9 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
                     Bat b(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), fly_mode);
                     m_level->m_entities.emplace_back(b);
                 }
+                if (*col == -8){
+                    // TODO: init heart(health 1) here
+                }
             } else {
                 Tile tile(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), tile_scale, tile_size);
                 auto it = m_level->m_entities.emplace(m_level->m_entities.end(), tile);
@@ -56,7 +59,7 @@ bool TileMap::init(MapVector map, TextureMapping dict) {
         row_count ++;
     }
 
-    m_map_dim.x = (col_index - 1) * tile_screen_size.x;
+    m_map_dim.x = col_index * tile_screen_size.x;
     m_map_dim.y = row_count * tile_screen_size.y;
 
     return true;

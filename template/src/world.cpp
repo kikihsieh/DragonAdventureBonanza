@@ -5,7 +5,7 @@
 #include <sstream>
 
 #include <scenes/levels/forest_level.hpp>
-#include <scenes/levels/volcano_level.hpp>
+#include <scenes/levels/snow_mountain_level.hpp>
 #include <scenes/start_menu.hpp>
 #include <scenes/help_menu.hpp>
 #include <sys/file.h>
@@ -28,7 +28,7 @@ namespace
 World::World() {
     map_init(m_scenes)
             ("FOREST", new ForestLevel(true))
-            ("MOUNTAIN", new VolcanoLevel(true))
+            ("SNOW_MOUNTAIN", new SnowMountainLeve(true))
 			("MAIN_MENU", new StartMenu())
 			("HELP", new HelpMenu());
 }
@@ -212,8 +212,8 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
     }
 
     if (key == GLFW_KEY_2 && action == GLFW_RELEASE) {
-        if (m_unlocked_levels["MOUNTAIN"]) {
-            load_scene(m_scenes.at("MOUNTAIN"));
+        if (m_unlocked_levels["SNOW_MOUNTAIN"]) {
+            load_scene(m_scenes.at("SNOW_MOUNTAIN"));
             return;
         }
     }

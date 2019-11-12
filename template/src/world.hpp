@@ -18,7 +18,6 @@ public:
     enum Scene_names {
         MAIN_MENU,
         FOREST,
-        VOLCANO,
         HELP,
         CAVE,
         SNOW_MOUNTAIN,

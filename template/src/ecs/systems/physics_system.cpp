@@ -66,7 +66,6 @@ void PhysicsSystem::move(float ms, Entity& entity) {
             x_step = 0;
         if (entity.physics->velocity.y < 0 && entity.position.y < m_level_bounds_y.x) {
             y_step = 0;
-            entity.physics->velocity.y = 0;
         }
     }
 
