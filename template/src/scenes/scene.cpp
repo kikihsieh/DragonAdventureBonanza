@@ -1,7 +1,7 @@
 #include <ecs/entities/background.hpp>
 #include "scene.hpp"
 
-Scene::Scene() : m_rendersystem(nullptr), m_inputsystem(nullptr) {
+Scene::Scene() : m_rendersystem(nullptr), m_inputsystem(nullptr), m_entities(std::list<Entity>{200}) {
 }
 
 bool Scene::init() {
