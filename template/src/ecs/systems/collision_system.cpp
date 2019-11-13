@@ -67,6 +67,7 @@ void CollisionSystem::tile_collisions(Entity& entity, float ms) {
 }
 
 bool CollisionSystem::collide_with_entities(Entity &e) {
+    bool collided = false;
     auto entity_it = m_entities->begin();
     while (entity_it != m_entities->end()) {
         if (!entity_it->collider || entity_it->id == e.id) {
@@ -108,9 +109,10 @@ bool CollisionSystem::collide_with_entities(Entity &e) {
             entity_it->destroy();
             m_entities->erase(entity_it);
         }
+        collided = true;
         ++entity_it;
     }
-    return e.collider->left || e.collider->right || e.collider->top || e.collider->bottom;
+    return collided;
 }
 
 /**
