@@ -28,7 +28,7 @@ bool Level::init() {
 
     m_shooting_system = new ShootingSystem();
     m_camera_system = new CameraSystem();
-    return init_player() && init_level(get_map(), get_mapping()) && Scene::init();
+    return init_level(get_map(), get_mapping()) && Scene::init();
 }
 
 /** destroys resources not needed when the scene is not active **/
@@ -67,8 +67,11 @@ bool Level::init_level(MapVector map, TexturePathMapping mapping) {
         fprintf(stderr, "Failed to initialize tile map!");
         return false;
     }
-
     m_level_dim = m_tile_map->get_map_dim();
+    Player player;
+    player.position = {100.f, m_level_dim.y - 300.f};
+    m_entities.emplace_back(player);
+    m_player = &m_entities.back();
 
     if (m_physics_system->init(&m_entities, m_tile_map->get_map_dim()) &&
            m_collision_system->init(&m_entities, m_tile_map->get_tiles()) &&
@@ -94,13 +97,6 @@ bool Level::init_enemy(int type, vec2 initial_pos) {
     }
 
     return false;
-}
-
-bool Level::init_player() {
-    Player player;
-    m_entities.emplace_back(player);
-    m_player = &m_entities.back();
-    return true;
 }
 
 void Level::update(float elapsed_ms, vec2 screen_size) {
