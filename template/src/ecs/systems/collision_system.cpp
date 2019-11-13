@@ -6,6 +6,13 @@
 #include "iostream"
 #include <cstdint>
 
+bool CollisionSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles) {
+    m_entities = entities;
+    m_tiles = tiles;
+
+    return true;
+}
+
 void CollisionSystem::update(float ms) {
     auto entity_it = m_entities->begin();
     while (entity_it != m_entities->end()) {
@@ -16,33 +23,23 @@ void CollisionSystem::update(float ms) {
 
         entity_it->collider->reset();
 
-        if (entity_it->collider) {
-            if (!entity_it->flyable) {
-                tile_collisions(*entity_it, ms);
-            }
-
-            if (entity_it->player_tag) {
-                player_enemy_collision(*entity_it);
-                player_projectile_collision(*entity_it);
-            }
-            if (entity_it->enemyai || entity_it->flyable) {
-                enemy_projectile_collision(*entity_it);
-            }
-            if (entity_it->properties && entity_it->properties->count <= 0) {
-                entity_it->destroy();
-                entity_it = m_entities->erase(entity_it);
-                continue;
-            }
-            entity_it++;
+        if (collide_with_entities(*entity_it) && (entity_it->is_enemy_proj || entity_it->is_player_proj)) {
+            entity_it->destroy();
+            m_entities->erase(entity_it);
         }
+
+        // IMPORTANT! entity collision checks need to come before tile collision check
+        if (!entity_it->flyable) {
+            tile_collisions(*entity_it, ms);
+        }
+
+        if (entity_it->properties && entity_it->properties->count <= 0) {
+            entity_it->destroy();
+            m_entities->erase(entity_it);
+        }
+
+        entity_it++;
     }
-}
-
-bool CollisionSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles) {
-    m_entities = entities;
-    m_tiles = tiles;
-
-    return true;
 }
 
 void CollisionSystem::tile_collisions(Entity& entity, float ms) {
@@ -69,71 +66,51 @@ void CollisionSystem::tile_collisions(Entity& entity, float ms) {
         fall(entity);
 }
 
-void CollisionSystem::player_enemy_collision(Entity& player) {
-    if (player.health->invincible)
-        return;
-
+bool CollisionSystem::collide_with_entities(Entity &e) {
     auto entity_it = m_entities->begin();
     while (entity_it != m_entities->end()) {
-        if(entity_it->collider && !entity_it->player_tag && !entity_it->is_player_proj && !entity_it->is_enemy_proj &&
-           ((entity_it->enemyai || entity_it->flyable))) {
-            CollisionSystem::Side side = detect_collision(*entity_it, player);
+        if (!entity_it->collider || entity_it->id == e.id) {
+            ++entity_it;
+            continue;
+        }
 
-            if (side == CollisionSystem::BOTTOM) {
-                player.physics->velocity.y = -200.f;
-                land(player);
-                if (entity_it->health)
-                    entity_it->health->decrease_health();
-            } else if (side != NONE) {
-                player.health->decrease_health();
+        CollisionSystem::Side side = detect_collision(e, *entity_it);
+
+        if (side == CollisionSystem::Side::NONE) {
+            ++entity_it;
+            continue;
+        }
+
+        if ((e.is_player_proj && entity_it->player_tag) || (!entity_it->player_tag && e.is_enemy_proj)) {
+            ++entity_it;
+            continue;
+        }
+
+        if (e.player_tag) {
+            if (entity_it->is_player_proj) {
+                ++entity_it;
+                continue;
             }
+            if (side == CollisionSystem::TOP) {
+                e.physics->velocity.y = -200.f;
+                land(e);
+
+                if (entity_it->health) {
+                    entity_it->health->decrease_health();
+                }
+
+                entity_it->destroy();
+                m_entities->erase(entity_it);
+            } else if (!e.health->invincible){
+                e.health->decrease_health();
+            }
+        } else if (e.is_player_proj) {
+            entity_it->destroy();
+            m_entities->erase(entity_it);
         }
         ++entity_it;
     }
-}
-
-void CollisionSystem::player_projectile_collision(Entity& player) {
-    auto entity_it = m_entities->begin();
-    while (entity_it != m_entities->end()) {
-        if(entity_it->collider && !entity_it->player_tag && !entity_it->enemyai && entity_it->is_enemy_proj) {
-            CollisionSystem::Side side = detect_collision(*entity_it, player);
-            
-            //if projectile hits anyside of player, remove projectile
-            if (side == CollisionSystem::TOP || side == CollisionSystem::BOTTOM ||
-                side == CollisionSystem::LEFT || side == CollisionSystem::RIGHT) {
-                entity_it->destroy();
-                entity_it = m_entities->erase(entity_it);
-                
-                if (player.health && !player.health->invincible)
-                    player.health->decrease_health();
-                continue;
-            }
-		}
-        ++entity_it;
-    }
-}
-
-void CollisionSystem::enemy_projectile_collision(Entity& enemy) {
-    auto entity_it = m_entities->begin();
-    while (entity_it != m_entities->end()) {
-        if (entity_it->collider && !entity_it->player_tag && !entity_it->enemyai && entity_it->is_player_proj) {
-            CollisionSystem::Side side = detect_collision(*entity_it, enemy);
-            
-            if (side == CollisionSystem::TOP || side == CollisionSystem::BOTTOM ||
-                side == CollisionSystem::LEFT || side == CollisionSystem::RIGHT) {
-                // if projectile hits any side of enemy, remove projectile
-                // TODO: theres a bug when trying to shooting left and hit right
-                
-                entity_it->destroy();
-                entity_it = m_entities->erase(entity_it);
-
-                if (enemy.health)
-                    enemy.health->decrease_health();
-                continue;
-			}
-		}
-        ++entity_it;
-    }
+    return e.collider->left || e.collider->right || e.collider->top || e.collider->bottom;
 }
 
 /**

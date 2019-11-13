@@ -21,12 +21,9 @@ public:
 
 private:
     void tile_collisions(Entity& entity, float ms);
-    void player_enemy_collision(Entity& entity);
 
     bool collide_with_tile(Entity& e1, Tile &tile, float ms);
-
-    void player_projectile_collision(Entity& player);
-    void enemy_projectile_collision(Entity& enemy);
+    bool collide_with_entities(Entity& e);
 
     Side detect_collision(Entity& e1, Entity &e2);
 
