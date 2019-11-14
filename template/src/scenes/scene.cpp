@@ -10,7 +10,11 @@ bool Scene::init() {
     Background background(get_bg_texture_path());
     m_entities.insert(m_entities.begin(), background);
     m_rendersystem->initEntity(help);
-    return m_rendersystem->init(&m_entities) && m_inputsystem->init(&m_entities, &m_buttons);
+    if (m_rendersystem->init(&m_entities, get_tiles()) && m_inputsystem->init(&m_entities, &m_buttons)) {
+        state = LOADED;
+        return true;
+    }
+    return false;
 }
 
 // Releases all graphics resources
@@ -25,13 +29,16 @@ void Scene::destroy() {
     m_entities.clear();
     m_buttons.clear();
     drawHelp = false;
-    paused = false;
 }
 
 void Scene::draw(const mat3& projection) {
-    m_rendersystem->draw(projection);
+    if (state == LOADING) {
+        // TODO: draw loading screen
+        return;
+    }
+    m_rendersystem->draw_all(projection);
     if (drawHelp) {
-        paused = true;
+        state = PAUSED;
         m_rendersystem->drawModal(projection, help);
     }
 }
@@ -41,11 +48,20 @@ bool Scene::is_level() {
 }
 
 void Scene::update(float elapsed_ms, vec2 screen_size) {
-    if (!paused)
-        m_rendersystem->update(elapsed_ms);
+    m_rendersystem->update(elapsed_ms);
 }
 
 void Scene::on_key(int key, int action) {
+    if (key == GLFW_KEY_H && action == GLFW_RELEASE) {
+        drawHelp = !drawHelp;
+        state = (state == RUNNING) ? PAUSED : RUNNING;
+        return;
+    }
+    if (key == GLFW_KEY_P && action == GLFW_RELEASE) {
+        if (!drawHelp)
+            state = (state == RUNNING) ? PAUSED : RUNNING;
+        return;
+    }
     m_inputsystem->on_key_update(key, action);
 }
 

@@ -5,13 +5,15 @@ CameraSystem::CameraSystem(){}
 
 CameraSystem::~CameraSystem() = default;
 
-bool CameraSystem::init(vec2 level_dim, bool vertical_enabled){
+bool CameraSystem::init(vec2 level_dim, vec2 screen_size, bool vertical_enabled){
     m_level_dim = level_dim;
 
-    m_center = {-1,-1};
+    m_center = {screen_size.x*0.5f, m_level_dim.y - (screen_size.y * 0.5f)};
 
     m_horizontal_snap_speed = 750.f;
     m_vertical_snap_speed = 600.f;
+
+    m_target_y_pos = m_center.y;
 
     m_snap_threshold_f = true;
     m_snap_threshold_b = false;
@@ -26,8 +28,6 @@ void CameraSystem::update(float ms, Player* player, vec2 screen_size) {
 
     if (!m_vertical_enabled) {
         m_center.y = m_level_dim.y - (screen_size.y * 0.5f);
-    } else if (m_center.y == -1) {
-        m_center.y = player->position.y;
     } else {
          update_y(ms, player, screen_size);
     }

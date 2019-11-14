@@ -41,14 +41,13 @@ void HealthSystem::update(float ms) {
         if (entity_it->health->health <= 0) {
             if(entity_it->player_tag) {
                 m_player_died = true;
-                entity_it++;
-            }else{
+            } else {
                 entity_it->destroy();
                 entity_it = m_entities->erase(entity_it);
+                continue;
             }
-        } else {
-            entity_it++;
         }
+        entity_it++;
     }
 }
 

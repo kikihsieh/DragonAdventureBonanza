@@ -36,10 +36,13 @@ public:
     void update(float elapsed_ms, vec2 screen_size) override;
 
     bool init_enemy(int type, vec2 initial_pos);
+    bool init_player();
 
     virtual bool use_vertical_camera() {
         return false;
     }
+
+    virtual std::map<int, Tile*> get_tiles() override;
 
     bool is_level() override {
         return true;

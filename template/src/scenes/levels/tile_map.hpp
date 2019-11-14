@@ -21,7 +21,12 @@ const int P = 1000;
 class TileMap {
 public:
     explicit TileMap(Level* level);
-    ~TileMap();
+    ~TileMap() {
+        for (auto const& tile : m_tiles) {
+            tile.second->destroy();
+            delete tile.second;
+        }
+    }
 
     static vec2 tile_size;
     static vec2 tile_scale;
@@ -52,6 +57,8 @@ public:
 
 private:
     std::map<int, Tile*> m_tiles;
+
+private:
 
     Level* m_level;
     vec2 m_map_dim{};

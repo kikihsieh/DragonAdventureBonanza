@@ -7,7 +7,7 @@ public:
     CameraSystem();
     ~CameraSystem();
     
-    bool init(vec2 level_dim, bool vertical_enabled);
+    bool init(vec2 level_dim, vec2 screen_size, bool vertical_enabled);
     void update(float elapsed_ms, Player* player, vec2 screen_size);
     void update_x(float elapsed_ms, Player* player, vec2 screen_size);
     void update_y(float elapsed_ms, Player* player, vec2 screen_size);

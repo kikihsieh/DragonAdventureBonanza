@@ -41,6 +41,7 @@ void AirDashSystem::airdash(Entity& entity) {
     entity.airdash->cur_airdash_speed = entity.is_facing_forward ? entity.airdash->base_airdash_speed : -1.f * entity.airdash->base_airdash_speed;
     entity.physics->velocity.y = 0;
     entity.physics->acceleration.y = 0;
+    entity.physics->velocity.x = 0;
     entity.airdash->airdashing = true;
     entity.airdash->can_airdash = false;
 }
@@ -56,7 +57,7 @@ void AirDashSystem::stop_airdash(Entity& entity) {
 
 
 bool AirDashSystem::can_airdash(Entity& entity) {
-    return entity.airdash->can_airdash;
+    return entity.airdash->can_airdash && !entity.physics->grounded;
 }
 
 

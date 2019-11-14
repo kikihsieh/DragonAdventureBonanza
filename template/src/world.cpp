@@ -5,6 +5,7 @@
 #include <sstream>
 
 #include <scenes/levels/forest_level.hpp>
+#include <scenes/levels/cave_level.hpp>
 #include <scenes/levels/snow_mountain_level.hpp>
 #include <scenes/start_menu.hpp>
 #include <scenes/help_menu.hpp>
@@ -28,6 +29,7 @@ World::World() {
     map_init(m_scenes)
             ("FOREST", new ForestLevel(true))
             ("SNOW_MOUNTAIN", new SnowMountainLeve(true))
+            ("CAVE", new CaveLevel(true))
 			("MAIN_MENU", new StartMenu())
 			("HELP", new HelpMenu());
 }
@@ -96,7 +98,7 @@ bool World::init(vec2 screen)
     int l = load();
     if (l < 0) {
         m_unlocked_levels.insert(std::pair<std::string, bool>("FOREST", true));
-        m_unlocked_levels.insert(std::pair<std::string, bool>("CAVE", false));
+        m_unlocked_levels.insert(std::pair<std::string, bool>("CAVE", true));
         m_unlocked_levels.insert(std::pair<std::string, bool>("SNOW_MOUNTAIN", true));
         m_unlocked_levels.insert(std::pair<std::string, bool>("NIGHT_SKY", false));
         std::cout << "No existing save file" << std::endl;
@@ -202,6 +204,10 @@ bool World::load_scene(Scene* scene) {
 
 // On key callback
 void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
+    if (m_current_scene->state == m_current_scene->LOADING) {
+        return;
+    }
+
     if (key == GLFW_KEY_1 && action == GLFW_RELEASE) {
         if (m_unlocked_levels["FOREST"])
             load_scene(m_scenes.at("FOREST"));
@@ -213,17 +219,11 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
             load_scene(m_scenes.at("SNOW_MOUNTAIN"));
         return;
     }
-
-	if (key == GLFW_KEY_H && action == GLFW_RELEASE) {
-		m_current_scene->drawHelp = !m_current_scene->drawHelp;
-		m_current_scene->paused = !m_current_scene->paused;
-		return;
-	}
-	if (key == GLFW_KEY_P && action == GLFW_RELEASE) {
-		if (!m_current_scene->drawHelp)
-			m_current_scene->paused = !m_current_scene->paused;
-		return;
-	}
+    if (key == GLFW_KEY_3 && action == GLFW_RELEASE) {
+        if (m_unlocked_levels["CAVE"])
+            load_scene(m_scenes.at("CAVE"));
+        return;
+    }
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
 		load_scene(m_scenes.at("MAIN_MENU"));
 		return;

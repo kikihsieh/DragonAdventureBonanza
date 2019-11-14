@@ -3,13 +3,13 @@
 #include <list>
 #include <sstream>
 #include <cmath>
-#include <iostream>
+#include <ecs/entities/tile.hpp>
 
 RenderSystem::RenderSystem() {}
 
 RenderSystem::~RenderSystem() = default;
 
-bool RenderSystem::init(std::list<Entity> *entities) {
+bool RenderSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles) {
     m_effects = {};
     m_entities = entities;
 
@@ -18,7 +18,14 @@ bool RenderSystem::init(std::list<Entity> *entities) {
             continue;
         }
         initEntity(entity);
-    };
+    }
+    m_tiles = tiles;
+    for (auto &tile : m_tiles) {
+        if (tile.second->drawable == nullptr) {
+            continue;
+        }
+        initEntity(*tile.second);
+    }
     return true;
 }
 
@@ -93,12 +100,19 @@ void RenderSystem::destroy() {
     }
 }
 
-void RenderSystem::draw(mat3 projection) {
+void RenderSystem::draw_all(mat3 projection) {
     for (auto &entity: *m_entities) {
         if (entity.drawable == nullptr) {
             continue;
         }
+        draw(entity, projection);
+    }
+    for (auto &tile : m_tiles) {
+        draw(*tile.second, projection);
+    }
+}
 
+void RenderSystem::draw(Entity &entity, mat3 projection) {
         Drawable *drawable = entity.drawable;
 
         transform(entity);
@@ -156,7 +170,6 @@ void RenderSystem::draw(mat3 projection) {
         glDisableVertexAttribArray(in_texcoord_loc);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         //reset uniform transform
-    };
 }
 
 void RenderSystem::drawModal(mat3 projection, Modal &entity) {
@@ -334,6 +347,7 @@ void RenderSystem::scale(mat3 &out, vec2 scale) {
               {0.f,     0.f,     1.f}};
     out = mul(out, S);
 }
+
 
 void RenderSystem::update(float ms) {
     for (auto &entity : *m_entities) {

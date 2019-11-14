@@ -15,6 +15,13 @@
 class Scene
 {
 public:
+    enum State {
+        LOADING,
+        LOADED,
+        RUNNING,
+        PAUSED
+    };
+
     Scene();
     virtual ~Scene() = default;
 
@@ -25,6 +32,7 @@ public:
     virtual void destroy();
 
     virtual void update(float elapsed_ms, vec2 screen_size);
+    virtual std::map<int, Tile*> get_tiles() { return {}; }
 
     virtual void draw(const mat3& projection);
     virtual bool is_level();
@@ -47,7 +55,7 @@ public:
     std::list<Entity> m_entities;
     std::list<Button> m_buttons;
     bool drawHelp = false;
-    bool paused = true;
+    State state = LOADING;
 
 protected:
     virtual const char * get_bg_texture_path() = 0;

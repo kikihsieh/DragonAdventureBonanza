@@ -10,8 +10,6 @@ vec2 TileMap::tile_screen_size = {tile_size.x * tile_scale.x, tile_size.y * tile
 TileMap::TileMap(Level* level) : m_level(level) {
 }
 
-TileMap::~TileMap() = default;
-
 bool TileMap::init(MapVector map, TextureMapping dict, TilePropertyMapping property_map) {
     std::vector< std::vector<int> >::const_iterator row;
     std::vector<int>::const_iterator col;
@@ -28,7 +26,9 @@ bool TileMap::init(MapVector map, TextureMapping dict, TilePropertyMapping prope
                 col_index ++;
                 continue;
             }
-            if (*col < 0) {
+            if (*col == P) {
+                m_level->get_player()->position = get_coord_from_tile_pos(col_index, row_index);
+            } else if (*col < 0) {
                 if (*col == -1) {
                     Spider s(dict.at(*col), get_coord_from_tile_pos(col_index, row_index));
                     m_level->m_entities.emplace_back(s);
@@ -46,17 +46,14 @@ bool TileMap::init(MapVector map, TextureMapping dict, TilePropertyMapping prope
                     // TODO: init heart(health 1) here
                 }
             } else {
-                Tile* tile = nullptr;
+                Tile* tile;
                 if (property_map.find(*col) == property_map.end()) {
-                    Tile t(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), tile_scale, tile_size);
-                    tile = &t;
+                    tile = new Tile(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), tile_scale, tile_size);
                 } else {
-                    Tile t(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), tile_scale, tile_size, property_map.at(*col));
-                    tile = &t;
+                    tile = new Tile(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), tile_scale, tile_size, property_map.at(*col));
                 }
-                auto it = m_level->m_entities.emplace(m_level->m_entities.end(), *tile);
                 m_tiles.insert(std::map<int, Tile*>::value_type(
-                        TileMap::hash(col_index, row_index), (Tile*) &(*it)));
+                        TileMap::hash(col_index, row_index), tile));
             }
             col_index ++;
         }

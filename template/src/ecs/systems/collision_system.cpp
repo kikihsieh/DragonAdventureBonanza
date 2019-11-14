@@ -25,7 +25,8 @@ void CollisionSystem::update(float ms) {
 
         if (collide_with_entities(*entity_it) && (entity_it->is_enemy_proj || entity_it->is_player_proj)) {
             entity_it->destroy();
-            m_entities->erase(entity_it);
+            entity_it = m_entities->erase(entity_it);
+            continue;
         }
 
         // IMPORTANT! entity collision checks need to come before tile collision check
@@ -35,7 +36,8 @@ void CollisionSystem::update(float ms) {
 
         if (entity_it->properties && entity_it->properties->count <= 0) {
             entity_it->destroy();
-            m_entities->erase(entity_it);
+            entity_it = m_entities->erase(entity_it);
+            continue;
         }
 
         entity_it++;
@@ -100,14 +102,17 @@ bool CollisionSystem::collide_with_entities(Entity &e) {
                     entity_it->health->decrease_health();
                 }
 
-                entity_it->destroy();
-                m_entities->erase(entity_it);
             } else if (!e.health->invincible){
                 e.health->decrease_health();
             }
         } else if (e.is_player_proj) {
-            entity_it->destroy();
-            m_entities->erase(entity_it);
+            if (entity_it->health) {
+                entity_it->health->decrease_health();
+            }
+            if (e.properties) {
+                e.properties->count--;
+            }
+            return true;
         }
         collided = true;
         ++entity_it;
