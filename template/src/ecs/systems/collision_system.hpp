@@ -15,7 +15,7 @@ public:
         NONE
     };
 
-    bool init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles);
+    bool init(std::list<Entity> *entities, std::map<int, Tile*>* tiles);
 
     void update(float ms);
 
@@ -32,7 +32,7 @@ private:
     void fall(Entity& entity);
 
     std::list<Entity>* m_entities;
-    std::map<int, Tile*> m_tiles;
+    std::map<int, Tile*>* m_tiles;
     float padding = 0.1;
 };
 

@@ -8,7 +8,7 @@
 
 class EnemyMotionSystem {
 public:
-    bool init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles);
+    bool init(std::list<Entity> *entities, std::map<int, Tile*>* tiles);
     vec2 QuadraticBezierPts(float t, vec2 p0, vec2 p1, vec2 p2);
 
     void update(float ms);
@@ -33,7 +33,7 @@ private:
     
 
     std::list<Entity>* m_entities;
-    std::map<int, Tile*> m_tiles;
+    std::map<int, Tile*>* m_tiles;
   
 };
 

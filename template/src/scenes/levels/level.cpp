@@ -124,6 +124,6 @@ void Level::update(float elapsed_ms, vec2 screen_size) {
     }
 }
 
-std::map<int, Tile *> Level::get_tiles() {
+std::map<int, Tile *>* Level::get_tiles() {
     return m_tile_map->get_tiles();
 }

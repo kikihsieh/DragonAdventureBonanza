@@ -42,7 +42,7 @@ public:
         return false;
     }
 
-    virtual std::map<int, Tile*> get_tiles() override;
+    virtual std::map<int, Tile*>* get_tiles() override;
 
     bool is_level() override {
         return true;

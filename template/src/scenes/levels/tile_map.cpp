@@ -42,9 +42,6 @@ bool TileMap::init(MapVector map, TextureMapping dict, TilePropertyMapping prope
                     Bat b(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), fly_mode);
                     m_level->m_entities.emplace_back(b);
                 }
-                if (*col == -8){
-                    // TODO: init heart(health 1) here
-                }
             } else {
                 Tile* tile;
                 if (property_map.find(*col) == property_map.end()) {
@@ -77,4 +74,8 @@ std::pair<int, int> TileMap::get_tile_pos_from_coord(float x, float y, vec2 size
     int col = floor(x_tiles);
     int row = floor(y_tiles);
     return {col, row};
+}
+
+std::map<int, Tile*>* TileMap::get_tiles() {
+    return &m_tiles;
 }

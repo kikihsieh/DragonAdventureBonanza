@@ -7,7 +7,7 @@
 #include <iostream>
 
 
-bool EnemyMotionSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles) {
+bool EnemyMotionSystem::init(std::list<Entity> *entities, std::map<int, Tile*>* tiles) {
     //srand( time(0));
     //int max_waitTime = 10;
     //int min_waitTime = 4;
@@ -168,10 +168,10 @@ void EnemyMotionSystem::move(float ms, Entity& entity){
             entity.physics->velocity.x *= -1;
             continue;
         }
-        if (entity.is_facing_forward && m_tiles.count(TileMap::hash(platform_tile_pos.first+1, platform_tile_pos.second)) == 0) {
+        if (entity.is_facing_forward && m_tiles->count(TileMap::hash(platform_tile_pos.first+1, platform_tile_pos.second)) == 0) {
             entity.is_facing_forward = !(entity.is_facing_forward);
             entity.physics->velocity.x *= -1;
-        } else if (!entity.is_facing_forward && m_tiles.count(TileMap::hash(platform_tile_pos.first, platform_tile_pos.second)) == 0) {
+        } else if (!entity.is_facing_forward && m_tiles->count(TileMap::hash(platform_tile_pos.first, platform_tile_pos.second)) == 0) {
             entity.is_facing_forward = !(entity.is_facing_forward);
             entity.physics->velocity.x *= -1;
         }

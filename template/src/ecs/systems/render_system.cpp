@@ -21,7 +21,7 @@ RenderSystem::~RenderSystem() {
         glDeleteBuffers(1, &entity.drawable->ibo);
         glDeleteVertexArrays(1, &entity.drawable->vao);
     }
-    for (auto &tile : m_tiles) {
+    for (auto &tile : *m_tiles) {
         if (!tile.second->drawable) {
             continue;
         }
@@ -31,7 +31,7 @@ RenderSystem::~RenderSystem() {
     }
 }
 
-bool RenderSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles) {
+bool RenderSystem::init(std::list<Entity> *entities, std::map<int, Tile*>* tiles) {
     m_effects = {};
     m_entities = entities;
 
@@ -42,7 +42,7 @@ bool RenderSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>&
         initEntity(entity);
     }
     m_tiles = tiles;
-    for (auto &tile : m_tiles) {
+    for (auto &tile : *m_tiles) {
         if (tile.second->drawable == nullptr) {
             continue;
         }
@@ -118,7 +118,7 @@ void RenderSystem::draw_all(mat3 projection) {
         }
         draw(entity, projection);
     }
-    for (auto &tile : m_tiles) {
+    for (auto &tile : *m_tiles) {
         draw(*tile.second, projection);
     }
 }

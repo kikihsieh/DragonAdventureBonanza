@@ -6,7 +6,7 @@
 #include "iostream"
 #include <cstdint>
 
-bool CollisionSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles) {
+bool CollisionSystem::init(std::list<Entity> *entities, std::map<int, Tile*>* tiles) {
     m_entities = entities;
     m_tiles = tiles;
 
@@ -55,12 +55,17 @@ void CollisionSystem::tile_collisions(Entity& entity, float ms) {
 
     for (int col = tile_pos.first; col <= tile_pos.first + ceil(e_width / t_width); col++) {
         for (int row = tile_pos.second; row <= tile_pos.second + ceil(e_height / t_height); row++) {
-            if (!m_tiles.count(TileMap::hash(col, row))) {
+            if (!m_tiles->count(TileMap::hash(col, row))) {
                 continue;
             }
 
-            Tile* tile = m_tiles.at(TileMap::hash(col, row));
-            collide_with_tile(entity, *tile, ms);
+            Tile* tile = m_tiles->at(TileMap::hash(col, row));
+            if (collide_with_tile(entity, *tile, ms) &&
+                    tile->properties && tile->properties->type == Properties::COLLECTIBLE && entity.player_tag) {
+                entity.health->increase_health();
+                tile->destroy();
+                m_tiles->erase(TileMap::hash(col, row));
+            }
         }
     }
 
@@ -151,7 +156,15 @@ bool CollisionSystem::collide_with_tile(Entity& e1, Tile &tile, float ms) {
                              fmin(max_vel, hit_vel_x) :
                              fmax(-max_vel, hit_vel_x);
 
-    switch (detect_collision(e1, tile)) {
+    Side side = detect_collision(e1, tile);
+
+    if (side == NONE || (tile.properties && tile.properties->type == Properties::DECORATION)) {
+        return false;
+    } else if (tile.properties && tile.properties->type == Properties::COLLECTIBLE && e1.player_tag) {
+        return true;
+    }
+
+    switch (side) {
         case TOP: {
             e1.collider->top = true;
             e1.physics->velocity.y = fmin(e1.physics->velocity.y, hit_vel_y);
