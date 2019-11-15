@@ -13,9 +13,7 @@ public:
 
     bool init(std::list<Entity>* entities, const std::map<int, Tile*>& tiles);
     bool initEntity(Entity& entity);
-    
-	void destroy();
-    
+
 	void draw_all(mat3 projection);
 	void draw(Entity &entity, mat3 projection);
 	void drawModal(mat3 projection, Modal& entity);

@@ -7,7 +7,29 @@
 
 RenderSystem::RenderSystem() {}
 
-RenderSystem::~RenderSystem() = default;
+RenderSystem::~RenderSystem() {
+    for (auto &shader : m_effects) {
+        glDeleteShader(shader.second.vertex);
+        glDeleteShader(shader.second.fragment);
+        glDeleteShader(shader.second.program);
+    }
+    for (Entity &entity: *m_entities) {
+        if (!entity.drawable) {
+            continue;
+        }
+        glDeleteBuffers(1, &entity.drawable->vbo);
+        glDeleteBuffers(1, &entity.drawable->ibo);
+        glDeleteVertexArrays(1, &entity.drawable->vao);
+    }
+    for (auto &tile : m_tiles) {
+        if (!tile.second->drawable) {
+            continue;
+        }
+        glDeleteBuffers(1, &tile.second->drawable->vbo);
+        glDeleteBuffers(1, &tile.second->drawable->ibo);
+        glDeleteVertexArrays(1, &tile.second->drawable->vao);
+    }
+}
 
 bool RenderSystem::init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles) {
     m_effects = {};
@@ -88,17 +110,6 @@ bool RenderSystem::initEntity(Entity &entity) {
     return true;
 }
 
-void RenderSystem::destroy() {
-    for (auto &entity: *m_entities) {
-        glDeleteBuffers(1, &entity.drawable->vbo);
-        glDeleteBuffers(1, &entity.drawable->ibo);
-        glDeleteVertexArrays(1, &entity.drawable->vao);
-
-        glDeleteShader(entity.drawable->effect.vertex);
-        glDeleteShader(entity.drawable->effect.fragment);
-        glDeleteShader(entity.drawable->effect.program);
-    }
-}
 
 void RenderSystem::draw_all(mat3 projection) {
     for (auto &entity: *m_entities) {
