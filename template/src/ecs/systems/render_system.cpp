@@ -113,12 +113,16 @@ bool RenderSystem::initEntity(Entity &entity) {
 
 void RenderSystem::draw_all(mat3 projection) {
     for (auto &entity: *m_entities) {
-        if (entity.drawable == nullptr) {
+        if (entity.drawable == nullptr || entity.clipped) {
             continue;
         }
         draw(entity, projection);
     }
     for (auto &tile : *m_tiles) {
+        if (tile.second->clipped) {
+            continue;
+        }
+
         draw(*tile.second, projection);
     }
 }

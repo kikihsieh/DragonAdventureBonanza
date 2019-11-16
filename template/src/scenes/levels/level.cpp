@@ -113,6 +113,8 @@ void Level::update(float elapsed_ms, vec2 screen_size) {
         return;
     }
 
+    update_clipped(m_camera_system->get_center(), screen_size);
+
     m_airdash_system->update(elapsed_ms);
     m_physics_system->update(elapsed_ms);
     m_collision_system->update(elapsed_ms);
@@ -127,6 +129,25 @@ void Level::update(float elapsed_ms, vec2 screen_size) {
     if (m_health_system->player_died()) {
         destroy();
         init();
+    }
+}
+
+void Level::update_clipped(vec2 camera_center, vec2 screen_size) {
+    for (auto &entity: m_entities) {
+        if (entity.is_background || entity.player_tag) {
+            continue;
+        }
+        entity.clipped = entity.position.x > camera_center.x + screen_size.x * 0.6f ||
+                         entity.position.x < camera_center.x - screen_size.x * 0.6f ||
+                         entity.position.y > camera_center.y + screen_size.y * 0.6f ||
+                         entity.position.y < camera_center.y - screen_size.y * 0.6f;
+    }
+
+    for (auto &tile: *m_tile_map->get_tiles()) {
+        tile.second->clipped = tile.second->position.x > camera_center.x + screen_size.x * 0.6f ||
+                tile.second->position.x < camera_center.x - screen_size.x * 0.6f ||
+                tile.second->position.y > camera_center.y + screen_size.y * 0.6f ||
+                tile.second->position.y < camera_center.y - screen_size.y * 0.6f;
     }
 }
 

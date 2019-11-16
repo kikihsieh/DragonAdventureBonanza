@@ -3,8 +3,6 @@
 #include <cmath>
 #include <utility>
 #include <scenes/levels/tile_map.hpp>
-#include "iostream"
-#include <cstdint>
 
 bool CollisionSystem::init(std::list<Entity> *entities, std::map<int, Tile*>* tiles) {
     m_entities = entities;
@@ -16,7 +14,8 @@ bool CollisionSystem::init(std::list<Entity> *entities, std::map<int, Tile*>* ti
 void CollisionSystem::update(float ms) {
     auto entity_it = m_entities->begin();
     while (entity_it != m_entities->end()) {
-        if (!entity_it->collider) {
+
+        if (!entity_it->collider || entity_it->clipped) {
             entity_it++;
             continue;
         }

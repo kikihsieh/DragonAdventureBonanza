@@ -43,8 +43,11 @@ struct Entity {
     bool is_facing_forward;
     bool is_player_proj;
     bool is_enemy_proj;
+    bool is_background;
 
     int id;
 
     static int current_id;
+
+    bool clipped;
 };

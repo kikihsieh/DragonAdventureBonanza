@@ -68,6 +68,7 @@ protected:
     virtual bool init_walking_enemy(int type, vec2 initial_pos) = 0;
 
     bool init_level(MapVector map, TexturePathMapping mapping);
+    void update_clipped(vec2 camera_center, vec2 screen_size);
 
     TileMap* m_tile_map;
     TextureMapping m_texture_mapping;

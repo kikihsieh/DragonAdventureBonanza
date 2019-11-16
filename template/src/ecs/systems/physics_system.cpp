@@ -1,13 +1,21 @@
 #include "physics_system.hpp"
 
 #include <cmath>
-#include <utility>
-#include <iostream>
+
+bool PhysicsSystem::init(std::list<Entity> *entities, vec2 level_bounds) {
+    m_entities = entities;
+
+    m_level_bounds_x = {0, level_bounds.x};
+    m_level_bounds_y = {0, level_bounds.y};
+
+    return true;
+}
 
 void PhysicsSystem::update(float ms) {
     auto entity_it = m_entities->begin();
     while (entity_it != m_entities->end()) {
-        if (!entity_it->physics) {
+
+        if (!entity_it->physics || entity_it->clipped) {
             entity_it++;
             continue;
         }
@@ -46,26 +54,14 @@ void PhysicsSystem::update(float ms) {
         if (entity_it->position.y > m_level_bounds_y.y) {
             entity_it->physics->off_screen = true;
         }
-        // TODO: This is already checked for. Re-factor so the check doesn't need to be performed multiple times
-        if ((entity_it->is_player_proj || entity_it->is_enemy_proj) &&
-                ((entity_it->physics->velocity.x < 0 && entity_it->position.x < m_level_bounds_x.x) ||
-                (entity_it->physics->velocity.x > 0 && entity_it->position.x > m_level_bounds_x.y) ||
-                (entity_it->physics->velocity.y < 0 && entity_it->position.y < m_level_bounds_y.x))) {
+
+        if ((entity_it->is_player_proj || entity_it->is_enemy_proj) && entity_it->clipped) {
             entity_it->destroy();
             entity_it = m_entities->erase(entity_it);
             continue;
         }
         entity_it++;
     }
-}
-
-bool PhysicsSystem::init(std::list<Entity> *entities, vec2 level_bounds) {
-    m_entities = entities;
-
-    m_level_bounds_x = {0, level_bounds.x};
-    m_level_bounds_y = {0, level_bounds.y};
-
-    return true;
 }
 
 void PhysicsSystem::move(float ms, Entity& entity) {
