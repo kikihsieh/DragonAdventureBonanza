@@ -18,7 +18,7 @@ struct Properties {
         if (type == BOUNCY) {
             bounce = 1.0;
         } else if (type == SLIPPERY) {
-            friction = 1.2;
+            friction = 1.4;
         } else if (type == PROJECTILE) {
             count = 4;
         }

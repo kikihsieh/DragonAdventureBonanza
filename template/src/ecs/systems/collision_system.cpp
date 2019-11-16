@@ -88,12 +88,12 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
             return false;
         case Properties::SLIPPERY: {
             collider_updates(entity, tile, side);
-            friction_updates(entity, tile.properties->friction);
+            friction_updates(entity, tile.properties->friction, side);
             break;
         }
         case Properties::BOUNCY:
+            bounce_updates(entity, tile.properties->bounce, side);
             collider_updates(entity, tile, side);
-            bounce_updates(entity, tile.properties->bounce);
             break;
         case Properties::DAMAGE:
             if (entity.player_tag) {
@@ -110,14 +110,29 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
     return false;
 }
 
-void CollisionSystem::bounce_updates(Entity &entity, float bounce) {
-    float max_vel = 450;
-    // TODO
+void CollisionSystem::bounce_updates(Entity &entity, float bounce, Side side) {
+    float max_vel = 500;
+    if (side == Side::TOP) {
+        entity.physics->velocity.y = fmin(max_vel, -entity.physics->velocity.y*bounce);
+    } else if (side == Side::BOTTOM) {
+        entity.physics->velocity.y = fmax(-max_vel, -entity.physics->velocity.y*bounce);
+    }
 }
 
-void CollisionSystem::friction_updates(Entity &entity, float friction) {
-    float max_vel = 450;
+void CollisionSystem::friction_updates(Entity &entity, float friction, Side side) {
+    float max_vel = 550;
+
     // TODO add milliseconds?
+    if (side != Side::TOP) {
+        return;
+    }
+
+    if (entity.is_facing_forward) {
+        entity.physics->velocity.x = fmin(max_vel, abs(entity.physics->velocity.x*friction));
+    } else {
+        entity.physics->velocity.x = fmax(-max_vel, -abs(entity.physics->velocity.x*friction));
+    }
+    entity.physics->velocity.y = -0.1f * entity.physics->velocity.y;
 }
 
 bool CollisionSystem::collide_with_entities(Entity &e) {

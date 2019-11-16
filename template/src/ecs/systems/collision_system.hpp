@@ -28,8 +28,8 @@ private:
     bool tile_property_updates(Entity& entity, Tile& tile, Side side); // Returns true if tile should be removed
     bool entity_property_updates(Entity& entity, Side side); // Returns true if tile should be removed
     void collider_updates(Entity& entity, Tile &tile, Side side);
-    void bounce_updates(Entity& entity, float bounce);
-    void friction_updates(Entity& entity, float friction);
+    void bounce_updates(Entity& entity, float bounce, Side side);
+    void friction_updates(Entity& entity, float friction, Side side);
 
     Side detect_collision(Entity& e1, Entity &e2);
 

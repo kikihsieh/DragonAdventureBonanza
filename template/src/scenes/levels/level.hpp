@@ -35,7 +35,6 @@ public:
     void destroy() override;
     void update(float elapsed_ms, vec2 screen_size) override;
 
-    bool init_enemy(int type, vec2 initial_pos);
     bool init_player();
 
     virtual bool use_vertical_camera() {
@@ -65,8 +64,6 @@ public:
     }
 
 protected:
-    virtual bool init_walking_enemy(int type, vec2 initial_pos) = 0;
-
     bool init_level(MapVector map, TexturePathMapping mapping);
     void update_clipped(vec2 camera_center, vec2 screen_size);
 

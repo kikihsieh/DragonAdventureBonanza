@@ -87,15 +87,6 @@ bool Level::init_player() {
     return true;
 }
 
-
-bool Level::init_enemy(int type, vec2 initial_pos) {
-    if (type == -1) {
-        return init_walking_enemy(type, initial_pos);
-    }
-
-    return false;
-}
-
 void Level::update(float elapsed_ms, vec2 screen_size) {
     if (state == LOADED) {
         state = RUNNING;

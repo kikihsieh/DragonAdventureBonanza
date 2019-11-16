@@ -17,8 +17,6 @@ public:
     }
 
 private:
-    bool init_walking_enemy(int type, vec2 initial_pos) override;
-
     const MapVector get_map() const override {
         return m_tile_vec;
     }
