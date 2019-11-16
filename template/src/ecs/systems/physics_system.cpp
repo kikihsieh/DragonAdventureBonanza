@@ -20,7 +20,8 @@ void PhysicsSystem::update(float ms) {
             continue;
         }
 
-        float friction = (entity_it->physics->grounded) ? 20 : 2;
+        float friction = (entity_it->physics->grounded) ? 500 : 200;
+        friction = friction * ms / 1000;
 
         if (entity_it->input) {
           if (!entity_it->airdash || !entity_it->airdash->airdashing) {
@@ -32,9 +33,9 @@ void PhysicsSystem::update(float ms) {
                 entity_it->physics->velocity.x = fmin(-entity_it->physics->walk_speed, entity_it->physics->velocity.x + friction);
             } else {
                 if (entity_it->is_facing_forward) {
-                    entity_it->physics->velocity.x = fmax(0, entity_it->physics->velocity.x - 50);
+                    entity_it->physics->velocity.x = fmax(0, entity_it->physics->velocity.x - friction);
                 } else {
-                    entity_it->physics->velocity.x = fmin(0, entity_it->physics->velocity.x + 50);
+                    entity_it->physics->velocity.x = fmin(0, entity_it->physics->velocity.x + friction);
                 }
             }
             if (entity_it->input->up) {

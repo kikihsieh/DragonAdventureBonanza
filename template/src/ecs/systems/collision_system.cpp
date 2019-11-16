@@ -209,13 +209,7 @@ bool CollisionSystem::collide_with_tile(Entity& entity, Tile &tile, float ms) {
         case BOTTOM:
             entity.physics->velocity.y = fmax(-0.1f * entity.physics->velocity.y, entity.physics->velocity.y);
             break;
-        case LEFT:
-            entity.physics->velocity.x = fmax(-entity.physics->walk_speed, entity.physics->velocity.x);
-            break;
-        case RIGHT:
-            entity.physics->velocity.x = fmax(entity.physics->walk_speed, entity.physics->velocity.x);
-            break;
-        case NONE:
+        default:
             break;
     }
 
