@@ -9,7 +9,7 @@
 #include <list>
 #include <sstream>
 
-const size_t PLAYER_PROJ_DELAY_MS = 400; //around 5 clicks
+const size_t PLAYER_PROJ_DELAY_MS = 1000;
 const size_t ENEMY_PROJ_DELAY_MS = 3000;
 
 bool ShootingSystem::init(std::list<Entity> *entities, TextureMapping mapping, Entity *player, vec2 bounds) {
@@ -30,7 +30,9 @@ void ShootingSystem::update(float ms) {
         if (!entity.shooting) {
             continue;
         }
-        if (entity.input && entity.input->space) {
+        
+        entity.shooting->m_next_projectile -= ms;
+        if (entity.input && entity.input->space && entity.shooting->m_next_projectile < 0.f) {
             vec2 pos = {entity.position.x, entity.position.y + 10.f};
             vec2 shoot_direction = { 1.f, 0.f };
             vec2 texture_scale = { 1.0f, 1.0f };
@@ -40,19 +42,17 @@ void ShootingSystem::update(float ms) {
                 texture_scale = { -1.0f, 1.0f };
             }
             
-            entity.shooting->m_next_projectile -= ms;
-            if (entity.shooting->m_next_projectile < 0.f) {
-                Projectile p(m_texture_mapping.at(-7), pos, shoot_direction, texture_scale, false);
-                p.properties->count = 1;
-                if (initEntity(p)) {
-                    m_entities->emplace_back(p);
-                }
-                entity.shooting->m_next_projectile = ((PLAYER_PROJ_DELAY_MS)/2) + m_dist(m_rng) * ((PLAYER_PROJ_DELAY_MS)/2);
+            Projectile p(m_texture_mapping.at(-7), pos, shoot_direction, texture_scale, false);
+            p.properties->count = 1;
+            if (initEntity(p)) {
+                m_entities->emplace_back(p);
             }
+            entity.shooting->m_next_projectile = ((PLAYER_PROJ_DELAY_MS)/2) + m_dist(m_rng) * ((PLAYER_PROJ_DELAY_MS)/2);
         }
         else if (entity.enemyai) {
             vec2 pos = entity.position;
-            vec2 shoot_direction; // = normalize({-1.f*(entity.position.x - m_player->position.x), -1.f*(entity.position.y - m_player->position.y)});
+            vec2 shoot_direction;
+            // = normalize({-1.f*(entity.position.x - m_player->position.x), -1.f*(entity.position.y - m_player->position.y)});
             vec2 texture_scale = { 1.0f, 1.0f };
             float vertical_offset = (rand() % 50) / 100.f;
             if (pos.x < m_player->position.x)
@@ -62,6 +62,7 @@ void ShootingSystem::update(float ms) {
             entity.shooting->m_next_projectile -= ms;
             float hor_dist = abs(entity.position.x - m_player->position.x);
             float vert_dist = abs(entity.position.y - m_player->position.y);
+            
             if (hor_dist < 300.f && vert_dist < 300.f && entity.shooting->m_next_projectile < 0.f) {
                 Projectile p(m_texture_mapping.at(-6), pos, shoot_direction, texture_scale, true);
                 if (initEntity(p)) {

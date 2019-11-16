@@ -25,7 +25,7 @@ struct Player : public Entity {
         shooting = new Shooting();
 
         health = new Health();
-        health->health = 3;
+        health->health = 10;
         health->is_player = true;
 
         collider = new Collider();

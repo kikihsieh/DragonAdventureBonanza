@@ -187,8 +187,8 @@ private:
     const TexturePathMapping m_texture_map = {
         { 1, textures_path("snow_mountain/tiles/tile.png")},
         { 2, textures_path("snow_mountain/tiles/tile1.png")},
-        { -1, textures_path("snow_mountain/enemies/spider.png")},
-        { -2, textures_path("snow_mountain/enemies/glob.png")},
+        { -1, textures_path("snow_mountain/enemies/penguin.png")},
+        { -2, textures_path("snow_mountain/enemies/monkey-small.png")},
         { -6, textures_path("snow_mountain/projectiles/ice.png")},
         { -7, textures_path("fire.png")},
         { -8, textures_path("heart.png")}
