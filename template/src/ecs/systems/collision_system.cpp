@@ -33,15 +33,10 @@ void CollisionSystem::update(float ms) {
             tile_collisions(*entity_it, ms);
         }
 
-        if (entity_it->properties) {
-            if (entity_it->collider->bottom || entity_it->collider->top || entity_it->collider->right || entity_it->collider->left) {
-                entity_it->properties->count--;
-            }
-            if (entity_it->properties->count <= 0) {
-                entity_it->destroy();
-                entity_it = m_entities->erase(entity_it);
-                continue;
-            }
+        if (entity_it->properties && entity_it->properties->count <= 0) {
+            entity_it->destroy();
+            entity_it = m_entities->erase(entity_it);
+            continue;
         }
 
         entity_it++;
@@ -275,6 +270,11 @@ bool CollisionSystem::entity_property_updates(Entity &entity, CollisionSystem::S
         case NONE:
             return false;
     }
+
+    if (entity.properties) {
+        entity.properties->count--;
+    }
+
     return false;
 }
 
