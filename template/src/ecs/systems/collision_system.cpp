@@ -59,7 +59,7 @@ void CollisionSystem::tile_collisions(Entity& entity, float ms) {
             }
 
             Tile *tile = m_tiles->at(TileMap::hash(col, row));
-            if (collide_with_tile(entity, *tile)) {
+            if (collide_with_tile(entity, *tile, ms)) {
                 tile->destroy();
                 m_tiles->erase(TileMap::hash(col, row));
             }
@@ -70,7 +70,7 @@ void CollisionSystem::tile_collisions(Entity& entity, float ms) {
         fall(entity);
 }
 
-bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side side) {
+bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side side, float ms) {
     if (side == NONE) {
         return false;
     } else if (!tile.properties) {
@@ -88,7 +88,7 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
             return false;
         case Properties::SLIPPERY: {
             collider_updates(entity, tile, side);
-            friction_updates(entity, tile.properties->friction, side);
+            friction_updates(entity, tile.properties->friction, side, ms);
             break;
         }
         case Properties::BOUNCY:
@@ -119,18 +119,17 @@ void CollisionSystem::bounce_updates(Entity &entity, float bounce, Side side) {
     }
 }
 
-void CollisionSystem::friction_updates(Entity &entity, float friction, Side side) {
-    float max_vel = 550;
+void CollisionSystem::friction_updates(Entity &entity, float friction, Side side, float ms) {
+    float max_vel = 650;
 
-    // TODO add milliseconds?
     if (side != Side::TOP) {
         return;
     }
 
     if (entity.is_facing_forward) {
-        entity.physics->velocity.x = fmin(max_vel, abs(entity.physics->velocity.x*friction));
+        entity.physics->velocity.x = fmin(max_vel, abs(entity.physics->velocity.x*(1 + friction*ms/1000)));
     } else {
-        entity.physics->velocity.x = fmax(-max_vel, -abs(entity.physics->velocity.x*friction));
+        entity.physics->velocity.x = fmax(-max_vel, -abs(entity.physics->velocity.x*(1 + friction*ms/1000)));
     }
     entity.physics->velocity.y = -0.1f * entity.physics->velocity.y;
 }
@@ -193,17 +192,31 @@ bool CollisionSystem::collide_with_entities(Entity &e) {
  * @param tile : a tile
  * Returns true if the entity should be removed from the entity list
  */
-bool CollisionSystem::collide_with_tile(Entity& entity, Tile &tile) {
+bool CollisionSystem::collide_with_tile(Entity& entity, Tile &tile, float ms) {
     Side side = detect_collision(entity, tile);
 
     if (tile.properties || entity.properties) {
-        return tile_property_updates(entity, tile, side);
+        return tile_property_updates(entity, tile, side, ms);
     }
 
     collider_updates(entity, tile, side);
-    if (side == TOP || side == BOTTOM) {
-        entity.physics->velocity.y = -0.1f * entity.physics->velocity.y;
+    switch (side) {
+        case TOP:
+            entity.physics->velocity.y = fmin(-0.1f * entity.physics->velocity.y, entity.physics->velocity.y);
+            break;
+        case BOTTOM:
+            entity.physics->velocity.y = fmax(-0.1f * entity.physics->velocity.y, entity.physics->velocity.y);
+            break;
+        case LEFT:
+            entity.physics->velocity.x = fmax(-entity.physics->walk_speed, entity.physics->velocity.x);
+            break;
+        case RIGHT:
+            entity.physics->velocity.x = fmax(entity.physics->walk_speed, entity.physics->velocity.x);
+            break;
+        case NONE:
+            break;
     }
+
     return false;
 }
 
