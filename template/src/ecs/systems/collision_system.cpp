@@ -58,10 +58,8 @@ void CollisionSystem::tile_collisions(Entity& entity, float ms) {
                 continue;
             }
 
-            Tile* tile = m_tiles->at(TileMap::hash(col, row));
-            if (collide_with_tile(entity, *tile, ms) &&
-                    tile->properties && tile->properties->type == Properties::COLLECTIBLE && entity.player_tag) {
-                entity.health->increase_health();
+            Tile *tile = m_tiles->at(TileMap::hash(col, row));
+            if (collide_with_tile(entity, *tile)) {
                 tile->destroy();
                 m_tiles->erase(TileMap::hash(col, row));
             }
@@ -70,6 +68,56 @@ void CollisionSystem::tile_collisions(Entity& entity, float ms) {
 
     if (entity.health && entity.health->is_player && !entity.collider->top)
         fall(entity);
+}
+
+bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side side) {
+    if (side == NONE) {
+        return false;
+    } else if (!tile.properties) {
+        return entity_property_updates(entity, side);
+    }
+
+    switch (tile.properties->type) {
+        case Properties::DECORATIVE:
+            return false;
+        case Properties::HEALTH:
+            if (entity.player_tag) {
+                entity.health->increase_health();
+                return true;
+            }
+            return false;
+        case Properties::SLIPPERY: {
+            collider_updates(entity, tile, side);
+            friction_updates(entity, tile.properties->friction);
+            break;
+        }
+        case Properties::BOUNCY:
+            collider_updates(entity, tile, side);
+            bounce_updates(entity, tile.properties->bounce);
+            break;
+        case Properties::DAMAGE:
+            if (entity.player_tag) {
+                entity.health->decrease_health();
+            }
+            return false;
+        default:
+            break;
+    }
+    if (entity.properties) {
+        return entity_property_updates(entity, side);
+    }
+
+    return false;
+}
+
+void CollisionSystem::bounce_updates(Entity &entity, float bounce) {
+    float max_vel = 450;
+    // TODO
+}
+
+void CollisionSystem::friction_updates(Entity &entity, float friction) {
+    float max_vel = 450;
+    // TODO add milliseconds?
 }
 
 bool CollisionSystem::collide_with_entities(Entity &e) {
@@ -126,80 +174,77 @@ bool CollisionSystem::collide_with_entities(Entity &e) {
 
 /**
  * This function expects that the first entity is collidable
- * @param e1 : a collid-able entity
+ * @param entity : a collid-able entity
  * @param tile : a tile
+ * Returns true if the entity should be removed from the entity list
  */
-bool CollisionSystem::collide_with_tile(Entity& e1, Tile &tile, float ms) {
-    float max_vel = 450;
+bool CollisionSystem::collide_with_tile(Entity& entity, Tile &tile) {
+    Side side = detect_collision(entity, tile);
 
-    float e1_height = e1.texture_size.y * e1.scale.y * 0.5f;
-    float e1_width = e1.texture_size.x * e1.scale.x * 0.5f;
+    if (tile.properties || entity.properties) {
+        return tile_property_updates(entity, tile, side);
+    }
+
+    collider_updates(entity, tile, side);
+    if (side == TOP || side == BOTTOM) {
+        entity.physics->velocity.y = -0.1f * entity.physics->velocity.y;
+    }
+    return false;
+}
+
+void CollisionSystem::collider_updates(Entity &entity, Tile &tile, CollisionSystem::Side side) {
+    float e1_height = entity.texture_size.y * entity.scale.y * 0.5f;
+    float e1_width = entity.texture_size.x * entity.scale.x * 0.5f;
 
     float t_height = tile.texture_size.y * tile.scale.y * 0.5f;
     float t_width = tile.texture_size.x * tile.scale.x * 0.5f;
 
-    float hit_vel_y = e1.physics->velocity.y;
-    // TODO: make it work when both tile and entity has properties
-    //      also friction should use ms to update at the same rate
-//    hit_vel_y = (tile.properties) ? -1.f * hit_vel_y * tile.properties->bounce : 0;
-    hit_vel_y = (e1.properties) ? -1.f * hit_vel_y * e1.properties->bounce : hit_vel_y;
-
-    float hit_vel_x = e1.physics->velocity.x;
-    if (tile.properties)  {
-        hit_vel_x = hit_vel_x * tile.properties->friction;
-    }
-    if (e1.properties)  {
-        hit_vel_x = hit_vel_x * e1.properties->friction;
-    }
-    hit_vel_x = (e1.physics->velocity.x < 0) ?
-                             fmin(max_vel, hit_vel_x) :
-                             fmax(-max_vel, hit_vel_x);
-
-    Side side = detect_collision(e1, tile);
-
-    if (side == NONE || (tile.properties && tile.properties->type == Properties::DECORATION)) {
-        return false;
-    } else if (tile.properties && tile.properties->type == Properties::COLLECTIBLE && e1.player_tag) {
-        return true;
-    }
-
     switch (side) {
         case TOP: {
-            e1.collider->top = true;
-            e1.physics->velocity.y = fmin(e1.physics->velocity.y, hit_vel_y);
-            e1.position.y = tile.position.y - t_height - e1_height - padding;
-            land(e1);
-            e1.physics->velocity.y = fmin(e1.physics->velocity.y, 0);
-            e1.physics->velocity.x = hit_vel_x;
-            grounded(e1);
+            entity.collider->top = true;
+            entity.position.y = tile.position.y - t_height - e1_height - padding;
+            grounded(entity);
             break;
         } case BOTTOM: {
-            e1.collider->bottom = true;
-            e1.physics->velocity.y = fmax(e1.physics->velocity.y, hit_vel_y);
-            e1.position.y = tile.position.y + t_height + e1_height + padding;
-            e1.physics->velocity.x = hit_vel_x;
+            entity.collider->bottom = true;
+            entity.position.y = tile.position.y + t_height + e1_height + padding;
             break;
         } case LEFT: {
-            e1.collider->left = true;
-            e1.position.x = tile.position.x + t_width + e1_width + padding;
-            if (e1.properties) {
-                e1.physics->velocity.x = -hit_vel_x;
-            }
+            entity.collider->left = true;
+            entity.position.x = tile.position.x + t_width + e1_width + padding;
             break;
         } case RIGHT: {
-            e1.collider->right = true;
-            e1.position.x = tile.position.x - t_width - e1_width - padding;
-            if (e1.properties) {
-                e1.physics->velocity.x = -hit_vel_x;
-            }
+            entity.collider->right = true;
+            entity.position.x = tile.position.x - t_width - e1_width - padding;
             break;
-        } case NONE:
+        }
+        case NONE:
+            break;
+    }
+}
+
+bool CollisionSystem::entity_property_updates(Entity &entity, CollisionSystem::Side side) {
+    switch (side) {
+        case TOP:
+            entity.physics->velocity.y = fmin(0, -0.8f*entity.physics->velocity.y);
+            break;
+        case BOTTOM:
+            entity.physics->velocity.y = fmax(0, -0.8f*entity.physics->velocity.y);
+            break;
+        case LEFT:
+            entity.physics->velocity.x = fmax(0, -0.8*entity.physics->velocity.x);
+            break;
+        case RIGHT:
+            entity.physics->velocity.x = fmin(0, -0.8*entity.physics->velocity.x);
+            break;
+        case NONE:
             return false;
     }
-    if (e1.properties) {
-        e1.properties->count--;
+
+    if (entity.properties) {
+        entity.properties->count--;
     }
-    return true;
+    return false;
 }
 
 CollisionSystem::Side CollisionSystem::detect_collision(Entity &e1, Entity &e2) {

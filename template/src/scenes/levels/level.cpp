@@ -137,17 +137,17 @@ void Level::update_clipped(vec2 camera_center, vec2 screen_size) {
         if (entity.is_background || entity.player_tag) {
             continue;
         }
-        entity.clipped = entity.position.x > camera_center.x + screen_size.x * 0.5f ||
-                         entity.position.x < camera_center.x - screen_size.x * 0.5f ||
-                         entity.position.y > camera_center.y + screen_size.y * 0.5f ||
-                         entity.position.y < camera_center.y - screen_size.y * 0.5f;
+        entity.clipped = entity.position.x > camera_center.x + screen_size.x * 0.55f ||
+                         entity.position.x < camera_center.x - screen_size.x * 0.55f ||
+                         entity.position.y > camera_center.y + screen_size.y * 0.55f ||
+                         entity.position.y < camera_center.y - screen_size.y * 0.55f;
     }
 
     for (auto &tile: *m_tile_map->get_tiles()) {
-        tile.second->clipped = tile.second->position.x > camera_center.x + screen_size.x * 0.5f ||
-                tile.second->position.x < camera_center.x - screen_size.x * 0.5f ||
-                tile.second->position.y > camera_center.y + screen_size.y * 0.5f ||
-                tile.second->position.y < camera_center.y - screen_size.y * 0.5f;
+        tile.second->clipped = tile.second->position.x > camera_center.x + screen_size.x * 0.55f ||
+                tile.second->position.x < camera_center.x - screen_size.x * 0.55f ||
+                tile.second->position.y > camera_center.y + screen_size.y * 0.55f ||
+                tile.second->position.y < camera_center.y - screen_size.y * 0.55f;
     }
 }
 

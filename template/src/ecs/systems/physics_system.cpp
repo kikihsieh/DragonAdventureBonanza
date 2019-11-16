@@ -71,12 +71,17 @@ void PhysicsSystem::move(float ms, Entity& entity) {
     float x_step = entity.physics->velocity.x * (ms / 1000);
     float y_step = entity.physics->velocity.y * (ms / 1000);
 
-    if (entity.physics->velocity.x < 0 && entity.position.x < m_level_bounds_x.x)
+    if (entity.physics->velocity.x < 0 && entity.position.x < m_level_bounds_x.x) {
         x_step = 0;
-    if (entity.physics->velocity.x > 0 && entity.position.x > m_level_bounds_x.y)
+        if (!entity.player_tag) entity.clipped = true;
+    }
+    if (entity.physics->velocity.x > 0 && entity.position.x > m_level_bounds_x.y) {
         x_step = 0;
+        if (!entity.player_tag) entity.clipped = true;
+    }
     if (entity.physics->velocity.y < 0 && entity.position.y < m_level_bounds_y.x) {
         y_step = 0;
+        if (!entity.player_tag) entity.clipped = true;
     }
 
     entity.position.x += x_step;

@@ -80,8 +80,8 @@ private:
     };
 
     const TilePropertyMapping m_property_map = {
-            {13, std::make_shared<Properties>(Properties::Type::COLLECTIBLE)},
-            {14, std::make_shared<Properties>(Properties::Type::DECORATION)} // TODO: this is an example of a decorative tile
+            {13, std::make_shared<Properties>(Properties::Type::HEALTH)},
+            {14, std::make_shared<Properties>(Properties::Type::DECORATIVE)} // TODO: this is an example of a decorative tile
     };
 };
 

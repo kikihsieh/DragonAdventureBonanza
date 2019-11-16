@@ -20,10 +20,16 @@ public:
     void update(float ms);
 
 private:
-    void tile_collisions(Entity& entity, float ms);
+    void tile_collisions(Entity& entity, float ms); // Returns true if tile should be removed
 
-    bool collide_with_tile(Entity& e1, Tile &tile, float ms);
+    bool collide_with_tile(Entity& entity, Tile &tile);
     bool collide_with_entities(Entity& e);
+
+    bool tile_property_updates(Entity& entity, Tile& tile, Side side); // Returns true if tile should be removed
+    bool entity_property_updates(Entity& entity, Side side); // Returns true if tile should be removed
+    void collider_updates(Entity& entity, Tile &tile, Side side);
+    void bounce_updates(Entity& entity, float bounce);
+    void friction_updates(Entity& entity, float friction);
 
     Side detect_collision(Entity& e1, Entity &e2);
 
