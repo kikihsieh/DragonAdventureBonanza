@@ -29,12 +29,12 @@ void PhysicsSystem::update(float ms) {
                 entity_it->physics->velocity.x = fmax(entity_it->physics->walk_speed, entity_it->physics->velocity.x - friction);
             } else if (entity_it->input->left) {
                 entity_it->is_facing_forward = false;
-                entity_it->physics->velocity.x = fmin(-1 * entity_it->physics->walk_speed, entity_it->physics->velocity.x + friction);
+                entity_it->physics->velocity.x = fmin(-entity_it->physics->walk_speed, entity_it->physics->velocity.x + friction);
             } else {
-                if (entity_it->physics->velocity.x > 0) {
-                    entity_it->physics->velocity.x = fmax(0, entity_it->physics->velocity.x - 20);
+                if (entity_it->is_facing_forward) {
+                    entity_it->physics->velocity.x = fmax(0, entity_it->physics->velocity.x - 50);
                 } else {
-                    entity_it->physics->velocity.x = fmin(0, entity_it->physics->velocity.x + 20);
+                    entity_it->physics->velocity.x = fmin(0, entity_it->physics->velocity.x + 50);
                 }
             }
             if (entity_it->input->up) {

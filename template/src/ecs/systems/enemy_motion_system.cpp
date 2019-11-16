@@ -163,11 +163,16 @@ void EnemyMotionSystem::move(float ms, Entity& entity){
         std::pair<int, int> enemy_tile_pos = TileMap::get_tile_pos_from_coord(entity.position.x, entity.position.y, {e_width, e_height});
         std::pair<int, int> platform_tile_pos = {enemy_tile_pos.first, enemy_tile_pos.second + 1};
         
-        if (entity.collider->left || entity.collider->right){
-            entity.is_facing_forward = !(entity.is_facing_forward);
-            entity.physics->velocity.x *= -1;
+        if (entity.collider->left) {
+            entity.is_facing_forward = true;
+            entity.physics->velocity.x = entity.physics->walk_speed;
+            continue;
+        } else if (entity.collider->right) {
+            entity.is_facing_forward = false;
+            entity.physics->velocity.x = -entity.physics->walk_speed;
             continue;
         }
+
         if (entity.is_facing_forward && m_tiles->count(TileMap::hash(platform_tile_pos.first+1, platform_tile_pos.second)) == 0) {
             entity.is_facing_forward = !(entity.is_facing_forward);
             entity.physics->velocity.x *= -1;
