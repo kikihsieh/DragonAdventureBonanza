@@ -113,18 +113,21 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
 }
 
 void CollisionSystem::bounce_updates(Entity &entity, float bounce, Side side) {
-    float max_vel = 500;
+    float max_vel = 800;
     if (side == Side::TOP) {
-        entity.physics->velocity.y = fmin(max_vel, -entity.physics->velocity.y*bounce);
-    } else if (side == Side::BOTTOM) {
         entity.physics->velocity.y = fmax(-max_vel, -entity.physics->velocity.y*bounce);
+    } else if (side == Side::BOTTOM) {
+        entity.physics->velocity.y = fmin(max_vel, -entity.physics->velocity.y*bounce);
     }
 }
 
 void CollisionSystem::friction_updates(Entity &entity, float friction, Side side, float ms) {
     float max_vel = 650;
 
-    if (side != Side::TOP) {
+    if (side == Side::BOTTOM) {
+        entity.physics->velocity.y = fmax(-0.1f * entity.physics->velocity.y, entity.physics->velocity.y);
+        return;
+    } else if (side != TOP) {
         return;
     }
 
@@ -133,7 +136,7 @@ void CollisionSystem::friction_updates(Entity &entity, float friction, Side side
     } else {
         entity.physics->velocity.x = fmax(-max_vel, -abs(entity.physics->velocity.x*(1 + friction*ms/1000)));
     }
-    entity.physics->velocity.y = -0.1f * entity.physics->velocity.y;
+    entity.physics->velocity.y = fmin(-0.1f * entity.physics->velocity.y, entity.physics->velocity.y);
 }
 
 bool CollisionSystem::collide_with_entities(Entity &e) {

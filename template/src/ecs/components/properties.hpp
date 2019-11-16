@@ -16,9 +16,9 @@ struct Properties {
         this->type = type;
 
         if (type == BOUNCY) {
-            bounce = 1.0;
+            bounce = 1.2;
         } else if (type == SLIPPERY) {
-            friction = 8.0;
+            friction = 6.5;
         } else if (type == PROJECTILE) {
             count = 4;
         }

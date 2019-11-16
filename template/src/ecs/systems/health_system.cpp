@@ -83,6 +83,7 @@ void HealthSystem::respawn_at_last_safe(Entity &entity) {
     if (m_player_died)
         return;
 
+    entity.physics->velocity = { 0.f, 0.f };
     entity.physics->off_screen = false;
     entity.position = entity.health->last_safe;
 }
