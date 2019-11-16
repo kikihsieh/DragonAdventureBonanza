@@ -107,6 +107,12 @@ void Level::update(float elapsed_ms, vec2 screen_size) {
         return;
     }
 
+    // TODO: This is a hack to get rid of the initialization error. The problem should be improved once
+    //      efficiency issues are addressed
+    if (elapsed_ms > 100) {
+        return;
+    }
+
     m_airdash_system->update(elapsed_ms);
     m_physics_system->update(elapsed_ms);
     m_collision_system->update(elapsed_ms);

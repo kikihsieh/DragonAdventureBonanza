@@ -29,7 +29,7 @@ void CameraSystem::update(float ms, Player* player, vec2 screen_size) {
     if (!m_vertical_enabled) {
         m_center.y = m_level_dim.y - (screen_size.y * 0.5f);
     } else {
-         update_y(ms, player, screen_size);
+        update_y(ms, player, screen_size);
     }
 }
 
