@@ -20,7 +20,7 @@ void PhysicsSystem::update(float ms) {
             continue;
         }
 
-        float friction = (entity_it->physics->grounded) ? 500 : 200;
+        float friction = (entity_it->physics->grounded) ? 500 : 250;
         friction = friction * ms / 1000;
 
         if (entity_it->input) {
