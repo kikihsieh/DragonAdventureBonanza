@@ -26,7 +26,7 @@ private:
     bool collide_with_entities(Entity& e);
 
     bool tile_property_updates(Entity& entity, Tile& tile, Side side, float ms); // Returns true if tile should be removed
-    static bool entity_property_updates(Entity& entity, Side side); // Returns true if tile should be removed
+    static bool entity_property_updates(Entity& entity, Tile &tile, Side side); // Returns true if tile should be removed
     void collider_updates(Entity& entity, Tile &tile, Side side);
     static void bounce_updates(Entity& entity, float bounce, Side side);
     static void friction_updates(Entity& entity, float friction, Side side, float ms);

@@ -75,7 +75,7 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
         return false;
     } else if (!tile.properties) {
         collider_updates(entity, tile, side);
-        return entity_property_updates(entity, side);
+        return entity_property_updates(entity, tile, side);
     }
 
     switch (tile.properties->type) {
@@ -106,7 +106,7 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
     }
     if (entity.properties) {
         collider_updates(entity, tile, side);
-        return entity_property_updates(entity, side);
+        return entity_property_updates(entity, tile, side);
     }
 
     return false;
@@ -253,7 +253,8 @@ void CollisionSystem::collider_updates(Entity &entity, Tile &tile, CollisionSyst
     }
 }
 
-bool CollisionSystem::entity_property_updates(Entity &entity, CollisionSystem::Side side) {
+bool CollisionSystem::entity_property_updates(Entity &entity, Tile &tile, CollisionSystem::Side side) {
+    // TODO: calculate the new velocity based on hit relative to tile
     switch (side) {
         case TOP:
             entity.physics->velocity.y = fmin(0, -0.8f*entity.physics->velocity.y);
