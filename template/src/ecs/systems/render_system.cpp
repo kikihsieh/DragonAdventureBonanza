@@ -325,9 +325,10 @@ void RenderSystem::draw_health(mat3 projection, int health) {
 
     float screen_width = 1200.f;
     float screen_height = 800.f;
+    float offset = 50.f;
 
-    vec2 position = {screen_width * projection.c2.x / -2.0f + (screen_width - 350.f) / 2.f,
-                     screen_height * projection.c2.y / 2.0f - (screen_height- 50.f) / 2.f};
+    vec2 position = {screen_width * projection.c2.x / -2.0f - (screen_width - offset) / 2.f,
+                     screen_height * projection.c2.y / 2.0f - (screen_height- offset) / 2.f};
     glm::vec3 color = { 1.0,1.0,1.0 };
     
     render_text(string, projection, position, color);
