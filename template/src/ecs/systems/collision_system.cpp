@@ -3,6 +3,7 @@
 #include <cmath>
 #include <utility>
 #include <scenes/levels/tile_map.hpp>
+#define PI 3.141592653589793238463
 
 bool CollisionSystem::init(std::list<Entity> *entities, std::map<int, Tile*>* tiles) {
     m_entities = entities;
@@ -252,27 +253,25 @@ void CollisionSystem::collider_updates(Entity &entity, Tile &tile, CollisionSyst
 
 bool CollisionSystem::entity_property_updates(Entity &entity, Tile &tile, CollisionSystem::Side side) {
     // TODO: calculate the new velocity based on hit relative to tile
+    if (side == NONE)
+        return false;
+
     vec2 normal = {0, 0};
-    switch (side) {
-        case TOP:
-//            entity.physics->velocity.y = fmin(0, -0.8f*entity.physics->velocity.y);
-            normal = {0, -1};
-            break;
-        case BOTTOM:
-//            entity.physics->velocity.y = fmax(0, -0.8f*entity.physics->velocity.y);
-            normal = {0, 1};
-            break;
-        case LEFT:
-//            entity.physics->velocity.x = fmax(0, -0.8*entity.physics->velocity.x);
-            normal = {-1, 0};
-            break;
-        case RIGHT:
-//            entity.physics->velocity.x = fmin(0, -0.8*entity.physics->velocity.x);
-            normal = {1, 0};
-            break;
-        case NONE:
-            return false;
-    }
+
+    vec2 dir = normalize(sub(entity.position, tile.position));
+    float angle = acos(dot(dir, {1, 0})) * (180.0 / PI);
+
+    std::cout << angle << std::endl;
+
+    if (angle < 45)
+        normal = {1, 0};
+    else if (angle > 135)
+        normal = {-1, 0};
+    else if (entity.position.y >= tile.position.y)
+        normal = {0, -1};
+    else
+        normal = { 0, 1};
+
 
     entity.physics->velocity = mul(sub(entity.physics->velocity, mul(normal, 2 * dot(normal, entity.physics->velocity))), 0.8);
 
