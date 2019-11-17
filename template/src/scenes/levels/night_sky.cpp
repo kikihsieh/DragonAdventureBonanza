@@ -1,6 +1,7 @@
 #include <ecs/entities/cloud.hpp>
 #include <sstream>
 #include <ecs/systems/flying_physics_system.hpp>
+#include <ecs/entities/final_boss.hpp>
 #include "night_sky.hpp"
 
 NightSky::NightSky(bool unlocked) :
@@ -45,11 +46,18 @@ bool NightSky::init() {
     m_player->physics->acceleration = {0, 0};
     m_player->position = {100, 400};
 
+    FinalBoss b(m_texture_mapping.at(3), {m_screen.x - 100, m_screen.y / 2});
+    if (!init_entity(b))
+        return false;
+    m_entities.push_back(b);
+
     return init;
 }
 
 
 void NightSky::update(float elapsed_ms, vec2 screen_size) {
+    m_player->input->space = true;
+    
     Level::update(elapsed_ms, screen_size);
 
     m_spawn_cloud_timer += elapsed_ms;

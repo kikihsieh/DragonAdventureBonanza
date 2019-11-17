@@ -70,6 +70,7 @@ private:
     const TexturePathMapping m_texture_map = {
         { 1, textures_path("night_sky/cloud1.png")},
         { 2, textures_path("night_sky/cloud2.png")},
+        { 3, textures_path("night_sky/final_boss.png")},
         { -7, textures_path("fire.png")}
     };
 
