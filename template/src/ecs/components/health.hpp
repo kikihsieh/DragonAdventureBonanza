@@ -18,6 +18,11 @@ struct Health {
         }
     }
 
+    void increase_health() {
+        health++;
+        std::cout << "health increased" << std::endl;
+    }
+
     int health;
     bool is_player = false;
     vec2 last_safe;

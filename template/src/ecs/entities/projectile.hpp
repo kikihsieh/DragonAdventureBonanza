@@ -24,7 +24,7 @@ struct Projectile : public Entity {
         physics->velocity = { dir.x * physics->walk_speed, dir.y * physics->walk_speed};
         physics->acceleration = { 0.f, physics->gravity };
 
-        properties = std::make_shared<Properties>(1.0, 0.95);
+        properties = std::make_shared<Properties>(Properties::PROJECTILE);
 
         collider = new Collider();
         is_facing_forward = true;

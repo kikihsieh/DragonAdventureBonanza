@@ -7,7 +7,7 @@
 
 class HealthSystem {
 public:
-    bool init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles);
+    bool init(std::list<Entity> *entities, std::map<int, Tile*>* tiles);
 
     void update(float ms);
 
@@ -21,7 +21,7 @@ private:
     bool m_player_died;
 
     std::list<Entity>* m_entities;
-    std::map<int, Tile*> m_tiles;
+    std::map<int, Tile*>* m_tiles;
 };
 
 

@@ -7,12 +7,11 @@
 struct Player : public Entity {
     Player() {
         scale = {0.5f, 0.5f};
-//        texture_size = {131.f, 181.f};
 
         physics = new Physics();
         physics->gravity = 750.f;
         physics->walk_speed = 250.f;
-        physics->jump_speed = -430.f;
+        physics->jump_speed = -450.f;
         physics->velocity = {0.f, 0.f};
         physics->acceleration = {0.f, physics->gravity};
 
@@ -40,5 +39,7 @@ struct Player : public Entity {
         animatable = new Animatable();
         animatable->num_rows = 2;
         animatable->num_columns = 6;
+
+        clipped = false;
     }
 };

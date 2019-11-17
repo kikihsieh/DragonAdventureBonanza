@@ -74,3 +74,7 @@ Button* Scene::on_mouse(int key, int action, double xpos, double ypos) {
     }
     return b;
 }
+
+std::map<int, Tile*>* Scene::get_tiles() {
+    return &m_tiles;
+}

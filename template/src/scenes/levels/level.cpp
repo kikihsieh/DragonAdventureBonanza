@@ -87,15 +87,6 @@ bool Level::init_player() {
     return true;
 }
 
-
-bool Level::init_enemy(int type, vec2 initial_pos) {
-    if (type == -1) {
-        return init_walking_enemy(type, initial_pos);
-    }
-
-    return false;
-}
-
 void Level::update(float elapsed_ms, vec2 screen_size) {
     if (state == LOADED) {
         state = RUNNING;
@@ -106,6 +97,14 @@ void Level::update(float elapsed_ms, vec2 screen_size) {
     if (state == PAUSED || state == LOADING) {
         return;
     }
+
+    // TODO: This is a hack to get rid of the initialization error. The problem should be improved once
+    //      efficiency issues are addressed
+    if (elapsed_ms > 100) {
+        return;
+    }
+
+    update_clipped(m_camera_system->get_center(), screen_size);
 
     m_airdash_system->update(elapsed_ms);
     m_physics_system->update(elapsed_ms);
@@ -124,6 +123,25 @@ void Level::update(float elapsed_ms, vec2 screen_size) {
     }
 }
 
-std::map<int, Tile *> Level::get_tiles() {
+void Level::update_clipped(vec2 camera_center, vec2 screen_size) {
+    for (auto &entity: m_entities) {
+        if (entity.is_background || entity.player_tag) {
+            continue;
+        }
+        entity.clipped = entity.position.x > camera_center.x + screen_size.x * 0.55f ||
+                         entity.position.x < camera_center.x - screen_size.x * 0.55f ||
+                         entity.position.y > camera_center.y + screen_size.y * 0.55f ||
+                         entity.position.y < camera_center.y - screen_size.y * 0.55f;
+    }
+
+    for (auto &tile: *m_tile_map->get_tiles()) {
+        tile.second->clipped = tile.second->position.x > camera_center.x + screen_size.x * 0.55f ||
+                tile.second->position.x < camera_center.x - screen_size.x * 0.55f ||
+                tile.second->position.y > camera_center.y + screen_size.y * 0.55f ||
+                tile.second->position.y < camera_center.y - screen_size.y * 0.55f;
+    }
+}
+
+std::map<int, Tile *>* Level::get_tiles() {
     return m_tile_map->get_tiles();
 }

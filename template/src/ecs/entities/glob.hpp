@@ -16,7 +16,7 @@ struct Glob : public Entity {
         
         position = pos;
         physics = new Physics();
-        physics->gravity = 10.f;
+        physics->gravity = 750.f;
         physics->walk_speed = 30.f;
         
         physics->velocity = { physics->walk_speed, 0.f };

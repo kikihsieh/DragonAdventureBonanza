@@ -21,7 +21,9 @@ Entity::Entity() :
         is_facing_forward(false),
         player_tag(false),
         is_player_proj(false),
-        is_enemy_proj(false){
+        is_enemy_proj(false),
+        is_background(false),
+        clipped(true) {
 }
 
 void Entity::destroy() {

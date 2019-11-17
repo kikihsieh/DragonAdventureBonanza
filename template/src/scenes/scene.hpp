@@ -32,7 +32,7 @@ public:
     virtual void destroy();
 
     virtual void update(float elapsed_ms, vec2 screen_size);
-    virtual std::map<int, Tile*> get_tiles() { return {}; }
+    virtual std::map<int, Tile*>* get_tiles();
 
     virtual void draw(const mat3& projection);
     virtual bool is_level();
@@ -63,5 +63,7 @@ protected:
 	RenderSystem* m_rendersystem;
     InputSystem *m_inputsystem;
     Modal help = Modal(textures_path("help_menu.png"));
+
+    std::map<int, Tile*> m_tiles;
 };
 #endif

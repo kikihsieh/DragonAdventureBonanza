@@ -1,30 +1,41 @@
 #include "physics_system.hpp"
 
 #include <cmath>
-#include <utility>
-#include <iostream>
+
+bool PhysicsSystem::init(std::list<Entity> *entities, vec2 level_bounds) {
+    m_entities = entities;
+
+    m_level_bounds_x = {0, level_bounds.x};
+    m_level_bounds_y = {0, level_bounds.y};
+
+    return true;
+}
 
 void PhysicsSystem::update(float ms) {
     auto entity_it = m_entities->begin();
     while (entity_it != m_entities->end()) {
-        if (!entity_it->physics) {
+
+        if (!entity_it->physics || entity_it->clipped) {
             entity_it++;
             continue;
         }
+
+        float friction = (entity_it->physics->grounded) ? 500 : 300;
+        friction = friction * ms / 1000;
 
         if (entity_it->input) {
           if (!entity_it->airdash || !entity_it->airdash->airdashing) {
             if (entity_it->input->right) {
                 entity_it->is_facing_forward = true;
-                entity_it->physics->velocity.x = fmax(entity_it->physics->walk_speed, entity_it->physics->velocity.x);
+                entity_it->physics->velocity.x = fmax(entity_it->physics->walk_speed, entity_it->physics->velocity.x - friction);
             } else if (entity_it->input->left) {
                 entity_it->is_facing_forward = false;
-                entity_it->physics->velocity.x = fmin(-1 * entity_it->physics->walk_speed, entity_it->physics->velocity.x);
+                entity_it->physics->velocity.x = fmin(-entity_it->physics->walk_speed, entity_it->physics->velocity.x + friction);
             } else {
-                if (entity_it->physics->velocity.x > 0) {
-                    entity_it->physics->velocity.x = fmax(0, entity_it->physics->velocity.x - 50);
+                if (entity_it->is_facing_forward) {
+                    entity_it->physics->velocity.x = fmax(0, entity_it->physics->velocity.x - friction);
                 } else {
-                    entity_it->physics->velocity.x = fmin(0, entity_it->physics->velocity.x + 50);
+                    entity_it->physics->velocity.x = fmin(0, entity_it->physics->velocity.x + friction);
                 }
             }
             if (entity_it->input->up) {
@@ -46,26 +57,14 @@ void PhysicsSystem::update(float ms) {
         if (entity_it->position.y > m_level_bounds_y.y) {
             entity_it->physics->off_screen = true;
         }
-        // TODO: This is already checked for. Re-factor so the check doesn't need to be performed multiple times
-        if ((entity_it->is_player_proj || entity_it->is_enemy_proj) &&
-                ((entity_it->physics->velocity.x < 0 && entity_it->position.x < m_level_bounds_x.x) ||
-                (entity_it->physics->velocity.x > 0 && entity_it->position.x > m_level_bounds_x.y) ||
-                (entity_it->physics->velocity.y < 0 && entity_it->position.y < m_level_bounds_y.x))) {
+
+        if ((entity_it->is_player_proj || entity_it->is_enemy_proj) && entity_it->clipped) {
             entity_it->destroy();
             entity_it = m_entities->erase(entity_it);
             continue;
         }
         entity_it++;
     }
-}
-
-bool PhysicsSystem::init(std::list<Entity> *entities, vec2 level_bounds) {
-    m_entities = entities;
-
-    m_level_bounds_x = {0, level_bounds.x};
-    m_level_bounds_y = {0, level_bounds.y};
-
-    return true;
 }
 
 void PhysicsSystem::move(float ms, Entity& entity) {
@@ -75,12 +74,17 @@ void PhysicsSystem::move(float ms, Entity& entity) {
     float x_step = entity.physics->velocity.x * (ms / 1000);
     float y_step = entity.physics->velocity.y * (ms / 1000);
 
-    if (entity.physics->velocity.x < 0 && entity.position.x < m_level_bounds_x.x)
+    if (entity.physics->velocity.x < 0 && entity.position.x < m_level_bounds_x.x) {
         x_step = 0;
-    if (entity.physics->velocity.x > 0 && entity.position.x > m_level_bounds_x.y)
+        if (!entity.player_tag) entity.clipped = true;
+    }
+    if (entity.physics->velocity.x > 0 && entity.position.x > m_level_bounds_x.y) {
         x_step = 0;
+        if (!entity.player_tag) entity.clipped = true;
+    }
     if (entity.physics->velocity.y < 0 && entity.position.y < m_level_bounds_y.x) {
         y_step = 0;
+        if (!entity.player_tag) entity.clipped = true;
     }
 
     entity.position.x += x_step;

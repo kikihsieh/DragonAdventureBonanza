@@ -14,7 +14,7 @@ public:
 
     float compute_translation_x(vec2 screen_size);
     float compute_translation_y(vec2 screen_size);
-    vec2 get_center() {return m_center;};
+    vec2 get_center() { return m_center; };
 
 private:
     vec2 m_center;

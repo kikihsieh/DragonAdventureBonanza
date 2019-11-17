@@ -15,24 +15,30 @@ public:
         NONE
     };
 
-    bool init(std::list<Entity> *entities, const std::map<int, Tile*>& tiles);
+    bool init(std::list<Entity> *entities, std::map<int, Tile*>* tiles);
 
     void update(float ms);
 
 private:
-    void tile_collisions(Entity& entity, float ms);
+    void tile_collisions(Entity& entity, float ms); // Returns true if tile should be removed
 
-    bool collide_with_tile(Entity& e1, Tile &tile, float ms);
+    bool collide_with_tile(Entity& entity, Tile &tile, float ms);
     bool collide_with_entities(Entity& e);
 
-    Side detect_collision(Entity& e1, Entity &e2);
+    bool tile_property_updates(Entity& entity, Tile& tile, Side side, float ms); // Returns true if tile should be removed
+    static bool entity_property_updates(Entity& entity, Tile &tile, Side side); // Returns true if tile should be removed
+    void collider_updates(Entity& entity, Tile &tile, Side side);
+    static void bounce_updates(Entity& entity, float bounce, Side side);
+    static void friction_updates(Entity& entity, float friction, Side side, float ms);
 
-    void land(Entity& entity);
+    static Side detect_collision(Entity& e1, Entity &e2);
+
+    static void land(Entity& entity);
     void grounded(Entity& entity);
-    void fall(Entity& entity);
+    static void fall(Entity& entity);
 
     std::list<Entity>* m_entities;
-    std::map<int, Tile*> m_tiles;
+    std::map<int, Tile*>* m_tiles;
     float padding = 0.1;
 };
 

@@ -12,6 +12,8 @@ struct Button : public Entity {
         drawable->vs_shader = shader_path("textured.vs.glsl");
 
 		input = new Input();
+
+		clipped = false;
     }
 
 public:

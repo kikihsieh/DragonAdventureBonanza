@@ -2,13 +2,33 @@
 #define DAB_PROPERTIES_HPP
 
 struct Properties {
-    Properties() : bounce(0.f), friction(0.f) {}
-    Properties(float bounce, float friction) : bounce(bounce), friction(friction), count(4) {}
+    enum Type {
+        DECORATIVE,     // has no effect, is rendered for decoration
+        HEALTH,         // +1 health when collected
+        SLIPPERY,       // increases vx by friction % / second
+        BOUNCY,         // bounces when colliding from top or bottom
+        DAMAGE,         // -1 health when collided with
+        PROJECTILE      // used specifically for projectiles
+    };
 
-    float bounce;   // percent of speed obtained during each bounce
-    float friction; // percent per second of speed retained, < 0 to lose speed, > 1 to gain speed
+    // Use this constructor for stationary tile entities
+    Properties(Type type) {
+        this->type = type;
+
+        if (type == BOUNCY) {
+            bounce = 1.2f;
+        } else if (type == SLIPPERY) {
+            friction = 4.0f;
+        } else if (type == PROJECTILE) {
+            count = 4;
+        }
+    }
+
+    float bounce;   // percent of vy obtained during each bounce
+    float friction; // percent per second of vx increased per second
 
     int count; // number of times the projectile bounces before disappearing
+    Type type;
 };
 
 #endif //DAB_PROPERTIES_HPP
