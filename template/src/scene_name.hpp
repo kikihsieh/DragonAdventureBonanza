@@ -7,7 +7,7 @@ enum Scene_name {
     FOREST,
     SNOW_MOUNTAIN,
     CAVE,
-//        NIGHT_SKY,
+    NIGHT_SKY,
 //        BOSS,
             END,
 };

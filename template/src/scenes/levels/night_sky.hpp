@@ -46,6 +46,7 @@ private:
         return m_property_map;
     }
 
+    // 25 x 17
     const MapVector m_tile_vec = {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -68,7 +69,8 @@ private:
 
     const TexturePathMapping m_texture_map = {
         { 1, textures_path("night_sky/cloud1.png")},
-        { 2, textures_path("night_sky/cloud2.png")}
+        { 2, textures_path("night_sky/cloud2.png")},
+        { -7, textures_path("fire.png")}
     };
 
     const TilePropertyMapping m_property_map = {};

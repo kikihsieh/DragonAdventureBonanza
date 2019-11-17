@@ -26,12 +26,12 @@ namespace
 
 World::World() {
     map_init(m_scenes)
-            ("FOREST", new ForestLevel(true))
-            ("SNOW_MOUNTAIN", new SnowMountainLeve(true))
-            ("CAVE", new CaveLevel(true))
-            ("NIGHT_SKY", new NightSky(true))
-			("MAIN_MENU", new StartMenu())
-			("HELP", new HelpMenu());
+            (FOREST, new ForestLevel(true))
+            (SNOW_MOUNTAIN, new SnowMountainLeve(true))
+            (CAVE, new CaveLevel(true))
+            (NIGHT_SKY, new NightSky(true))
+			(MAIN_MENU, new StartMenu())
+			(HELP, new HelpMenu());
 }
 
 World::~World() {}
@@ -227,7 +227,7 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
     }
     if (key == GLFW_KEY_4 && action == GLFW_RELEASE) {
         if (m_unlocked_levels["NIGHT_SKY"])
-            load_scene(m_scenes.at("NIGHT_SKY"));
+            load_scene(NIGHT_SKY);
         return;
     }
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
