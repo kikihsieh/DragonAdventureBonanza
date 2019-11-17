@@ -1,5 +1,6 @@
 #include <ecs/entities/cloud.hpp>
 #include <sstream>
+#include <ecs/systems/flying_physics_system.hpp>
 #include "night_sky.hpp"
 
 NightSky::NightSky(bool unlocked) :
@@ -8,13 +9,12 @@ NightSky::NightSky(bool unlocked) :
 
 bool NightSky::init() {
     bool init = Level::init();
-    m_player->physics->gravity = 0;
-    m_player->physics->velocity = {0, 0};
-    m_player->physics->acceleration = {0, 0};
-    m_player->position = {100, 400};
 
     m_rng = std::default_random_engine(std::random_device()());
     m_screen = {1200, 800};
+
+    m_physics_system = new FlyingPhysicsSystem();
+    m_physics_system->init(&m_entities, m_screen);
 
     for (auto &iter : m_texture_map) {
         auto texture = std::make_shared<Texture>();
@@ -39,6 +39,11 @@ bool NightSky::init() {
             m_entities.insert(it, c);
         }
     }
+
+    m_player->physics->gravity = 0;
+    m_player->physics->velocity = {0, 0};
+    m_player->physics->acceleration = {0, 0};
+    m_player->position = {100, 400};
 
     return init;
 }

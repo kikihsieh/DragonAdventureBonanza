@@ -4,6 +4,7 @@
 #include <ecs/entities/player.hpp>
 #include <iostream>
 #include "common.hpp"
+#include "ecs/systems/default_physics_system.hpp"
 
 Level::Level(bool unlocked) :
         m_unlocked(unlocked),
@@ -20,7 +21,7 @@ Level::Level(bool unlocked) :
 
 bool Level::init() {
     m_collision_system = new CollisionSystem();
-    m_physics_system = new PhysicsSystem();
+    m_physics_system = new DefaultPhysicsSystem();
     m_airdash_system = new AirDashSystem();
 
     m_enemy_motion_system = new EnemyMotionSystem();

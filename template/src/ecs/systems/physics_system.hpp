@@ -6,12 +6,12 @@
 
 class PhysicsSystem {
 public:
-    bool init(std::list<Entity> *entities, vec2 level_bounds);
+    virtual bool init(std::list<Entity> *entities, vec2 level_bounds) = 0;
 
-    void update(float ms);
+    virtual void update(float ms) = 0;
 
 private:
-    void move(float ms, Entity& entity);
+    virtual void move(float ms, Entity& entity) = 0;
 
     std::list<Entity>* m_entities;
 

@@ -1,8 +1,7 @@
-#include "physics_system.hpp"
-
 #include <cmath>
+#include <ecs/systems/default_physics_system.hpp>
 
-bool PhysicsSystem::init(std::list<Entity> *entities, vec2 level_bounds) {
+bool DefaultPhysicsSystem::init(std::list<Entity> *entities, vec2 level_bounds) {
     m_entities = entities;
 
     m_level_bounds_x = {0, level_bounds.x};
@@ -11,7 +10,7 @@ bool PhysicsSystem::init(std::list<Entity> *entities, vec2 level_bounds) {
     return true;
 }
 
-void PhysicsSystem::update(float ms) {
+void DefaultPhysicsSystem::update(float ms) {
     auto entity_it = m_entities->begin();
     while (entity_it != m_entities->end()) {
 
@@ -67,7 +66,7 @@ void PhysicsSystem::update(float ms) {
     }
 }
 
-void PhysicsSystem::move(float ms, Entity& entity) {
+void DefaultPhysicsSystem::move(float ms, Entity& entity) {
     entity.physics->velocity.x += (entity.physics->acceleration.x * ms / 1000);
     entity.physics->velocity.y += (entity.physics->acceleration.y * ms / 1000);
 
