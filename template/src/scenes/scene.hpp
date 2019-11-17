@@ -12,6 +12,7 @@
 #include <ecs/entities/modal.hpp>
 #include <ecs/entities/button.hpp>
 #include "../src/scene_name.hpp"
+#include <functional>
 
 class Scene
 {
