@@ -5,18 +5,34 @@
 #include <ecs/entities/modal.hpp>
 #include <ecs/entities/tile.hpp>
 #include "../entities/entity.hpp"
+#include <ecs/components/drawable.hpp>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 class RenderSystem {
 public:
 	RenderSystem();
 	~RenderSystem();
 
+    struct Character {
+        GLuint textureID;
+        glm::ivec2 size;
+        glm::ivec2 bearing;
+        GLuint advance;
+    };
+
     bool init(std::list<Entity>* entities, std::map<int, Tile*>* tiles);
-    bool initEntity(Entity& entity);
+    bool init_entity(Entity& entity);
+    bool setup_freetype();
 
 	void draw_all(mat3 projection);
 	void draw(Entity &entity, mat3 projection);
-	void drawModal(mat3 projection, Modal& entity);
+	void draw_modal(mat3 projection, Modal& entity);
+    void draw_health(mat3 projection, int health);
+    void render_text(std::string text, mat3 projection, vec2 position, glm::vec3 color);
 	void update(float ms);
 
 private:
@@ -28,8 +44,15 @@ private:
     void scale(mat3 &out, vec2 scale);
 
     void release(Drawable::Effect& effect);
+
+    Drawable* characters_drawable;
+
+    FT_Library library;
+    FT_Face face;
+
     std::list<Entity>* m_entities;
     std::map<int, Tile*>* m_tiles;
     std::map<const char*, Drawable::Effect> m_effects;
+    std::map<GLchar, Character> characters;
     mat3 out;
 };

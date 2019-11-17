@@ -11,6 +11,7 @@
 #include <ecs/entities/player.hpp>
 #include <ecs/entities/modal.hpp>
 #include <ecs/entities/button.hpp>
+#include "../src/scene_name.hpp"
 
 class Scene
 {
@@ -49,6 +50,8 @@ public:
         return -(top + bottom) / (top - bottom);
     }
 
+    void addSceneChangeHandler(std::function<void(void)> callback);
+
     void on_key(int key, int action);
     Button* on_mouse(int key, int action, double xpos, double ypos);
 
@@ -65,5 +68,7 @@ protected:
     Modal help = Modal(textures_path("help_menu.png"));
 
     std::map<int, Tile*> m_tiles;
+
+    std::function<void(void)> m_scene_change_callback;
 };
 #endif

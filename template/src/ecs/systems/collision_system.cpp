@@ -8,6 +8,7 @@
 bool CollisionSystem::init(std::list<Entity> *entities, std::map<int, Tile*>* tiles) {
     m_entities = entities;
     m_tiles = tiles;
+    m_goal_reached = false;
 
     return true;
 }
@@ -102,7 +103,10 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
                 entity.health->decrease_health();
             }
             return false;
-        default:
+        case Properties::GOAL: {
+            m_goal_reached = true;
+            return false;
+        } default:
             break;
     }
     if (entity.properties) {

@@ -29,6 +29,9 @@ RenderSystem::~RenderSystem() {
         glDeleteBuffers(1, &tile.second->drawable->ibo);
         glDeleteVertexArrays(1, &tile.second->drawable->vao);
     }
+
+    glDeleteBuffers(1, &characters_drawable->vbo);
+    glDeleteBuffers(1, &characters_drawable->vao);
 }
 
 bool RenderSystem::init(std::list<Entity> *entities, std::map<int, Tile*>* tiles) {
@@ -39,19 +42,93 @@ bool RenderSystem::init(std::list<Entity> *entities, std::map<int, Tile*>* tiles
         if (entity.drawable == nullptr) {
             continue;
         }
-        initEntity(entity);
+        init_entity(entity);
     }
     m_tiles = tiles;
     for (auto &tile : *m_tiles) {
         if (tile.second->drawable == nullptr) {
             continue;
         }
-        initEntity(*tile.second);
+        init_entity(*tile.second);
     }
+    return setup_freetype();
+}
+
+// https://learnopengl.com/In-Practice/Text-Rendering
+bool RenderSystem::setup_freetype() {
+
+    if(FT_Init_FreeType(&library)) 
+        fprintf(stderr, "Failed to init Freetype library");
+
+    if(FT_New_Face( library, PROJECT_SOURCE_DIR "src/Delugia_Nerd_Font.ttf", 0, &face ))
+        fprintf(stderr, "Font file cuold not be opened or read, or that it is broken");
+
+    FT_Set_Pixel_Sizes(face, 0, 24);
+
+    // Disable byte-alignment restriction
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    // Load first 128 characters of ASCII set
+    for(GLubyte c = 0;  c < 128; c++) {
+        if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
+            fprintf(stderr, "Failed to load Glyph");
+            continue;
+        }
+        GLuint texture;
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, face->glyph->bitmap.width, face->glyph->bitmap.rows,
+                     0, GL_RED, GL_UNSIGNED_BYTE, face->glyph->bitmap.buffer);
+        
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        
+        // Store character for later use
+        Character character = {
+            texture,
+            glm::ivec2( face->glyph->bitmap.width, face->glyph->bitmap.rows ),
+            glm::ivec2( face->glyph->bitmap_left, face->glyph->bitmap_top ),
+            static_cast<GLuint>(face->glyph->advance.x)
+        };
+        characters.insert(std::pair<GLchar, Character>(c, character));
+    }
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    
+    // Destroy FreeType when we are finished
+    FT_Done_Face(face);
+    FT_Done_FreeType(library);
+
+    characters_drawable = new Drawable();
+    characters_drawable->fs_shader = shader_path("text.fs.glsl");
+    characters_drawable->vs_shader = shader_path("text.vs.glsl");
+
+    glGenVertexArrays(1, &characters_drawable->vao);
+    glGenBuffers(1, &characters_drawable->vbo);
+    glBindVertexArray(characters_drawable->vao);
+    glBindBuffer(GL_ARRAY_BUFFER, characters_drawable->vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    if (gl_has_errors())
+        return false;
+
+    if (m_effects.find(characters_drawable->vs_shader) == m_effects.end()) {
+        if (!load_from_file(characters_drawable->effect, characters_drawable->vs_shader, characters_drawable->fs_shader))
+            return false;
+        m_effects[characters_drawable->vs_shader] = characters_drawable->effect;
+    } else {
+        characters_drawable->effect = m_effects[characters_drawable->vs_shader];
+    };
     return true;
 }
 
-bool RenderSystem::initEntity(Entity &entity) {
+bool RenderSystem::init_entity(Entity &entity) {
     Drawable *drawable = entity.drawable;
     if (!entity.drawable->texture->is_valid()) {
         if (!entity.drawable->texture->load_from_file(entity.drawable->texture_path)) {
@@ -119,75 +196,81 @@ void RenderSystem::draw_all(mat3 projection) {
         draw(entity, projection);
     }
     for (auto &tile : *m_tiles) {
-        if (tile.second->clipped) {
+        if (tile.second->clipped || !tile.second->drawable) {
             continue;
         }
 
         draw(*tile.second, projection);
     }
+    // Maybe enable depth so we can avoid using another loop just to find player
+    for (auto &entity: *m_entities) {
+        if (!entity.player_tag)
+            continue;
+        draw_health(projection, entity.health->health);
+}
 }
 
 void RenderSystem::draw(Entity &entity, mat3 projection) {
-        Drawable *drawable = entity.drawable;
+    Drawable *drawable = entity.drawable;
 
-        transform(entity);
+    transform(entity);
 
-        // Enabling alpha channel for textures
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glDisable(GL_DEPTH_TEST);
+    // Enabling alpha channel for textures
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable(GL_DEPTH_TEST);
 
-        // Setting shaders
-        glUseProgram(drawable->effect.program);
+    // Setting shaders
+    glUseProgram(drawable->effect.program);
 
-        // Getting uniform locations for glUniform* calls
-        GLint transform_uloc = glGetUniformLocation(drawable->effect.program, "transform");
-        GLint color_uloc = glGetUniformLocation(drawable->effect.program, "fcolor");
-        GLint projection_uloc = glGetUniformLocation(drawable->effect.program, "projection");
-        GLint offset_uloc = glGetUniformLocation(drawable->effect.program, "offset");
-        GLint frames_uloc= glGetUniformLocation(drawable->effect.program, "frames");
+    // Getting uniform locations for glUniform* calls
+    GLint transform_uloc = glGetUniformLocation(drawable->effect.program, "transform");
+    GLint color_uloc = glGetUniformLocation(drawable->effect.program, "fcolor");
+    GLint projection_uloc = glGetUniformLocation(drawable->effect.program, "projection");
+    GLint offset_uloc = glGetUniformLocation(drawable->effect.program, "offset");
+    GLint frames_uloc= glGetUniformLocation(drawable->effect.program, "frames");
 
-        // Setting vertices and indices
-        glBindVertexArray(drawable->vao);
-        glBindBuffer(GL_ARRAY_BUFFER, drawable->vbo);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawable->ibo);
+    // Setting vertices and indices
+    glBindVertexArray(drawable->vao);
+    glBindBuffer(GL_ARRAY_BUFFER, drawable->vbo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawable->ibo);
 
-        // Input data location as in the vertex buffer
-        GLint in_position_loc = glGetAttribLocation(drawable->effect.program, "in_position");
-        GLint in_texcoord_loc = glGetAttribLocation(drawable->effect.program, "in_texcoord");
-        glEnableVertexAttribArray(in_position_loc);
-        glEnableVertexAttribArray(in_texcoord_loc);
-        glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void *) 0);
-        glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void *) sizeof(vec3));
+    // Input data location as in the vertex buffer
+    GLint in_position_loc = glGetAttribLocation(drawable->effect.program, "in_position");
+    GLint in_texcoord_loc = glGetAttribLocation(drawable->effect.program, "in_texcoord");
+    glEnableVertexAttribArray(in_position_loc);
+    glEnableVertexAttribArray(in_texcoord_loc);
+    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void *) 0);
+    glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void *) sizeof(vec3));
+    
+    // Enabling and binding texture to slot 0
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, drawable->texture->id);
 
-        // Enabling and binding texture to slot 0
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, drawable->texture->id);
+    // Setting uniform values to the currently bound program
+    glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float *) &drawable->transform);
+    float color[] = {1.f, 1.f, 1.f};
+    glUniform3fv(color_uloc, 1, color);
+    if (entity.animatable) {
+        int rows = entity.animatable->num_rows;
+        int cols = entity.animatable->num_columns;
+        float frames[] = {(float) cols, (float) rows};
+        float offset[] = {entity.animatable->frame_index.x / cols, entity.animatable->frame_index.y / rows};
+        glUniform2fv(offset_uloc, 1, offset);
+        glUniform2fv(frames_uloc, 1, frames);
+    }
+    glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *) &projection);
 
-        // Setting uniform values to the currently bound program
-        glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float *) &drawable->transform);
-        float color[] = {1.f, 1.f, 1.f};
-        glUniform3fv(color_uloc, 1, color);
-        if (entity.animatable) {
-            int rows = entity.animatable->num_rows;
-            int cols = entity.animatable->num_columns;
-            float frames[] = {(float) cols, (float) rows};
-            float offset[] = {entity.animatable->frame_index.x / cols, entity.animatable->frame_index.y / rows};
-            glUniform2fv(offset_uloc, 1, offset);
-            glUniform2fv(frames_uloc, 1, frames);
-        }
-        glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *) &projection);
+    // Drawing!
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 
-        // Drawing!
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
-
-        glDisableVertexAttribArray(in_position_loc);
-        glDisableVertexAttribArray(in_texcoord_loc);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        //reset uniform transform
+    glDisableVertexAttribArray(in_position_loc);
+    glDisableVertexAttribArray(in_texcoord_loc);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    //reset uniform transform
 }
 
-void RenderSystem::drawModal(mat3 projection, Modal &entity) {
+void RenderSystem::draw_modal(mat3 projection, Modal &entity) {
     Drawable *drawable = entity.drawable;
 
     transform(entity);
@@ -235,6 +318,72 @@ void RenderSystem::drawModal(mat3 projection, Modal &entity) {
     glDisableVertexAttribArray(in_texcoord_loc);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     //reset uniform transform
+}
+
+void RenderSystem::draw_health(mat3 projection, int health) {
+    std::string string = "Health: " + std::to_string(health);
+
+    float screen_width = 1200.f;
+    float screen_height = 800.f;
+
+    vec2 position = {screen_width * projection.c2.x / -2.0f + (screen_width - 350.f) / 2.f,
+                     screen_height * projection.c2.y / 2.0f - (screen_height- 50.f) / 2.f};
+    glm::vec3 color = { 1.0,1.0,1.0 };
+    
+    render_text(string, projection, position, color);
+}
+
+void RenderSystem::render_text(std::string text, mat3 projection, vec2 position, glm::vec3 color) {
+    float scale = 1.f;
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable(GL_DEPTH_TEST);
+
+    glUseProgram(characters_drawable->effect.program);
+
+    GLint projection_uloc = glGetUniformLocation(characters_drawable->effect.program, "projection");
+    
+    glActiveTexture(GL_TEXTURE0);
+    glBindVertexArray(characters_drawable->vao);
+    
+    std::string::const_iterator it;
+    for (it = text.begin(); it != text.end(); it++) {
+        Character ch = characters[*it];
+
+        // bottom left of the character
+        GLfloat xpos = position.x + ch.bearing.x * scale;
+        GLfloat ypos = position.y + (ch.size.y - ch.bearing.y) * scale;
+
+        GLfloat w = ch.size.x * scale;
+        GLfloat h = ch.size.y * scale;
+
+        GLfloat vertices[6][4] = { 
+            { xpos,     ypos - h,   0.0, 0.0 },            
+            { xpos,     ypos,       0.0, 1.0 },
+            { xpos + w, ypos,       1.0, 1.0 },
+
+            { xpos,     ypos - h,   0.0, 0.0 },
+            { xpos + w, ypos,       1.0, 1.0 },
+            { xpos + w, ypos - h,   1.0, 0.0 }
+        };
+        
+        glBindTexture(GL_TEXTURE_2D, ch.textureID);
+        glBindBuffer(GL_ARRAY_BUFFER, characters_drawable->vbo);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glUniform3f(glGetUniformLocation(characters_drawable->effect.program, "textColor"), color.x, color.y, color.z);
+        glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *) &projection);
+        
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+        position.x += (ch.advance >> 6) * scale;
+    }
+
+    glBindVertexArray(0);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 namespace {

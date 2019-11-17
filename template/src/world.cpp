@@ -12,7 +12,6 @@
 #include <iostream>
 #include <scenes/levels/night_sky.hpp>
 
-
 // Same as static in c, local to compilation unit
 namespace
 {
@@ -24,7 +23,6 @@ namespace
 		}
 	}
 }
-
 
 World::World() {
     map_init(m_scenes)
@@ -107,7 +105,7 @@ bool World::init(vec2 screen)
     } else
         std::cout << "Loaded save!" << std::endl;
 
-	return load_scene(m_scenes.at("MAIN_MENU"));
+	return load_scene(MAIN_MENU);
 }
 
 // Releases all the associated resources
@@ -127,7 +125,7 @@ bool World::update(float elapsed_ms)
     int w, h;
     glfwGetFramebufferSize(m_window, &w, &h);
 
-    m_current_scene->update(elapsed_ms, {w / m_screen_scale, h / m_screen_scale});
+    m_scenes.at(m_current_scene)->update(elapsed_ms, {w / m_screen_scale, h / m_screen_scale});
   	return true;
 }
 
@@ -163,8 +161,8 @@ void World::draw() {
 	float sx = 2.f / (right - left);
 	float sy = 2.f / (top - bottom);
 	vec2 screen_size = {(right - left) , (bottom - top)};
-	float tx = m_current_scene->get_translation_x(screen_size);
-	float ty = m_current_scene->get_translation_y(screen_size);
+	float tx = m_scenes.at(m_current_scene)->get_translation_x(screen_size);
+	float ty = m_scenes.at(m_current_scene)->get_translation_y(screen_size);
 	mat3 projection_2D{ { sx, 0.f, 0.f },{ 0.f, sy, 0.f },{ tx, ty, 1.f } };
 
 	/////////////////////
@@ -182,7 +180,7 @@ void World::draw() {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_screen_tex.id);
 
-    m_current_scene->draw(projection_2D);
+    m_scenes.at(m_current_scene)->draw(projection_2D);
 
 	//////////////////
 	// Presenting
@@ -194,36 +192,37 @@ bool World::is_over() const {
 	return glfwWindowShouldClose(m_window);
 }
 
-bool World::load_scene(Scene* scene) {
+bool World::load_scene(Scene_name scene) {
     if (m_current_scene) {
-        m_current_scene->destroy();
+        m_scenes.at(m_current_scene)->destroy();
     }
 
     m_current_scene = scene;
-    m_current_scene->init();
-	return true;
+    m_scenes.at(m_current_scene)->init();
+    m_scenes.at(m_current_scene)->addSceneChangeHandler(std::bind(&World::change_scene, this));
+    return true;
 }
 
 // On key callback
 void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
-    if (m_current_scene->state == m_current_scene->LOADING) {
+    if (m_scenes.at(m_current_scene)->state == Scene::LOADING) {
         return;
     }
 
     if (key == GLFW_KEY_1 && action == GLFW_RELEASE) {
         if (m_unlocked_levels["FOREST"])
-            load_scene(m_scenes.at("FOREST"));
+            load_scene(FOREST);
         return;
     }
 
     if (key == GLFW_KEY_2 && action == GLFW_RELEASE) {
         if (m_unlocked_levels["SNOW_MOUNTAIN"])
-            load_scene(m_scenes.at("SNOW_MOUNTAIN"));
+            load_scene(SNOW_MOUNTAIN);
         return;
     }
     if (key == GLFW_KEY_3 && action == GLFW_RELEASE) {
         if (m_unlocked_levels["CAVE"])
-            load_scene(m_scenes.at("CAVE"));
+            load_scene(CAVE);
         return;
     }
     if (key == GLFW_KEY_4 && action == GLFW_RELEASE) {
@@ -232,7 +231,7 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
         return;
     }
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
-		load_scene(m_scenes.at("MAIN_MENU"));
+		load_scene(MAIN_MENU);
 		return;
 	}
 
@@ -244,20 +243,20 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
             std::cout << "Saved game!" << std::endl;
         return;
     }
-    m_current_scene->on_key(key, action);
+    m_scenes.at(m_current_scene)->on_key(key, action);
 }
 
 void World::on_mouse_click(GLFWwindow* window, int key, int action, int mod) {
 	double xposition, yposition;
     glfwGetCursorPos(window, &xposition, &yposition);
-	Button* b = m_current_scene->on_mouse(key,action, xposition, yposition);
-	if (b != nullptr) {
-		Button btn = *b;
-		if (btn.function == "level")
-			load_scene(m_scenes.at(btn.scenes[btn.scene_index]));
-		else if (btn.function == "close")
+    Button* b = m_scenes.at(m_current_scene)->on_mouse(key,action, xposition, yposition);
+    if (b != nullptr) {
+        Button btn = *b;
+        if (btn.function == "level")
+            change_scene();
+        else if (btn.function == "close")
             glfwSetWindowShouldClose(m_window, true);
-	}
+    }
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
@@ -327,4 +326,13 @@ int World::load() {
 
     fclose(fp);
     return count;
+}
+
+void World::change_scene() {
+    Scene_name next = static_cast<Scene_name>(m_current_scene + 1);
+    if (next == END) {
+        load_scene(MAIN_MENU);
+    } else {
+        load_scene(next);
+    }
 }

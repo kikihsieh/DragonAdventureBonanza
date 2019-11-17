@@ -17,6 +17,7 @@ typedef std::map<int, std::shared_ptr<Properties>> TilePropertyMapping;
 typedef std::vector<std::vector<int>> MapVector;
 
 const int P = 1000;
+const int G = 2000;
 
 class TileMap {
 public:

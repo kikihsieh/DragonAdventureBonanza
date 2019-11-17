@@ -19,6 +19,12 @@ struct Tile : public Entity {
         position = pos;
     }
 
+    Tile(vec2 pos, vec2 size, vec2 tile_scale, std::shared_ptr<Properties> properties) {
+        position = pos;
+        texture_size = mul(size, tile_scale);
+        this->properties = properties;
+    }
+
     Tile(std::shared_ptr<Texture> texture, vec2 pos, vec2 scale, vec2 size, std::shared_ptr<Properties> properties)
         : Tile(texture, pos, scale, size) {
         this->properties = properties;

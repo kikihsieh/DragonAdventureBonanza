@@ -117,6 +117,10 @@ void Level::update(float elapsed_ms, vec2 screen_size) {
 
     m_health_system->update(elapsed_ms);
 
+    if (m_collision_system->is_goal_reached()) {
+        m_scene_change_callback();
+    }
+
     if (m_health_system->player_died()) {
         destroy();
         init();

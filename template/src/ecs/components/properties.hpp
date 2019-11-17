@@ -8,6 +8,7 @@ struct Properties {
         SLIPPERY,       // increases vx by friction % / second
         BOUNCY,         // bounces when colliding from top or bottom
         DAMAGE,         // -1 health when collided with
+        GOAL,           // when reached, switches to the next level
         PROJECTILE      // used specifically for projectiles
     };
 
