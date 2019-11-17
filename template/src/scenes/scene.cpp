@@ -9,7 +9,7 @@ bool Scene::init() {
     m_rendersystem = new RenderSystem();
     Background background(get_bg_texture_path());
     m_entities.insert(m_entities.begin(), background);
-    m_rendersystem->initEntity(help);
+    m_rendersystem->init_entity(help);
     if (m_rendersystem->init(&m_entities, get_tiles()) && m_inputsystem->init(&m_entities, &m_buttons)) {
         state = LOADED;
         return true;
@@ -39,7 +39,7 @@ void Scene::draw(const mat3& projection) {
     m_rendersystem->draw_all(projection);
     if (drawHelp) {
         state = PAUSED;
-        m_rendersystem->drawModal(projection, help);
+        m_rendersystem->draw_modal(projection, help);
     }
 }
 

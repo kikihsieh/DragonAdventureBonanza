@@ -10,10 +10,6 @@
 #include <memory>
 #include <random>
 
-#define SDL_MAIN_HANDLED
-#include <SDL.h>
-#include <SDL_mixer.h>
-
 typedef std::map<int, const char*> TexturePathMapping;
 typedef std::map<int, std::shared_ptr<Texture>> TextureMapping;
 

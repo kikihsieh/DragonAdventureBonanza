@@ -1,3 +1,7 @@
+Mac Users:
+brew install freetype
+brew install glm
+
 Milestone 1: Skeletal Game
 
 Rendering: 
