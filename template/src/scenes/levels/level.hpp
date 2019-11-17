@@ -33,7 +33,7 @@ public:
     virtual bool init() override;
 
     void destroy() override;
-    void update(float elapsed_ms, vec2 screen_size) override;
+    virtual void update(float elapsed_ms, vec2 screen_size) override;
 
     bool init_player();
 

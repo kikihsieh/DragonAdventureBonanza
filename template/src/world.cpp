@@ -10,6 +10,7 @@
 #include <scenes/start_menu.hpp>
 #include <scenes/help_menu.hpp>
 #include <iostream>
+#include <scenes/levels/night_sky.hpp>
 
 
 // Same as static in c, local to compilation unit
@@ -30,6 +31,7 @@ World::World() {
             ("FOREST", new ForestLevel(true))
             ("SNOW_MOUNTAIN", new SnowMountainLeve(true))
             ("CAVE", new CaveLevel(true))
+            ("NIGHT_SKY", new NightSky(true))
 			("MAIN_MENU", new StartMenu())
 			("HELP", new HelpMenu());
 }
@@ -222,6 +224,11 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
     if (key == GLFW_KEY_3 && action == GLFW_RELEASE) {
         if (m_unlocked_levels["CAVE"])
             load_scene(m_scenes.at("CAVE"));
+        return;
+    }
+    if (key == GLFW_KEY_4 && action == GLFW_RELEASE) {
+        if (m_unlocked_levels["NIGHT_SKY"])
+            load_scene(m_scenes.at("NIGHT_SKY"));
         return;
     }
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
