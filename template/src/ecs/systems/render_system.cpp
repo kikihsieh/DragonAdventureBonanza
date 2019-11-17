@@ -119,7 +119,7 @@ void RenderSystem::draw_all(mat3 projection) {
         draw(entity, projection);
     }
     for (auto &tile : *m_tiles) {
-        if (tile.second->clipped) {
+        if (tile.second->clipped || !tile.second->drawable) {
             continue;
         }
 

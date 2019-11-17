@@ -78,3 +78,7 @@ Button* Scene::on_mouse(int key, int action, double xpos, double ypos) {
 std::map<int, Tile*>* Scene::get_tiles() {
     return &m_tiles;
 }
+
+void Scene::addSceneChangeHandler(std::function<void(void)> callback) {
+    m_scene_change_callback = callback;
+}

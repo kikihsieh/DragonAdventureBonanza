@@ -28,6 +28,10 @@ bool TileMap::init(MapVector map, TextureMapping dict, TilePropertyMapping prope
             }
             if (*col == P) {
                 m_level->get_player()->position = get_coord_from_tile_pos(col_index, row_index);
+            } else if (*col == G) {
+                Tile* tile = new Tile(get_coord_from_tile_pos(col_index, row_index), tile_scale, tile_size, std::make_shared<Properties>(Properties::GOAL));
+                m_tiles.insert(std::map<int, Tile*>::value_type(
+                        TileMap::hash(col_index, row_index), tile));
             } else if (*col < 0) {
                 if (*col == -1) {
                     Spider s(dict.at(*col), get_coord_from_tile_pos(col_index, row_index));

@@ -19,6 +19,10 @@ public:
 
     void update(float ms);
 
+    bool is_goal_reached() const {
+        return m_goal_reached;
+    };
+
 private:
     void tile_collisions(Entity& entity, float ms); // Returns true if tile should be removed
 
@@ -36,6 +40,8 @@ private:
     static void land(Entity& entity);
     void grounded(Entity& entity);
     static void fall(Entity& entity);
+    
+    bool m_goal_reached;
 
     std::list<Entity>* m_entities;
     std::map<int, Tile*>* m_tiles;

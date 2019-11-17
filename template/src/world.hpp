@@ -5,6 +5,7 @@
 #include "ecs/systems/camera_system.hpp"
 #include <scenes/levels/level.hpp>
 #include <ecs/entities/button.hpp>
+#include <scene_name.hpp>
 
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
@@ -15,16 +16,7 @@
 class World
 {
 public:
-    enum Scene_names {
-        MAIN_MENU,
-        FOREST,
-        HELP,
-        CAVE,
-        SNOW_MOUNTAIN,
-        NIGHT_SKY
-    };
-
-	World();
+    World();
 	~World();
 
 	// Creates a window, sets up events and begins the game
@@ -43,7 +35,7 @@ public:
 	bool is_over()const;
 	
 private:
-    bool load_scene(Scene* scene);
+    bool load_scene(Scene_name scene);
     
 	// !!! INPUT CALLBACK FUNCTIONS
 	void on_key(GLFWwindow*, int key, int, int action, int mod);
@@ -52,6 +44,8 @@ private:
 
 	int save();
 	int load();
+
+	void change_scene();
 
 private:
 	// Window handle
@@ -64,9 +58,9 @@ private:
 	Texture m_screen_tex;
 
     // Game entities
-    Scene* m_current_scene;
+    Scene_name m_current_scene;
 
-    std::map<std::string, Scene*> m_scenes;
+    std::map<Scene_name, Scene*> m_scenes;
     std::map<std::string, bool> m_unlocked_levels;
 
     std::string m_save_path;
