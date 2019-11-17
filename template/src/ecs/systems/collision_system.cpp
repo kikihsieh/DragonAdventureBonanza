@@ -252,7 +252,6 @@ void CollisionSystem::collider_updates(Entity &entity, Tile &tile, CollisionSyst
 }
 
 bool CollisionSystem::entity_property_updates(Entity &entity, Tile &tile, CollisionSystem::Side side) {
-    // TODO: calculate the new velocity based on hit relative to tile
     if (side == NONE)
         return false;
 
@@ -260,8 +259,6 @@ bool CollisionSystem::entity_property_updates(Entity &entity, Tile &tile, Collis
 
     vec2 dir = normalize(sub(entity.position, tile.position));
     float angle = acos(dot(dir, {1, 0})) * (180.0 / PI);
-
-    std::cout << angle << std::endl;
 
     if (angle < 45)
         normal = {1, 0};
@@ -271,7 +268,6 @@ bool CollisionSystem::entity_property_updates(Entity &entity, Tile &tile, Collis
         normal = {0, -1};
     else
         normal = { 0, 1};
-
 
     entity.physics->velocity = mul(sub(entity.physics->velocity, mul(normal, 2 * dot(normal, entity.physics->velocity))), 0.8);
 
