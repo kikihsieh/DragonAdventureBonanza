@@ -252,22 +252,29 @@ void CollisionSystem::collider_updates(Entity &entity, Tile &tile, CollisionSyst
 
 bool CollisionSystem::entity_property_updates(Entity &entity, Tile &tile, CollisionSystem::Side side) {
     // TODO: calculate the new velocity based on hit relative to tile
+    vec2 normal = {0, 0};
     switch (side) {
         case TOP:
-            entity.physics->velocity.y = fmin(0, -0.8f*entity.physics->velocity.y);
+//            entity.physics->velocity.y = fmin(0, -0.8f*entity.physics->velocity.y);
+            normal = {0, -1};
             break;
         case BOTTOM:
-            entity.physics->velocity.y = fmax(0, -0.8f*entity.physics->velocity.y);
+//            entity.physics->velocity.y = fmax(0, -0.8f*entity.physics->velocity.y);
+            normal = {0, 1};
             break;
         case LEFT:
-            entity.physics->velocity.x = fmax(0, -0.8*entity.physics->velocity.x);
+//            entity.physics->velocity.x = fmax(0, -0.8*entity.physics->velocity.x);
+            normal = {-1, 0};
             break;
         case RIGHT:
-            entity.physics->velocity.x = fmin(0, -0.8*entity.physics->velocity.x);
+//            entity.physics->velocity.x = fmin(0, -0.8*entity.physics->velocity.x);
+            normal = {1, 0};
             break;
         case NONE:
             return false;
     }
+
+    entity.physics->velocity = mul(sub(entity.physics->velocity, mul(normal, 2 * dot(normal, entity.physics->velocity))), 0.8);
 
     if (entity.properties) {
         entity.properties->count--;
@@ -288,8 +295,8 @@ CollisionSystem::Side CollisionSystem::detect_collision(Entity &e1, Entity &e2) 
     float dy = e1.position.y - e2.position.y;
     float width = (e1_width + e2_width)/2;
     float height = (e1_height + e2_height)/2;
-    float crossWidth = width*dy;
-    float crossHeight = height*dx;
+    float crossWidth = width * dy;
+    float crossHeight = height * dx;
 
     if (abs(dx) <= width && abs(dy) <= height){
         if(crossWidth > crossHeight){
