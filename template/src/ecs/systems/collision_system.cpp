@@ -127,7 +127,7 @@ void CollisionSystem::bounce_updates(Entity &entity, float bounce, Side side) {
 }
 
 void CollisionSystem::friction_updates(Entity &entity, float friction, Side side, float ms) {
-    float max_vel = 700;
+    float max_vel = 1000;
 
     if (side == Side::BOTTOM) {
         entity.physics->velocity.y = fmax(-0.1f * entity.physics->velocity.y, entity.physics->velocity.y);
