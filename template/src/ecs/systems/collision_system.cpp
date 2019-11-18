@@ -121,8 +121,10 @@ void CollisionSystem::bounce_updates(Entity &entity, float bounce, Side side) {
     float max_vel = 800;
     if (side == Side::TOP) {
         entity.physics->velocity.y = fmax(-max_vel, -entity.physics->velocity.y*bounce);
+        entity.physics->velocity.y = fmin(-entity.physics->jump_speed, entity.physics->velocity.y);
     } else if (side == Side::BOTTOM) {
         entity.physics->velocity.y = fmin(max_vel, -entity.physics->velocity.y*bounce);
+        entity.physics->velocity.y = fmax(entity.physics->jump_speed, entity.physics->velocity.y);
     }
 }
 
@@ -299,14 +301,13 @@ CollisionSystem::Side CollisionSystem::detect_collision(Entity &e1, Entity &e2) 
 
     if (abs(dx) <= width && abs(dy) <= height){
         if(crossWidth > crossHeight){
-            if (crossWidth > -crossHeight &&
-                    (e2.position.y + (e2_height / 2.f)) < (e1.position.y - (e1_height / 3.f))) {
+            if (crossWidth > -crossHeight) {
                 return Side::BOTTOM;
             } else {
                 return Side::RIGHT;
             }
         } else {
-            if (crossWidth > -crossHeight) {
+            if (crossWidth > -crossHeight || (e2.position.y - (e2_height / 2.f)) < (e1.position.y + (e1_height / 4.f))) {
                 return Side::LEFT;
             } else {
                 return Side::TOP;
