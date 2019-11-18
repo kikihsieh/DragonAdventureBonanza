@@ -57,7 +57,7 @@ bool Level::init_level(MapVector map, TexturePathMapping mapping) {
         auto texture = std::make_shared<Texture>();
         if (!texture->is_valid()) {
             if (!texture->load_from_file(iter.second)) {
-                fprintf(stderr, "Failed to load tile texture!");
+                fprintf(stderr, iter.second);
                 return false;
             }
         }
