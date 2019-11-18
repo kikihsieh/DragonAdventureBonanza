@@ -57,7 +57,7 @@ bool NightSky::init() {
 
 void NightSky::update(float elapsed_ms, vec2 screen_size) {
     m_player->input->space = true;
-    
+
     Level::update(elapsed_ms, screen_size);
 
     m_spawn_cloud_timer += elapsed_ms;

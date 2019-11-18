@@ -29,7 +29,9 @@ void FlyingPhysicsSystem::update(float ms) {
                 entity_it->physics->velocity.x = entity_it->physics->walk_speed;
             }
             if (entity_it->input->left) {
-                entity_it->is_facing_forward = false;
+                // Want the player to always be shooting forwards
+                // Render system hasnt changed yet, but that player sprite should also always face forwards
+                entity_it->is_facing_forward = true;
                 entity_it->physics->velocity.x = -entity_it->physics->walk_speed;
             }
             if (entity_it->input->up) {
