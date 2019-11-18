@@ -15,6 +15,12 @@ void PhysicsSystem::update(float ms) {
     auto entity_it = m_entities->begin();
     while (entity_it != m_entities->end()) {
 
+        if ((entity_it->is_player_proj || entity_it->is_enemy_proj) && entity_it->clipped) {
+            entity_it->destroy();
+            entity_it = m_entities->erase(entity_it);
+            continue;
+        }
+
         if (!entity_it->physics || entity_it->clipped) {
             entity_it++;
             continue;
@@ -69,11 +75,6 @@ void PhysicsSystem::update(float ms) {
             entity_it->physics->off_screen = true;
         }
 
-        if ((entity_it->is_player_proj || entity_it->is_enemy_proj) && entity_it->clipped) {
-            entity_it->destroy();
-            entity_it = m_entities->erase(entity_it);
-            continue;
-        }
         entity_it++;
     }
 }
