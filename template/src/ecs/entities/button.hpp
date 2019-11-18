@@ -1,4 +1,6 @@
 #pragma once
+
+#include <functional>
 #include "entity.hpp"
 
 struct Button : public Entity {
@@ -17,9 +19,7 @@ struct Button : public Entity {
     }
 
 public:
-    std::string function;
-    int scene_index;
-    std::string scenes[4] = {"FOREST", "CAVE", "SNOW_MOUNTAIN", "BOSS"};
+    std::function<void()> m_button_callback;
 };
 
 

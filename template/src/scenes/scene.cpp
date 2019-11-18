@@ -65,14 +65,8 @@ void Scene::on_key(int key, int action) {
     m_inputsystem->on_key_update(key, action);
 }
 
-Button* Scene::on_mouse(int key, int action, double xpos, double ypos) {
-    Button* b = m_inputsystem->on_mouse_update(key, action, xpos, ypos);
-    if (b != nullptr) {
-        Button btn = *b;
-        if (btn.function == "help")
-            drawHelp = !drawHelp;
-    }
-    return b;
+void Scene::on_mouse(int key, int action, double xpos, double ypos) {
+    m_inputsystem->on_mouse_update(key, action, xpos, ypos);
 }
 
 std::map<int, Tile*>* Scene::get_tiles() {
@@ -81,4 +75,12 @@ std::map<int, Tile*>* Scene::get_tiles() {
 
 void Scene::addSceneChangeHandler(std::function<void(void)> callback) {
     m_scene_change_callback = callback;
+}
+
+void Scene::loadSceneHandler(std::function<void(Scene_name)> callback){
+    load_scene = callback;
+}
+
+void Scene::exitGameHandler(std::function<void(void)> callback) {
+    exit_game = callback;
 }
