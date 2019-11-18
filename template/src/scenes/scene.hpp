@@ -52,9 +52,11 @@ public:
     }
 
     void addSceneChangeHandler(std::function<void(void)> callback);
+    void loadSceneHandler(std::function<void(Scene_name)> callback);
+    void exitGameHandler(std::function<void()> callback);
 
     void on_key(int key, int action);
-    Button* on_mouse(int key, int action, double xpos, double ypos);
+    void on_mouse(int key, int action, double xpos, double ypos);
 
     std::list<Entity> m_entities;
     std::list<Button> m_buttons;
@@ -71,5 +73,7 @@ protected:
     std::map<int, Tile*> m_tiles;
 
     std::function<void(void)> m_scene_change_callback;
+    std::function<void(Scene_name)> load_scene;
+    std::function<void(void)> exit_game;
 };
 #endif
