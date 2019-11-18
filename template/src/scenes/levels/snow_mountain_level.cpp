@@ -14,7 +14,7 @@ void SnowMountainLeve::init_walking_enemy(std::shared_ptr<Texture> texture, vec2
 
 void SnowMountainLeve::init_throwing_enemy(std::shared_ptr<Texture> texture, vec2 pos) {
     Glob g(texture, pos);
-    g.shooting->time = 6000;
+    g.shooting->time = 4000;
     g.drawable->texture->height = 320;
     g.drawable->texture->width = 250;
     m_entities.emplace_back(g);
