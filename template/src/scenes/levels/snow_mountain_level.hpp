@@ -201,7 +201,7 @@ private:
         { 13, textures_path("snow_mountain/tiles/left_mid.png") },
         { 14, textures_path("snow_mountain/tiles/right_mid.png") },
         { -1, textures_path("snow_mountain/enemies/penguin.png") },
-        { -2, textures_path("snow_mountain/enemies/monkey-small.png") },
+        { -2, textures_path("snow_mountain/enemies/monkey.png") },
         { -6, textures_path("snow_mountain/projectiles/ice.png") },
         { -7, textures_path("fire.png") },
     };
