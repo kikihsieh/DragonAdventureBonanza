@@ -43,6 +43,9 @@ public:
 
     virtual std::map<int, Tile*>* get_tiles() override;
 
+    virtual void init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) {};
+    virtual void init_throwing_enemy(std::shared_ptr<Texture> texture, vec2 pos) {};
+
     bool is_level() override {
         return true;
     }

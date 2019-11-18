@@ -22,6 +22,7 @@ struct Player : public Entity {
 
         airdash = new AirDash();
         shooting = new Shooting();
+        shooting->time = 1000;
 
         health = new Health();
         health->health = 10;

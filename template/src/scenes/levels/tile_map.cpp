@@ -34,12 +34,10 @@ bool TileMap::init(MapVector map, TextureMapping dict, TilePropertyMapping prope
                         TileMap::hash(col_index, row_index), tile));
             } else if (*col < 0) {
                 if (*col == -1) {
-                    Spider s(dict.at(*col), get_coord_from_tile_pos(col_index, row_index));
-                    m_level->m_entities.emplace_back(s);
+                    m_level->init_walking_enemy(dict.at(*col), get_coord_from_tile_pos(col_index, row_index));
                 }
                 if (*col == -2) {
-                    Glob s(dict.at(*col), get_coord_from_tile_pos(col_index, row_index));
-                    m_level->m_entities.emplace_back(s);
+                    m_level->init_throwing_enemy(dict.at(*col), get_coord_from_tile_pos(col_index, row_index));
                 }
                 if (*col <= -3 && *col >= -5) {
                     int fly_mode = (-1 * *col) % 3 + 1;
@@ -68,10 +66,19 @@ bool TileMap::init(MapVector map, TextureMapping dict, TilePropertyMapping prope
     return true;
 }
 
-std::pair<int, int> TileMap::get_tile_pos_from_coord(float x, float y, vec2 size) {
+std::pair<int, int> TileMap::get_left_top_tile_pos_from_coord(float x, float y, vec2 size) {
     float x_pos = x - size.x*0.5f;
     float y_pos = y - size.y*0.5f;
 
+    float x_tiles = x_pos / tile_screen_size.x;
+    float y_tiles = y_pos / tile_screen_size.y;
+
+    int col = floor(x_tiles);
+    int row = floor(y_tiles);
+    return {col, row};
+}
+
+std::pair<int, int> TileMap::get_tile_pos_from_coord(float x_pos, float y_pos) {
     float x_tiles = x_pos / tile_screen_size.x;
     float y_tiles = y_pos / tile_screen_size.y;
 

@@ -52,7 +52,8 @@ void CollisionSystem::tile_collisions(Entity& entity, float ms) {
     float t_width = TileMap::tile_screen_size.x;
     float t_height = TileMap::tile_screen_size.y;
 
-    std::pair<int, int> tile_pos = TileMap::get_tile_pos_from_coord(entity.position.x, entity.position.y, {e_width, e_height});
+    std::pair<int, int> tile_pos = TileMap::get_left_top_tile_pos_from_coord(entity.position.x, entity.position.y,
+                                                                             {e_width, e_height});
 
     for (int col = tile_pos.first; col <= tile_pos.first + ceil(e_width / t_width); col++) {
         for (int row = tile_pos.second; row <= tile_pos.second + ceil(e_height / t_height); row++) {
@@ -129,7 +130,7 @@ void CollisionSystem::bounce_updates(Entity &entity, float bounce, Side side) {
 }
 
 void CollisionSystem::friction_updates(Entity &entity, float friction, Side side, float ms) {
-    float max_vel = 1000;
+    float max_vel = 800;
 
     if (side == Side::BOTTOM) {
         entity.physics->velocity.y = fmax(-0.1f * entity.physics->velocity.y, entity.physics->velocity.y);
@@ -140,8 +141,10 @@ void CollisionSystem::friction_updates(Entity &entity, float friction, Side side
 
     if (entity.is_facing_forward) {
         entity.physics->velocity.x = fmin(max_vel, abs(entity.physics->velocity.x*(1 + friction*ms/1000)));
+        entity.physics->velocity.x = fmax(entity.physics->walk_speed, entity.physics->velocity.x);
     } else {
         entity.physics->velocity.x = fmax(-max_vel, -abs(entity.physics->velocity.x*(1 + friction*ms/1000)));
+        entity.physics->velocity.x = fmin(-entity.physics->walk_speed, entity.physics->velocity.x);
     }
     entity.physics->velocity.y = fmin(-0.1f * entity.physics->velocity.y, entity.physics->velocity.y);
 }

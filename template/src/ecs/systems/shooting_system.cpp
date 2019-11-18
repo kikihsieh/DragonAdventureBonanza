@@ -1,16 +1,11 @@
 #include "shooting_system.hpp"
-#include "render_system.hpp"
 
 #include <cmath>
 #include <utility>
-#include <iostream>
 #include <random>
 #include <vector>
 #include <list>
 #include <sstream>
-
-const size_t PLAYER_PROJ_DELAY_MS = 1000;
-const size_t ENEMY_PROJ_DELAY_MS = 8000;
 
 bool ShootingSystem::init(std::list<Entity> *entities, TextureMapping mapping, Entity *player, vec2 bounds) {
     m_entities = entities;
@@ -47,7 +42,7 @@ void ShootingSystem::update(float ms) {
             if (initEntity(p)) {
                 m_entities->emplace_back(p);
             }
-            entity.shooting->m_next_projectile = ((PLAYER_PROJ_DELAY_MS)/2) + m_dist(m_rng) * ((PLAYER_PROJ_DELAY_MS)/2);
+            entity.shooting->m_next_projectile = ((entity.shooting->time) / 2) + m_dist(m_rng) * ((entity.shooting->time) / 2);
         }
         else if (entity.enemyai) {
             vec2 pos = entity.position;
@@ -68,7 +63,7 @@ void ShootingSystem::update(float ms) {
                 if (initEntity(p)) {
                     m_entities->emplace_back(p);
                 }
-                entity.shooting->m_next_projectile = ((ENEMY_PROJ_DELAY_MS) / 2) + m_dist(m_rng) * ((ENEMY_PROJ_DELAY_MS)/2);
+                entity.shooting->m_next_projectile = ((entity.shooting->time) / 2) + m_dist(m_rng) * ((entity.shooting->time)/2);
             }
         }
     }

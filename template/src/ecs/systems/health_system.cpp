@@ -66,7 +66,8 @@ void HealthSystem::update_last_safe (Entity& entity) {
     float t_height = TileMap::tile_screen_size.y;
     float t_width = TileMap::tile_screen_size.x;
 
-    std::pair<int, int> tile_pos = TileMap::get_tile_pos_from_coord(entity.position.x, entity.position.y, {e_width, e_height});
+    std::pair<int, int> tile_pos = TileMap::get_left_top_tile_pos_from_coord(entity.position.x, entity.position.y,
+                                                                             {e_width, e_height});
 
     if (m_tiles->count(TileMap::hash(tile_pos.first, tile_pos.second + ceil(e_height / t_height))) > 0) {
         if (m_tiles->count(TileMap::hash(tile_pos.first - 1, tile_pos.second + ceil(e_height / t_height))) > 0)

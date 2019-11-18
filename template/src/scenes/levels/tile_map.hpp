@@ -38,7 +38,8 @@ public:
         return x >= y ? x * x + x + y : x + y * y;  // where x, y >= 0
     }
 
-    static std::pair<int, int> get_tile_pos_from_coord(float x, float y, vec2 size);
+    static std::pair<int, int> get_left_top_tile_pos_from_coord(float x, float y, vec2 size);
+    static std::pair<int, int> get_tile_pos_from_coord(float x_pos, float y_pos);
 
     static vec2 get_coord_from_tile_pos(int col, int row) {
         float x = col * tile_size.x * tile_scale.x + tile_screen_size.x*0.5f;

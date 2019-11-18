@@ -3,7 +3,7 @@
 struct Shooting
 {
     Shooting() :
-        time(20) {
+        time(8000) {
     }
     float m_next_projectile = 0.f;
     int time;
