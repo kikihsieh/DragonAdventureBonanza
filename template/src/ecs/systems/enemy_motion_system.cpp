@@ -36,6 +36,10 @@ bool EnemyMotionSystem::init(std::list<Entity> *entities, std::map<int, Tile*>* 
 
 void EnemyMotionSystem::update(float ms) {
     for (auto &entity : *m_entities){
+        if (entity.clipped) {
+            continue;
+        }
+
         if (entity.enemyai){
             move(ms, entity);
         }
@@ -151,37 +155,28 @@ vec2 EnemyMotionSystem::QuadraticBezierPts( float t, vec2 p0, vec2 p1, vec2 p2){
  }
 
 void EnemyMotionSystem::move(float ms, Entity& entity){
-    
-    for (auto &entity : *m_entities){
-        if (!entity.physics || !entity.collider || !entity.enemyai){
-            continue;
-        }
+    float e_height = entity.texture_size.y * entity.scale.y *0.5f;
+    float e_width = entity.texture_size.x * entity.scale.x * 0.5f;
 
-        float e_height = entity.texture_size.y * entity.scale.y;
-        float e_width = entity.texture_size.x * entity.scale.x;
-        
-        std::pair<int, int> enemy_tile_pos = TileMap::get_tile_pos_from_coord(entity.position.x, entity.position.y, {e_width, e_height});
-        std::pair<int, int> platform_tile_pos = {enemy_tile_pos.first, enemy_tile_pos.second + 1};
-        
-        if (entity.collider->left) {
-            entity.is_facing_forward = true;
-            entity.physics->velocity.x = entity.physics->walk_speed;
-            continue;
-        } else if (entity.collider->right) {
-            entity.is_facing_forward = false;
-            entity.physics->velocity.x = -entity.physics->walk_speed;
-            continue;
-        }
+    std::pair<int, int> bottom_left = TileMap::get_tile_pos_from_coord(entity.position.x - e_width, entity.position.y + e_height);
+    std::pair<int, int> bottom_right = TileMap::get_tile_pos_from_coord(entity.position.x + e_width, entity.position.y + e_height);
 
-        if (entity.is_facing_forward && m_tiles->count(TileMap::hash(platform_tile_pos.first+1, platform_tile_pos.second)) == 0) {
-            entity.is_facing_forward = !(entity.is_facing_forward);
-            entity.physics->velocity.x *= -1;
-        } else if (!entity.is_facing_forward && m_tiles->count(TileMap::hash(platform_tile_pos.first, platform_tile_pos.second)) == 0) {
-            entity.is_facing_forward = !(entity.is_facing_forward);
-            entity.physics->velocity.x *= -1;
-        }
+    if (entity.collider->left) {
+        entity.is_facing_forward = true;
+        entity.physics->velocity.x = entity.physics->walk_speed;
+        return;
+    } else if (entity.collider->right) {
+        entity.is_facing_forward = false;
+        entity.physics->velocity.x = -entity.physics->walk_speed;
+        return;
     }
-    
-    
+
+    if (entity.is_facing_forward && m_tiles->count(TileMap::hash(bottom_right.first, bottom_right.second + 1)) == 0) {
+        entity.is_facing_forward = false;
+        entity.physics->velocity.x = -entity.physics->walk_speed;
+    } else if (!entity.is_facing_forward && m_tiles->count(TileMap::hash(bottom_left.first, bottom_left.second + 1)) == 0) {
+        entity.is_facing_forward = true;
+        entity.physics->velocity.x = entity.physics->walk_speed;
+    }
 }
 

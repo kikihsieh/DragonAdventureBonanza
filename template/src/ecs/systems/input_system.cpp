@@ -1,5 +1,4 @@
 #include "input_system.hpp"
-#include <list>
 
 bool InputSystem::init(std::list<Entity> *entities, std::list<Button> *buttons) {
     m_entities = entities;
@@ -61,8 +60,7 @@ void InputSystem::on_key_update(int key, int action) {
     }
 }
 
-Button* InputSystem::on_mouse_update(int key, int action, double xpos, double ypos) {
-    Button* r = nullptr;
+void InputSystem::on_mouse_update(int key, int action, double xpos, double ypos) {
     for (auto &entity : *m_buttons) {
         if (!entity.input) {
             continue;
@@ -80,13 +78,9 @@ Button* InputSystem::on_mouse_update(int key, int action, double xpos, double yp
             if (action == GLFW_PRESS) {
                 if (xpos > left && xpos < right &&
                     ypos < top && ypos > bottom) {
-                    entity.input->mouse_left = true;
-                    r = &entity;
+                    return entity.m_button_callback();
                 }
-            } else {
-                entity.input->mouse_left = false;
             }
         }
     }
-    return r;
 }

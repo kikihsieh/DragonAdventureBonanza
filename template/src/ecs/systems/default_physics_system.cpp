@@ -14,6 +14,12 @@ void DefaultPhysicsSystem::update(float ms) {
     auto entity_it = m_entities->begin();
     while (entity_it != m_entities->end()) {
 
+        if ((entity_it->is_player_proj || entity_it->is_enemy_proj) && entity_it->clipped) {
+            entity_it->destroy();
+            entity_it = m_entities->erase(entity_it);
+            continue;
+        }
+
         if (!entity_it->physics || entity_it->clipped) {
             entity_it++;
             continue;
@@ -26,10 +32,21 @@ void DefaultPhysicsSystem::update(float ms) {
           if (!entity_it->airdash || !entity_it->airdash->airdashing) {
             if (entity_it->input->right) {
                 entity_it->is_facing_forward = true;
-                entity_it->physics->velocity.x = fmax(entity_it->physics->walk_speed, entity_it->physics->velocity.x - friction);
+                if (entity_it->physics->velocity.x < entity_it->physics->walk_speed) {
+                    entity_it->physics->velocity.x = fmin(entity_it->physics->walk_speed, entity_it->physics->velocity.x + friction + 40);
+                } else {
+                    entity_it->physics->velocity.x = fmax(entity_it->physics->walk_speed, entity_it->physics->velocity.x - friction);
+                }
             } else if (entity_it->input->left) {
                 entity_it->is_facing_forward = false;
-                entity_it->physics->velocity.x = fmin(-entity_it->physics->walk_speed, entity_it->physics->velocity.x + friction);
+                if (entity_it->physics->velocity.x > entity_it->physics->walk_speed) {
+                    entity_it->physics->velocity.x = fmax(-entity_it->physics->walk_speed,
+                                                          entity_it->physics->velocity.x - friction - 40);
+                } else {
+                    entity_it->physics->velocity.x = fmin(-entity_it->physics->walk_speed,
+                                                          entity_it->physics->velocity.x + friction);
+
+                }
             } else {
                 if (entity_it->is_facing_forward) {
                     entity_it->physics->velocity.x = fmax(0, entity_it->physics->velocity.x - friction);
@@ -57,11 +74,6 @@ void DefaultPhysicsSystem::update(float ms) {
             entity_it->physics->off_screen = true;
         }
 
-        if ((entity_it->is_player_proj || entity_it->is_enemy_proj) && entity_it->clipped) {
-            entity_it->destroy();
-            entity_it = m_entities->erase(entity_it);
-            continue;
-        }
         entity_it++;
     }
 }

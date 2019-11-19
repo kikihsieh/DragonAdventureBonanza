@@ -5,9 +5,9 @@ enum Scene_name {
     HELP,
     MAIN_MENU,
     FOREST,
-    SNOW_MOUNTAIN,
     CAVE,
     NIGHT_SKY,
+    SNOW_MOUNTAIN,
 //        BOSS,
             END,
 };
