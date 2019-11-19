@@ -6,7 +6,7 @@ bool FinalBossSystem::init(Entity* player, Entity& final_boss, std::list<Entity>
     m_entities = entities;
     m_player = player;
 
-    m_phase_1_timer = 3000;
+    m_phase_1_timer = 0;
     m_phase_1_frequency = 3000;
     m_phase_1_minion_spawn_timer = 0;
     m_phase_1_minion_spawn_frequency = 5000;
