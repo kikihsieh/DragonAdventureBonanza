@@ -5,7 +5,7 @@
 
 struct FinalBoss : public Entity {
     FinalBoss(std::shared_ptr<Texture> texture, vec2 pos) {
-        scale = { 0.2f, 0.2f };
+        scale = { 0.35f, 0.35f };
         texture_size = {(float) texture->width, (float) texture->height};
 
         drawable = new Drawable();
@@ -27,7 +27,7 @@ struct FinalBoss : public Entity {
         is_facing_forward = true;
 
         health = new Health();
-        health->health = 100;
+        health->health = 50;
     }
 };
 

@@ -45,6 +45,8 @@ struct Entity {
     bool is_enemy_proj;
     bool is_background;
 
+    bool is_bomb;
+
     int id;
 
     static int current_id;

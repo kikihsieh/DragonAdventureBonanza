@@ -1,6 +1,7 @@
 #include <cmath>
 #include <ecs/systems/default_physics_system.hpp>
 #include "flying_physics_system.hpp"
+#include "final_boss_spawning_system.hpp"
 
 bool FlyingPhysicsSystem::init(std::list<Entity> *entities, vec2 level_bounds) {
     m_entities = entities;
@@ -51,6 +52,13 @@ void FlyingPhysicsSystem::update(float ms) {
             entity_it->physics->off_screen = true;
         }
 
+        if (entity_it->is_bomb && entity_it->position.x - (entity_it->texture_size.x * entity_it->scale.x) / 2 <= 0) {
+            m_final_boss_spawning_system->explode_bomb(entity_it->position);
+            entity_it->destroy();
+            entity_it = m_entities->erase(entity_it);
+            continue;
+        }
+
         if ((entity_it->is_player_proj || entity_it->is_enemy_proj) && entity_it->clipped) {
             entity_it->destroy();
             entity_it = m_entities->erase(entity_it);
@@ -91,17 +99,40 @@ void FlyingPhysicsSystem::move(float ms, Entity& entity) {
 
     if (entity.physics->velocity.x < 0 && entity.position.x + width / 2 < m_level_bounds_x.x) {
         x_step = 0;
-        if (!entity.player_tag) entity.destroy();
+        if (!entity.player_tag && !entity.is_player_proj && !entity.is_enemy_proj) {
+            m_entities->erase(std::find_if(m_entities->begin(), m_entities->end(), [&](const Entity& e) {
+                return &e == &entity;
+            }));
+            entity.destroy();
+            return;
+        }
     }
     if (entity.physics->velocity.x > 0 && entity.position.x - width / 2 > m_level_bounds_x.y) {
         x_step = 0;
-        if (!entity.player_tag) entity.destroy();
+        if (!entity.player_tag && !entity.is_player_proj && !entity.is_enemy_proj) {
+            m_entities->erase(std::find_if(m_entities->begin(), m_entities->end(), [&](const Entity& e) {
+                return &e == &entity;
+            }));
+            entity.destroy();
+            return;
+        }
     }
     if (entity.physics->velocity.y < 0 && entity.position.y + height / 2 < m_level_bounds_y.x) {
         y_step = 0;
-        if (!entity.player_tag) entity.destroy();
+        if (!entity.player_tag && !entity.is_player_proj && !entity.is_enemy_proj) {
+            m_entities->erase(std::find_if(m_entities->begin(), m_entities->end(), [&](const Entity& e) {
+                return &e == &entity;
+            }));
+            entity.destroy();
+            return;
+        }
     }
 
     entity.position.x += x_step;
     entity.position.y += y_step;
+}
+
+
+void FlyingPhysicsSystem::set_spawning_system(FinalBossSpawningSystem* final_boss_spawning_system) {
+    m_final_boss_spawning_system = final_boss_spawning_system;
 }

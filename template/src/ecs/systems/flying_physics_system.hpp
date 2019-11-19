@@ -3,12 +3,15 @@
 
 #include <list>
 #include "physics_system.hpp"
+#include "final_boss_spawning_system.hpp"
 
 class FlyingPhysicsSystem : public PhysicsSystem {
 public:
     bool init(std::list<Entity> *entities, vec2 level_bounds) override;
 
     void update(float ms) override;
+
+    void set_spawning_system(FinalBossSpawningSystem* final_boss_spawning_system);
 
 private:
     void move(float ms, Entity& entity) override;
@@ -17,6 +20,8 @@ private:
 
     vec2 m_level_bounds_x;
     vec2 m_level_bounds_y;
+
+    FinalBossSpawningSystem* m_final_boss_spawning_system;
 };
 
 

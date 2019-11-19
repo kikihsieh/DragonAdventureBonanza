@@ -2,6 +2,7 @@
 #define DAB_NIGHT_SKY_HPP
 
 #include <ecs/systems/final_boss_system.hpp>
+#include <ecs/systems/final_boss_spawning_system.hpp>
 #include "level.hpp"
 
 class NightSky: public Level {
@@ -19,12 +20,6 @@ public:
 private:
 
     void spawn_cloud();
-    bool init_entity(Entity& entity);
-    bool load_from_file(Drawable::Effect& effect, const char* vs_path, const char* fs_path);
-    void release(Drawable::Effect& effect);
-    void destroy_entity(Entity& entity);
-
-    std::map<const char*, Drawable::Effect> m_effects;
 
     vec2 m_screen;
 
@@ -34,7 +29,9 @@ private:
     float m_spawn_cloud_frequency;
     float m_spawn_cloud_timer;
 
+    Entity* m_final_boss;
     FinalBossSystem m_final_boss_system;
+    FinalBossSpawningSystem m_final_boss_spawning_system;
 
     const MapVector get_map() const override {
         return m_tile_vec;
@@ -70,9 +67,6 @@ private:
     };
 
     const TexturePathMapping m_texture_map = {
-        { 1, textures_path("night_sky/cloud1.png")},
-        { 2, textures_path("night_sky/cloud2.png")},
-        { 3, textures_path("night_sky/final_boss.png")},
         { -7, textures_path("fire.png")}
     };
 
