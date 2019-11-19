@@ -53,7 +53,7 @@ bool NightSky::init() {
         return false;
     m_final_boss = &m_entities.back();
 
-    return init && m_final_boss_system.init(*m_final_boss, &m_entities, m_screen, &m_final_boss_spawning_system);
+    return init && m_final_boss_system.init(m_player, *m_final_boss, &m_entities, m_screen, &m_final_boss_spawning_system);
 }
 
 

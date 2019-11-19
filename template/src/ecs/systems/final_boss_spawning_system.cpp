@@ -7,6 +7,7 @@
 #include <ecs/entities/cloud.hpp>
 #include <ecs/entities/projectile.hpp>
 #include <cmath>
+#include <ecs/entities/sibling.hpp>
 
 bool FinalBossSpawningSystem::init(std::list<Entity> *entities, vec2 screen_size) {
     m_entities = entities;
@@ -62,35 +63,51 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
         m_entities->push_back(p1);
 
     Projectile p2(m_texture_mapping.at(4), position,
-            normalize({1, 0.7}), {0.05, 0.05}, true);
+            normalize({(float)sqrt(3), 1}), {0.05, 0.05}, true);
     p2.physics->gravity = 0;
     p2.physics->acceleration.y = 0;
     if (init_entity(p2))
         m_entities->push_back(p2);
 
     Projectile p3(m_texture_mapping.at(4), position,
-            normalize({1, -0.7}), {0.05, 0.05}, true);
+            normalize({(float)sqrt(3), -1}), {0.05, 0.05}, true);
     p3.physics->gravity = 0;
     p3.physics->acceleration.y = 0;
     if (init_entity(p3))
         m_entities->push_back(p3);
 
     Projectile p4(m_texture_mapping.at(4), position,
-                  normalize({1, 2.75}), {0.05, 0.05}, true);
+                  normalize({1, (float)sqrt(3)}), {0.05, 0.05}, true);
     p4.physics->gravity = 0;
     p4.physics->acceleration.y = 0;
     if (init_entity(p4))
         m_entities->push_back(p4);
 
     Projectile p5(m_texture_mapping.at(4), position,
-                  normalize({1, -2.75}), {0.05, 0.05}, true);
+                  normalize({1, -(float)sqrt(3)}), {0.05, 0.05}, true);
     p5.physics->gravity = 0;
     p5.physics->acceleration.y = 0;
     if (init_entity(p5))
         m_entities->push_back(p5);
+
+    Projectile p6(m_texture_mapping.at(4), position,{0, 1}, {0.05, 0.05}, true);
+    p6.physics->gravity = 0;
+    p6.physics->acceleration.y = 0;
+    if (init_entity(p6))
+        m_entities->push_back(p6);
+
+    Projectile p7(m_texture_mapping.at(4), position, {0, -1}, {0.05, 0.05}, true);
+    p7.physics->gravity = 0;
+    p7.physics->acceleration.y = 0;
+    if (init_entity(p7))
+        m_entities->push_back(p7);
 }
 
-
+void FinalBossSpawningSystem::spawn_minion(vec2 position) {
+    Sibling s(m_texture_mapping.at(5), {m_screen_bounds.x, position.y}, {-1.5, 0}, {0.25, 0.25});
+    if (init_entity(s))
+        m_entities->push_back(s);
+}
 
 bool FinalBossSpawningSystem::init_entity(Entity& entity) {
 

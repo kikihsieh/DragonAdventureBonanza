@@ -17,6 +17,7 @@ public:
     void spawn_cloud(int texture, vec2 position);
     void spawn_bomb(vec2 position);
     void explode_bomb(vec2 position);
+    void spawn_minion(vec2 position);
 
 private:
 
@@ -37,6 +38,7 @@ private:
             { 2, textures_path("night_sky/cloud2.png")},
             { 3, textures_path("night_sky/final_boss.png")},
             { 4, textures_path("night_sky/bomb.png")},
+            { 5, textures_path("night_sky/sibling.png")},
             { -7, textures_path("fire.png")}
     };
 };

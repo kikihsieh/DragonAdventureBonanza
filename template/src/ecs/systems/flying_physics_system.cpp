@@ -59,7 +59,7 @@ void FlyingPhysicsSystem::update(float ms) {
             continue;
         }
 
-        if ((entity_it->is_player_proj || entity_it->is_enemy_proj) && entity_it->clipped) {
+        if (entity_it->clipped) {
             entity_it->destroy();
             entity_it = m_entities->erase(entity_it);
             continue;
@@ -100,30 +100,21 @@ void FlyingPhysicsSystem::move(float ms, Entity& entity) {
     if (entity.physics->velocity.x < 0 && entity.position.x + width / 2 < m_level_bounds_x.x) {
         x_step = 0;
         if (!entity.player_tag && !entity.is_player_proj && !entity.is_enemy_proj) {
-            m_entities->erase(std::find_if(m_entities->begin(), m_entities->end(), [&](const Entity& e) {
-                return &e == &entity;
-            }));
-            entity.destroy();
+            entity.clipped = true;
             return;
         }
     }
     if (entity.physics->velocity.x > 0 && entity.position.x - width / 2 > m_level_bounds_x.y) {
         x_step = 0;
         if (!entity.player_tag && !entity.is_player_proj && !entity.is_enemy_proj) {
-            m_entities->erase(std::find_if(m_entities->begin(), m_entities->end(), [&](const Entity& e) {
-                return &e == &entity;
-            }));
-            entity.destroy();
+            entity.clipped = true;
             return;
         }
     }
     if (entity.physics->velocity.y < 0 && entity.position.y + height / 2 < m_level_bounds_y.x) {
         y_step = 0;
         if (!entity.player_tag && !entity.is_player_proj && !entity.is_enemy_proj) {
-            m_entities->erase(std::find_if(m_entities->begin(), m_entities->end(), [&](const Entity& e) {
-                return &e == &entity;
-            }));
-            entity.destroy();
+            entity.clipped = true;
             return;
         }
     }
