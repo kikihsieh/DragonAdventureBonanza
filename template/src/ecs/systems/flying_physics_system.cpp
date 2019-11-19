@@ -91,15 +91,15 @@ void FlyingPhysicsSystem::move(float ms, Entity& entity) {
 
     if (entity.physics->velocity.x < 0 && entity.position.x + width / 2 < m_level_bounds_x.x) {
         x_step = 0;
-        if (!entity.player_tag) entity.clipped = true;
+        if (!entity.player_tag) entity.destroy();
     }
     if (entity.physics->velocity.x > 0 && entity.position.x - width / 2 > m_level_bounds_x.y) {
         x_step = 0;
-        if (!entity.player_tag) entity.clipped = true;
+        if (!entity.player_tag) entity.destroy();
     }
     if (entity.physics->velocity.y < 0 && entity.position.y + height / 2 < m_level_bounds_y.x) {
         y_step = 0;
-        if (!entity.player_tag) entity.clipped = true;
+        if (!entity.player_tag) entity.destroy();
     }
 
     entity.position.x += x_step;

@@ -51,6 +51,8 @@ bool NightSky::init() {
         return false;
     m_entities.push_back(b);
 
+    m_final_boss_system.init(b, &m_entities);
+
     return init;
 }
 

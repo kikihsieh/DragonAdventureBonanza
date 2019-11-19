@@ -36,7 +36,7 @@ if (IS_OS_MAC)
   link_directories(/usr/local/lib)
 endif()
 
-add_executable(${PROJECT_NAME} ${SOURCE_FILES} src/scenes/levels/night_sky.hpp src/scenes/levels/night_sky.cpp src/ecs/entities/cloud.hpp src/ecs/systems/default_physics_system.hpp src/ecs/systems/flying_physics_system.hpp src/ecs/systems/flying_physics_system.cpp src/ecs/entities/final_boss.hpp)
+add_executable(${PROJECT_NAME} ${SOURCE_FILES} src/scenes/levels/night_sky.hpp src/scenes/levels/night_sky.cpp src/ecs/entities/cloud.hpp src/ecs/systems/default_physics_system.hpp src/ecs/systems/flying_physics_system.hpp src/ecs/systems/flying_physics_system.cpp src/ecs/entities/final_boss.hpp src/ecs/systems/final_boss_system.hpp src/ecs/systems/final_boss_system.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC src/)
 
 # Added this so policy CMP0065 doesn't scream

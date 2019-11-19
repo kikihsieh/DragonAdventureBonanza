@@ -1,6 +1,7 @@
 #ifndef DAB_NIGHT_SKY_HPP
 #define DAB_NIGHT_SKY_HPP
 
+#include <ecs/systems/final_boss_system.hpp>
 #include "level.hpp"
 
 class NightSky: public Level {
@@ -33,6 +34,7 @@ private:
     float m_spawn_cloud_frequency;
     float m_spawn_cloud_timer;
 
+    FinalBossSystem m_final_boss_system;
 
     const MapVector get_map() const override {
         return m_tile_vec;
