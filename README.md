@@ -1,5 +1,48 @@
 # Dragon Adventure Bonanza
 
+### Milestone 3: Playable Game
+
+#### Rendering: 
+* Added real sprite sheet animation
+* More assests to create new levels
+
+#### Gameplay:
+* Enemies
+   * Spline based flying enemies
+   * Shooting enemies  
+* Collisions with environment obstacles and enemies
+   * Player is able to collide with platforms from all directions, the collisions are improved
+* Systems
+   * Health system (player and enemies are given health and can die)
+   * Shooting System (player and enemies can shoot)
+* UI
+   * Escape/exit button
+   * Clickable buttons
+   * Help menu modals
+* Features
+   * Save game, return to old location when you fall
+   * restart game when you lose all your lives
+   * Pause
+
+#### Creative Component: 
+* Spline based flying enemies
+* physics to make projectiles bounce
+* three new and improved levels (forest, cave, mountain)
+* extended camera to work vertically
+* modals
+* save (when player falls it restarts with its last location, if health is sufficient)
+
+#### Robustness:
+* No severe lag
+* Resolution / ratio is consistent (1200 x 800) 
+* No crashes
+
+#### In progress: 
+* Tile Map properties (bouncing, slipperry, damage tiles)
+* final boss level
+* story transitions
+
+
 ### Milestone 2: Minimal Playable Game
 
 #### Rendering: 
