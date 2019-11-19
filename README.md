@@ -28,7 +28,6 @@
 * Spline based flying enemies
 * physics to make projectiles bounce
 * three new and improved levels (forest, cave, mountain)
-* three new levels
 * extended camera to work vertically
 * modals
 * save (when player falls it restarts with its last location, if health is sufficient)
