@@ -7,6 +7,7 @@
 
 #include <ecs/entities/entity.hpp>
 #include <list>
+#include <random>
 
 class FinalBossSpawningSystem {
 public:
@@ -14,10 +15,11 @@ public:
     bool init(std::list<Entity> *entities, vec2 screen_bounds);
 
     bool spawn_final_boss();
-    void spawn_cloud(int texture, vec2 position);
+    void spawn_cloud(float x_offset);
     void spawn_bomb(vec2 position);
     void explode_bomb(vec2 position);
     void spawn_minion(vec2 position);
+    void spawn_wave(vec2 position);
 
 private:
 
@@ -27,6 +29,9 @@ private:
     void destroy_entity(Entity& entity);
 
     std::map<const char*, Drawable::Effect> m_effects;
+
+    std::default_random_engine m_rng;
+    std::uniform_real_distribution<float> dist;
 
     vec2 m_screen_bounds;
 

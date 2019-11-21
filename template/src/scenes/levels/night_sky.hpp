@@ -23,9 +23,6 @@ private:
 
     vec2 m_screen;
 
-    std::default_random_engine m_rng;
-    std::uniform_real_distribution<float> dist;
-
     float m_spawn_cloud_frequency;
     float m_spawn_cloud_timer;
 

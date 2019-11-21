@@ -11,7 +11,6 @@ NightSky::NightSky(bool unlocked) :
 bool NightSky::init() {
     bool init = Level::init();
 
-    m_rng = std::default_random_engine(std::random_device()());
     m_screen = {1200, 800};
 
     if(!m_final_boss_spawning_system.init(&m_entities, m_screen))
@@ -31,9 +30,8 @@ bool NightSky::init() {
     m_spawn_cloud_frequency = 5500;
     m_spawn_cloud_timer = m_spawn_cloud_frequency;
 
-    for (float x = 0; x <= m_screen.x - 100; x += 150) {
-        float y = 20 + dist(m_rng) * (m_screen.y - 20);
-        m_final_boss_spawning_system.spawn_cloud(round(1 + dist(m_rng)), {x, y});
+    for (float x = 100; x <= m_screen.x; x += 150) {
+        m_final_boss_spawning_system.spawn_cloud(x);
     }
 
     //=================================
@@ -72,7 +70,5 @@ void NightSky::update(float elapsed_ms, vec2 screen_size) {
 
 
 void NightSky::spawn_cloud() {
-    float y = 20 + dist(m_rng) * (m_screen.y - 20);
-    float x = m_screen.x + 50;
-    m_final_boss_spawning_system.spawn_cloud(round(1 + dist(m_rng)), {x, y});
+    m_final_boss_spawning_system.spawn_cloud(0);
 }

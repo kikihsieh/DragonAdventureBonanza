@@ -12,6 +12,7 @@
 bool FinalBossSpawningSystem::init(std::list<Entity> *entities, vec2 screen_size) {
     m_entities = entities;
     m_screen_bounds = screen_size;
+    m_rng = std::default_random_engine(std::random_device()());
 
     for (auto &iter : m_texture_map) {
         auto texture = std::make_shared<Texture>();
@@ -36,8 +37,11 @@ bool FinalBossSpawningSystem::spawn_final_boss() {
     return true;
 }
 
-void FinalBossSpawningSystem::spawn_cloud(int texture, vec2 position) {
-    Cloud c(m_texture_mapping.at(texture), {position.x, position.y});
+void FinalBossSpawningSystem::spawn_cloud(float x_offset) {
+    float y = 20 + dist(m_rng) * (m_screen_bounds.y - 20);
+    float x = m_screen_bounds.x + 50 - x_offset;
+
+    Cloud c(m_texture_mapping.at(round(1 + dist(m_rng))), {x, y});
     if (init_entity(c)) {
         auto it = m_entities->begin();
         std::advance(it, 1);
@@ -108,6 +112,34 @@ void FinalBossSpawningSystem::spawn_minion(vec2 position) {
     if (init_entity(s))
         m_entities->push_back(s);
 }
+
+void FinalBossSpawningSystem::spawn_wave(vec2 position) {
+
+    float y;
+    float x = 1;
+    float safe_angle = -0.261799 + dist(m_rng) * 2 * 0.261799;
+
+    float angle_increment = 0.0872665;
+    for (float i = -1.5708; i < 1.5708; i += angle_increment) {
+
+        if (abs(i - safe_angle) <= angle_increment)
+            continue;
+
+        y = tan(i) * x;
+
+        Projectile p1(m_texture_mapping.at(4), position,
+                normalize({-x, y}), {0.05, 0.05}, true);
+        p1.physics->gravity = 0;
+        p1.physics->acceleration.y = 0;
+        if (init_entity(p1))
+            m_entities->push_back(p1);
+    }
+}
+
+
+
+
+
 
 bool FinalBossSpawningSystem::init_entity(Entity& entity) {
 

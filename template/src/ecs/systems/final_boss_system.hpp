@@ -16,9 +16,16 @@ private:
 
     void phase_1 (Entity& final_boss, float ms);
     void phase_2 (Entity& final_boss, float ms);
+    void phase_2a (Entity& final_boss, float ms);
+    void phase_2b (Entity& final_boss, float ms);
     void phase_3 (Entity& final_boss, float ms);
 
+    void move_to_start_pos(Entity& final_boss);
+
+
     int m_final_boss_max_health;
+
+    float m_boss_move_speed;
 
     float m_phase_1_timer;
     float m_phase_1_frequency;
@@ -31,7 +38,18 @@ private:
     int m_minions_to_spawn;
     int m_minions_spawned;
 
+
+    float m_phase_2a_timer;
+    float m_phase_2a_frequency;
+    float m_phase_2b_timer;
+    float m_phase_2b_frequency;
+
+    int m_phase_2_count;
+    int m_phase_2_frequency;
+    bool m_phase_2a;
+
     vec2 m_screen_bounds;
+    vec2 m_start_pos;
 
     std::list<Entity>* m_entities;
     Entity* m_player;
