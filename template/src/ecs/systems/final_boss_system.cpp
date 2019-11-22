@@ -39,7 +39,7 @@ bool FinalBossSystem::init(Entity* player, Entity& final_boss, std::list<Entity>
 
 void FinalBossSystem::update(Entity& final_boss, float ms) {
 
-    if (final_boss.health->health > m_final_boss_max_health * 2/3)
+    if (final_boss.health->health > m_final_boss_max_health * 0.8)
         phase_1(final_boss, ms);
     else if (final_boss.health->health > m_final_boss_max_health * 1/3) {
         if (len(sub(final_boss.position, m_start_pos)) > 10)

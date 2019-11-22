@@ -165,7 +165,9 @@ bool CollisionSystem::collide_with_entities(Entity &e) {
             continue;
         }
 
-        if ((e.is_player_proj && entity_it->player_tag) || (!entity_it->player_tag && e.is_enemy_proj)) {
+        if ((e.is_player_proj && entity_it->player_tag) ||
+                (!entity_it->player_tag && e.is_enemy_proj) ||
+                (e.is_player_proj && entity_it->is_boss_proj)) {
             ++entity_it;
             continue;
         }
