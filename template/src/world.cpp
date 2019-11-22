@@ -190,6 +190,10 @@ bool World::is_over() const {
 
 bool World::load_scene(Scene_name scene) {
     using namespace std::placeholders;
+    if (m_scenes.at(scene)->is_level() && !m_unlocked_levels.at(scene)) {
+        return false;
+    }
+
     if (m_current_scene) {
         m_scenes.at(m_current_scene)->destroy();
     }
