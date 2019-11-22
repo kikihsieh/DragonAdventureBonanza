@@ -68,7 +68,7 @@ protected:
 
 	RenderSystem* m_rendersystem;
     InputSystem *m_inputsystem;
-    Modal help = Modal(textures_path("help_menu.png"));
+    Modal help = Modal(textures_path("modals/help_menu.png"));
 
     std::map<int, Tile*> m_tiles;
 
