@@ -2,6 +2,10 @@
 
 #include <cmath>
 
+PhysicsSystem::PhysicsSystem(bool double_jump) : m_double_jump(double_jump) {
+
+}
+
 bool PhysicsSystem::init(std::list<Entity> *entities, vec2 level_bounds) {
     m_entities = entities;
 
@@ -56,7 +60,7 @@ void PhysicsSystem::update(float ms) {
                 }
             }
             if (entity_it->input->up) {
-                if (entity_it->physics->jump_count < 2) {
+                if (entity_it->physics->jump_count < ((m_double_jump)? 2 : 1)) {
                     entity_it->physics->velocity.y = entity_it->physics->jump_speed;
                     entity_it->physics->jump_count++;
 

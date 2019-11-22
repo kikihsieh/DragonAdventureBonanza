@@ -20,10 +20,6 @@ struct Player : public Entity {
         drawable->fs_shader = shader_path("animated.fs.glsl");
         drawable->vs_shader = shader_path("animated.vs.glsl");
 
-        airdash = new AirDash();
-        shooting = new Shooting();
-        shooting->time = 1000;
-
         health = new Health();
         health->health = 10;
         health->is_player = true;
