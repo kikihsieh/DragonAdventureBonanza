@@ -12,7 +12,7 @@ StartMenu::StartMenu()  {
 bool StartMenu::init() {
     Button start(textures_path("start.png"));
     start.position = {600.f,400.f};
-    start.m_button_callback = [this](){load_scene(FOREST);};
+    start.m_button_callback = [this](){load_scene(LEVEL_SELECT);};
     m_buttons.emplace_back(start);
     m_entities.emplace_back(start);
     Button help(textures_path("help.png"));
