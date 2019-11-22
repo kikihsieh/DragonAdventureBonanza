@@ -22,11 +22,18 @@ namespace
 	}
 }
 
-World::World() {
+World::World() : m_save_path("save.txt") {
+    int l = load();
+    if (l < 0) {
+        std::cout << "No existing save file" << std::endl;
+    } else {
+        std::cout << "Loaded save!" << std::endl;
+    }
+
     map_init(m_scenes)
             (FOREST, new ForestLevel(true))
-            (SNOW_MOUNTAIN, new SnowMountainLeve(true))
-            (CAVE, new CaveLevel(true))
+            (SNOW_MOUNTAIN, new SnowMountainLeve(m_unlocked_levels.count(SNOW_MOUNTAIN) ? m_unlocked_levels.at(SNOW_MOUNTAIN) : false))
+            (CAVE, new CaveLevel((m_unlocked_levels.count(CAVE)) ? (m_unlocked_levels.at(CAVE)) : false))
 			(MAIN_MENU, new StartMenu())
 			(HELP, new HelpMenu());
 }
@@ -88,19 +95,6 @@ bool World::init(vec2 screen)
 
 	// Initialize the screen texture
 	m_screen_tex.create_from_screen(m_window);
-
-    m_save_path = "save.txt";
-
-    //TODO: temporary settings, change to number of levels once determine
-    int l = load();
-    if (l < 0) {
-        m_unlocked_levels.insert(std::pair<std::string, bool>("FOREST", true));
-        m_unlocked_levels.insert(std::pair<std::string, bool>("CAVE", true));
-        m_unlocked_levels.insert(std::pair<std::string, bool>("SNOW_MOUNTAIN", true));
-        m_unlocked_levels.insert(std::pair<std::string, bool>("NIGHT_SKY", false));
-        std::cout << "No existing save file" << std::endl;
-    } else
-        std::cout << "Loaded save!" << std::endl;
 
 	return load_scene(MAIN_MENU);
 }
@@ -210,19 +204,16 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
     }
 
     if (key == GLFW_KEY_1 && action == GLFW_RELEASE) {
-        if (m_unlocked_levels["FOREST"])
-            load_scene(FOREST);
+        load_scene(FOREST);
         return;
     }
 
     if (key == GLFW_KEY_2 && action == GLFW_RELEASE) {
-        if (m_unlocked_levels["SNOW_MOUNTAIN"])
-            load_scene(SNOW_MOUNTAIN);
+        load_scene(CAVE);
         return;
     }
     if (key == GLFW_KEY_3 && action == GLFW_RELEASE) {
-        if (m_unlocked_levels["CAVE"])
-            load_scene(CAVE);
+        load_scene(SNOW_MOUNTAIN);
         return;
     }
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
@@ -245,13 +236,6 @@ void World::on_mouse_click(GLFWwindow* window, int key, int action, int mod) {
 	double xposition, yposition;
     glfwGetCursorPos(window, &xposition, &yposition);
     m_scenes.at(m_current_scene)->on_mouse(key,action, xposition, yposition);
-//    if (b != nullptr) {
-//        Button btn = *b;
-//        if (btn.function == "level")
-//            change_scene();
-//        else if (btn.function == "close")
-//            glfwSetWindowShouldClose(m_window, true);
-//    }
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
@@ -262,16 +246,16 @@ void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 
 int World::save() {
     int count = 0;
-    if (m_unlocked_levels.empty())
-        return -1;
 
     FILE *fp = fopen(m_save_path.c_str(), "w");
     if (!fp)
         return -errno;
 
-    for(auto & it : m_unlocked_levels) {
-        fprintf(fp, "%s=%s\n", it.first.c_str(), std::to_string(it.second).c_str());
-        count++;
+    for(auto & it : m_scenes) {
+        if (it.second->is_level()) {
+            fprintf(fp, "%i=%s\n", it.first, std::to_string(((Level *)it.second)->is_unlocked()).c_str());
+            count++;
+        }
     }
 
     fclose(fp);
@@ -314,7 +298,7 @@ int World::load() {
             std::string s1 = (const char *) char_array;
             bool s2 = *sep == '1';
 
-            (m_unlocked_levels)[s1] = s2;
+            m_unlocked_levels[(Scene_name) std::stoi(s1)] = s2;
             count++;
         }
     }
@@ -328,6 +312,11 @@ void World::change_scene() {
     if (next == END) {
         load_scene(MAIN_MENU);
     } else {
+        Scene* scene = m_scenes.at(next);
+        if (scene->is_level() && !((Level*) scene)->is_unlocked()) {
+            ((Level*) scene)->set_unlocked(true);
+            save();
+        }
         load_scene(next);
     }
 }
