@@ -20,6 +20,7 @@ Level::Level(bool unlocked) :
 
 bool Level::init() {
     m_collision_system = new CollisionSystem();
+    m_shooting_system = new ShootingSystem();
 
     m_enemy_motion_system = new EnemyMotionSystem();
     m_health_system = new HealthSystem();
@@ -70,11 +71,8 @@ bool Level::init_level(MapVector map, TexturePathMapping mapping) {
         return false;
     }
 
-    if (m_shooting_system && !m_shooting_system->init(&m_entities, m_texture_mapping, m_player, m_level_dim)) {
-        return false;
-    }
-
     return m_physics_system->init(&m_entities, m_tile_map->get_map_dim()) &&
+           m_shooting_system->init(&m_entities, m_texture_mapping, m_player, m_level_dim) &&
            m_collision_system->init(&m_entities, m_tile_map->get_tiles()) &&
            m_enemy_motion_system->init(&m_entities, m_tile_map->get_tiles()) &&
            m_health_system->init(&m_entities, m_tile_map->get_tiles()) &&
@@ -106,10 +104,8 @@ void Level::update(float elapsed_ms, vec2 screen_size) {
     m_physics_system->update(elapsed_ms);
     m_collision_system->update(elapsed_ms);
     m_enemy_motion_system->update(elapsed_ms);
+    m_shooting_system->update(elapsed_ms);
 
-    if (m_shooting_system) {
-        m_shooting_system->update(elapsed_ms);
-    }
     help.position = m_camera_system->get_center();
     Scene::update(elapsed_ms, screen_size);
     m_camera_system->update(elapsed_ms, (Player *) m_player, screen_size);

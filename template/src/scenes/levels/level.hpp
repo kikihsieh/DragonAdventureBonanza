@@ -54,6 +54,7 @@ public:
         return m_unlocked;
     }
 
+
     float get_translation_x(vec2 screen_size) override {
         return m_camera_system->compute_translation_x(screen_size);
     }

@@ -28,6 +28,9 @@ struct Player : public Entity {
 
         input = new Input();
 
+        shooting = new Shooting();
+        shooting->time = 1000;
+
         player_tag = true;
         is_facing_forward = true;
         is_player_proj = false;
