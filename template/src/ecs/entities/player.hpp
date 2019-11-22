@@ -17,12 +17,8 @@ struct Player : public Entity {
 
         drawable = new Drawable();
         drawable->texture_path = textures_path("dragon_sprite.png");
-        drawable->fs_shader = shader_path("animated.fs.glsl");
+        drawable->fs_shader = shader_path("player.fs.glsl");
         drawable->vs_shader = shader_path("animated.vs.glsl");
-
-        airdash = new AirDash();
-        shooting = new Shooting();
-        shooting->time = 1000;
 
         health = new Health();
         health->health = 10;
@@ -31,6 +27,9 @@ struct Player : public Entity {
         collider = new Collider();
 
         input = new Input();
+
+        shooting = new Shooting();
+        shooting->time = 1000;
 
         player_tag = true;
         is_facing_forward = true;

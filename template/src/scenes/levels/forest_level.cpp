@@ -15,3 +15,14 @@ void ForestLevel::init_throwing_enemy(std::shared_ptr<Texture> texture, vec2 pos
     m_entities.emplace_back(g);
 }
 
+bool ForestLevel::init_player() {
+    Player player;
+    m_entities.emplace_back(player);
+    m_player = &m_entities.back();
+    return true;
+}
+
+bool ForestLevel::init() {
+    m_physics_system = new PhysicsSystem(false);
+    return Level::init();
+}

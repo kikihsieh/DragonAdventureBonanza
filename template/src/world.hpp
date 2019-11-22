@@ -61,7 +61,7 @@ private:
     Scene_name m_current_scene;
 
     std::map<Scene_name, Scene*> m_scenes;
-    std::map<std::string, bool> m_unlocked_levels;
+    std::map<Scene_name, bool> m_unlocked_levels;
 
     std::string m_save_path;
 };

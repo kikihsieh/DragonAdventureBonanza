@@ -20,13 +20,11 @@ Level::Level(bool unlocked) :
 
 bool Level::init() {
     m_collision_system = new CollisionSystem();
-    m_physics_system = new PhysicsSystem();
-    m_airdash_system = new AirDashSystem();
+    m_shooting_system = new ShootingSystem();
 
     m_enemy_motion_system = new EnemyMotionSystem();
     m_health_system = new HealthSystem();
 
-    m_shooting_system = new ShootingSystem();
     m_camera_system = new CameraSystem();
     return init_player() && init_level(get_map(), get_mapping());
 }
@@ -69,22 +67,16 @@ bool Level::init_level(MapVector map, TexturePathMapping mapping) {
     }
     m_level_dim = m_tile_map->get_map_dim();
 
-    return m_physics_system->init(&m_entities, m_tile_map->get_map_dim()) &&
-           m_collision_system->init(&m_entities, m_tile_map->get_tiles()) &&
-           m_airdash_system->init(&m_entities) &&
+    if (m_airdash_system && !m_airdash_system->init(&m_entities)) {
+        return false;
+    }
 
+    return m_physics_system->init(&m_entities, m_tile_map->get_map_dim()) &&
+           m_shooting_system->init(&m_entities, m_texture_mapping, m_player, m_level_dim) &&
+           m_collision_system->init(&m_entities, m_tile_map->get_tiles()) &&
            m_enemy_motion_system->init(&m_entities, m_tile_map->get_tiles()) &&
            m_health_system->init(&m_entities, m_tile_map->get_tiles()) &&
-
-           m_shooting_system->init(&m_entities, m_texture_mapping, m_player, m_level_dim) &&
            Scene::init();
-}
-
-bool Level::init_player() {
-    Player player;
-    m_entities.emplace_back(player);
-    m_player = &m_entities.back();
-    return true;
 }
 
 void Level::update(float elapsed_ms, vec2 screen_size) {
@@ -106,11 +98,14 @@ void Level::update(float elapsed_ms, vec2 screen_size) {
 
     update_clipped(m_camera_system->get_center(), screen_size);
 
-    m_airdash_system->update(elapsed_ms);
+    if (m_airdash_system) {
+        m_airdash_system->update(elapsed_ms);
+    }
     m_physics_system->update(elapsed_ms);
     m_collision_system->update(elapsed_ms);
     m_enemy_motion_system->update(elapsed_ms);
     m_shooting_system->update(elapsed_ms);
+
     help.position = m_camera_system->get_center();
     Scene::update(elapsed_ms, screen_size);
     m_camera_system->update(elapsed_ms, (Player *) m_player, screen_size);

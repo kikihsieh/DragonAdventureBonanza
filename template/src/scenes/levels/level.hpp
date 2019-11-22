@@ -35,7 +35,7 @@ public:
     void destroy() override;
     void update(float elapsed_ms, vec2 screen_size) override;
 
-    bool init_player();
+    virtual bool init_player() = 0;
 
     virtual bool use_vertical_camera() {
         return false;
@@ -52,6 +52,10 @@ public:
 
     bool is_unlocked() const {
         return m_unlocked;
+    }
+
+    void set_unlocked(bool unlocked) {
+        m_unlocked = unlocked;
     }
 
     float get_translation_x(vec2 screen_size) override {

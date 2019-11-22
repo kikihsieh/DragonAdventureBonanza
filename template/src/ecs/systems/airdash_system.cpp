@@ -1,5 +1,4 @@
 #include "airdash_system.hpp"
-#include <cmath>
 
 void AirDashSystem::update(float ms) {
 
