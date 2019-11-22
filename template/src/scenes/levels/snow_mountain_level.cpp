@@ -1,7 +1,7 @@
 #include "snow_mountain_level.hpp"
 
-SnowMountainLeve::SnowMountainLeve(bool unlocked) :
-        Level(unlocked) {
+SnowMountainLeve::SnowMountainLeve() :
+        Level() {
 }
 
 void SnowMountainLeve::init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) {

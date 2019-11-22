@@ -23,17 +23,10 @@ namespace
 }
 
 World::World() : m_save_path("save.txt") {
-    int l = load();
-    if (l < 0) {
-        std::cout << "No existing save file" << std::endl;
-    } else {
-        std::cout << "Loaded save!" << std::endl;
-    }
-
     map_init(m_scenes)
-            (FOREST, new ForestLevel(true))
-            (SNOW_MOUNTAIN, new SnowMountainLeve(m_unlocked_levels.count(SNOW_MOUNTAIN) ? m_unlocked_levels.at(SNOW_MOUNTAIN) : false))
-            (CAVE, new CaveLevel((m_unlocked_levels.count(CAVE)) ? (m_unlocked_levels.at(CAVE)) : false))
+            (FOREST, new ForestLevel())
+            (SNOW_MOUNTAIN, new SnowMountainLeve())
+            (CAVE, new CaveLevel())
 			(MAIN_MENU, new StartMenu())
 			(HELP, new HelpMenu());
 }
@@ -95,6 +88,18 @@ bool World::init(vec2 screen)
 
 	// Initialize the screen texture
 	m_screen_tex.create_from_screen(m_window);
+
+    int l = load();
+    if (l < 0) {
+        for (auto &scene: m_scenes) {
+            if (scene.second->is_level()) {
+                m_unlocked_levels[scene.first] = scene.first == FOREST;
+            }
+        }
+        std::cout << "No existing save file" << std::endl;
+    } else {
+        std::cout << "Loaded save!" << std::endl;
+    }
 
 	return load_scene(MAIN_MENU);
 }
@@ -251,11 +256,9 @@ int World::save() {
     if (!fp)
         return -errno;
 
-    for(auto & it : m_scenes) {
-        if (it.second->is_level()) {
-            fprintf(fp, "%i=%s\n", it.first, std::to_string(((Level *)it.second)->is_unlocked()).c_str());
-            count++;
-        }
+    for(auto & it : m_unlocked_levels) {
+        fprintf(fp, "%i=%s\n", it.first, std::to_string(it.second).c_str());
+        count++;
     }
 
     fclose(fp);
@@ -312,9 +315,8 @@ void World::change_scene() {
     if (next == END) {
         load_scene(MAIN_MENU);
     } else {
-        Scene* scene = m_scenes.at(next);
-        if (scene->is_level() && !((Level*) scene)->is_unlocked()) {
-            ((Level*) scene)->set_unlocked(true);
+        if (!m_unlocked_levels[next]) {
+            m_unlocked_levels[next] = true;
             save();
         }
         load_scene(next);

@@ -5,8 +5,7 @@
 #include <iostream>
 #include "common.hpp"
 
-Level::Level(bool unlocked) :
-        m_unlocked(unlocked),
+Level::Level() :
         m_tile_map(nullptr),
         m_level_dim({0, 0}),
         m_collision_system(nullptr),
