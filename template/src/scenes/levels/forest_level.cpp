@@ -1,8 +1,8 @@
 #include <ecs/entities/spider.hpp>
 #include "forest_level.hpp"
 
-ForestLevel::ForestLevel(bool unlocked) :
-    Level(unlocked) {
+ForestLevel::ForestLevel() :
+    Level() {
 }
 
 void ForestLevel::init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) {

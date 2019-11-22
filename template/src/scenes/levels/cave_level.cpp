@@ -1,7 +1,7 @@
 #include "cave_level.hpp"
 
-CaveLevel::CaveLevel(bool unlocked) :
-    Level(unlocked) {
+CaveLevel::CaveLevel() :
+    Level() {
 }
 
 void CaveLevel::init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) {

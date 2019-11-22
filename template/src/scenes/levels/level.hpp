@@ -27,7 +27,7 @@ class Level : public Scene
 {
 
 public:
-    explicit Level(bool unlocked);
+    explicit Level();
     virtual ~Level() = default;
 
     virtual bool init() override;
@@ -48,14 +48,6 @@ public:
 
     bool is_level() override {
         return true;
-    }
-
-    bool is_unlocked() const {
-        return m_unlocked;
-    }
-
-    void set_unlocked(bool unlocked) {
-        m_unlocked = unlocked;
     }
 
     float get_translation_x(vec2 screen_size) override {
@@ -86,7 +78,6 @@ protected:
     CameraSystem* m_camera_system;
     Entity* m_player;
 
-    bool m_unlocked;
     vec2 m_level_dim;
 
 private:

@@ -5,7 +5,7 @@
 
 class CaveLevel: public Level {
 public:
-    explicit CaveLevel(bool unlocked);
+    explicit CaveLevel();
 
     const char * get_bg_texture_path() override {
         return textures_path("cave/background.png");
