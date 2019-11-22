@@ -3,7 +3,7 @@
 #include "entity.hpp"
 
 struct Sibling : public Entity {
-    Sibling(std::shared_ptr<Texture> texture, vec2 pos, vec2 dir, vec2 texture_scale) {
+    Sibling(std::shared_ptr<Texture> texture, vec2 pos, vec2 dir, vec2 texture_scale, int hp) {
         scale = texture_scale;
 
         drawable = new Drawable();
@@ -12,7 +12,7 @@ struct Sibling : public Entity {
         drawable->texture = texture;
 
         health = new Health();
-        health->health = 3;
+        health->health = hp;
 
         position = pos;
 

@@ -21,7 +21,7 @@ bool FinalBossSystem::init(Entity* player, Entity& final_boss, std::list<Entity>
     m_phase_2a_timer = 0;
     m_phase_2a_frequency = 2000;
     m_phase_2b_timer = 0;
-    m_phase_2b_frequency = 1500;
+    m_phase_2b_frequency = 2000;
     m_phase_2_count = 0;
     m_phase_2_frequency = 5;
     m_phase_2a = true;
@@ -80,7 +80,7 @@ void FinalBossSystem::phase_1(Entity& final_boss, float ms) {
 
         if (m_phase_1_minion_timer >= m_phase_1_minion_frequency) {
             m_phase_1_minion_timer = 0;
-            m_final_boss_spawning_system->spawn_minion(m_player->position);
+            m_final_boss_spawning_system->spawn_minion({m_screen_bounds.x, m_player->position.y}, {-1.5, 0}, 3);
             m_minions_spawned++;
         }
     }
@@ -112,6 +112,7 @@ void FinalBossSystem::phase_2a(Entity& final_boss, float ms) {
 
     if (m_phase_2a_timer >= m_phase_2a_frequency) {
         m_phase_2a_timer = 0;
+        m_phase_2_count++;
 
         float width = final_boss.texture_size.x * final_boss.scale.x + 50;
         m_final_boss_spawning_system->spawn_wave(sub(final_boss.position, {width / 2, 0}));
@@ -120,6 +121,15 @@ void FinalBossSystem::phase_2a(Entity& final_boss, float ms) {
 
 void FinalBossSystem::phase_2b(Entity& final_boss, float ms) {
 
+    m_phase_2b_timer += ms;
+
+    if (m_phase_2b_timer >= m_phase_2b_frequency) {
+        m_phase_2b_timer = 0;
+        m_phase_2_count++;
+
+        float width = final_boss.texture_size.x * final_boss.scale.x + 50;
+        m_final_boss_spawning_system->spawn_wall(sub(final_boss.position, {width / 2 + 50, 0}));
+    }
 }
 
 void FinalBossSystem::phase_3(Entity& final_boss, float ms) {
@@ -134,5 +144,5 @@ void FinalBossSystem::phase_3(Entity& final_boss, float ms) {
 
 void FinalBossSystem::move_to_start_pos(Entity &final_boss) {
     vec2 dir = normalize(sub(m_start_pos, final_boss.position));
-    final_boss.physics->velocity = mul(dir, m_boss_move_speed);
+    final_boss.physics->velocity = mul(dir, 4 * m_boss_move_speed);
 }

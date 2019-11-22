@@ -115,8 +115,8 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
         m_entities->push_back(p7);
 }
 
-void FinalBossSpawningSystem::spawn_minion(vec2 position) {
-    Sibling s(m_texture_mapping.at(5), {m_screen_bounds.x, position.y}, {-1.5, 0}, {0.25, 0.25});
+void FinalBossSpawningSystem::spawn_minion(vec2 position, vec2 dir, int health) {
+    Sibling s(m_texture_mapping.at(5), position, dir, {0.25, 0.25}, health);
     if (init_entity(s))
         m_entities->push_back(s);
 }
@@ -146,6 +146,30 @@ void FinalBossSpawningSystem::spawn_wave(vec2 position) {
 }
 
 
+void FinalBossSpawningSystem::spawn_wall(vec2 position) {
+
+    float x = 1;
+    float safe_y = 300 + dist(m_rng) * (m_screen_bounds.y - 2 * 300);
+
+    float increment = 50;
+
+    for (float y = 0; y <= m_screen_bounds.y; y += increment) {
+        if (abs(y - safe_y) < increment * 1.5) {
+            if (abs(y - safe_y) < increment / 2) {
+                spawn_minion({position.x, safe_y}, {-1.75, 0}, 2);
+            }
+            continue;
+        }
+
+        Projectile p(m_texture_mapping.at(4), {position.x, y},
+             normalize({-x, 0}), {0.05, 0.05}, true);
+        p.physics->gravity = 0;
+        p.physics->acceleration.y = 0;
+        p.is_boss_proj = true;
+        if (init_entity(p))
+            m_entities->push_back(p);
+    }
+}
 
 
 

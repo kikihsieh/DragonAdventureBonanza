@@ -18,8 +18,9 @@ public:
     void spawn_cloud(float x_offset);
     void spawn_bomb(vec2 position);
     void explode_bomb(vec2 position);
-    void spawn_minion(vec2 position);
+    void spawn_minion(vec2 position, vec2 dir, int health);
     void spawn_wave(vec2 position);
+    void spawn_wall(vec2 position);
 
 private:
 
