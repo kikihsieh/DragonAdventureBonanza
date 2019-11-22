@@ -229,6 +229,7 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
     GLint projection_uloc = glGetUniformLocation(drawable->effect.program, "projection");
     GLint offset_uloc = glGetUniformLocation(drawable->effect.program, "offset");
     GLint frames_uloc= glGetUniformLocation(drawable->effect.program, "frames");
+    GLint invinc_uloc = glGetUniformLocation(drawable->effect.program, "invicibility");
 
     // Setting vertices and indices
     glBindVertexArray(drawable->vao);
@@ -258,6 +259,10 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
         float offset[] = {entity.animatable->frame_index.x / cols, entity.animatable->frame_index.y / rows};
         glUniform2fv(offset_uloc, 1, offset);
         glUniform2fv(frames_uloc, 1, frames);
+    }
+    if (entity.health) {
+        float invin = entity.health->invincible_timer;
+        glUniform1f(invinc_uloc, invin);
     }
     glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *) &projection);
 

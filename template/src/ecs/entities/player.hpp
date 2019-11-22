@@ -17,7 +17,7 @@ struct Player : public Entity {
 
         drawable = new Drawable();
         drawable->texture_path = textures_path("dragon_sprite.png");
-        drawable->fs_shader = shader_path("animated.fs.glsl");
+        drawable->fs_shader = shader_path("player.fs.glsl");
         drawable->vs_shader = shader_path("animated.vs.glsl");
 
         health = new Health();
