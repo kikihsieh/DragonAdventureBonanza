@@ -71,7 +71,8 @@ void InputSystem::on_mouse_update(int key, int action, double xpos, double ypos)
             if (action == GLFW_PRESS) {
                 if (xpos > left && xpos < right &&
                     ypos < top && ypos > bottom) {
-                    return entity.m_button_callback();
+                    if (entity.active)
+                        return entity.m_button_callback();
                 }
             }
         }
