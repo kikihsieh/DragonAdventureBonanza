@@ -8,7 +8,7 @@
 #include <scenes/levels/cave_level.hpp>
 #include <scenes/levels/snow_mountain_level.hpp>
 #include <scenes/start_menu.hpp>
-#include <scenes/help_menu.hpp>
+#include <scenes/level_select.hpp>
 
 // Same as static in c, local to compilation unit
 namespace
@@ -28,7 +28,7 @@ World::World() {
             (SNOW_MOUNTAIN, new SnowMountainLeve(true))
             (CAVE, new CaveLevel(true))
 			(MAIN_MENU, new StartMenu())
-			(HELP, new HelpMenu());
+            (LEVEL_SELECT, new LevelSelect());
 }
 
 World::~World() {}

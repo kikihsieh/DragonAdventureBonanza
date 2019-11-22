@@ -2,8 +2,8 @@
 #define DAB_SCENE_NAME_HPP
 
 enum Scene_name {
-    HELP,
     MAIN_MENU,
+    LEVEL_SELECT,
     FOREST,
     CAVE,
     SNOW_MOUNTAIN,
