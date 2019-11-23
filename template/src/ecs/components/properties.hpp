@@ -14,7 +14,7 @@ struct Properties {
     };
 
     // Use this constructor for stationary tile entities
-    Properties(Type type) {
+    Properties(Type type) : lit(false) {
         this->type = type;
 
         if (type == BOUNCY) {
@@ -30,6 +30,8 @@ struct Properties {
     float friction; // percent per second of vx increased per second
 
     int count; // number of times the projectile bounces before disappearing
+    bool lit;
+
     Type type;
 };
 
