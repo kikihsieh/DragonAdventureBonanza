@@ -4,6 +4,7 @@
 Scene::Scene() : m_rendersystem(nullptr), m_inputsystem(nullptr) {
 }
 
+
 bool Scene::init() {
     m_inputsystem = new InputSystem();
     m_rendersystem = new RenderSystem();
@@ -15,6 +16,8 @@ bool Scene::init() {
         return true;
     }
     return false;
+    
+
 }
 
 // Releases all graphics resources
@@ -29,6 +32,12 @@ void Scene::destroy() {
     m_entities.clear();
     m_buttons.clear();
     drawHelp = false;
+    
+    if (m_background_music != nullptr)
+        Mix_FreeMusic(m_background_music);
+    Mix_CloseAudio();
+
+    
 }
 
 void Scene::draw(const mat3& projection) {
@@ -84,3 +93,5 @@ void Scene::loadSceneHandler(std::function<void(Scene_name)> callback){
 void Scene::exitGameHandler(std::function<void(void)> callback) {
     exit_game = callback;
 }
+
+

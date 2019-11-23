@@ -46,6 +46,7 @@ void Level::destroy() {
     m_enemy_motion_system = nullptr;
     m_shooting_system = nullptr;
     m_camera_system = nullptr;
+    
 }
 
 bool Level::init_level(MapVector map, TexturePathMapping mapping) {
@@ -76,6 +77,7 @@ bool Level::init_level(MapVector map, TexturePathMapping mapping) {
            m_enemy_motion_system->init(&m_entities, m_tile_map->get_tiles()) &&
            m_health_system->init(&m_entities, m_tile_map->get_tiles()) &&
            Scene::init();
+    
 }
 
 void Level::update(float elapsed_ms, vec2 screen_size) {

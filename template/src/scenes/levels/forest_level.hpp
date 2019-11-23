@@ -2,6 +2,9 @@
 #define DAB_FOREST_LEVEL_HPP
 
 #include "level.hpp"
+#define SDL_MAIN_HANDLED
+#include <SDL.h>
+#include <SDL_mixer.h>
 
 class ForestLevel: public Level {
 public:
@@ -19,7 +22,11 @@ public:
     bool init_player() override;
     void init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) override;
     void init_throwing_enemy(std::shared_ptr<Texture> texture, vec2 pos) override;
-
+    
+    
+    void background_music(Mix_Music* b) override;
+    Mix_Music* m_background_music;
+    
 private:
     const MapVector get_map() const override {
         return m_tile_vec;
