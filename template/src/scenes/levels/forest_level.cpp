@@ -14,14 +14,7 @@ void ForestLevel::init_throwing_enemy(std::shared_ptr<Texture> texture, vec2 pos
     Glob g(texture, pos);
     m_entities.emplace_back(g);
 }
-void ForestLevel::background_music(Mix_Music* b){
-    
-    // Playing background music indefinitely
-    Mix_PlayMusic(b, -1);
-    
-    fprintf(stderr, "Loaded music\n");
-    
-}
+
 bool ForestLevel::init_player() {
     Player player;
     m_entities.emplace_back(player);
@@ -43,7 +36,7 @@ bool ForestLevel::init() {
         return false;
     }
     
-    m_background_music = Mix_LoadMUS(audio_path("forest.wav"));
+    m_background_music = Mix_LoadWAV(audio_path("forest.wav"));
     //m_salmon_dead_sound = Mix_LoadWAV(audio_path("salmon_dead.wav"));
     //m_salmon_eat_sound = Mix_LoadWAV(audio_path("salmon_eat.wav"));
     
@@ -56,5 +49,14 @@ bool ForestLevel::init() {
     background_music(m_background_music);
     
     return Level::init();
+}
+
+void ForestLevel::background_music(Mix_Chunk* b){
+    
+    // Playing background music indefinitely
+    Mix_PlayChannel(-1,b, -1);
+    
+    fprintf(stderr, "Loaded music\n");
+    
 }
 

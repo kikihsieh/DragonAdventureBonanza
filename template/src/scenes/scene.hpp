@@ -68,7 +68,7 @@ public:
     State state = LOADING;
     
     //virtual void background_music();
-    Mix_Music* m_background_music;
+    Mix_Chunk* m_background_music;
     //Mix_Chunk* m_salmon_dead_sound;
     //Mix_Chunk* m_salmon_eat_sound;
     
