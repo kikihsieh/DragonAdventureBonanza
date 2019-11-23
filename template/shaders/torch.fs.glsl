@@ -6,7 +6,7 @@ in vec2 texcoord;
 // Application data
 uniform sampler2D sampler0;
 uniform vec3 fcolor;
-uniform vec3 fcolor;
+uniform bool lit;
 
 // Output color
 layout(location = 0) out  vec4 color;
