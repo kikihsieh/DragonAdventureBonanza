@@ -82,6 +82,12 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
     }
 
     switch (tile.properties->type) {
+        case Properties::TORCH:
+            if (entity.is_player_proj) {
+                // TODO: LIGHT UP
+                std::cout << "lighting the torch \n";
+            }
+            return false;
         case Properties::DECORATIVE:
             return false;
         case Properties::HEALTH:
