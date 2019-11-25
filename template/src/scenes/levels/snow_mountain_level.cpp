@@ -25,12 +25,6 @@ bool SnowMountainLeve::init_player() {
     player.airdash = new AirDash();
     m_entities.emplace_back(player);
     m_player = &m_entities.back();
-    return true;
-}
-
-bool SnowMountainLeve::init() {
-    m_airdash_system = new AirDashSystem();
-    m_physics_system = new PhysicsSystem(true);
     if (SDL_Init(SDL_INIT_AUDIO) < 0)
     {
         fprintf(stderr, "Failed to initialize SDL Audio");
@@ -54,6 +48,13 @@ bool SnowMountainLeve::init() {
         return false;
     }
     background_music(m_background_music);
+    return true;
+}
+
+bool SnowMountainLeve::init() {
+    m_airdash_system = new AirDashSystem();
+    m_physics_system = new PhysicsSystem(true);
+   
     return Level::init();
 }
 
@@ -63,7 +64,7 @@ bool SnowMountainLeve::init() {
 void SnowMountainLeve::background_music(Mix_Chunk* b){
     
     // Playing background music indefinitely
-    Mix_PlayChannel(0,b, -1);
+    Mix_PlayChannel(-1,b, -1);
     
     fprintf(stderr, "Loaded music\n");
     

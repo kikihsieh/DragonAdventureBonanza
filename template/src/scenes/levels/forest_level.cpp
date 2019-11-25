@@ -19,11 +19,6 @@ bool ForestLevel::init_player() {
     Player player;
     m_entities.emplace_back(player);
     m_player = &m_entities.back();
-    return true;
-}
-
-bool ForestLevel::init() {
-    m_physics_system = new PhysicsSystem(false);
     if (SDL_Init(SDL_INIT_AUDIO) < 0)
     {
         fprintf(stderr, "Failed to initialize SDL Audio");
@@ -47,6 +42,11 @@ bool ForestLevel::init() {
         return false;
     }
     background_music(m_background_music);
+    return true;
+}
+
+bool ForestLevel::init() {
+    m_physics_system = new PhysicsSystem(false);
     
     return Level::init();
 }
