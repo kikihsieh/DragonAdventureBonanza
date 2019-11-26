@@ -13,10 +13,11 @@ bool FlyingPhysicsSystem::init(std::list<Entity> *entities, vec2 level_bounds) {
 }
 
 void FlyingPhysicsSystem::update(float ms) {
+
     auto entity_it = m_entities->begin();
     while (entity_it != m_entities->end()) {
 
-        if (!entity_it->physics || entity_it->clipped) {
+        if (!entity_it->physics) { // || entity_it->clipped) {
             entity_it++;
             continue;
         }
@@ -52,7 +53,8 @@ void FlyingPhysicsSystem::update(float ms) {
             entity_it->physics->off_screen = true;
         }
 
-        if (entity_it->is_bomb && entity_it->position.x - (entity_it->texture_size.x * entity_it->scale.x) / 2 <= 0) {
+        float buffer = 10;
+        if (entity_it->is_bomb && entity_it->position.x - (entity_it->texture_size.x * entity_it->scale.x) / 2 - buffer <= 0) {
             m_final_boss_spawning_system->explode_bomb(entity_it->position);
             entity_it->destroy();
             entity_it = m_entities->erase(entity_it);
@@ -100,24 +102,28 @@ void FlyingPhysicsSystem::move(float ms, Entity& entity) {
 
     float x_step = entity.physics->velocity.x * (ms / 1000);
     float y_step = entity.physics->velocity.y * (ms / 1000);
+    float buffer = 25;
 
-    if (entity.physics->velocity.x < 0 && entity.position.x + width / 2 < m_level_bounds_x.x) {
-        x_step = 0;
-        if (!entity.player_tag && !entity.is_player_proj && !entity.is_enemy_proj) {
+    if (entity.position.x + width / 2 + buffer < m_level_bounds_x.x) {
+        if (entity.is_player_proj || entity.is_enemy_proj || entity.is_boss_proj || entity.is_minion) {
             entity.clipped = true;
             return;
         }
     }
-    if (entity.physics->velocity.x > 0 && entity.position.x - width / 2 > m_level_bounds_x.y) {
-        x_step = 0;
-        if (!entity.player_tag && !entity.is_player_proj && !entity.is_enemy_proj) {
+    if (entity.position.x - width / 2 - buffer > m_level_bounds_x.y) {
+        if (entity.is_player_proj || entity.is_enemy_proj || entity.is_boss_proj || entity.is_minion) {
             entity.clipped = true;
             return;
         }
     }
-    if (entity.physics->velocity.y < 0 && entity.position.y + height / 2 < m_level_bounds_y.x) {
-        y_step = 0;
-        if (!entity.player_tag && !entity.is_player_proj && !entity.is_enemy_proj) {
+    if (entity.position.y + height / 2 + buffer < m_level_bounds_y.x) {
+        if (entity.is_player_proj || entity.is_enemy_proj || entity.is_boss_proj || entity.is_minion) {
+            entity.clipped = true;
+            return;
+        }
+    }
+    if (entity.position.y - height / 2  - buffer > m_level_bounds_y.y) {
+        if (entity.is_player_proj || entity.is_enemy_proj || entity.is_boss_proj || entity.is_minion) {
             entity.clipped = true;
             return;
         }

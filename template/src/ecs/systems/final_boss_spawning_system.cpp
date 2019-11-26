@@ -65,6 +65,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
     p1.physics->gravity = 0;
     p1.physics->acceleration.y = 0;
     p1.is_boss_proj = true;
+    p1.clipped = false;
     if (init_entity(p1))
         m_entities->push_back(p1);
 
@@ -73,6 +74,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
     p2.physics->gravity = 0;
     p2.physics->acceleration.y = 0;
     p2.is_boss_proj = true;
+    p2.clipped = false;
     if (init_entity(p2))
         m_entities->push_back(p2);
 
@@ -81,6 +83,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
     p3.physics->gravity = 0;
     p3.physics->acceleration.y = 0;
     p3.is_boss_proj = true;
+    p3.clipped = false;
     if (init_entity(p3))
         m_entities->push_back(p3);
 
@@ -89,6 +92,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
     p4.physics->gravity = 0;
     p4.physics->acceleration.y = 0;
     p4.is_boss_proj = true;
+    p4.clipped = false;
     if (init_entity(p4))
         m_entities->push_back(p4);
 
@@ -97,6 +101,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
     p5.physics->gravity = 0;
     p5.physics->acceleration.y = 0;
     p5.is_boss_proj = true;
+    p5.clipped = false;
     if (init_entity(p5))
         m_entities->push_back(p5);
 
@@ -104,6 +109,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
     p6.physics->gravity = 0;
     p6.physics->acceleration.y = 0;
     p6.is_boss_proj = true;
+    p6.clipped = false;
     if (init_entity(p6))
         m_entities->push_back(p6);
 
@@ -111,6 +117,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
     p7.physics->gravity = 0;
     p7.physics->acceleration.y = 0;
     p7.is_boss_proj = true;
+    p7.clipped = false;
     if (init_entity(p7))
         m_entities->push_back(p7);
 }

@@ -24,6 +24,8 @@ struct Sibling : public Entity {
         physics->velocity = { dir.x * physics->walk_speed, dir.y * physics->walk_speed};
         physics->acceleration = { 0.f, physics->gravity };
 
+        is_minion = true;
+
         collider = new Collider();
         is_facing_forward = false;
     }
