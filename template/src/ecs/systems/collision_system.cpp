@@ -186,7 +186,9 @@ bool CollisionSystem::collide_with_entities(Entity &e) {
                 }
 
             } else if (!e.health->invincible){
-                e.health->decrease_health();
+
+                if (!entity_it->clipped)
+                    e.health->decrease_health();
             }
         } else if (e.is_player_proj) {
             if (entity_it->health) {

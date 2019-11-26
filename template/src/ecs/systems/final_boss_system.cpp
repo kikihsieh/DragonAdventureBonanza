@@ -39,7 +39,7 @@ bool FinalBossSystem::init(Entity* player, Entity& final_boss, std::list<Entity>
 
 void FinalBossSystem::update(Entity& final_boss, float ms) {
 
-    if (final_boss.health->health > m_final_boss_max_health * 0.8)
+    if (final_boss.health->health > m_final_boss_max_health * 0.95)
         phase_1(final_boss, ms);
     else if (final_boss.health->health > m_final_boss_max_health * 1/3) {
         if (len(sub(final_boss.position, m_start_pos)) > 10)
@@ -53,8 +53,9 @@ void FinalBossSystem::update(Entity& final_boss, float ms) {
 void FinalBossSystem::phase_1(Entity& final_boss, float ms) {
 
     float height = final_boss.texture_size.y * final_boss.scale.y + 50;
+    float buffer = 50;
 
-    if (final_boss.position.y - height / 2 <= 0 || final_boss.position.y + height / 2 >= m_screen_bounds.y) {
+    if (final_boss.position.y - height / 2 <= 0 - buffer || final_boss.position.y + height / 2 >= m_screen_bounds.y + buffer) {
         final_boss.physics->velocity.y = -1 * final_boss.physics->velocity.y;
     }
 
