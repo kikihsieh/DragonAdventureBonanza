@@ -46,6 +46,7 @@ struct Entity {
     bool is_background;
 
     int id;
+    int level = 1;
 
     static int current_id;
 
