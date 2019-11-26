@@ -29,20 +29,35 @@ RenderSystem::~RenderSystem() {
         glDeleteBuffers(1, &tile.second->drawable->ibo);
         glDeleteVertexArrays(1, &tile.second->drawable->vao);
     }
+    for (Entity &button: *m_buttons) {
+        if (!button.drawable) {
+            continue;
+        }
+        glDeleteBuffers(1, &button.drawable->vbo);
+        glDeleteBuffers(1, &button.drawable->ibo);
+        glDeleteVertexArrays(1, &button.drawable->vao);
+    }
 
     glDeleteBuffers(1, &characters_drawable->vbo);
     glDeleteBuffers(1, &characters_drawable->vao);
 }
 
-bool RenderSystem::init(std::list<Entity> *entities, std::map<int, Tile*>* tiles) {
+bool RenderSystem::init(std::list<Entity> *entities, std::map<int, Tile *> *tiles, std::list<Button> *buttons) {
     m_effects = {};
     m_entities = entities;
+    m_buttons = buttons;
 
     for (auto &entity : *entities) {
         if (entity.drawable == nullptr) {
             continue;
         }
         init_entity(entity);
+    }
+    for (auto &button : *buttons) {
+        if (button.drawable == nullptr) {
+            continue;
+        }
+        init_entity(button);
     }
     m_tiles = tiles;
     for (auto &tile : *m_tiles) {
@@ -57,10 +72,10 @@ bool RenderSystem::init(std::list<Entity> *entities, std::map<int, Tile*>* tiles
 // https://learnopengl.com/In-Practice/Text-Rendering
 bool RenderSystem::setup_freetype() {
 
-    if(FT_Init_FreeType(&library)) 
+    if (FT_Init_FreeType(&library))
         fprintf(stderr, "Failed to init Freetype library");
 
-    if(FT_New_Face( library, PROJECT_SOURCE_DIR "src/Delugia_Nerd_Font.ttf", 0, &face ))
+    if (FT_New_Face(library, PROJECT_SOURCE_DIR "src/Delugia_Nerd_Font.ttf", 0, &face))
         fprintf(stderr, "Font file cuold not be opened or read, or that it is broken");
 
     FT_Set_Pixel_Sizes(face, 0, 24);
@@ -69,7 +84,7 @@ bool RenderSystem::setup_freetype() {
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     // Load first 128 characters of ASCII set
-    for(GLubyte c = 0;  c < 128; c++) {
+    for (GLubyte c = 0; c < 128; c++) {
         if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
             fprintf(stderr, "Failed to load Glyph");
             continue;
@@ -79,24 +94,24 @@ bool RenderSystem::setup_freetype() {
         glBindTexture(GL_TEXTURE_2D, texture);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, face->glyph->bitmap.width, face->glyph->bitmap.rows,
                      0, GL_RED, GL_UNSIGNED_BYTE, face->glyph->bitmap.buffer);
-        
+
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        
+
         // Store character for later use
         Character character = {
-            texture,
-            glm::ivec2( face->glyph->bitmap.width, face->glyph->bitmap.rows ),
-            glm::ivec2( face->glyph->bitmap_left, face->glyph->bitmap_top ),
-            static_cast<GLuint>(face->glyph->advance.x)
+                texture,
+                glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+                glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+                static_cast<GLuint>(face->glyph->advance.x)
         };
         characters.insert(std::pair<GLchar, Character>(c, character));
     }
 
     glBindTexture(GL_TEXTURE_2D, 0);
-    
+
     // Destroy FreeType when we are finished
     FT_Done_Face(face);
     FT_Done_FreeType(library);
@@ -119,7 +134,8 @@ bool RenderSystem::setup_freetype() {
         return false;
 
     if (m_effects.find(characters_drawable->vs_shader) == m_effects.end()) {
-        if (!load_from_file(characters_drawable->effect, characters_drawable->vs_shader, characters_drawable->fs_shader))
+        if (!load_from_file(characters_drawable->effect, characters_drawable->vs_shader,
+                            characters_drawable->fs_shader))
             return false;
         m_effects[characters_drawable->vs_shader] = characters_drawable->effect;
     } else {
@@ -139,7 +155,8 @@ bool RenderSystem::init_entity(Entity &entity) {
     entity.texture_size = {drawable->texture->width * 1.f, drawable->texture->height * 1.f};
 
     if (entity.animatable) {
-        entity.texture_size = mul(entity.texture_size, {1.f/entity.animatable->num_columns, 1.f/entity.animatable->num_rows });
+        entity.texture_size = mul(entity.texture_size,
+                                  {1.f / entity.animatable->num_columns, 1.f / entity.animatable->num_rows});
     }
 
     // The position corresponds to the center of the texture
@@ -207,7 +224,14 @@ void RenderSystem::draw_all(mat3 projection) {
         if (!entity.player_tag)
             continue;
         draw_health(projection, entity.health->health);
-}
+    }
+
+    for (auto &button: *m_buttons) {
+        if (button.drawable == nullptr || button.clipped) {
+            continue;
+        }
+        draw(button, projection);
+    }
 }
 
 void RenderSystem::draw(Entity &entity, mat3 projection) {
@@ -228,7 +252,7 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
     GLint color_uloc = glGetUniformLocation(drawable->effect.program, "fcolor");
     GLint projection_uloc = glGetUniformLocation(drawable->effect.program, "projection");
     GLint offset_uloc = glGetUniformLocation(drawable->effect.program, "offset");
-    GLint frames_uloc= glGetUniformLocation(drawable->effect.program, "frames");
+    GLint frames_uloc = glGetUniformLocation(drawable->effect.program, "frames");
     GLint invinc_uloc = glGetUniformLocation(drawable->effect.program, "invicibility");
 
     // Setting vertices and indices
@@ -243,7 +267,7 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
     glEnableVertexAttribArray(in_texcoord_loc);
     glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void *) 0);
     glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void *) sizeof(vec3));
-    
+
     // Enabling and binding texture to slot 0
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, drawable->texture->id);
@@ -333,9 +357,9 @@ void RenderSystem::draw_health(mat3 projection, int health) {
     float offset = 50.f;
 
     vec2 position = {screen_width * projection.c2.x / -2.0f - (screen_width - offset) / 2.f,
-                     screen_height * projection.c2.y / 2.0f - (screen_height- offset) / 2.f};
-    glm::vec3 color = { 1.0,1.0,1.0 };
-    
+                     screen_height * projection.c2.y / 2.0f - (screen_height - offset) / 2.f};
+    glm::vec3 color = {1.0, 1.0, 1.0};
+
     render_text(string, projection, position, color);
 }
 
@@ -349,10 +373,10 @@ void RenderSystem::render_text(std::string text, mat3 projection, vec2 position,
     glUseProgram(characters_drawable->effect.program);
 
     GLint projection_uloc = glGetUniformLocation(characters_drawable->effect.program, "projection");
-    
+
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(characters_drawable->vao);
-    
+
     std::string::const_iterator it;
     for (it = text.begin(); it != text.end(); it++) {
         Character ch = characters[*it];
@@ -364,16 +388,16 @@ void RenderSystem::render_text(std::string text, mat3 projection, vec2 position,
         GLfloat w = ch.size.x * scale;
         GLfloat h = ch.size.y * scale;
 
-        GLfloat vertices[6][4] = { 
-            { xpos,     ypos - h,   0.0, 0.0 },            
-            { xpos,     ypos,       0.0, 1.0 },
-            { xpos + w, ypos,       1.0, 1.0 },
+        GLfloat vertices[6][4] = {
+                {xpos,     ypos - h, 0.0, 0.0},
+                {xpos,     ypos,     0.0, 1.0},
+                {xpos + w, ypos,     1.0, 1.0},
 
-            { xpos,     ypos - h,   0.0, 0.0 },
-            { xpos + w, ypos,       1.0, 1.0 },
-            { xpos + w, ypos - h,   1.0, 0.0 }
+                {xpos,     ypos - h, 0.0, 0.0},
+                {xpos + w, ypos,     1.0, 1.0},
+                {xpos + w, ypos - h, 1.0, 0.0}
         };
-        
+
         glBindTexture(GL_TEXTURE_2D, ch.textureID);
         glBindBuffer(GL_ARRAY_BUFFER, characters_drawable->vbo);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
@@ -381,7 +405,7 @@ void RenderSystem::render_text(std::string text, mat3 projection, vec2 position,
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glUniform3f(glGetUniformLocation(characters_drawable->effect.program, "textColor"), color.x, color.y, color.z);
         glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *) &projection);
-        
+
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
@@ -524,19 +548,19 @@ void RenderSystem::update(float ms) {
         if (!entity.animatable) {
             continue;
         }
-        if (entity.flyable){
+        if (entity.flyable) {
             entity.animatable->countdown -= ms;
             if (entity.animatable->countdown > 0) {
                 continue;
             }
             entity.animatable->countdown = entity.animatable->frame_switch_time;
             entity.animatable->frame_index.x++;
-            if (entity.animatable->frame_index.x == 6){
+            if (entity.animatable->frame_index.x == 6) {
                 entity.animatable->frame_index.x = 0;
             }
         } else if (entity.physics->velocity.x == 0) {
-            if(entity.is_facing_forward) {
-                entity.animatable->frame_index = {0 , 1};
+            if (entity.is_facing_forward) {
+                entity.animatable->frame_index = {0, 1};
             } else {
                 entity.animatable->frame_index = {0, 0};
             }

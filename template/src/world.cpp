@@ -8,7 +8,7 @@
 #include <scenes/levels/cave_level.hpp>
 #include <scenes/levels/snow_mountain_level.hpp>
 #include <scenes/start_menu.hpp>
-#include <scenes/help_menu.hpp>
+#include <scenes/level_select.hpp>
 
 // Same as static in c, local to compilation unit
 namespace
@@ -28,7 +28,7 @@ World::World() : m_save_path("save.txt") {
             (SNOW_MOUNTAIN, new SnowMountainLeve())
             (CAVE, new CaveLevel())
 			(MAIN_MENU, new StartMenu())
-			(HELP, new HelpMenu());
+            (LEVEL_SELECT, new LevelSelect());
 }
 
 World::~World() {}
@@ -202,6 +202,7 @@ bool World::load_scene(Scene_name scene) {
     m_scenes.at(m_current_scene)->addSceneChangeHandler(std::bind(&World::change_scene, this));
     m_scenes.at(m_current_scene)->loadSceneHandler(std::bind(&World::load_scene, this, _1));
     m_scenes.at(m_current_scene)->exitGameHandler(std::bind(glfwSetWindowShouldClose, m_window, true));
+    m_scenes.at(m_current_scene)->m_unlocked_levels = &m_unlocked_levels;
     m_scenes.at(m_current_scene)->init();
     return true;
 }
