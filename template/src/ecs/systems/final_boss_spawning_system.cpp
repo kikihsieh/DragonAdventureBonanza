@@ -178,7 +178,25 @@ void FinalBossSpawningSystem::spawn_wall(vec2 position) {
     }
 }
 
+void FinalBossSpawningSystem::spawn_radial(vec2 position, float offset) {
 
+    float y;
+    float x = 1;
+
+    float angle_increment = 0.26;
+    for (float i = -1.5708 - offset; i < 1.5708 + offset; i += angle_increment) {
+
+        y = tan(i) * x;
+
+        Projectile p(m_texture_mapping.at(4), position,
+                     normalize({-x, y}), {0.05, 0.05}, true);
+        p.physics->gravity = 0;
+        p.physics->acceleration.y = 0;
+        p.is_boss_proj = true;
+        if (init_entity(p))
+            m_entities->push_back(p);
+    }
+}
 
 
 bool FinalBossSpawningSystem::init_entity(Entity& entity) {

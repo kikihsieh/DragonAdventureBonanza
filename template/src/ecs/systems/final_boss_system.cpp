@@ -26,6 +26,10 @@ bool FinalBossSystem::init(Entity* player, Entity& final_boss, std::list<Entity>
     m_phase_2_frequency = 5;
     m_phase_2a = true;
 
+    m_phase_3_timer = 0;
+    m_phase_3_frequency = 700;
+    m_phase_3a = true;
+
     final_boss.physics->velocity.y = m_boss_move_speed;
     m_final_boss_max_health = final_boss.health->health;
 
@@ -39,9 +43,9 @@ bool FinalBossSystem::init(Entity* player, Entity& final_boss, std::list<Entity>
 
 void FinalBossSystem::update(Entity& final_boss, float ms) {
 
-    if (final_boss.health->health > m_final_boss_max_health * 0.95)
+    if (final_boss.health->health > m_final_boss_max_health * 0.8)
         phase_1(final_boss, ms);
-    else if (final_boss.health->health > m_final_boss_max_health * 1/3) {
+    else if (final_boss.health->health > m_final_boss_max_health * 0.35) {
         if (len(sub(final_boss.position, m_start_pos)) > 10)
             move_to_start_pos(final_boss);
         else
@@ -135,11 +139,20 @@ void FinalBossSystem::phase_2b(Entity& final_boss, float ms) {
 
 void FinalBossSystem::phase_3(Entity& final_boss, float ms) {
 
-    std::cout << "Phase 3" << std::endl;
-    float height = final_boss.texture_size.y * final_boss.scale.y + 50;
+    m_phase_3_timer += ms;
 
-    if (final_boss.position.y - height / 2 <= 0 || final_boss.position.y + height / 2 >= m_screen_bounds.y) {
-        final_boss.physics->velocity.y = -1 * final_boss.physics->velocity.y;
+    if (m_phase_3_timer > m_phase_3_frequency) {
+        m_phase_3a = !m_phase_3a;
+        m_phase_3_timer = 0;
+
+        float offset;
+        if (m_phase_3a)
+            offset = 0;
+        else
+            offset = 0.261799 / 2;
+
+        float width = final_boss.texture_size.x * final_boss.scale.x + 50;
+        m_final_boss_spawning_system->spawn_radial(sub(final_boss.position, {width / 2 + 50, 0}), offset);
     }
 }
 

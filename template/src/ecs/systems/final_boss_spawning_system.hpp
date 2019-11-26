@@ -21,6 +21,7 @@ public:
     void spawn_minion(vec2 position, vec2 dir, int health);
     void spawn_wave(vec2 position);
     void spawn_wall(vec2 position);
+    void spawn_radial(vec2 position, float offset);
 
 private:
 

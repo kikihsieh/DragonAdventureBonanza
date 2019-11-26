@@ -48,6 +48,10 @@ private:
     int m_phase_2_frequency;
     bool m_phase_2a;
 
+    float m_phase_3_timer;
+    float m_phase_3_frequency;
+    bool m_phase_3a;
+
     vec2 m_screen_bounds;
     vec2 m_start_pos;
 
