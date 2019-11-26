@@ -51,9 +51,11 @@ void Level::destroy() {
 bool Level::init_level(MapVector map, TexturePathMapping mapping) {
     Button home(textures_path("buttons/home.png"));
     home.m_button_callback = [this](){load_scene(MAIN_MENU);};
+    home.scale = {0.5f, 0.5f};
     m_buttons.emplace_back(home);
     Button help_btn(textures_path("buttons/help.png"));
     help_btn.m_button_callback = [this](){drawHelp = !drawHelp; state = (state == RUNNING) ? PAUSED : RUNNING;};
+    help_btn.scale = {0.5f, 0.5f};
     m_buttons.emplace_back(help_btn);
     m_tile_map = new TileMap(this);
     for (auto &iter : mapping) {
@@ -112,9 +114,9 @@ void Level::update(float elapsed_ms, vec2 screen_size) {
     m_shooting_system->update(elapsed_ms);
 
     Button* home = &m_buttons.front();
-    home->position = m_camera_system->get_center();
+    home->position = add(m_camera_system->get_center(),{screen_size.x/2 - home->texture_size.x*home->scale.x + 25.f, -(screen_size.y/2 - home->texture_size.x*home->scale.x + 25.f)});
     Button* help_btn = &m_buttons.back();
-    help_btn->position = m_camera_system->get_center();
+    help_btn->position = add(m_camera_system->get_center(),{screen_size.x/2 - help_btn->texture_size.x*help_btn->scale.x*2, -(screen_size.y/2 - help_btn->texture_size.x*help_btn->scale.x + 25.f)});
 
     help.position = m_camera_system->get_center();
 
