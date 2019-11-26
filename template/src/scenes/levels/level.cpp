@@ -49,6 +49,12 @@ void Level::destroy() {
 }
 
 bool Level::init_level(MapVector map, TexturePathMapping mapping) {
+    Button home(textures_path("buttons/home.png"));
+    home.m_button_callback = [this](){load_scene(MAIN_MENU);};
+    m_buttons.emplace_back(home);
+    Button help_btn(textures_path("buttons/help.png"));
+    help_btn.m_button_callback = [this](){drawHelp = !drawHelp; state = (state == RUNNING) ? PAUSED : RUNNING;};
+    m_buttons.emplace_back(help_btn);
     m_tile_map = new TileMap(this);
     for (auto &iter : mapping) {
         auto texture = std::make_shared<Texture>();
@@ -105,7 +111,13 @@ void Level::update(float elapsed_ms, vec2 screen_size) {
     m_enemy_motion_system->update(elapsed_ms);
     m_shooting_system->update(elapsed_ms);
 
+    Button* home = &m_buttons.front();
+    home->position = m_camera_system->get_center();
+    Button* help_btn = &m_buttons.back();
+    help_btn->position = m_camera_system->get_center();
+
     help.position = m_camera_system->get_center();
+
     Scene::update(elapsed_ms, screen_size);
     m_camera_system->update(elapsed_ms, (Player *) m_player, screen_size);
 
@@ -142,4 +154,10 @@ void Level::update_clipped(vec2 camera_center, vec2 screen_size) {
 
 std::map<int, Tile *>* Level::get_tiles() {
     return m_tile_map->get_tiles();
+}
+
+void Level::on_mouse(int key, int action, double xpos, double ypos) {
+    double x = xpos + m_camera_system->get_center().x - m_screen_size.x/2;
+    double y = ypos + m_camera_system->get_center().y - m_screen_size.y/2;
+    m_inputsystem->on_mouse_update(key, action, x, y);
 }
