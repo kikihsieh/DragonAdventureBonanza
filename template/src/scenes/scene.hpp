@@ -62,6 +62,7 @@ public:
     std::list<Button> m_buttons;
     bool drawHelp = false;
     State state = LOADING;
+    std::map<Scene_name, bool>* m_unlocked_levels;
 
 protected:
     virtual const char * get_bg_texture_path() = 0;
