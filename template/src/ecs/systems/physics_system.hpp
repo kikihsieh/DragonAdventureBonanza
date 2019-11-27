@@ -6,6 +6,8 @@
 
 class PhysicsSystem {
 public:
+    virtual ~PhysicsSystem() {};
+
     virtual bool init(std::list<Entity> *entities, vec2 level_bounds) = 0;
 
     virtual void update(float ms) = 0;
