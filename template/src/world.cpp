@@ -234,8 +234,7 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
         return;
     }
     if (key == GLFW_KEY_4 && action == GLFW_RELEASE) {
-        if (m_unlocked_levels["NIGHT_SKY"])
-            load_scene(NIGHT_SKY);
+        load_scene(NIGHT_SKY);
         return;
     }
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
