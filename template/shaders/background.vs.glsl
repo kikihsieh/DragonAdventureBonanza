@@ -3,11 +3,14 @@
 layout(location = 0) in vec4 in_position;
 
 out vec2 uv;
+uniform mat3 projection;
+uniform float level;
 
 void main()
 {
+    vec3 offset = projection * vec3(600.f, 400.f, 1.f);
     gl_Position = in_position;
 
     // Convert to the [0, 1] range of UV coordinate
-    uv = (in_position.xy + vec2(1.05, 1.05)) / 2.1;
+    uv = ((in_position.xy + vec2(1.0, 1.0)) / 2) - vec2(offset.x, 0.0)/(2*level);
 }
