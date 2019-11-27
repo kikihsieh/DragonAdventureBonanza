@@ -26,7 +26,7 @@ bool StartMenu::init() {
     exit.m_button_callback = [this](){exit_game();};
     m_entities.emplace_back(exit);
     m_buttons.emplace_back(exit);
-    m_background_music = Mix_LoadWAV(audio_path("mainmenu.wav"));
+    m_background_music = Mix_LoadMUS(audio_path("mainmenu.wav"));
     Scene::init();
     
     return true;

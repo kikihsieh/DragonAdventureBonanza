@@ -35,7 +35,7 @@ void Scene::destroy() {
     drawHelp = false;
    
     if (m_background_music != nullptr){
-        Mix_FreeChunk(m_background_music);
+        Mix_FreeMusic(m_background_music);
         m_background_music = nullptr;
     }
     Mix_CloseAudio();
@@ -114,7 +114,7 @@ void Scene::background_music(){
         return;
     }
     // Playing background music indefinitely
-    Mix_PlayChannel(-1,m_background_music, -1);
+    Mix_PlayMusic(m_background_music, -1);
 
     fprintf(stderr, "Loaded music\n");
 

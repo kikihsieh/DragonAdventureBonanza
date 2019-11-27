@@ -84,7 +84,7 @@ protected:
     std::function<void(Scene_name)> load_scene;
     std::function<void(void)> exit_game;
 
-    Mix_Chunk* m_background_music;
+    Mix_Music* m_background_music;
     
   
     
