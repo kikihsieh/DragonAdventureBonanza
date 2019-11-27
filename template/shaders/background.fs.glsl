@@ -9,5 +9,7 @@ layout(location = 0) out vec4 color;
 
 void main()
 {
-    color = texture(screen_texture, uv);
+    float x = mod(uv.x, 1.f);
+    float y = mod(uv.y, 1.f);
+    color = texture(screen_texture, vec2(x,y));
 }

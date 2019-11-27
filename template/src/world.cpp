@@ -9,6 +9,8 @@
 #include <scenes/levels/snow_mountain_level.hpp>
 #include <scenes/start_menu.hpp>
 #include <scenes/level_select.hpp>
+#include <scenes/levels/night_sky.hpp>
+#include <iostream>
 
 // Same as static in c, local to compilation unit
 namespace
@@ -27,6 +29,7 @@ World::World() : m_save_path("save_v2.txt") {
             (FOREST, new ForestLevel())
             (SNOW_MOUNTAIN, new SnowMountainLeve())
             (CAVE, new CaveLevel())
+            (NIGHT_SKY, new NightSky())
 			(MAIN_MENU, new StartMenu())
             (LEVEL_SELECT, new LevelSelect());
 }
@@ -224,6 +227,14 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
     }
     if (key == GLFW_KEY_3 && action == GLFW_RELEASE) {
         load_scene(SNOW_MOUNTAIN);
+        return;
+    }
+    if (key == GLFW_KEY_4 && action == GLFW_RELEASE) {
+        load_scene(NIGHT_SKY);
+        return;
+    }
+    if (key == GLFW_KEY_4 && action == GLFW_RELEASE) {
+        load_scene(NIGHT_SKY);
         return;
     }
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {

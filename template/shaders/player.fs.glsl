@@ -17,6 +17,11 @@ void main()
         color = vec4(fcolor, 1.0) * texture(sampler0, vec2(texcoord.x, texcoord.y));
     }
     else {
-        color = vec4(0.7, 0.0, 0.0, 0.0) + (vec4(fcolor, 1.0) * texture(sampler0, vec2(texcoord.x, texcoord.y)));
+        if (sin(5*invicibility/1000.f*2*3.141592653589) >= 0) {
+            color = vec4(0.7, 0.0, 0.0, 0.0) + (vec4(fcolor, 1.0) * texture(sampler0, vec2(texcoord.x, texcoord.y)));
+        }
+        else {
+            color = vec4(fcolor, 1.0) * texture(sampler0, vec2(texcoord.x, texcoord.y));
+        }
     }
 }

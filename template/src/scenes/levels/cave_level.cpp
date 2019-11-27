@@ -1,3 +1,4 @@
+#include <ecs/systems/default_physics_system.hpp>
 #include "cave_level.hpp"
 
 CaveLevel::CaveLevel() :
@@ -22,6 +23,6 @@ bool CaveLevel::init_player() {
 }
 
 bool CaveLevel::init() {
-    m_physics_system = new PhysicsSystem(true);
+    m_physics_system = new DefaultPhysicsSystem(true);
     return Level::init();
 }

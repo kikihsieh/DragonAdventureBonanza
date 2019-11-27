@@ -1,3 +1,4 @@
+#include <cmath>
 #include "input_system.hpp"
 
 bool InputSystem::init(std::list<Entity> *entities, std::list<Button> *buttons) {
@@ -17,6 +18,13 @@ void InputSystem::on_key_update(int key, int action) {
                 entity.input->up = true;
             } else if (action == GLFW_RELEASE) {
                 entity.input->up = false;
+            }
+        }
+        if (key == GLFW_KEY_DOWN || key == GLFW_KEY_S) {
+            if (action == GLFW_PRESS) {
+                entity.input->down = true;
+            } else if (action == GLFW_RELEASE) {
+                entity.input->down = false;
             }
         }
         if (key == GLFW_KEY_LEFT || key == GLFW_KEY_A) {
@@ -62,10 +70,10 @@ void InputSystem::on_mouse_update(int key, int action, double xpos, double ypos)
         float width = entity.texture_size.x * entity.scale.x;
         float height = entity.texture_size.y * entity.scale.y;
 
-        float top = entity.position.y + height/2;
-        float bottom = entity.position.y - height/2;
-        float left = entity.position.x - width/2;
-        float right = entity.position.x + width/2;
+        float top = entity.position.y + height/2.f;
+        float bottom = entity.position.y - height/2.f;
+        float left = entity.position.x - width/2.f;
+        float right = entity.position.x + width/2.f;
 
         if (key == GLFW_MOUSE_BUTTON_LEFT) {
             if (action == GLFW_PRESS) {

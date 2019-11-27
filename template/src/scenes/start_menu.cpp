@@ -14,11 +14,10 @@ bool StartMenu::init() {
     start.position = {600.f,400.f};
     start.m_button_callback = [this](){load_scene(LEVEL_SELECT);};
     m_buttons.emplace_back(start);
-//    m_entities.emplace_back(start);
-    Button help(textures_path("help.png"));
-    help.position = {600.f,600.f};
+    Button help(textures_path("buttons/help.png"));
+    help.position = {1150.f,50.f};
+    help.scale = {0.5f, 0.5f};
     help.m_button_callback = [this]() {drawHelp = !drawHelp;};
-//    m_entities.emplace_back(help);
     m_buttons.emplace_back(help);
     Button exit(textures_path("exit.png"));
     exit.position = {50.f,750.f};
