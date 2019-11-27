@@ -17,6 +17,9 @@ private:
 
     vec2 m_level_bounds_x;
     vec2 m_level_bounds_y;
+
+protected:
+    bool m_double_jump;
 };
 
 #endif //DAB_PHYSICS_SYSTEM_HPP

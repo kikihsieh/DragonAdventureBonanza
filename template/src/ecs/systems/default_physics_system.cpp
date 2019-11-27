@@ -1,6 +1,11 @@
 #include <cmath>
 #include <ecs/systems/default_physics_system.hpp>
 
+DefaultPhysicsSystem::DefaultPhysicsSystem(bool double_jump) {
+    m_double_jump = double_jump;
+}
+
+
 bool DefaultPhysicsSystem::init(std::list<Entity> *entities, vec2 level_bounds) {
     m_entities = entities;
 
@@ -9,6 +14,7 @@ bool DefaultPhysicsSystem::init(std::list<Entity> *entities, vec2 level_bounds) 
 
     return true;
 }
+
 
 void DefaultPhysicsSystem::update(float ms) {
     auto entity_it = m_entities->begin();
@@ -29,43 +35,43 @@ void DefaultPhysicsSystem::update(float ms) {
         friction = friction * ms / 1000;
 
         if (entity_it->input) {
-          if (!entity_it->airdash || !entity_it->airdash->airdashing) {
-            if (entity_it->input->right) {
-                entity_it->is_facing_forward = true;
-                if (entity_it->physics->velocity.x < entity_it->physics->walk_speed) {
-                    entity_it->physics->velocity.x = fmin(entity_it->physics->walk_speed, entity_it->physics->velocity.x + friction + 40);
-                } else {
-                    entity_it->physics->velocity.x = fmax(entity_it->physics->walk_speed, entity_it->physics->velocity.x - friction);
-                }
-            } else if (entity_it->input->left) {
-                entity_it->is_facing_forward = false;
-                if (entity_it->physics->velocity.x > entity_it->physics->walk_speed) {
-                    entity_it->physics->velocity.x = fmax(-entity_it->physics->walk_speed,
-                                                          entity_it->physics->velocity.x - friction - 40);
-                } else {
-                    entity_it->physics->velocity.x = fmin(-entity_it->physics->walk_speed,
-                                                          entity_it->physics->velocity.x + friction);
+            if (!entity_it->airdash || !entity_it->airdash->airdashing) {
+                if (entity_it->input->right) {
+                    entity_it->is_facing_forward = true;
+                    if (entity_it->physics->velocity.x < entity_it->physics->walk_speed) {
+                        entity_it->physics->velocity.x = fmin(entity_it->physics->walk_speed, entity_it->physics->velocity.x + friction + 40);
+                    } else {
+                        entity_it->physics->velocity.x = fmax(entity_it->physics->walk_speed, entity_it->physics->velocity.x - friction);
+                    }
+                } else if (entity_it->input->left) {
+                    entity_it->is_facing_forward = false;
+                    if (entity_it->physics->velocity.x > entity_it->physics->walk_speed) {
+                        entity_it->physics->velocity.x = fmax(-entity_it->physics->walk_speed,
+                                                              entity_it->physics->velocity.x - friction - 40);
+                    } else {
+                        entity_it->physics->velocity.x = fmin(-entity_it->physics->walk_speed,
+                                                              entity_it->physics->velocity.x + friction);
 
-                }
-            } else {
-                if (entity_it->is_facing_forward) {
-                    entity_it->physics->velocity.x = fmax(0, entity_it->physics->velocity.x - friction);
+                    }
                 } else {
-                    entity_it->physics->velocity.x = fmin(0, entity_it->physics->velocity.x + friction);
+                    if (entity_it->is_facing_forward) {
+                        entity_it->physics->velocity.x = fmax(0, entity_it->physics->velocity.x - friction);
+                    } else {
+                        entity_it->physics->velocity.x = fmin(0, entity_it->physics->velocity.x + friction);
+                    }
+                }
+                if (entity_it->input->up) {
+                    if (entity_it->physics->jump_count < ((m_double_jump)? 2 : 1)) {
+                        entity_it->physics->velocity.y = entity_it->physics->jump_speed;
+                        entity_it->physics->jump_count++;
+
+                        // Holding down up arrow will cause the player to jump twice in very quick succession
+                        // This will appear as a single jump
+                        // Set up to false so this doesnt occur
+                        entity_it->input->up = false;
+                    }
                 }
             }
-            if (entity_it->input->up) {
-                if (entity_it->physics->jump_count < 2) {
-                    entity_it->physics->velocity.y = entity_it->physics->jump_speed;
-                    entity_it->physics->jump_count++;
-
-                    // Holding down up arrow will cause the player to jump twice in very quick succession
-                    // This will appear as a single jump
-                    // Set up to false so this doesnt occur
-                    entity_it->input->up = false;
-                }
-            }
-          }
         }
 
         move(ms, *entity_it);

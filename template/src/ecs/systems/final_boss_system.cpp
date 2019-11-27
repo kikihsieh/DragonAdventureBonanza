@@ -77,6 +77,8 @@ void FinalBossSystem::update(Entity& final_boss, float ms) {
                 m_death = true;
         }
         if (m_death) {
+
+            // TODO make boss flash
             if (final_boss.scale.x > 0 && final_boss.scale.y > 0) {
                 final_boss.scale.x -= 0.001;
                 final_boss.scale.y -= 0.001;

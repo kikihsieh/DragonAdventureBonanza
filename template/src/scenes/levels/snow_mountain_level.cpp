@@ -1,7 +1,8 @@
+#include <ecs/systems/default_physics_system.hpp>
 #include "snow_mountain_level.hpp"
 
-SnowMountainLeve::SnowMountainLeve(bool unlocked) :
-        Level(unlocked) {
+SnowMountainLeve::SnowMountainLeve() :
+        Level() {
 }
 
 void SnowMountainLeve::init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) {
@@ -18,4 +19,18 @@ void SnowMountainLeve::init_throwing_enemy(std::shared_ptr<Texture> texture, vec
     g.drawable->texture->height = 320;
     g.drawable->texture->width = 250;
     m_entities.emplace_back(g);
+}
+
+bool SnowMountainLeve::init_player() {
+    Player player;
+    player.airdash = new AirDash();
+    m_entities.emplace_back(player);
+    m_player = &m_entities.back();
+    return true;
+}
+
+bool SnowMountainLeve::init() {
+    m_airdash_system = new AirDashSystem();
+    m_physics_system = new DefaultPhysicsSystem(true);
+    return Level::init();
 }

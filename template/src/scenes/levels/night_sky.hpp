@@ -7,13 +7,14 @@
 
 class NightSky: public Level {
 public:
-    explicit NightSky(bool unlocked);
+    explicit NightSky();
 
     const char * get_bg_texture_path() override {
         return textures_path("night_sky/background.png");
     }
 
     bool init() override;
+    bool init_player() override;
 
     virtual void update(float elapsed_ms, vec2 screen_size) override;
 

@@ -4,13 +4,11 @@
 #include <ecs/entities/final_boss.hpp>
 #include "night_sky.hpp"
 
-NightSky::NightSky(bool unlocked) :
-        Level(unlocked) {
+NightSky::NightSky() :
+    Level() {
 }
 
 bool NightSky::init() {
-    bool init = Level::init();
-
     m_screen = {1200, 800};
 
     if(!m_final_boss_spawning_system.init(&m_entities, m_screen))
@@ -24,6 +22,8 @@ bool NightSky::init() {
     auto *flying_physics = dynamic_cast<FlyingPhysicsSystem *>(m_physics_system);
     flying_physics->set_spawning_system(&m_final_boss_spawning_system);
 
+    bool init = Level::init();
+
     //=================================
     // Cloud Spawning
     //=================================
@@ -33,18 +33,7 @@ bool NightSky::init() {
     for (float x = 100; x <= m_screen.x; x += 150) {
         m_final_boss_spawning_system.spawn_cloud(x);
     }
-
-    //=================================
-    // Update Player Variables
-    //=================================
-    m_player->physics->gravity = 0;
-    m_player->physics->velocity = {0, 0};
-    m_player->physics->acceleration = {0, 0};
-    m_player->position = {100, 400};
-    m_player->shooting->time = 500;
-
-
-    //=================================
+  
     // Spawn Final Boss
     //=================================
     if(!m_final_boss_spawning_system.spawn_final_boss())
@@ -71,4 +60,16 @@ void NightSky::update(float elapsed_ms, vec2 screen_size) {
 
 void NightSky::spawn_cloud() {
     m_final_boss_spawning_system.spawn_cloud(0);
+}
+
+bool NightSky::init_player() {
+    Player player;
+    m_entities.emplace_back(player);
+    m_player = &m_entities.back();
+    m_player->physics->gravity = 0;
+    m_player->physics->velocity = {0, 0};
+    m_player->physics->acceleration = {0, 0};
+    m_player->position = {100, 400};
+    m_player->shooting->time = 500;
+    return true;
 }

@@ -8,9 +8,9 @@
 #include <scenes/levels/cave_level.hpp>
 #include <scenes/levels/snow_mountain_level.hpp>
 #include <scenes/start_menu.hpp>
-#include <scenes/help_menu.hpp>
-#include <iostream>
+#include <scenes/level_select.hpp>
 #include <scenes/levels/night_sky.hpp>
+#include <iostream>
 
 // Same as static in c, local to compilation unit
 namespace
@@ -24,14 +24,14 @@ namespace
 	}
 }
 
-World::World() {
+World::World() : m_save_path("save_v2.txt") {
     map_init(m_scenes)
-            (FOREST, new ForestLevel(true))
-            (SNOW_MOUNTAIN, new SnowMountainLeve(true))
-            (CAVE, new CaveLevel(true))
-            (NIGHT_SKY, new NightSky(true))
+            (FOREST, new ForestLevel())
+            (SNOW_MOUNTAIN, new SnowMountainLeve())
+            (CAVE, new CaveLevel())
+            (NIGHT_SKY, new NightSky())
 			(MAIN_MENU, new StartMenu())
-			(HELP, new HelpMenu());
+            (LEVEL_SELECT, new LevelSelect());
 }
 
 World::~World() {}
@@ -92,18 +92,17 @@ bool World::init(vec2 screen)
 	// Initialize the screen texture
 	m_screen_tex.create_from_screen(m_window);
 
-    m_save_path = "save.txt";
-
-    //TODO: temporary settings, change to number of levels once determine
     int l = load();
     if (l < 0) {
-        m_unlocked_levels.insert(std::pair<std::string, bool>("FOREST", true));
-        m_unlocked_levels.insert(std::pair<std::string, bool>("CAVE", true));
-        m_unlocked_levels.insert(std::pair<std::string, bool>("SNOW_MOUNTAIN", true));
-        m_unlocked_levels.insert(std::pair<std::string, bool>("NIGHT_SKY", true));
+        for (auto &scene: m_scenes) {
+            if (scene.second->is_level()) {
+                m_unlocked_levels[scene.first] = scene.first == FOREST;
+            }
+        }
         std::cout << "No existing save file" << std::endl;
-    } else
+    } else {
         std::cout << "Loaded save!" << std::endl;
+    }
 
 	return load_scene(MAIN_MENU);
 }
@@ -194,6 +193,10 @@ bool World::is_over() const {
 
 bool World::load_scene(Scene_name scene) {
     using namespace std::placeholders;
+    if (m_scenes.at(scene)->is_level() && !m_unlocked_levels.at(scene)) {
+        return false;
+    }
+
     if (m_current_scene) {
         m_scenes.at(m_current_scene)->destroy();
     }
@@ -202,6 +205,7 @@ bool World::load_scene(Scene_name scene) {
     m_scenes.at(m_current_scene)->addSceneChangeHandler(std::bind(&World::change_scene, this));
     m_scenes.at(m_current_scene)->loadSceneHandler(std::bind(&World::load_scene, this, _1));
     m_scenes.at(m_current_scene)->exitGameHandler(std::bind(glfwSetWindowShouldClose, m_window, true));
+    m_scenes.at(m_current_scene)->m_unlocked_levels = &m_unlocked_levels;
     m_scenes.at(m_current_scene)->init();
     return true;
 }
@@ -213,19 +217,20 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
     }
 
     if (key == GLFW_KEY_1 && action == GLFW_RELEASE) {
-        if (m_unlocked_levels["FOREST"])
-            load_scene(FOREST);
+        load_scene(FOREST);
         return;
     }
 
     if (key == GLFW_KEY_2 && action == GLFW_RELEASE) {
-        if (m_unlocked_levels["SNOW_MOUNTAIN"])
-            load_scene(SNOW_MOUNTAIN);
+        load_scene(CAVE);
         return;
     }
     if (key == GLFW_KEY_3 && action == GLFW_RELEASE) {
-        if (m_unlocked_levels["CAVE"])
-            load_scene(CAVE);
+        load_scene(SNOW_MOUNTAIN);
+        return;
+    }
+    if (key == GLFW_KEY_4 && action == GLFW_RELEASE) {
+        load_scene(NIGHT_SKY);
         return;
     }
     if (key == GLFW_KEY_4 && action == GLFW_RELEASE) {
@@ -253,13 +258,6 @@ void World::on_mouse_click(GLFWwindow* window, int key, int action, int mod) {
 	double xposition, yposition;
     glfwGetCursorPos(window, &xposition, &yposition);
     m_scenes.at(m_current_scene)->on_mouse(key,action, xposition, yposition);
-//    if (b != nullptr) {
-//        Button btn = *b;
-//        if (btn.function == "level")
-//            change_scene();
-//        else if (btn.function == "close")
-//            glfwSetWindowShouldClose(m_window, true);
-//    }
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
@@ -270,15 +268,13 @@ void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 
 int World::save() {
     int count = 0;
-    if (m_unlocked_levels.empty())
-        return -1;
 
     FILE *fp = fopen(m_save_path.c_str(), "w");
     if (!fp)
         return -errno;
 
     for(auto & it : m_unlocked_levels) {
-        fprintf(fp, "%s=%s\n", it.first.c_str(), std::to_string(it.second).c_str());
+        fprintf(fp, "%i=%s\n", it.first, std::to_string(it.second).c_str());
         count++;
     }
 
@@ -322,7 +318,7 @@ int World::load() {
             std::string s1 = (const char *) char_array;
             bool s2 = *sep == '1';
 
-            (m_unlocked_levels)[s1] = s2;
+            m_unlocked_levels[(Scene_name) std::stoi(s1)] = s2;
             count++;
         }
     }
@@ -336,6 +332,10 @@ void World::change_scene() {
     if (next == END) {
         load_scene(MAIN_MENU);
     } else {
+        if (!m_unlocked_levels[next]) {
+            m_unlocked_levels[next] = true;
+            save();
+        }
         load_scene(next);
     }
 }

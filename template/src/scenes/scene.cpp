@@ -10,7 +10,7 @@ bool Scene::init() {
     Background background(get_bg_texture_path());
     m_entities.insert(m_entities.begin(), background);
     m_rendersystem->init_entity(help);
-    if (m_rendersystem->init(&m_entities, get_tiles()) && m_inputsystem->init(&m_entities, &m_buttons)) {
+    if (m_rendersystem->init(&m_entities, get_tiles(), &m_buttons) && m_inputsystem->init(&m_entities, &m_buttons)) {
         state = LOADED;
         return true;
     }
@@ -25,6 +25,9 @@ void Scene::destroy() {
     m_inputsystem = nullptr;
     for (auto &entity: m_entities) {
         entity.destroy();
+    }
+    for (auto &button: m_buttons) {
+        button.destroy();
     }
     m_entities.clear();
     m_buttons.clear();

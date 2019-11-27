@@ -7,6 +7,9 @@
 
 class DefaultPhysicsSystem : public PhysicsSystem {
 public:
+
+    explicit DefaultPhysicsSystem(bool double_jump);
+
     bool init(std::list<Entity> *entities, vec2 level_bounds) override;
 
     void update(float ms) override;

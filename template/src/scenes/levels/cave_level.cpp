@@ -1,7 +1,8 @@
+#include <ecs/systems/default_physics_system.hpp>
 #include "cave_level.hpp"
 
-CaveLevel::CaveLevel(bool unlocked) :
-    Level(unlocked) {
+CaveLevel::CaveLevel() :
+    Level() {
 }
 
 void CaveLevel::init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) {
@@ -12,4 +13,16 @@ void CaveLevel::init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) {
 void CaveLevel::init_throwing_enemy(std::shared_ptr<Texture> texture, vec2 pos) {
     Glob g(texture, pos);
     m_entities.emplace_back(g);
+}
+
+bool CaveLevel::init_player() {
+    Player player;
+    m_entities.emplace_back(player);
+    m_player = &m_entities.back();
+    return true;
+}
+
+bool CaveLevel::init() {
+    m_physics_system = new DefaultPhysicsSystem(true);
+    return Level::init();
 }

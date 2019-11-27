@@ -5,7 +5,7 @@
 
 class CaveLevel: public Level {
 public:
-    explicit CaveLevel(bool unlocked);
+    explicit CaveLevel();
 
     const char * get_bg_texture_path() override {
         return textures_path("cave/background.png");
@@ -14,6 +14,8 @@ public:
         return true;
     }
 
+    bool init() override;
+    bool init_player() override;
     void init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) override;
     void init_throwing_enemy(std::shared_ptr<Texture> texture, vec2 pos) override;
 

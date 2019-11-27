@@ -13,7 +13,7 @@ void HealthSystem::update(float ms) {
             continue;
         }
 
-        if (entity_it->health->is_player && entity_it->health->invincible) {
+        if (entity_it->health->invincible) {
             entity_it->health->invincible_timer += ms;
 
             if (entity_it->health->invincible_timer > entity_it->health->invincibility_duration) {
