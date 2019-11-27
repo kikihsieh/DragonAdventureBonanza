@@ -27,6 +27,8 @@ struct Health {
     bool is_player = false;
     vec2 last_safe;
 
+    bool is_boss = false;
+
     bool invincible = false;
     float invincible_timer = 0;
     float invincibility_duration = 1000;

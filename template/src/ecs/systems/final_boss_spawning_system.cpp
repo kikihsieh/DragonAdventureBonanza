@@ -208,16 +208,16 @@ float FinalBossSpawningSystem::spawn_maze(vec2 position, float last_safe_y, int 
 
     if (count == 0) {
         float rng = dist(m_rng);
-        if (rng > (((m_screen_bounds.y / 2) - last_safe_y) / 600) + 0.5)
+        if (rng > (((m_screen_bounds.y / 2) - last_safe_y) / (2 * (m_screen_bounds.y - increment))) + 0.5)
             safe_y -= increment;
         else
             safe_y += increment;
     }
 
-    if (safe_y < 100)
-        safe_y = 100;
-    if (safe_y > m_screen_bounds.y - 100)
-        safe_y = m_screen_bounds.y - 100;
+    if (safe_y < increment)
+        safe_y = increment;
+    if (safe_y > m_screen_bounds.y - increment)
+        safe_y = m_screen_bounds.y - increment;
 
     for (float y = 0; y <= m_screen_bounds.y; y += increment) {
         if (abs(y - safe_y) < increment || abs(y - last_safe_y) < increment) {

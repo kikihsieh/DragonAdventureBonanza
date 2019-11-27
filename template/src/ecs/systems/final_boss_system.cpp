@@ -56,9 +56,16 @@ void FinalBossSystem::update(Entity& final_boss, float ms) {
         else
             phase_2(final_boss, ms);
     } else if (final_boss.health->health > m_final_boss_max_health * 0.9) {
-        phase_3(final_boss, ms);
-    } else
-        phase_4(final_boss, ms);
+        if (len(sub(final_boss.position, m_start_pos)) > 10)
+            move_to_start_pos(final_boss);
+        else
+            phase_3(final_boss, ms);
+    } else if (final_boss.health->health > 0) {
+        if (len(sub(final_boss.position, m_start_pos)) > 10)
+            move_to_start_pos(final_boss);
+        else
+            phase_4(final_boss, ms);
+    }
 }
 
 void FinalBossSystem::phase_1(Entity& final_boss, float ms) {
@@ -146,6 +153,8 @@ void FinalBossSystem::phase_2b(Entity& final_boss, float ms) {
 
 void FinalBossSystem::phase_3(Entity& final_boss, float ms) {
 
+    final_boss.physics->velocity = {0, 0};
+
     m_phase_3_timer += ms;
 
     if (m_phase_3_timer > m_phase_3_frequency) {
@@ -164,6 +173,8 @@ void FinalBossSystem::phase_3(Entity& final_boss, float ms) {
 }
 
 void FinalBossSystem::phase_4(Entity& final_boss, float ms) {
+
+    final_boss.physics->velocity = {0, 0};
 
     m_phase_4_timer += ms;
 
