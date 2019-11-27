@@ -51,6 +51,7 @@ struct Entity {
     bool is_bomb;
 
     int id;
+    int level = 1;
 
     static int current_id;
 
