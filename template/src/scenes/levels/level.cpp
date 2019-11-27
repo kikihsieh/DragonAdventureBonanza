@@ -46,12 +46,12 @@ void Level::destroy() {
     m_enemy_motion_system = nullptr;
     m_shooting_system = nullptr;
     m_camera_system = nullptr;
-    
+    /*
     if (m_background_music != nullptr){
         Mix_FreeChunk(m_background_music);
         m_background_music =nullptr;
         }
-    Mix_CloseAudio();
+    Mix_CloseAudio();*/
     
 }
 

@@ -27,5 +27,34 @@ bool StartMenu::init() {
     m_entities.emplace_back(exit);
     m_buttons.emplace_back(exit);
     Scene::init();
+    
+    if (SDL_Init(SDL_INIT_AUDIO) < 0)
+    {
+        fprintf(stderr, "Failed to initialize SDL Audio");
+        return false;
+    }
+    
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1)
+    {
+        fprintf(stderr, "Failed to open audio device");
+        return false;
+    }
+    
+    m_background_music = Mix_LoadWAV(audio_path("mainmenu.wav"));
+    //m_salmon_dead_sound = Mix_LoadWAV(audio_path("salmon_dead.wav"));
+    //m_salmon_eat_sound = Mix_LoadWAV(audio_path("salmon_eat.wav"));
+    
+    if (m_background_music == nullptr)
+    {
+        fprintf(stderr, "Failed to load sounds\n %s\n %s\n %s\n make sure the data directory is present",
+                audio_path("mainmenu.wav"));
+        return false;
+    }
+   
+    // Playing background music indefinitely
+    Mix_PlayChannel(-1,m_background_music, -1);
+    
+    fprintf(stderr, "Loaded music\n");
+    
     return true;
 }

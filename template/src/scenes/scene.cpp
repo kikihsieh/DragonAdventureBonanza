@@ -32,12 +32,13 @@ void Scene::destroy() {
     m_entities.clear();
     m_buttons.clear();
     drawHelp = false;
-    /*
-    if (m_background_music != nullptr)
+   
+    if (m_background_music != nullptr){
         Mix_FreeChunk(m_background_music);
-    m_background_music = nullptr;
+        m_background_music = nullptr;
+    }
     Mix_CloseAudio();
-*/
+
     
 }
 
