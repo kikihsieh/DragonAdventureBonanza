@@ -51,12 +51,12 @@ bool ForestLevel::init() {
     return Level::init();
 }
 
-void ForestLevel::background_music(Mix_Chunk* b){
-    
-    // Playing background music indefinitely
-    Mix_PlayChannel(-1,b, -1);
-    
-    fprintf(stderr, "Loaded music\n");
-    
-}
+//void ForestLevel::background_music(Mix_Chunk* b){
+//
+//    // Playing background music indefinitely
+//    Mix_PlayChannel(-1,b, -1);
+//
+//    fprintf(stderr, "Loaded music\n");
+//
+//}
 

@@ -54,11 +54,11 @@ bool CaveLevel::init() {
 
 
 
-void CaveLevel::background_music(Mix_Chunk* b){
-    
-    // Playing background music indefinitely
-    Mix_PlayChannel(-1,b, -1);
-    
-    fprintf(stderr, "Loaded music\n");
-    
-}
+//void CaveLevel::background_music(Mix_Chunk* b){
+//
+//    // Playing background music indefinitely
+//    Mix_PlayChannel(-1,b, -1);
+//
+//    fprintf(stderr, "Loaded music\n");
+//
+//}

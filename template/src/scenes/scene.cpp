@@ -97,3 +97,13 @@ void Scene::exitGameHandler(std::function<void(void)> callback) {
 }
 
 
+void Scene::background_music(Mix_Chunk* b){
+
+    // Playing background music indefinitely
+    Mix_PlayChannel(-1,b, -1);
+
+    fprintf(stderr, "Loaded music\n");
+
+}
+
+

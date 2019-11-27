@@ -24,8 +24,8 @@ public:
     void init_throwing_enemy(std::shared_ptr<Texture> texture, vec2 pos) override;
     
     
-    virtual void background_music(Mix_Chunk* b) override;
-    Mix_Chunk* m_background_music;
+//    virtual void background_music(Mix_Chunk* b) override;
+//    Mix_Chunk* m_background_music;
     
 private:
     const MapVector get_map() const override {

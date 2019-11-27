@@ -26,7 +26,6 @@ bool StartMenu::init() {
     exit.m_button_callback = [this](){exit_game();};
     m_entities.emplace_back(exit);
     m_buttons.emplace_back(exit);
-    Scene::init();
     
     if (SDL_Init(SDL_INIT_AUDIO) < 0)
     {
@@ -51,10 +50,12 @@ bool StartMenu::init() {
         return false;
     }
    
-    // Playing background music indefinitely
-    Mix_PlayChannel(-1,m_background_music, -1);
-    
-    fprintf(stderr, "Loaded music\n");
+//    // Playing background music indefinitely
+//    Mix_PlayChannel(-1,m_background_music, -1);
+//
+//    fprintf(stderr, "Loaded music\n");
+    background_music(m_background_music);
+    Scene::init();
     
     return true;
 }
