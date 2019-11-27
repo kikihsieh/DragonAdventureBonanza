@@ -43,7 +43,12 @@ struct Entity {
     bool is_facing_forward;
     bool is_player_proj;
     bool is_enemy_proj;
+    bool is_boss_proj;
+    bool is_minion;
+
     bool is_background;
+
+    bool is_bomb;
 
     int id;
 

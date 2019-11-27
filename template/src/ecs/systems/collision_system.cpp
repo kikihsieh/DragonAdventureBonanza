@@ -165,7 +165,9 @@ bool CollisionSystem::collide_with_entities(Entity &e) {
             continue;
         }
 
-        if ((e.is_player_proj && entity_it->player_tag) || (!entity_it->player_tag && e.is_enemy_proj)) {
+        if ((e.is_player_proj && entity_it->player_tag) ||
+                (!entity_it->player_tag && e.is_enemy_proj) ||
+                (e.is_player_proj && entity_it->is_boss_proj)) {
             ++entity_it;
             continue;
         }
@@ -184,7 +186,9 @@ bool CollisionSystem::collide_with_entities(Entity &e) {
                 }
 
             } else if (!e.health->invincible){
-                e.health->decrease_health();
+                Entity a = *entity_it;
+                if (!entity_it->clipped)
+                    e.health->decrease_health();
             }
         } else if (e.is_player_proj) {
             if (entity_it->health) {

@@ -4,6 +4,7 @@
 #include <ecs/entities/player.hpp>
 #include <iostream>
 #include "common.hpp"
+#include "ecs/systems/default_physics_system.hpp"
 
 Level::Level() :
         m_tile_map(nullptr),

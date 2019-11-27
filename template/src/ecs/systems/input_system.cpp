@@ -19,6 +19,13 @@ void InputSystem::on_key_update(int key, int action) {
                 entity.input->up = false;
             }
         }
+        if (key == GLFW_KEY_DOWN || key == GLFW_KEY_S) {
+            if (action == GLFW_PRESS) {
+                entity.input->down = true;
+            } else if (action == GLFW_RELEASE) {
+                entity.input->down = false;
+            }
+        }
         if (key == GLFW_KEY_LEFT || key == GLFW_KEY_A) {
             if (action == GLFW_PRESS) {
                 entity.input->left = true;

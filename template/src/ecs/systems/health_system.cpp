@@ -13,7 +13,7 @@ void HealthSystem::update(float ms) {
             continue;
         }
 
-        if (entity_it->health->is_player && entity_it->health->invincible) {
+        if (entity_it->health->invincible) {
             entity_it->health->invincible_timer += ms;
 
             if (entity_it->health->invincible_timer > entity_it->health->invincibility_duration) {
@@ -41,7 +41,7 @@ void HealthSystem::update(float ms) {
         if (entity_it->health->health <= 0) {
             if(entity_it->player_tag) {
                 m_player_died = true;
-            } else {
+            } else if(!entity_it->health->is_boss) {
                 entity_it->destroy();
                 entity_it = m_entities->erase(entity_it);
                 continue;
