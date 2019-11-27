@@ -26,19 +26,6 @@ bool StartMenu::init() {
     exit.m_button_callback = [this](){exit_game();};
     m_entities.emplace_back(exit);
     m_buttons.emplace_back(exit);
-    
-    if (SDL_Init(SDL_INIT_AUDIO) < 0)
-    {
-        fprintf(stderr, "Failed to initialize SDL Audio");
-        return false;
-    }
-    
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1)
-    {
-        fprintf(stderr, "Failed to open audio device");
-        return false;
-    }
-    
     m_background_music = Mix_LoadWAV(audio_path("mainmenu.wav"));
     Scene::init();
     

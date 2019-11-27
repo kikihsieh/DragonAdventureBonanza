@@ -11,17 +11,6 @@ bool Scene::init() {
     Background background(get_bg_texture_path());
     m_entities.insert(m_entities.begin(), background);
     m_rendersystem->init_entity(help);
-    if (SDL_Init(SDL_INIT_AUDIO) < 0)
-    {
-        fprintf(stderr, "Failed to initialize SDL Audio");
-        return false;
-    }
-
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1)
-    {
-        fprintf(stderr, "Failed to open audio device");
-        return false;
-    }
     background_music();
     if (m_rendersystem->init(&m_entities, get_tiles()) && m_inputsystem->init(&m_entities, &m_buttons)) {
         state = LOADED;
@@ -108,10 +97,20 @@ void Scene::exitGameHandler(std::function<void(void)> callback) {
 
 
 void Scene::background_music(){
+    if (SDL_Init(SDL_INIT_AUDIO) < 0)
+    {
+        fprintf(stderr, "Failed to initialize SDL Audio");
+        return;
+    }
+
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1)
+    {
+        fprintf(stderr, "Failed to open audio device");
+        return;
+    }
     if (m_background_music == nullptr)
     {
-        fprintf(stderr, "Failed to load sounds\n %s\n %s\n %s\n make sure the data directory is present",
-                audio_path("forest.wav"));
+        fprintf(stderr, "Failed to load sounds make sure the data directory is present");
         return;
     }
     // Playing background music indefinitely

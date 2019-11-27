@@ -101,6 +101,18 @@ bool World::init(vec2 screen)
         std::cout << "Loaded save!" << std::endl;
     }
 
+    if (SDL_Init(SDL_INIT_AUDIO) < 0)
+    {
+        fprintf(stderr, "Failed to initialize SDL Audio");
+        return false;
+    }
+
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1)
+    {
+        fprintf(stderr, "Failed to open audio device");
+        return false;
+    }
+
 	return load_scene(MAIN_MENU);
 }
 
