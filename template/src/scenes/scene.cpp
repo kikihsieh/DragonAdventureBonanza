@@ -38,8 +38,6 @@ void Scene::destroy() {
         m_background_music = nullptr;
     }
     Mix_CloseAudio();
-
-    
 }
 
 void Scene::draw(const mat3& projection) {

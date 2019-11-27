@@ -69,12 +69,6 @@ public:
     std::list<Button> m_buttons;
     bool drawHelp = false;
     State state = LOADING;
-    
-    //virtual void background_music();
-    Mix_Chunk* m_background_music;
-    //Mix_Chunk* m_salmon_dead_sound;
-    //Mix_Chunk* m_salmon_eat_sound;
-    
    
 
 protected:
@@ -89,6 +83,8 @@ protected:
     std::function<void(void)> m_scene_change_callback;
     std::function<void(Scene_name)> load_scene;
     std::function<void(void)> exit_game;
+
+    Mix_Chunk* m_background_music;
     
   
     

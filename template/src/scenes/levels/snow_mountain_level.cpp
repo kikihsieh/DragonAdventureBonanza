@@ -67,8 +67,6 @@ bool SnowMountainLeve::init() {
     }
 
     m_background_music = Mix_LoadWAV(audio_path("snow.wav"));
-    //m_salmon_dead_sound = Mix_LoadWAV(audio_path("salmon_dead.wav"));
-    //m_salmon_eat_sound = Mix_LoadWAV(audio_path("salmon_eat.wav"));
 
     if (m_background_music == nullptr)
     {
@@ -80,17 +78,5 @@ bool SnowMountainLeve::init() {
    
     return Level::init();
 }
-
-
-
-
-//void SnowMountainLeve::background_music(Mix_Chunk* b){
-//
-//    // Playing background music indefinitely
-//    Mix_PlayChannel(-1,b, -1);
-//
-//    fprintf(stderr, "Loaded music\n");
-//
-//}
 
 

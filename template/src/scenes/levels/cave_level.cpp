@@ -32,9 +32,7 @@ bool CaveLevel::init_player() {
     }
     
     m_background_music = Mix_LoadWAV(audio_path("cave.wav"));
-    //m_salmon_dead_sound = Mix_LoadWAV(audio_path("salmon_dead.wav"));
-    //m_salmon_eat_sound = Mix_LoadWAV(audio_path("salmon_eat.wav"));
-    
+
     if (m_background_music == nullptr)
     {
         fprintf(stderr, "Failed to load sounds\n %s\n %s\n %s\n make sure the data directory is present",
@@ -51,14 +49,3 @@ bool CaveLevel::init() {
    
     return Level::init();
 }
-
-
-
-//void CaveLevel::background_music(Mix_Chunk* b){
-//
-//    // Playing background music indefinitely
-//    Mix_PlayChannel(-1,b, -1);
-//
-//    fprintf(stderr, "Loaded music\n");
-//
-//}

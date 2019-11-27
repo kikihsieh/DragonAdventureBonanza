@@ -40,9 +40,7 @@ bool StartMenu::init() {
     }
     
     m_background_music = Mix_LoadWAV(audio_path("mainmenu.wav"));
-    //m_salmon_dead_sound = Mix_LoadWAV(audio_path("salmon_dead.wav"));
-    //m_salmon_eat_sound = Mix_LoadWAV(audio_path("salmon_eat.wav"));
-    
+
     if (m_background_music == nullptr)
     {
         fprintf(stderr, "Failed to load sounds\n %s\n %s\n %s\n make sure the data directory is present",
@@ -50,10 +48,6 @@ bool StartMenu::init() {
         return false;
     }
    
-//    // Playing background music indefinitely
-//    Mix_PlayChannel(-1,m_background_music, -1);
-//
-//    fprintf(stderr, "Loaded music\n");
     background_music(m_background_music);
     Scene::init();
     
