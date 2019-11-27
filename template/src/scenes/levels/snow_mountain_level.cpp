@@ -25,57 +25,13 @@ bool SnowMountainLeve::init_player() {
     player.airdash = new AirDash();
     m_entities.emplace_back(player);
     m_player = &m_entities.back();
-//    if (SDL_Init(SDL_INIT_AUDIO) < 0)
-//    {
-//        fprintf(stderr, "Failed to initialize SDL Audio");
-//        return false;
-//    }
-//
-//    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1)
-//    {
-//        fprintf(stderr, "Failed to open audio device");
-//        return false;
-//    }
-//
-//    m_background_music = Mix_LoadWAV(audio_path("snow.wav"));
-//    //m_salmon_dead_sound = Mix_LoadWAV(audio_path("salmon_dead.wav"));
-//    //m_salmon_eat_sound = Mix_LoadWAV(audio_path("salmon_eat.wav"));
-//
-//    if (m_background_music == nullptr)
-//    {
-//        fprintf(stderr, "Failed to load sounds\n %s\n %s\n %s\n make sure the data directory is present",
-//                audio_path("snow.wav"));
-//        return false;
-//    }
-//    background_music(m_background_music);
     return true;
 }
 
 bool SnowMountainLeve::init() {
     m_airdash_system = new AirDashSystem();
     m_physics_system = new PhysicsSystem(true);
-    if (SDL_Init(SDL_INIT_AUDIO) < 0)
-    {
-        fprintf(stderr, "Failed to initialize SDL Audio");
-        return false;
-    }
-
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1)
-    {
-        fprintf(stderr, "Failed to open audio device");
-        return false;
-    }
-
     m_background_music = Mix_LoadWAV(audio_path("snow.wav"));
-
-    if (m_background_music == nullptr)
-    {
-        fprintf(stderr, "Failed to load sounds\n %s\n %s\n %s\n make sure the data directory is present",
-                audio_path("snow.wav"));
-        return false;
-    }
-    background_music(m_background_music);
-   
     return Level::init();
 }
 

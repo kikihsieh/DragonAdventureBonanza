@@ -62,7 +62,7 @@ public:
     void on_key(int key, int action);
     void on_mouse(int key, int action, double xpos, double ypos);
 
-    void background_music(Mix_Chunk *b);
+    void background_music();
 
 
     std::list<Entity> m_entities;

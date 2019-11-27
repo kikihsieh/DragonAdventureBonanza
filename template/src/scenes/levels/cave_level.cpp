@@ -30,22 +30,12 @@ bool CaveLevel::init_player() {
         fprintf(stderr, "Failed to open audio device");
         return false;
     }
-    
-    m_background_music = Mix_LoadWAV(audio_path("cave.wav"));
 
-    if (m_background_music == nullptr)
-    {
-        fprintf(stderr, "Failed to load sounds\n %s\n %s\n %s\n make sure the data directory is present",
-                audio_path("cave.wav"));
-        return false;
-    }
-    background_music(m_background_music);
-    
     return true;
 }
 
 bool CaveLevel::init() {
     m_physics_system = new PhysicsSystem(true);
-   
+    m_background_music = Mix_LoadWAV(audio_path("cave.wav"));
     return Level::init();
 }

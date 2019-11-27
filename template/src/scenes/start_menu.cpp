@@ -40,15 +40,6 @@ bool StartMenu::init() {
     }
     
     m_background_music = Mix_LoadWAV(audio_path("mainmenu.wav"));
-
-    if (m_background_music == nullptr)
-    {
-        fprintf(stderr, "Failed to load sounds\n %s\n %s\n %s\n make sure the data directory is present",
-                audio_path("mainmenu.wav"));
-        return false;
-    }
-   
-    background_music(m_background_music);
     Scene::init();
     
     return true;
