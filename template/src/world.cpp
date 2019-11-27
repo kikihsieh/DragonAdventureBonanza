@@ -22,7 +22,7 @@ namespace
 	}
 }
 
-World::World() : m_save_path("save.txt") {
+World::World() : m_save_path("save_v2.txt") {
     map_init(m_scenes)
             (FOREST, new ForestLevel())
             (SNOW_MOUNTAIN, new SnowMountainLeve())
