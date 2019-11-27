@@ -22,6 +22,7 @@ public:
     void spawn_wave(vec2 position);
     void spawn_wall(vec2 position);
     void spawn_radial(vec2 position, float offset);
+    float spawn_maze (vec2 position, float last_safe_y, int count);
 
 private:
 

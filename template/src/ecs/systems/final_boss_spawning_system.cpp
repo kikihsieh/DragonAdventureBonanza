@@ -199,6 +199,43 @@ void FinalBossSpawningSystem::spawn_radial(vec2 position, float offset) {
 }
 
 
+float FinalBossSpawningSystem::spawn_maze(vec2 position, float last_safe_y, int count) {
+
+    float x = 1;
+    float increment = 100;
+
+    float safe_y = last_safe_y;
+
+    if (count == 0) {
+        float rng = dist(m_rng);
+        if (rng > (((m_screen_bounds.y / 2) - last_safe_y) / 600) + 0.5)
+            safe_y -= increment;
+        else
+            safe_y += increment;
+    }
+
+    if (safe_y < 100)
+        safe_y = 100;
+    if (safe_y > m_screen_bounds.y - 100)
+        safe_y = m_screen_bounds.y - 100;
+
+    for (float y = 0; y <= m_screen_bounds.y; y += increment) {
+        if (abs(y - safe_y) < increment || abs(y - last_safe_y) < increment) {
+            continue;
+        }
+
+        Projectile p(m_texture_mapping.at(4), {position.x, y},
+                     {-x / 1.25f, 0}, {0.05, 0.05}, true);
+        p.physics->gravity = 0;
+        p.physics->acceleration.y = 0;
+        p.is_boss_proj = true;
+        if (init_entity(p))
+            m_entities->push_back(p);
+    }
+
+    return safe_y;
+}
+
 bool FinalBossSpawningSystem::init_entity(Entity& entity) {
 
     if (entity.drawable == nullptr) {

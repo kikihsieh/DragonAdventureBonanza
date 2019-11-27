@@ -30,6 +30,11 @@ bool FinalBossSystem::init(Entity* player, Entity& final_boss, std::list<Entity>
     m_phase_3_frequency = 700;
     m_phase_3a = true;
 
+    m_phase_4_timer = 0;
+    m_phase_4_frequency = 400;
+    m_last_safe_y = screen_size.y / 2;
+    m_phase_4_count = 0;
+
     final_boss.physics->velocity.y = m_boss_move_speed;
     m_final_boss_max_health = final_boss.health->health;
 
@@ -43,15 +48,17 @@ bool FinalBossSystem::init(Entity* player, Entity& final_boss, std::list<Entity>
 
 void FinalBossSystem::update(Entity& final_boss, float ms) {
 
-    if (final_boss.health->health > m_final_boss_max_health * 0.8)
+    if (final_boss.health->health > m_final_boss_max_health * 0.98)
         phase_1(final_boss, ms);
-    else if (final_boss.health->health > m_final_boss_max_health * 0.35) {
+    else if (final_boss.health->health > m_final_boss_max_health * 0.95) {
         if (len(sub(final_boss.position, m_start_pos)) > 10)
             move_to_start_pos(final_boss);
         else
             phase_2(final_boss, ms);
-    } else
+    } else if (final_boss.health->health > m_final_boss_max_health * 0.9) {
         phase_3(final_boss, ms);
+    } else
+        phase_4(final_boss, ms);
 }
 
 void FinalBossSystem::phase_1(Entity& final_boss, float ms) {
@@ -153,6 +160,22 @@ void FinalBossSystem::phase_3(Entity& final_boss, float ms) {
 
         float width = final_boss.texture_size.x * final_boss.scale.x + 50;
         m_final_boss_spawning_system->spawn_radial(sub(final_boss.position, {width / 2 + 50, 0}), offset);
+    }
+}
+
+void FinalBossSystem::phase_4(Entity& final_boss, float ms) {
+
+    m_phase_4_timer += ms;
+
+    if (m_phase_4_timer > m_phase_4_frequency) {
+        m_phase_4_timer = 0;
+
+        float width = final_boss.texture_size.x * final_boss.scale.x + 50;
+        m_phase_4_count++;
+        if (m_phase_4_count > 4)
+            m_phase_4_count = 0;
+
+        m_last_safe_y = m_final_boss_spawning_system->spawn_maze(sub(final_boss.position, {width / 2, 0}), m_last_safe_y, m_phase_4_count);
     }
 }
 

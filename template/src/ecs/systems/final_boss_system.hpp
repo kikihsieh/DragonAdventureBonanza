@@ -19,6 +19,7 @@ private:
     void phase_2a (Entity& final_boss, float ms);
     void phase_2b (Entity& final_boss, float ms);
     void phase_3 (Entity& final_boss, float ms);
+    void phase_4 (Entity& final_boss, float ms);
 
     void move_to_start_pos(Entity& final_boss);
 
@@ -51,6 +52,11 @@ private:
     float m_phase_3_timer;
     float m_phase_3_frequency;
     bool m_phase_3a;
+
+    float m_phase_4_timer;
+    float m_phase_4_frequency;
+    float m_last_safe_y;
+    int m_phase_4_count;
 
     vec2 m_screen_bounds;
     vec2 m_start_pos;
