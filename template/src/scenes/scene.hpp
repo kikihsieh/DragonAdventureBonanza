@@ -56,7 +56,7 @@ public:
     void exitGameHandler(std::function<void()> callback);
 
     void on_key(int key, int action);
-    void on_mouse(int key, int action, double xpos, double ypos);
+    virtual void on_mouse(int key, int action, double xpos, double ypos);
 
     std::list<Entity> m_entities;
     std::list<Button> m_buttons;
@@ -76,5 +76,6 @@ protected:
     std::function<void(void)> m_scene_change_callback;
     std::function<void(Scene_name)> load_scene;
     std::function<void(void)> exit_game;
+    vec2 m_screen_size;
 };
 #endif
