@@ -27,7 +27,7 @@ struct FinalBoss : public Entity {
         is_facing_forward = true;
 
         health = new Health();
-        health->health = 20;
+        health->health = 200;
         health->is_boss = true;
     }
 };

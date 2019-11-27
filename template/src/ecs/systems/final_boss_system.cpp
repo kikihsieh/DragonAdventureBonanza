@@ -13,7 +13,7 @@ bool FinalBossSystem::init(Entity* player, Entity& final_boss, std::list<Entity>
     m_phase_1_minion_spawn_timer = 0;
     m_phase_1_minion_spawn_frequency = 5000;
     m_spawning_minions = false;
-    m_minions_to_spawn = 7;
+    m_minions_to_spawn = 5;
     m_minions_spawned = 0;
     m_phase_1_minion_frequency = 500;
     m_phase_1_minion_timer = m_phase_1_minion_frequency;
@@ -35,6 +35,10 @@ bool FinalBossSystem::init(Entity* player, Entity& final_boss, std::list<Entity>
     m_last_safe_y = screen_size.y / 2;
     m_phase_4_count = 0;
 
+    m_death_delay = 3000;
+    m_death_timer = 0;
+    m_death = false;
+
     final_boss.physics->velocity.y = m_boss_move_speed;
     m_final_boss_max_health = final_boss.health->health;
 
@@ -48,14 +52,14 @@ bool FinalBossSystem::init(Entity* player, Entity& final_boss, std::list<Entity>
 
 void FinalBossSystem::update(Entity& final_boss, float ms) {
 
-    if (final_boss.health->health > m_final_boss_max_health * 0.98)
+    if (final_boss.health->health > m_final_boss_max_health * 0.80)
         phase_1(final_boss, ms);
-    else if (final_boss.health->health > m_final_boss_max_health * 0.95) {
+    else if (final_boss.health->health > m_final_boss_max_health * 0.55) {
         if (len(sub(final_boss.position, m_start_pos)) > 10)
             move_to_start_pos(final_boss);
         else
             phase_2(final_boss, ms);
-    } else if (final_boss.health->health > m_final_boss_max_health * 0.9) {
+    } else if (final_boss.health->health > m_final_boss_max_health * 0.25) {
         if (len(sub(final_boss.position, m_start_pos)) > 10)
             move_to_start_pos(final_boss);
         else
@@ -65,6 +69,27 @@ void FinalBossSystem::update(Entity& final_boss, float ms) {
             move_to_start_pos(final_boss);
         else
             phase_4(final_boss, ms);
+    } else {
+        if (!m_death) {
+            m_death_timer += ms;
+
+            if (m_death_timer > m_death_delay)
+                m_death = true;
+        }
+        if (m_death) {
+            if (final_boss.scale.x > 0 && final_boss.scale.y > 0) {
+                final_boss.scale.x -= 0.001;
+                final_boss.scale.y -= 0.001;
+
+                if (final_boss.scale.x < 0)
+                    final_boss.scale.x = 0;
+                if (final_boss.scale.y < 0)
+                    final_boss.scale.y = 0;
+            } else {
+                // TODO: add level change
+                std::cout << "Boss died. Change level here" << std::endl;
+            }
+        }
     }
 }
 

@@ -58,6 +58,10 @@ private:
     float m_last_safe_y;
     int m_phase_4_count;
 
+    float m_death_delay;
+    float m_death_timer;
+    bool m_death;
+
     vec2 m_screen_bounds;
     vec2 m_start_pos;
 
