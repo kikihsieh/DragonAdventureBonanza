@@ -186,7 +186,6 @@ bool CollisionSystem::collide_with_entities(Entity &e) {
                 }
 
             } else if (!e.health->invincible){
-                Entity a = *entity_it;
                 if (!entity_it->clipped)
                     e.health->decrease_health();
             }

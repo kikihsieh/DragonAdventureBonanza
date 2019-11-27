@@ -5,6 +5,7 @@ DefaultPhysicsSystem::DefaultPhysicsSystem(bool double_jump) {
     m_double_jump = double_jump;
 }
 
+
 bool DefaultPhysicsSystem::init(std::list<Entity> *entities, vec2 level_bounds) {
     m_entities = entities;
 
