@@ -27,6 +27,9 @@ struct Tile : public Entity {
 
     Tile(std::shared_ptr<Texture> texture, vec2 pos, vec2 scale, vec2 size, std::shared_ptr<Properties> properties)
         : Tile(texture, pos, scale, size) {
+        if (properties->type == Properties::TORCH) {
+            drawable->fs_shader = shader_path("torch.fs.glsl");
+        }
         this->properties = properties;
     }
 };

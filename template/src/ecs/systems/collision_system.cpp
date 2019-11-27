@@ -82,6 +82,12 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
     }
 
     switch (tile.properties->type) {
+        case Properties::TORCH:
+            if (entity.is_player_proj) {
+                tile.properties->lit = true;
+                return entity_property_updates(entity, tile, side);
+            }
+            return false;
         case Properties::DECORATIVE:
             return false;
         case Properties::HEALTH:
