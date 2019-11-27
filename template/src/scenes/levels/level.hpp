@@ -50,8 +50,6 @@ public:
     virtual void init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) {};
     virtual void init_throwing_enemy(std::shared_ptr<Texture> texture, vec2 pos) {};
     
-//    virtual void background_music(Mix_Chunk *b){};
-
     bool is_level() override {
         return true;
     }
@@ -68,7 +66,6 @@ public:
         return (Player*) m_player;
     }
     
-//    Mix_Chunk* m_background_music;
 
 protected:
     bool init_level(MapVector map, TexturePathMapping mapping);
