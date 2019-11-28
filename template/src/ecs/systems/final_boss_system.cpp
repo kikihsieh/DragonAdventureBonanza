@@ -59,7 +59,7 @@ void FinalBossSystem::update(Entity& final_boss, float ms) {
             move_to_start_pos(final_boss);
         else
             phase_2(final_boss, ms);
-    } else if (final_boss.health->health > m_final_boss_max_health * 0.25) {
+    } else if (final_boss.health->health > m_final_boss_max_health * 0.3) {
         if (len(sub(final_boss.position, m_start_pos)) > 10)
             move_to_start_pos(final_boss);
         else
