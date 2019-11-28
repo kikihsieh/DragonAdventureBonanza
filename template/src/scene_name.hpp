@@ -6,10 +6,9 @@ enum Scene_name {
     LEVEL_SELECT,
     FOREST,
     CAVE,
-    NIGHT_SKY,
     SNOW_MOUNTAIN,
-//        BOSS,
-            END,
+    NIGHT_SKY,
+    END,
 };
 
 #endif //DAB_SCENE_NAME_HPP

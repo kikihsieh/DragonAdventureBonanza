@@ -11,7 +11,7 @@ bool LevelSelect::init() {
     forest.m_button_callback = [this](){load_scene(FOREST);};
     m_buttons.emplace_back(forest);
     Button cave(textures_path("level-select/button-cave.png"));
-    if (m_unlocked_levels->at(CAVE) == false) {
+    if (!m_unlocked_levels->at(CAVE)) {
         cave.drawable->texture_path = textures_path("level-select/button-lock.png");
         cave.active = false;
     }
@@ -19,7 +19,7 @@ bool LevelSelect::init() {
     cave.m_button_callback = [this](){load_scene(CAVE);};
     m_buttons.emplace_back(cave);
     Button snow(textures_path("level-select/button-snow-mountain.png"));
-    if (m_unlocked_levels->at(SNOW_MOUNTAIN) == false) {
+    if (!m_unlocked_levels->at(SNOW_MOUNTAIN)) {
         snow.drawable->texture_path = textures_path("level-select/button-lock.png");
         snow.active = false;
     }
@@ -27,13 +27,13 @@ bool LevelSelect::init() {
     snow.m_button_callback = [this](){load_scene(SNOW_MOUNTAIN);};
     m_buttons.emplace_back(snow);
     Button boss(textures_path("level-select/button-night-sky.png"));
-    if (true) {
+    if (!m_unlocked_levels->at(NIGHT_SKY)) {
         boss.drawable->texture_path = textures_path("level-select/button-lock.png");
         boss.active = false;
     }
     boss.position = {1012.5,400.f};
-    boss.active = false;
-//    boss.m_button_callback = [this](){load_scene();};
+    boss.active = true;
+    boss.m_button_callback = [this](){load_scene(NIGHT_SKY);};
     m_buttons.emplace_back(boss);
     Button home(textures_path("buttons/home.png"));
     home.m_button_callback = [this](){load_scene(MAIN_MENU);};
