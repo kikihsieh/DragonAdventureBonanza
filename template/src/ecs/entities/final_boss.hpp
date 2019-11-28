@@ -29,6 +29,10 @@ struct FinalBoss : public Entity {
         health = new Health();
         health->health = 200;
         health->is_boss = true;
+        
+        animatable = new Animatable();
+        animatable->num_rows = 1;
+        animatable->num_columns = 10;
     }
 };
 
