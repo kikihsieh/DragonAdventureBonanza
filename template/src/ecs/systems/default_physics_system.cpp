@@ -93,16 +93,16 @@ void DefaultPhysicsSystem::move(float ms, Entity& entity) {
 
     float width = entity.texture_size.x * entity.scale.x;
     float height = entity.texture_size.y * entity.scale.y;
-    
-    if (entity.physics->velocity.x < 0 && entity.position.x + width / 2 < m_level_bounds_x.x) {
+
+    if (entity.physics->velocity.x < 0 && entity.position.x - width / 2 < m_level_bounds_x.x) {
         x_step = 0;
         if (!entity.player_tag) entity.clipped = true;
     }
-    if (entity.physics->velocity.x > 0 && entity.position.x - width / 2 > m_level_bounds_x.y) {
+    if (entity.physics->velocity.x > 0 && entity.position.x + width / 2 > m_level_bounds_x.y) {
         x_step = 0;
         if (!entity.player_tag) entity.clipped = true;
     }
-    if (entity.physics->velocity.y < 0 && entity.position.y + height / 2 < m_level_bounds_y.x) {
+    if (entity.physics->velocity.y < 0 && entity.position.y - height / 2 < m_level_bounds_y.x) {
         y_step = 0;
         if (!entity.player_tag) entity.clipped = true;
     }
