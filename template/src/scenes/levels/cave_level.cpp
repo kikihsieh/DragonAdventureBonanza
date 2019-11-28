@@ -23,5 +23,18 @@ bool CaveLevel::init_player() {
 
 bool CaveLevel::init() {
     m_physics_system = new PhysicsSystem(true);
-    return Level::init();
+    Entity dark = Entity();
+    dark.drawable = new Drawable();
+    dark.is_background = true;
+    dark.clipped = false;
+    dark.drawLast = true;
+    dark.drawable->texture_path = textures_path("cave/background.png");
+    dark.drawable->fs_shader = shader_path("cave.fs.glsl");
+    dark.drawable->vs_shader = shader_path("cave.vs.glsl");
+    m_entities.emplace_back(dark);
+    bool result = Level::init();
+    Entity sec = *std::next(m_entities.begin());
+    m_entities.erase(std::next(m_entities.begin()));
+    m_entities.emplace_back(sec);
+    return result;
 }

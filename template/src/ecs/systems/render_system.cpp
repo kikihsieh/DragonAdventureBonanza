@@ -42,10 +42,11 @@ RenderSystem::~RenderSystem() {
     glDeleteBuffers(1, &characters_drawable->vao);
 }
 
-bool RenderSystem::init(std::list<Entity> *entities, std::map<int, Tile *> *tiles, std::list<Button> *buttons) {
+bool RenderSystem::init(std::list<Entity> *entities, std::map<int, Tile *> *tiles, std::list<Button> *buttons, std::list<vec2> *lights) {
     m_effects = {};
     m_entities = entities;
     m_buttons = buttons;
+    m_lights = lights;
 
     for (auto &entity : *entities) {
         if (entity.drawable == nullptr) {
@@ -207,7 +208,7 @@ bool RenderSystem::init_entity(Entity &entity) {
 
 void RenderSystem::draw_all(mat3 projection) {
     for (auto &entity: *m_entities) {
-        if (entity.drawable == nullptr || entity.clipped) {
+        if (entity.drawable == nullptr || entity.clipped || entity.drawLast) {
             continue;
         }
         draw(entity, projection);
@@ -231,6 +232,11 @@ void RenderSystem::draw_all(mat3 projection) {
             continue;
         }
         draw(button, projection);
+    }
+    for (auto &entity: *m_entities) {
+        if (entity.drawLast) {
+            draw(entity, projection);
+        }
     }
 }
 

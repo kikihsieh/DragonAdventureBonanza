@@ -46,9 +46,10 @@ struct Entity {
     bool is_background;
 
     int id;
-    int level = 1;
+    float level = 2.f;
 
     static int current_id;
 
     bool clipped;
+    bool drawLast = false;
 };

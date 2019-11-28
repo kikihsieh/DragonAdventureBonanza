@@ -25,6 +25,7 @@ public:
     };
 
     bool init(std::list<Entity>* entities, std::map<int, Tile*>* tiles, std::list<Button>* buttons);
+    bool init(std::list<Entity>* entities, std::map<int, Tile*>* tiles, std::list<Button>* buttons, std::list<vec2>* lights);
     bool init_entity(Entity& entity);
     bool setup_freetype();
 
@@ -52,6 +53,7 @@ private:
 
     std::list<Entity>* m_entities;
 	std::list<Button>* m_buttons;
+	std::list<vec2>* m_lights;
     std::map<int, Tile*>* m_tiles;
     std::map<const char*, Drawable::Effect> m_effects;
     std::map<GLchar, Character> characters;
