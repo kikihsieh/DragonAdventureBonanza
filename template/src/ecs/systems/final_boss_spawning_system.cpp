@@ -50,7 +50,7 @@ void FinalBossSpawningSystem::spawn_cloud(float x_offset) {
 }
 
 void FinalBossSpawningSystem::spawn_bomb(vec2 position) {
-    Projectile b(m_texture_mapping.at(4), position, {-1.5, 0}, {0.1, 0.1}, true);
+    Projectile b(m_texture_mapping.at(4), position, {-1.5, 0}, {0.1f, 0.1f}, true);
     b.physics->gravity = 0;
     b.physics->acceleration.y = 0;
     b.is_bomb = true;
@@ -61,7 +61,7 @@ void FinalBossSpawningSystem::spawn_bomb(vec2 position) {
 
 void FinalBossSpawningSystem::explode_bomb(vec2 position) {
 
-    Projectile p1(m_texture_mapping.at(4), position, {1, 0}, {0.05, 0.05}, true);
+    Projectile p1(m_texture_mapping.at(4), position, {1, 0}, {0.05f, 0.05f}, true);
     p1.physics->gravity = 0;
     p1.physics->acceleration.y = 0;
     p1.is_boss_proj = true;
@@ -70,7 +70,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
         m_entities->push_back(p1);
 
     Projectile p2(m_texture_mapping.at(4), position,
-            normalize({(float)sqrt(3), 1}), {0.05, 0.05}, true);
+                  normalize({(float)sqrt(3), 1}), {0.05f, 0.05f}, true);
     p2.physics->gravity = 0;
     p2.physics->acceleration.y = 0;
     p2.is_boss_proj = true;
@@ -79,7 +79,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
         m_entities->push_back(p2);
 
     Projectile p3(m_texture_mapping.at(4), position,
-            normalize({(float)sqrt(3), -1}), {0.05, 0.05}, true);
+                  normalize({(float)sqrt(3), -1}), {0.05f, 0.05f}, true);
     p3.physics->gravity = 0;
     p3.physics->acceleration.y = 0;
     p3.is_boss_proj = true;
@@ -88,7 +88,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
         m_entities->push_back(p3);
 
     Projectile p4(m_texture_mapping.at(4), position,
-                  normalize({1, (float)sqrt(3)}), {0.05, 0.05}, true);
+                  normalize({1, (float)sqrt(3)}), {0.05f, 0.05f}, true);
     p4.physics->gravity = 0;
     p4.physics->acceleration.y = 0;
     p4.is_boss_proj = true;
@@ -97,7 +97,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
         m_entities->push_back(p4);
 
     Projectile p5(m_texture_mapping.at(4), position,
-                  normalize({1, -(float)sqrt(3)}), {0.05, 0.05}, true);
+                  normalize({1, -(float)sqrt(3)}), {0.05f, 0.05f}, true);
     p5.physics->gravity = 0;
     p5.physics->acceleration.y = 0;
     p5.is_boss_proj = true;
@@ -105,7 +105,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
     if (init_entity(p5))
         m_entities->push_back(p5);
 
-    Projectile p6(m_texture_mapping.at(4), position,{0, 1}, {0.05, 0.05}, true);
+    Projectile p6(m_texture_mapping.at(4), position, {0, 1}, {0.05f, 0.05f}, true);
     p6.physics->gravity = 0;
     p6.physics->acceleration.y = 0;
     p6.is_boss_proj = true;
@@ -113,7 +113,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
     if (init_entity(p6))
         m_entities->push_back(p6);
 
-    Projectile p7(m_texture_mapping.at(4), position, {0, -1}, {0.05, 0.05}, true);
+    Projectile p7(m_texture_mapping.at(4), position, {0, -1}, {0.05f, 0.05f}, true);
     p7.physics->gravity = 0;
     p7.physics->acceleration.y = 0;
     p7.is_boss_proj = true;
@@ -143,7 +143,7 @@ void FinalBossSpawningSystem::spawn_wave(vec2 position) {
         y = tan(i) * x;
 
         Projectile p(m_texture_mapping.at(4), position,
-                     normalize({-x, y}), {0.05, 0.05}, true);
+                     normalize({-x, y}), {0.05f, 0.05f}, true);
         p.physics->gravity = 0;
         p.physics->acceleration.y = 0;
         p.is_boss_proj = true;
@@ -169,7 +169,7 @@ void FinalBossSpawningSystem::spawn_wall(vec2 position) {
         }
 
         Projectile p(m_texture_mapping.at(4), {position.x, y},
-             normalize({-x, 0}), {0.05, 0.05}, true);
+                     normalize({-x, 0}), {0.05f, 0.05f}, true);
         p.physics->gravity = 0;
         p.physics->acceleration.y = 0;
         p.is_boss_proj = true;
@@ -189,7 +189,7 @@ void FinalBossSpawningSystem::spawn_radial(vec2 position, float offset) {
         y = tan(i) * x;
 
         Projectile p(m_texture_mapping.at(4), position,
-                     normalize({-x, y}), {0.05, 0.05}, true);
+                     normalize({-x, y}), {0.05f, 0.05f}, true);
         p.physics->gravity = 0;
         p.physics->acceleration.y = 0;
         p.is_boss_proj = true;
@@ -225,7 +225,7 @@ float FinalBossSpawningSystem::spawn_maze(vec2 position, float last_safe_y, int 
         }
 
         Projectile p(m_texture_mapping.at(4), {position.x, y},
-                     {-x / 1.25f, 0}, {0.05, 0.05}, true);
+                     {-x / 1.25f, 0}, {0.05f, 0.05f}, true);
         p.physics->gravity = 0;
         p.physics->acceleration.y = 0;
         p.is_boss_proj = true;
