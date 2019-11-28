@@ -7,8 +7,8 @@
 
 class FinalBossSystem {
 public:
-
-    bool init(Entity* player, Entity& final_boss, std::list<Entity> *entities, vec2 screen_bounds, FinalBossSpawningSystem* final_boss_spawning_system);
+    bool init(Entity* player, Entity& final_boss, std::list<Entity> *entities, vec2 screen_bounds,
+            FinalBossSpawningSystem* final_boss_spawning_system, std::function<void(void)> scene_change_callback);
 
     void update(Entity& final_boss, float ms);
 
@@ -69,6 +69,8 @@ private:
     Entity* m_player;
 
     FinalBossSpawningSystem* m_final_boss_spawning_system;
+
+    std::function<void(void)> m_scene_change_callback;
 };
 
 #endif //DAB_FINAL_BOSS_SYSTEM_HPP

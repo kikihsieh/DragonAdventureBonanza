@@ -2,7 +2,9 @@
 #include <sstream>
 #include <vector>
 
-bool FinalBossSystem::init(Entity* player, Entity& final_boss, std::list<Entity> *entities, vec2 screen_size, FinalBossSpawningSystem* final_boss_spawning_system) {
+bool FinalBossSystem::init(Entity* player, Entity& final_boss, std::list<Entity> *entities, vec2 screen_size,
+        FinalBossSpawningSystem* final_boss_spawning_system, std::function<void(void)> scene_change_callback) {
+    m_scene_change_callback = scene_change_callback;
     m_entities = entities;
     m_player = player;
 
@@ -88,8 +90,7 @@ void FinalBossSystem::update(Entity& final_boss, float ms) {
                 if (final_boss.scale.y < 0)
                     final_boss.scale.y = 0;
             } else {
-                // TODO: add level change
-                std::cout << "Boss died. Change level here" << std::endl;
+                m_scene_change_callback();
             }
         }
     }
