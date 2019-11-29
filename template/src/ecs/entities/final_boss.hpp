@@ -5,7 +5,7 @@
 
 struct FinalBoss : public Entity {
     FinalBoss(std::shared_ptr<Texture> texture, vec2 pos) {
-        scale = { 0.07f, 0.7f };
+        scale = { 0.2f, 1.f };
 //        texture_size = {(float) texture->width, (float) texture->height};
 
         drawable = new Drawable();
@@ -31,7 +31,7 @@ struct FinalBoss : public Entity {
         
         animatable = new Animatable();
         animatable->num_rows = 1;
-        animatable->num_columns = 10;
+        animatable->num_columns = 5;
         animatable->frame_index = {0, 0};
     }
 };
