@@ -77,3 +77,4 @@ void InputSystem::on_mouse_update(int key, int action, double xpos, double ypos)
         }
     }
 }
+

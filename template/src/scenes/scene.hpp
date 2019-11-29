@@ -63,6 +63,7 @@ public:
     void on_mouse(int key, int action, double xpos, double ypos);
 
     void background_music();
+    void sfx();
 
 
     std::list<Entity> m_entities;
@@ -86,7 +87,9 @@ protected:
 
     Mix_Music* m_background_music;
     
-  
+
+    
+    Mix_Chunk* m_sfx;
     
 
 };
