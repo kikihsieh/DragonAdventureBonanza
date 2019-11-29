@@ -37,7 +37,7 @@ public:
     virtual bool init() override;
 
     void destroy() override;
-    void update(float elapsed_ms, vec2 screen_size) override;
+    virtual void update(float elapsed_ms, vec2 screen_size) override;
 
     virtual bool init_player() = 0;
 
@@ -65,7 +65,8 @@ public:
     Player* get_player() const {
         return (Player*) m_player;
     }
-    
+    void on_mouse(int key, int action, double xpos, double ypos) override;
+
 
 protected:
     bool init_level(MapVector map, TexturePathMapping mapping);

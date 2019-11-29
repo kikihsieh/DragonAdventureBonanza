@@ -12,7 +12,7 @@ bool Scene::init() {
     m_entities.insert(m_entities.begin(), background);
     m_rendersystem->init_entity(help);
     background_music();
-    if (m_rendersystem->init(&m_entities, get_tiles()) && m_inputsystem->init(&m_entities, &m_buttons)) {
+    if (m_rendersystem->init(&m_entities, get_tiles(), &m_buttons) && m_inputsystem->init(&m_entities, &m_buttons)) {
         state = LOADED;
         return true;
     }
@@ -29,6 +29,9 @@ void Scene::destroy() {
     m_inputsystem = nullptr;
     for (auto &entity: m_entities) {
         entity.destroy();
+    }
+    for (auto &button: m_buttons) {
+        button.destroy();
     }
     m_entities.clear();
     m_buttons.clear();
@@ -58,6 +61,7 @@ bool Scene::is_level() {
 }
 
 void Scene::update(float elapsed_ms, vec2 screen_size) {
+    m_screen_size = screen_size;
     m_rendersystem->update(elapsed_ms);
 }
 

@@ -8,7 +8,9 @@
 #include <scenes/levels/cave_level.hpp>
 #include <scenes/levels/snow_mountain_level.hpp>
 #include <scenes/start_menu.hpp>
-#include <scenes/help_menu.hpp>
+#include <scenes/level_select.hpp>
+#include <scenes/levels/night_sky.hpp>
+#include <iostream>
 
 // Same as static in c, local to compilation unit
 namespace
@@ -22,13 +24,14 @@ namespace
 	}
 }
 
-World::World() : m_save_path("save.txt") {
+World::World() : m_save_path("save_v2.txt") {
     map_init(m_scenes)
             (FOREST, new ForestLevel())
             (SNOW_MOUNTAIN, new SnowMountainLeve())
             (CAVE, new CaveLevel())
+            (NIGHT_SKY, new NightSky())
 			(MAIN_MENU, new StartMenu())
-			(HELP, new HelpMenu());
+            (LEVEL_SELECT, new LevelSelect());
 }
 
 World::~World() {}
@@ -216,6 +219,7 @@ bool World::load_scene(Scene_name scene) {
     m_scenes.at(m_current_scene)->addSceneChangeHandler(std::bind(&World::change_scene, this));
     m_scenes.at(m_current_scene)->loadSceneHandler(std::bind(&World::load_scene, this, _1));
     m_scenes.at(m_current_scene)->exitGameHandler(std::bind(glfwSetWindowShouldClose, m_window, true));
+    m_scenes.at(m_current_scene)->m_unlocked_levels = &m_unlocked_levels;
     m_scenes.at(m_current_scene)->init();
     return true;
 }
@@ -237,6 +241,14 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
     }
     if (key == GLFW_KEY_3 && action == GLFW_RELEASE) {
         load_scene(SNOW_MOUNTAIN);
+        return;
+    }
+    if (key == GLFW_KEY_4 && action == GLFW_RELEASE) {
+        load_scene(NIGHT_SKY);
+        return;
+    }
+    if (key == GLFW_KEY_4 && action == GLFW_RELEASE) {
+        load_scene(NIGHT_SKY);
         return;
     }
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {

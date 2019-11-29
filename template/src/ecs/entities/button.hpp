@@ -20,6 +20,7 @@ struct Button : public Entity {
 
 public:
     std::function<void()> m_button_callback;
+    bool active = true;
 };
 
 

@@ -60,7 +60,7 @@ public:
     void exitGameHandler(std::function<void()> callback);
 
     void on_key(int key, int action);
-    void on_mouse(int key, int action, double xpos, double ypos);
+    virtual void on_mouse(int key, int action, double xpos, double ypos);
 
     void background_music();
     void sfx();
@@ -70,7 +70,8 @@ public:
     std::list<Button> m_buttons;
     bool drawHelp = false;
     State state = LOADING;
-   
+    std::map<Scene_name, bool>* m_unlocked_levels;
+
 
 protected:
     virtual const char * get_bg_texture_path() = 0;
@@ -84,13 +85,9 @@ protected:
     std::function<void(void)> m_scene_change_callback;
     std::function<void(Scene_name)> load_scene;
     std::function<void(void)> exit_game;
-
     Mix_Music* m_background_music;
-    
-
-    
     Mix_Chunk* m_sfx;
-    
+    vec2 m_screen_size;
 
 };
 #endif

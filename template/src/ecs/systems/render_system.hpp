@@ -24,7 +24,7 @@ public:
         GLuint advance;
     };
 
-    bool init(std::list<Entity>* entities, std::map<int, Tile*>* tiles);
+    bool init(std::list<Entity>* entities, std::map<int, Tile*>* tiles, std::list<Button>* buttons);
     bool init_entity(Entity& entity);
     bool setup_freetype();
 
@@ -51,6 +51,7 @@ private:
     FT_Face face;
 
     std::list<Entity>* m_entities;
+	std::list<Button>* m_buttons;
     std::map<int, Tile*>* m_tiles;
     std::map<const char*, Drawable::Effect> m_effects;
     std::map<GLchar, Character> characters;

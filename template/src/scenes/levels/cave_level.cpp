@@ -1,3 +1,4 @@
+#include <ecs/systems/default_physics_system.hpp>
 #include "cave_level.hpp"
 
 CaveLevel::CaveLevel() :
@@ -22,7 +23,8 @@ bool CaveLevel::init_player() {
 }
 
 bool CaveLevel::init() {
-    m_physics_system = new PhysicsSystem(true);
+    m_physics_system = new DefaultPhysicsSystem(true);
     m_background_music = Mix_LoadMUS(audio_path("cave.wav"));
+
     return Level::init();
 }
