@@ -144,7 +144,7 @@ void FinalBossSpawningSystem::spawn_wave(vec2 position) {
     float safe_angle = -0.261799 + dist(m_rng) * 2 * 0.261799;
 
     float angle_increment = 0.0872665;
-    for (float i = -1.5708; i < 1.5708; i += angle_increment) {
+    for (float i = -PI/2 + angle_increment / 100; i <= PI/2; i += angle_increment) {
 
         if (abs(i - safe_angle) <= angle_increment)
             continue;
@@ -156,6 +156,7 @@ void FinalBossSpawningSystem::spawn_wave(vec2 position) {
         p.physics->gravity = 0;
         p.physics->acceleration.y = 0;
         p.is_boss_proj = true;
+        p.radians = -i;
         if (init_entity(p))
             m_entities->push_back(p);
     }
@@ -193,7 +194,7 @@ void FinalBossSpawningSystem::spawn_radial(vec2 position, float offset) {
     float x = 1;
 
     float angle_increment = 0.26;
-    for (float i = -1.5708 - offset; i < 1.5708 + offset; i += angle_increment) {
+    for (float i = -PI/2 - offset; i < PI/2+ offset; i += angle_increment) {
 
         y = tan(i) * x;
 
@@ -202,6 +203,9 @@ void FinalBossSpawningSystem::spawn_radial(vec2 position, float offset) {
         p.physics->gravity = 0;
         p.physics->acceleration.y = 0;
         p.is_boss_proj = true;
+        p.radians = -i;
+        if (i < -PI/2 || i > PI/2)
+            p.radians = i;
         if (init_entity(p))
             m_entities->push_back(p);
     }
@@ -234,7 +238,7 @@ float FinalBossSpawningSystem::spawn_maze(vec2 position, float last_safe_y, int 
         }
 
         Projectile p(m_texture_mapping.at(4), {position.x, y},
-                     {-x / 1.25f, 0}, {0.05f, 0.05f}, true);
+                     {-x * 0.95f, 0}, {0.05f, 0.05f}, true);
         p.physics->gravity = 0;
         p.physics->acceleration.y = 0;
         p.is_boss_proj = true;
