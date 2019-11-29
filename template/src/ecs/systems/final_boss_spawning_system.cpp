@@ -9,6 +9,8 @@
 #include <cmath>
 #include <ecs/entities/sibling.hpp>
 
+#define PI 3.14159265359
+
 bool FinalBossSpawningSystem::init(std::list<Entity> *entities, vec2 screen_size) {
     m_entities = entities;
     m_screen_bounds = screen_size;
@@ -66,6 +68,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
     p1.physics->acceleration.y = 0;
     p1.is_boss_proj = true;
     p1.clipped = false;
+    p1.radians = PI;
     if (init_entity(p1))
         m_entities->push_back(p1);
 
@@ -75,6 +78,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
     p2.physics->acceleration.y = 0;
     p2.is_boss_proj = true;
     p2.clipped = false;
+    p2.radians = PI + 0.65138788668;
     if (init_entity(p2))
         m_entities->push_back(p2);
 
@@ -84,6 +88,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
     p3.physics->acceleration.y = 0;
     p3.is_boss_proj = true;
     p3.clipped = false;
+    p3.radians = PI - 0.65138788668;
     if (init_entity(p3))
         m_entities->push_back(p3);
 
@@ -93,6 +98,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
     p4.physics->acceleration.y = 0;
     p4.is_boss_proj = true;
     p4.clipped = false;
+    p4.radians = PI + 0.91940844011;
     if (init_entity(p4))
         m_entities->push_back(p4);
 
@@ -102,6 +108,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
     p5.physics->acceleration.y = 0;
     p5.is_boss_proj = true;
     p5.clipped = false;
+    p5.radians = PI - 0.91940844011;
     if (init_entity(p5))
         m_entities->push_back(p5);
 
@@ -110,6 +117,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
     p6.physics->acceleration.y = 0;
     p6.is_boss_proj = true;
     p6.clipped = false;
+    p6.radians = PI / -2;
     if (init_entity(p6))
         m_entities->push_back(p6);
 
@@ -118,6 +126,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
     p7.physics->acceleration.y = 0;
     p7.is_boss_proj = true;
     p7.clipped = false;
+    p7.radians = PI / 2;
     if (init_entity(p7))
         m_entities->push_back(p7);
 }
