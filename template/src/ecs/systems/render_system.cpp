@@ -4,6 +4,10 @@
 #include <sstream>
 #include <cmath>
 #include <ecs/entities/tile.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/ext.hpp>
+#include <SDL_opengl.h>
 
 RenderSystem::RenderSystem() {}
 
@@ -208,23 +212,21 @@ bool RenderSystem::init_entity(Entity &entity) {
 
 void RenderSystem::draw_all(mat3 projection) {
     for (auto &entity: *m_entities) {
-        if (entity.drawable == nullptr || entity.clipped || entity.drawLast) {
+        if (entity.drawable == nullptr || entity.clipped) {
             continue;
         }
         draw(entity, projection);
+        if (!entity.player_tag)
+            continue;
+        draw_health(projection, entity.health->health);
     }
+
     for (auto &tile : *m_tiles) {
         if (tile.second->clipped || !tile.second->drawable) {
             continue;
         }
 
         draw(*tile.second, projection);
-    }
-    // Maybe enable depth so we can avoid using another loop just to find player
-    for (auto &entity: *m_entities) {
-        if (!entity.player_tag)
-            continue;
-        draw_health(projection, entity.health->health);
     }
 
     for (auto &button: *m_buttons) {
@@ -233,11 +235,11 @@ void RenderSystem::draw_all(mat3 projection) {
         }
         draw(button, projection);
     }
-    for (auto &entity: *m_entities) {
-        if (entity.drawLast) {
-            draw(entity, projection);
-        }
-    }
+//    for (auto &entity: *m_entities) {
+//        if (entity.drawLast) {
+//            draw(entity, projection);
+//        }
+//    }
 }
 
 void RenderSystem::draw(Entity &entity, mat3 projection) {
@@ -248,7 +250,9 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
     // Enabling alpha channel for textures
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glDisable(GL_DEPTH_TEST);
+//    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
 
     // Setting shaders
     glUseProgram(drawable->effect.program);
@@ -281,7 +285,7 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
     glBindTexture(GL_TEXTURE_2D, drawable->texture->id);
 
     // Setting uniform values to the currently bound program
-    glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float *) &drawable->transform);
+    glUniformMatrix4fv(transform_uloc, 1, GL_FALSE, (float *) &drawable->transform);
     float color[] = {1.f, 1.f, 1.f};
     glUniform3fv(color_uloc, 1, color);
     glUniform1f(depth_uloc, entity.level);
@@ -317,9 +321,12 @@ void RenderSystem::draw_modal(mat3 projection, Modal &entity) {
     transform(entity);
 
     // Enabling alpha channel for textures
+//    glEnable(GL_BLEND);
+//    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
 
     // Setting shaders
     glUseProgram(drawable->effect.program);
@@ -347,7 +354,7 @@ void RenderSystem::draw_modal(mat3 projection, Modal &entity) {
     glBindTexture(GL_TEXTURE_2D, drawable->texture->id);
 
     // Setting uniform values to the currently bound program
-    glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float *) &drawable->transform);
+    glUniformMatrix4fv(transform_uloc, 1, GL_FALSE, (float *) &drawable->transform);
     float color[] = {1.f, 1.f, 1.f};
     glUniform3fv(color_uloc, 1, color);
     glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *) &projection);
@@ -380,7 +387,8 @@ void RenderSystem::render_text(std::string text, mat3 projection, vec2 position,
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
 
     glUseProgram(characters_drawable->effect.program);
 
@@ -522,12 +530,10 @@ void RenderSystem::release(Drawable::Effect &effect) {
 }
 
 void RenderSystem::transform(Entity &entity) {
-    out = {{1.f, 0.f, 0.f},
-           {0.f, 1.f, 0.f},
-           {0.f, 0.f, 1.f}};
-    translate(out, entity.position);
-    rotate(out, entity.radians);
-    scale(out, entity.scale);
+    out = glm::mat4(1.f);
+    out = glm::translate(out, glm::vec3(entity.position.x, entity.position.y, entity.depth));
+    out = glm::rotate(out, glm::f32(entity.radians*(180/M_PI)), glm::vec3(0.f, 0.f, 1.f));
+    out = glm::scale(out, glm::vec3(entity.scale.x, entity.scale.y, 1.f));
     entity.drawable->transform = out;
 }
 
@@ -537,12 +543,14 @@ void RenderSystem::rotate(mat3 &out, float radians) {
     mat3 R = {{c,   s,   0.f},
               {-s,  c,   0.f},
               {0.f, 0.f, 1.f}};
+//              {0.f, 0.f, 0.f, 1.f}};
     out = mul(out, R);
 }
 
-void RenderSystem::translate(mat3 &out, vec2 offset) {
+void RenderSystem::translate(mat3 &out, vec2 offset, float depth) {
     mat3 T = {{1.f,      0.f,      0.f},
               {0.f,      1.f,      0.f},
+//              {0.f,      0.f,      1.f,    0.f},
               {offset.x, offset.y, 1.f}};
     out = mul(out, T);
 }
@@ -551,6 +559,7 @@ void RenderSystem::scale(mat3 &out, vec2 scale) {
     mat3 S = {{scale.x, 0.f,     0.f},
               {0.f,     scale.y, 0.f},
               {0.f,     0.f,     1.f}};
+//              {0.f,     0.f,     0.f,   1.f}};
     out = mul(out, S);
 }
 

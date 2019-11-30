@@ -16,8 +16,7 @@ struct Spider : public Entity {
         health->health = 1;
         
         position = pos;
-        
-        position = pos;
+
         physics = new Physics();
         physics->gravity = 750.f;
         physics->walk_speed = 50.f;

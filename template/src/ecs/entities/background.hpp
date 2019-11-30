@@ -11,6 +11,7 @@ struct Background : public Entity {
         clipped = false;
 
         is_background = true;
-        level = 3.f;
+        depth = 0.f;
+        level = 2.f;
     }
 };
