@@ -57,7 +57,6 @@ private:
 	GLuint m_frame_buffer;
 	Texture m_screen_tex;
 
-    // Game entities
     Scene_name m_current_scene;
 
     std::map<Scene_name, Scene*> m_scenes;

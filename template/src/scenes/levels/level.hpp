@@ -62,6 +62,7 @@ public:
         return (Player*) m_player;
     }
     void on_mouse(int key, int action, double xpos, double ypos) override;
+    bool should_draw_level_intro() override { return true; }
 
 protected:
     bool init_level(MapVector map, TexturePathMapping mapping);

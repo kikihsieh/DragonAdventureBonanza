@@ -10,6 +10,9 @@ bool Scene::init() {
     Background background(get_bg_texture_path());
     m_entities.insert(m_entities.begin(), background);
     m_rendersystem->init_entity(help);
+    level_intro = get_level_intro();
+    m_rendersystem->init_entity(level_intro);
+    // draw_level_intro = should_draw_level_intro();
     if (m_rendersystem->init(&m_entities, get_tiles(), &m_buttons) && m_inputsystem->init(&m_entities, &m_buttons)) {
         state = LOADED;
         return true;
@@ -32,6 +35,7 @@ void Scene::destroy() {
     m_entities.clear();
     m_buttons.clear();
     drawHelp = false;
+    draw_level_intro = false;
 }
 
 void Scene::draw(const mat3& projection) {
@@ -41,8 +45,18 @@ void Scene::draw(const mat3& projection) {
     }
     m_rendersystem->draw_all(projection);
     if (drawHelp) {
-        state = PAUSED;
+        if (state != PAUSED) {
+            prev_state = state;
+            state = PAUSED;
+        }
         m_rendersystem->draw_modal(projection, help);
+    }
+    if (draw_level_intro && (state != LOADING || state != LOADED)) {
+        if(state !=PAUSED) {
+            prev_state = state;
+            state = PAUSED;
+        }
+        m_rendersystem->draw_modal(projection, level_intro);
     }
 }
 
@@ -58,13 +72,27 @@ void Scene::update(float elapsed_ms, vec2 screen_size) {
 void Scene::on_key(int key, int action) {
     if (key == GLFW_KEY_H && action == GLFW_RELEASE) {
         drawHelp = !drawHelp;
-        state = (state == RUNNING) ? PAUSED : RUNNING;
+        if(state != PAUSED) {
+            prev_state = state;
+            state = PAUSED;
+        } else{
+            state = prev_state;
+        }
         return;
     }
-    if (key == GLFW_KEY_P && action == GLFW_RELEASE) {
-        if (!drawHelp)
-            state = (state == RUNNING) ? PAUSED : RUNNING;
+    if (key == GLFW_KEY_P && action == GLFW_RELEASE && !drawHelp) {
+        if(state != PAUSED) {
+            prev_state = state;
+            state = PAUSED;
+        } else {
+            state = prev_state;
+        }
         return;
+    }
+    if (key == GLFW_KEY_S && action == GLFW_RELEASE) {
+        draw_level_intro = !draw_level_intro;
+        if (state == PAUSED)
+            state = prev_state;
     }
     m_inputsystem->on_key_update(key, action);
 }

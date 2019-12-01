@@ -6,7 +6,7 @@
 class SnowMountainLeve: public Level {
 
 public:
-    explicit SnowMountainLeve();
+	explicit SnowMountainLeve();
 
     const char * get_bg_texture_path() override {
         return textures_path("snow_mountain/background.png");
@@ -20,6 +20,10 @@ public:
     bool init_player() override;
     void init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) override;
     void init_throwing_enemy(std::shared_ptr<Texture> texture, vec2 pos) override;
+
+    Modal get_level_intro() override {
+        return Modal(textures_path("modal/snow-mountains.png"));
+    }
 
 private:
     const MapVector get_map() const override {
@@ -180,7 +184,7 @@ private:
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {5, 0, 0, 0, P, 0, 0, 0, 0, 0, 0, 0, 7, 11, 12, 5, 0, -1, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 5, 0, 0, 0, -1, 0, 0, 0, -1, 0, 0, 0, 0, 0},
+        {5, 0, 0, 0, P, 0, 0, 0, 0, 0, 0, G, 7, 11, 12, 5, 0, -1, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 5, 0, 0, 0, -1, 0, 0, 0, -1, 0, 0, 0, 0, 0},
         {12, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 7, 11, 2, 2, 12, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 12, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         {2, 2, 2, 2, 2, 2, 2, 2, 14, 0, 0, 13, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
         {2, 2, 2, 2, 2, 2, 2, 2, 14, 0, 0, 13, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, -2, 0, 0, 0, -1, 3, 0, 0, 0, 0, 0, 0, 13, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},

@@ -54,10 +54,12 @@ bool Level::init_level(MapVector map, TexturePathMapping mapping) {
     home.m_button_callback = [this](){load_scene(MAIN_MENU);};
     home.scale = {0.4f, 0.4f};
     m_buttons.emplace_back(home);
+
     Button help_btn(textures_path("buttons/help.png"));
     help_btn.m_button_callback = [this](){drawHelp = !drawHelp; state = (state == RUNNING) ? PAUSED : RUNNING;};
     help_btn.scale = {0.4f, 0.4f};
     m_buttons.emplace_back(help_btn);
+
     m_tile_map = new TileMap(this);
     for (auto &iter : mapping) {
         auto texture = std::make_shared<Texture>();
@@ -69,6 +71,7 @@ bool Level::init_level(MapVector map, TexturePathMapping mapping) {
         }
         m_texture_mapping.insert(TextureMapping::value_type(iter.first, texture));
     }
+
     if (!m_tile_map->init(std::move(map), m_texture_mapping, get_property_map())) {
         fprintf(stderr, "Failed to initialize tile map!");
         return false;
