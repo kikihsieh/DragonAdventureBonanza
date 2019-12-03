@@ -14,6 +14,10 @@
 #include "../src/scene_name.hpp"
 #include <functional>
 
+#define SDL_MAIN_HANDLED
+#include <SDL.h>
+#include <SDL_mixer.h>
+
 class Scene
 {
 public:
@@ -58,11 +62,16 @@ public:
     void on_key(int key, int action);
     virtual void on_mouse(int key, int action, double xpos, double ypos);
 
+    void background_music();
+    void sfx();
+
+
     std::list<Entity> m_entities;
     std::list<Button> m_buttons;
     bool drawHelp = false;
     State state = LOADING;
     std::map<Scene_name, bool>* m_unlocked_levels;
+
 
 protected:
     virtual const char * get_bg_texture_path() = 0;
@@ -76,6 +85,9 @@ protected:
     std::function<void(void)> m_scene_change_callback;
     std::function<void(Scene_name)> load_scene;
     std::function<void(void)> exit_game;
+    Mix_Music* m_background_music;
+    Mix_Chunk* m_sfx;
     vec2 m_screen_size;
+
 };
 #endif
