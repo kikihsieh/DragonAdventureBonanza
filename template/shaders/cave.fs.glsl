@@ -14,7 +14,7 @@ void main()
 {
     color = vec4(0.0, 0.0, 0.0, 0.7);
     for (int i = 0; i < 10; i++) {
-        float radius = distance((projection * vec3(lights[i], 1.0)).xy, vec2(vpos.x, vpos.y));
+        float radius = distance((projection * vec3(lights[i], 1.0)).xy * vec2(12.0/8.0, 1.0), vec2(vpos.x*(12.0/8.0), vpos.y));
         if (radius < 1.0) {
             color.xyz += (1.0 - radius) * 0.6 * vec3(1.0, 0.7, 0.0);
         }
