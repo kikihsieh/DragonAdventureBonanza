@@ -60,7 +60,7 @@ public:
 
     std::list<Entity> m_entities;
     std::list<Button> m_buttons;
-    std::list<vec2> m_lights;
+    std::list<Tile*> m_lights;
     bool drawHelp = false;
     State state = LOADING;
     std::map<Scene_name, bool>* m_unlocked_levels;

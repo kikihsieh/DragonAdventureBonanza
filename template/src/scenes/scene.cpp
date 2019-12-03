@@ -31,6 +31,7 @@ void Scene::destroy() {
     }
     m_entities.clear();
     m_buttons.clear();
+    m_lights.clear();
     drawHelp = false;
 }
 

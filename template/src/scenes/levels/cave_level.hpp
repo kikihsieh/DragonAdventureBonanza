@@ -110,7 +110,6 @@ private:
         { -3, textures_path("bat/bat_spritesheet1.png")},
         { -2, textures_path("cave/enemies/glob.png")},
         { -1, textures_path("cave/enemies/spider.png")},
-        
         { 1, textures_path("cave/tiles/right_side.png")},
         { 2, textures_path("cave/tiles/bottom_l.png")},
         { 3, textures_path("cave/tiles/fill.png")},
@@ -118,7 +117,7 @@ private:
         { 9, textures_path("cave/tiles/bottom_l.png")},
         { 10, textures_path("cave/tiles/corner_TL.png")},
         { 13, textures_path("cave/tiles/rock_right.png")},
-        { 20, textures_path("cave/torch.png")},
+        { 20, textures_path("cave/torch_empty.png")},
         { 21, textures_path("cave/enemies/littleppl/littleppl.png")},
         { 23, textures_path("cave/enemies/littleppl/littleppl3.png")},
         { 28, textures_path("cave/tiles/rock_L.png")},
@@ -133,7 +132,7 @@ private:
         { 37, textures_path("cave/tiles/floor_BL.png")},
         { 38, textures_path("cave/tiles/corner_BL.png")},
         { 40, textures_path("cave/tiles/corner_BR.png")},
-        { 41, textures_path("cave/tiles/floor_BR.png")}
+        { 41, textures_path("cave/tiles/floor_BR.png")},
     };
     
     const TilePropertyMapping m_property_map = {

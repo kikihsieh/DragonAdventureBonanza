@@ -47,7 +47,7 @@ RenderSystem::~RenderSystem() {
     glDeleteBuffers(1, &characters_drawable->vao);
 }
 
-bool RenderSystem::init(std::list<Entity> *entities, std::map<int, Tile *> *tiles, std::list<Button> *buttons, std::list<vec2> *lights) {
+bool RenderSystem::init(std::list<Entity> *entities, std::map<int, Tile *> *tiles, std::list<Button> *buttons, std::list<Tile*> *lights) {
     m_effects = {};
     entities->sort([](Entity a, Entity b) { return a.depth > b.depth;});
 //    std::sort(entities->begin(), entities->end(), [](Entity a, Entity b) { return a.depth < b.depth;});
@@ -276,6 +276,8 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
     GLint invinc_uloc = glGetUniformLocation(drawable->effect.program, "invicibility");
     GLint lit_uloc = glGetUniformLocation(drawable->effect.program, "lit");
     GLint depth_uloc = glGetUniformLocation(drawable->effect.program, "level");
+    GLint lights_uloc = glGetUniformLocation(drawable->effect.program, "lights");
+    GLint nlights_uloc = glGetUniformLocation(drawable->effect.program, "numLights");
     
     // Setting vertices and indices
     glBindVertexArray(drawable->vao);
@@ -299,6 +301,8 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
     float color[] = {1.f, 1.f, 1.f};
     glUniform3fv(color_uloc, 1, color);
     glUniform1f(depth_uloc, entity.level);
+    glUniform1i(nlights_uloc, m_light_pos.size());
+    glUniform2fv(lights_uloc, m_light_pos.size(), (GLfloat*)&m_light_pos[0]);
     if (entity.animatable) {
         int rows = entity.animatable->num_rows;
         int cols = entity.animatable->num_columns;
@@ -612,5 +616,10 @@ void RenderSystem::update(float ms) {
             if (entity.animatable->frame_index.x == 4)
                 entity.animatable->frame_index.x = 0;
         }
+    }
+    m_light_pos.clear();
+    for (auto &light: *m_lights) {
+        if(light->properties->lit)
+            m_light_pos.emplace_back(light->position);
     }
 }

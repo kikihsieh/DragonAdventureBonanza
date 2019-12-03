@@ -85,6 +85,7 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
         case Properties::TORCH:
             if (entity.is_player_proj) {
                 tile.properties->lit = true;
+                tile.drawable->texture = tile.torchTex;
                 return entity_property_updates(entity, tile, side);
             }
             return false;
