@@ -1,6 +1,3 @@
-//
-// Created by arden on 10/14/2019.
-//
 #ifndef DAB_SCENE_HPP
 #define DAB_SCENE_HPP
 
@@ -14,7 +11,6 @@
 #include "../src/scene_name.hpp"
 #include <functional>
 
-#define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <SDL_mixer.h>
 
@@ -63,8 +59,6 @@ public:
     virtual void on_mouse(int key, int action, double xpos, double ypos);
 
     void background_music();
-    void sfx();
-
 
     std::list<Entity> m_entities;
     std::list<Button> m_buttons;
@@ -86,7 +80,6 @@ protected:
     std::function<void(Scene_name)> load_scene;
     std::function<void(void)> exit_game;
     Mix_Music* m_background_music;
-    Mix_Chunk* m_sfx;
     vec2 m_screen_size;
 
 };

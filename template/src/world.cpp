@@ -270,35 +270,8 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
 void World::on_mouse_click(GLFWwindow* window, int key, int action, int mod) {
 	double xposition, yposition;
     glfwGetCursorPos(window, &xposition, &yposition);
-    if (action == GLFW_PRESS){
-        m_sfx = Mix_LoadWAV(audio_path("/sfx/blreep_sound.wav"));
-        mouse_sfx();
-    }
     
     m_scenes.at(m_current_scene)->on_mouse(key,action, xposition, yposition);
-}
-
-void World::mouse_sfx(){
-    if (SDL_Init(SDL_INIT_AUDIO) < 0)
-    {
-        fprintf(stderr, "Failed to initialize SDL Audio");
-        return;
-    }
-    
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1)
-    {
-        fprintf(stderr, "Failed to open audio device");
-        return;
-    }
-    if (m_sfx == nullptr)
-    {
-        fprintf(stderr, "Failed to load sounds make sure the data directory is present");
-        return;
-    }
-    // Playing background music indefinitely
-    Mix_PlayChannel(-1, m_sfx, 0);
-    
-    fprintf(stderr, "Loaded sfx\n");
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
@@ -336,7 +309,7 @@ int World::load() {
     std::ifstream save;
     save.open(m_save_path);
     std::string s;
-    char char_array[20]; // TODO: def don't actually need this much space
+    char char_array[20];
     if (save.is_open()) {
         while (!save.eof()) {
 

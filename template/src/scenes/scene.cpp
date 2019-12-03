@@ -97,7 +97,6 @@ void Scene::exitGameHandler(std::function<void(void)> callback) {
     exit_game = callback;
 }
 
-
 void Scene::background_music(){
     if (SDL_Init(SDL_INIT_AUDIO) < 0)
     {
