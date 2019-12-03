@@ -52,5 +52,5 @@ struct Entity {
     static int current_id;
 
     bool clipped;
-    bool drawLast = false;
+    bool useDepth = true;
 };

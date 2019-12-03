@@ -28,6 +28,5 @@ struct Projectile : public Entity {
 
         collider = new Collider();
         is_facing_forward = true;
-        drawLast = true;
     }
 };

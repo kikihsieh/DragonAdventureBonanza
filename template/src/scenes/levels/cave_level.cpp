@@ -27,7 +27,8 @@ bool CaveLevel::init() {
     dark.drawable = new Drawable();
     dark.is_background = true;
     dark.clipped = false;
-    dark.drawLast = true;
+    dark.useDepth = false;
+    dark.depth = -0.8f;
     dark.drawable->texture_path = textures_path("cave/background.png");
     dark.drawable->fs_shader = shader_path("cave.fs.glsl");
     dark.drawable->vs_shader = shader_path("cave.vs.glsl");

@@ -8,6 +8,7 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/ext.hpp>
 #include <SDL_opengl.h>
+#include <algorithm>
 
 RenderSystem::RenderSystem() {}
 
@@ -48,6 +49,8 @@ RenderSystem::~RenderSystem() {
 
 bool RenderSystem::init(std::list<Entity> *entities, std::map<int, Tile *> *tiles, std::list<Button> *buttons, std::list<vec2> *lights) {
     m_effects = {};
+    entities->sort([](Entity a, Entity b) { return a.depth > b.depth;});
+//    std::sort(entities->begin(), entities->end(), [](Entity a, Entity b) { return a.depth < b.depth;});
     m_entities = entities;
     m_buttons = buttons;
     m_lights = lights;
@@ -211,16 +214,6 @@ bool RenderSystem::init_entity(Entity &entity) {
 
 
 void RenderSystem::draw_all(mat3 projection) {
-    for (auto &entity: *m_entities) {
-        if (entity.drawable == nullptr || entity.clipped) {
-            continue;
-        }
-        draw(entity, projection);
-        if (!entity.player_tag)
-            continue;
-        draw_health(projection, entity.health->health);
-    }
-
     for (auto &tile : *m_tiles) {
         if (tile.second->clipped || !tile.second->drawable) {
             continue;
@@ -228,6 +221,17 @@ void RenderSystem::draw_all(mat3 projection) {
 
         draw(*tile.second, projection);
     }
+    float health;
+    for (auto &entity: *m_entities) {
+        if (entity.drawable == nullptr || entity.clipped) {
+            continue;
+        }
+        draw(entity, projection);
+        if (!entity.player_tag)
+            continue;
+        health = entity.health->health;
+    }
+    draw_health(projection, health);
 
     for (auto &button: *m_buttons) {
         if (button.drawable == nullptr || button.clipped) {
@@ -250,9 +254,15 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
     // Enabling alpha channel for textures
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable(GL_DEPTH_TEST);
+    if (entity.useDepth) {
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
+    }
+    else
+        glDisable(GL_DEPTH_TEST);
 //    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
+//    glEnable(GL_DEPTH_TEST);
 
     // Setting shaders
     glUseProgram(drawable->effect.program);
@@ -325,8 +335,8 @@ void RenderSystem::draw_modal(mat3 projection, Modal &entity) {
 //    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
+    glDisable(GL_DEPTH_TEST);
+//    glDepthFunc(GL_LEQUAL);
 
     // Setting shaders
     glUseProgram(drawable->effect.program);
@@ -369,6 +379,8 @@ void RenderSystem::draw_modal(mat3 projection, Modal &entity) {
 }
 
 void RenderSystem::draw_health(mat3 projection, int health) {
+    if (!health)
+        return;
     std::string string = "Health: " + std::to_string(health);
 
     float screen_width = 1200.f;
@@ -387,8 +399,8 @@ void RenderSystem::render_text(std::string text, mat3 projection, vec2 position,
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
+//    glEnable(GL_DEPTH_TEST);
+//    glDepthFunc(GL_LEQUAL);
 
     glUseProgram(characters_drawable->effect.program);
 
