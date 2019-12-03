@@ -36,7 +36,7 @@ void Scene::destroy() {
     drawHelp = false;
 
     Mix_CloseAudio();
-    if (m_background_music != nullptr){
+    if (m_background_music != nullptr) {
         Mix_FreeMusic(m_background_music);
         m_background_music = nullptr;
     }
@@ -100,18 +100,18 @@ void Scene::exitGameHandler(std::function<void(void)> callback) {
 void Scene::background_music(){
     if (SDL_Init(SDL_INIT_AUDIO) < 0)
     {
-        fprintf(stderr, "Failed to initialize SDL Audio");
+        fprintf(stderr, "Failed to initialize SDL Audio\n");
         return;
     }
 
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1)
     {
-        fprintf(stderr, "Failed to open audio device");
+        fprintf(stderr, "Failed to open audio device\n");
         return;
     }
     if (m_background_music == nullptr)
     {
-        fprintf(stderr, "Failed to load sounds make sure the data directory is present");
+        fprintf(stderr, "Failed to load sounds make sure the data directory is present\n");
         return;
     }
     // Playing background music indefinitely
