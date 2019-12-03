@@ -22,10 +22,4 @@ void main()
             break;
 
     }
-//    float x = mod(uv.x, 1.f);
-//    float y = mod(uv.y, 1.f);
-//    float ambientStrength = 0.1;
-//    vec4 in_color = texture(screen_texture, uv);
-//    vec3 ambient = ambientStrength * vec3(1.0, 1.0, 1.0);
-//    color = vec4(0.0, 0.0, 0.0, 0.8);
 }
