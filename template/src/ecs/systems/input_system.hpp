@@ -4,6 +4,10 @@
 #include "../entities/entity.hpp"
 #include <ecs/entities/button.hpp>
 
+#define SDL_MAIN_HANDLED
+#include <SDL.h>
+#include <SDL_mixer.h>
+
 class InputSystem {
 public:
     bool init(std::list<Entity>* entities, std::list<Button>* buttons);
@@ -13,4 +17,7 @@ public:
 private:
     std::list<Entity>* m_entities;
     std::list<Button>* m_buttons;
+
+    void mouse_sfx();
+    Mix_Chunk* m_sfx;
 };

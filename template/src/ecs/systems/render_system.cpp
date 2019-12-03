@@ -83,7 +83,7 @@ bool RenderSystem::setup_freetype() {
     if (FT_Init_FreeType(&library))
         fprintf(stderr, "Failed to init Freetype library");
 
-    if (FT_New_Face(library, PROJECT_SOURCE_DIR "src/Delugia_Nerd_Font.ttf", 0, &face))
+    if (FT_New_Face(library, PROJECT_SOURCE_DIR "data/Delugia_Nerd_Font.ttf", 0, &face))
         fprintf(stderr, "Font file cuold not be opened or read, or that it is broken");
 
     FT_Set_Pixel_Sizes(face, 0, 24);
@@ -275,9 +275,10 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
     GLint frames_uloc = glGetUniformLocation(drawable->effect.program, "frames");
     GLint invinc_uloc = glGetUniformLocation(drawable->effect.program, "invicibility");
     GLint depth_uloc = glGetUniformLocation(drawable->effect.program, "level");
+  
     GLint lights_uloc = glGetUniformLocation(drawable->effect.program, "lights");
     GLint nlights_uloc = glGetUniformLocation(drawable->effect.program, "numLights");
-    
+
     // Setting vertices and indices
     glBindVertexArray(drawable->vao);
     glBindBuffer(GL_ARRAY_BUFFER, drawable->vbo);
@@ -302,6 +303,7 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
     glUniform1f(depth_uloc, entity.level);
     glUniform1i(nlights_uloc, m_light_pos.size());
     glUniform2fv(lights_uloc, m_light_pos.size(), (GLfloat*)&m_light_pos[0]);
+
     if (entity.animatable) {
         int rows = entity.animatable->num_rows;
         int cols = entity.animatable->num_columns;
@@ -591,7 +593,7 @@ void RenderSystem::update(float ms) {
             if (entity.animatable->frame_index.x == 6) {
                 entity.animatable->frame_index.x = 0;
             }
-        } else if (entity.physics->velocity.x == 0) {
+        } else if (entity.physics->velocity.x == 0 && entity.health->is_player) {
             if (entity.is_facing_forward) {
                 entity.animatable->frame_index = {0, 1};
             } else {
@@ -609,7 +611,7 @@ void RenderSystem::update(float ms) {
                 entity.animatable->frame_index.y = 0;
             }
             entity.animatable->frame_index.x++;
-            if (entity.animatable->frame_index.x == 4)
+            if (entity.animatable->frame_index.x == entity.animatable->num_columns)
                 entity.animatable->frame_index.x = 0;
         }
     }

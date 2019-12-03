@@ -9,6 +9,8 @@
 #include <scenes/levels/snow_mountain_level.hpp>
 #include <scenes/start_menu.hpp>
 #include <scenes/level_select.hpp>
+#include <scenes/levels/night_sky.hpp>
+#include <iostream>
 
 // Same as static in c, local to compilation unit
 namespace
@@ -22,11 +24,12 @@ namespace
 	}
 }
 
-World::World() : m_save_path("save.txt") {
+World::World() : m_save_path("save_v2.txt") {
     map_init(m_scenes)
             (FOREST, new ForestLevel())
             (SNOW_MOUNTAIN, new SnowMountainLeve())
             (CAVE, new CaveLevel())
+            (NIGHT_SKY, new NightSky())
 			(MAIN_MENU, new StartMenu())
             (LEVEL_SELECT, new LevelSelect());
 }
@@ -101,6 +104,18 @@ bool World::init(vec2 screen)
         std::cout << "Loaded save!" << std::endl;
     }
 
+    if (SDL_Init(SDL_INIT_AUDIO) < 0)
+    {
+        fprintf(stderr, "Failed to initialize SDL Audio\n");
+        return false;
+    }
+
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1)
+    {
+        fprintf(stderr, "Failed to open audio device\n");
+        return false;
+    }
+
 	return load_scene(MAIN_MENU);
 }
 
@@ -113,6 +128,8 @@ void World::destroy() {
         pair.second->destroy();
         delete pair.second;
     }
+    if (m_sfx != nullptr)
+        Mix_FreeChunk(m_sfx);
 }
 
 // Update our game world
@@ -226,6 +243,14 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
         load_scene(SNOW_MOUNTAIN);
         return;
     }
+    if (key == GLFW_KEY_4 && action == GLFW_RELEASE) {
+        load_scene(NIGHT_SKY);
+        return;
+    }
+    if (key == GLFW_KEY_4 && action == GLFW_RELEASE) {
+        load_scene(NIGHT_SKY);
+        return;
+    }
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
 		load_scene(MAIN_MENU);
 		return;
@@ -245,6 +270,7 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
 void World::on_mouse_click(GLFWwindow* window, int key, int action, int mod) {
 	double xposition, yposition;
     glfwGetCursorPos(window, &xposition, &yposition);
+    
     m_scenes.at(m_current_scene)->on_mouse(key,action, xposition, yposition);
 }
 
@@ -283,7 +309,7 @@ int World::load() {
     std::ifstream save;
     save.open(m_save_path);
     std::string s;
-    char char_array[20]; // TODO: def don't actually need this much space
+    char char_array[20];
     if (save.is_open()) {
         while (!save.eof()) {
 

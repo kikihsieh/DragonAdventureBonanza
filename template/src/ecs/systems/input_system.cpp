@@ -1,9 +1,9 @@
-#include <cmath>
 #include "input_system.hpp"
 
 bool InputSystem::init(std::list<Entity> *entities, std::list<Button> *buttons) {
     m_entities = entities;
     m_buttons = buttons;
+    m_sfx = Mix_LoadWAV(audio_path("/sfx/blreep_sound.wav"));
     return true;
 }
 
@@ -18,6 +18,13 @@ void InputSystem::on_key_update(int key, int action) {
                 entity.input->up = true;
             } else if (action == GLFW_RELEASE) {
                 entity.input->up = false;
+            }
+        }
+        if (key == GLFW_KEY_DOWN || key == GLFW_KEY_S) {
+            if (action == GLFW_PRESS) {
+                entity.input->down = true;
+            } else if (action == GLFW_RELEASE) {
+                entity.input->down = false;
             }
         }
         if (key == GLFW_KEY_LEFT || key == GLFW_KEY_A) {
@@ -72,10 +79,35 @@ void InputSystem::on_mouse_update(int key, int action, double xpos, double ypos)
             if (action == GLFW_PRESS) {
                 if (xpos > left && xpos < right &&
                     ypos < top && ypos > bottom) {
-                    if (entity.active)
+                    if (entity.active) {
+                        mouse_sfx();
                         return entity.m_button_callback();
+                    }
                 }
             }
         }
     }
+}
+
+void InputSystem::mouse_sfx() {
+    if (SDL_Init(SDL_INIT_AUDIO) < 0)
+    {
+        fprintf(stderr, "Failed to initialize SDL Audio");
+        return;
+    }
+
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1)
+    {
+        fprintf(stderr, "Failed to open audio device");
+        return;
+    }
+    if (m_sfx == nullptr)
+    {
+        fprintf(stderr, "Failed to load sounds make sure the data directory is present");
+        return;
+    }
+    // Playing background music indefinitely
+    Mix_PlayChannel(-1, m_sfx, 0);
+
+    fprintf(stderr, "Loaded sfx\n");
 }

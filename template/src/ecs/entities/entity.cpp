@@ -22,6 +22,9 @@ Entity::Entity() :
         player_tag(false),
         is_player_proj(false),
         is_enemy_proj(false),
+        is_boss_proj(false),
+        is_minion(false),
+        is_bomb(false),
         is_background(false),
         clipped(true) {
 }

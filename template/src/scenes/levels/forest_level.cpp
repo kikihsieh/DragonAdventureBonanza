@@ -1,4 +1,5 @@
 #include <ecs/entities/spider.hpp>
+#include <ecs/systems/default_physics_system.hpp>
 #include "forest_level.hpp"
 
 ForestLevel::ForestLevel() :
@@ -23,6 +24,10 @@ bool ForestLevel::init_player() {
 }
 
 bool ForestLevel::init() {
-    m_physics_system = new PhysicsSystem(false);
+   m_physics_system = new DefaultPhysicsSystem(false);
+   m_background_music = Mix_LoadMUS(audio_path("forest.wav"));
+
     return Level::init();
 }
+
+
