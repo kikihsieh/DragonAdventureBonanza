@@ -94,6 +94,14 @@ void Level::update(float elapsed_ms, vec2 screen_size) {
     if (state == LOADED) {
         state = RUNNING;
         m_camera_system->init(m_level_dim, screen_size, use_vertical_camera());
+
+        // All the things we need on first paused frame
+        update_clipped(m_camera_system->get_center(), screen_size);
+        level_intro.position = m_camera_system->get_center();
+        Button* home = &m_buttons.front();
+        home->position = add(m_camera_system->get_center(),{screen_size.x/2 - home->texture_size.x*home->scale.x + 25.f, -(screen_size.y/2 - home->texture_size.x*home->scale.x + 25.f)});
+        Button* help_btn = &m_buttons.back();
+        help_btn->position = add(m_camera_system->get_center(),{screen_size.x/2 - help_btn->texture_size.x*help_btn->scale.x*2, -(screen_size.y/2 - help_btn->texture_size.x*help_btn->scale.x + 25.f)});
         return;
     }
 
@@ -118,6 +126,7 @@ void Level::update(float elapsed_ms, vec2 screen_size) {
     m_shooting_system->update(elapsed_ms);
 
     help.position = m_camera_system->get_center();
+    level_intro.position = m_camera_system->get_center();
 
     Scene::update(elapsed_ms, screen_size);
     m_camera_system->update(elapsed_ms, (Player *) m_player, screen_size);

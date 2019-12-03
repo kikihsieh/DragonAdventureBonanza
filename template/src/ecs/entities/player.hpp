@@ -39,6 +39,7 @@ struct Player : public Entity {
         animatable = new Animatable();
         animatable->num_rows = 2;
         animatable->num_columns = 4;
+        animatable->frame_index = {0, 1};
 
         clipped = false;
     }

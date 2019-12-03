@@ -12,7 +12,7 @@ bool Scene::init() {
     m_rendersystem->init_entity(help);
     level_intro = get_level_intro();
     m_rendersystem->init_entity(level_intro);
-    // draw_level_intro = should_draw_level_intro();
+    draw_level_intro = should_draw_level_intro();
     if (m_rendersystem->init(&m_entities, get_tiles(), &m_buttons) && m_inputsystem->init(&m_entities, &m_buttons)) {
         state = LOADED;
         return true;
@@ -43,7 +43,9 @@ void Scene::draw(const mat3& projection) {
         // TODO: draw loading screen
         return;
     }
+
     m_rendersystem->draw_all(projection);
+
     if (drawHelp) {
         if (state != PAUSED) {
             prev_state = state;
@@ -51,12 +53,13 @@ void Scene::draw(const mat3& projection) {
         }
         m_rendersystem->draw_modal(projection, help);
     }
-    if (draw_level_intro && (state != LOADING || state != LOADED)) {
-        if(state !=PAUSED) {
+
+    if (draw_level_intro) {
+        m_rendersystem->draw_modal(projection, level_intro);
+        if (state == RUNNING) {
             prev_state = state;
             state = PAUSED;
         }
-        m_rendersystem->draw_modal(projection, level_intro);
     }
 }
 
@@ -90,7 +93,7 @@ void Scene::on_key(int key, int action) {
         return;
     }
     if (key == GLFW_KEY_S && action == GLFW_RELEASE) {
-        draw_level_intro = !draw_level_intro;
+        draw_level_intro = false;
         if (state == PAUSED)
             state = prev_state;
     }
