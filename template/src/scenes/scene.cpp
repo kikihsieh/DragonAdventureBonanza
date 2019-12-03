@@ -17,8 +17,6 @@ bool Scene::init() {
         return true;
     }
     return false;
-    
-
 }
 
 // Releases all graphics resources
@@ -36,12 +34,12 @@ void Scene::destroy() {
     m_entities.clear();
     m_buttons.clear();
     drawHelp = false;
-   
+
+    Mix_CloseAudio();
     if (m_background_music != nullptr){
         Mix_FreeMusic(m_background_music);
         m_background_music = nullptr;
     }
-    Mix_CloseAudio();
 }
 
 void Scene::draw(const mat3& projection) {
