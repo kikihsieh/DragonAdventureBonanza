@@ -1,6 +1,7 @@
 #ifndef DAB_FINAL_BOSS_SYSTEM_HPP
 #define DAB_FINAL_BOSS_SYSTEM_HPP
 
+#include <functional>
 #include <ecs/entities/entity.hpp>
 #include <list>
 #include "final_boss_spawning_system.hpp"
