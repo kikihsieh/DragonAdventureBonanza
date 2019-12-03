@@ -23,8 +23,9 @@ bool StartMenu::init() {
     exit.position = {50.f,750.f};
     exit.scale = {0.35f, 0.35f};
     exit.m_button_callback = [this](){exit_game();};
-//    m_entities.emplace_back(exit);
     m_buttons.emplace_back(exit);
+    m_background_music = Mix_LoadMUS(audio_path("mainmenu.wav"));
     Scene::init();
+    
     return true;
 }

@@ -1,6 +1,3 @@
-//
-// Created by arden on 10/14/2019.
-//
 #ifndef DAB_SCENE_HPP
 #define DAB_SCENE_HPP
 
@@ -13,6 +10,9 @@
 #include <ecs/entities/button.hpp>
 #include "../src/scene_name.hpp"
 #include <functional>
+
+#include <SDL.h>
+#include <SDL_mixer.h>
 
 class Scene
 {
@@ -58,6 +58,8 @@ public:
     void on_key(int key, int action);
     virtual void on_mouse(int key, int action, double xpos, double ypos);
 
+    void background_music();
+
     std::list<Entity> m_entities;
     std::list<Button> m_buttons;
     bool drawHelp = false;
@@ -65,6 +67,7 @@ public:
     State state = LOADING;
     State prev_state = state;
     std::map<Scene_name, bool>* m_unlocked_levels;
+
 
 protected:
     virtual const char * get_bg_texture_path() = 0;
@@ -81,6 +84,8 @@ protected:
     std::function<void(void)> m_scene_change_callback;
     std::function<void(Scene_name)> load_scene;
     std::function<void(void)> exit_game;
+    Mix_Music* m_background_music;
     vec2 m_screen_size;
+
 };
 #endif

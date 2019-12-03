@@ -2,6 +2,9 @@
 #define DAB_FOREST_LEVEL_HPP
 
 #include "level.hpp"
+#define SDL_MAIN_HANDLED
+#include <SDL.h>
+#include <SDL_mixer.h>
 
 class ForestLevel: public Level {
 public:

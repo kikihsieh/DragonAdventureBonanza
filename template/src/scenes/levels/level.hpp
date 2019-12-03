@@ -16,6 +16,10 @@
 #include "tile_map.hpp"
 #include "scenes/scene.hpp"
 
+#define SDL_MAIN_HANDLED
+#include <SDL.h>
+#include <SDL_mixer.h>
+
 typedef std::map<int, const char*> TexturePathMapping;
 typedef std::map<int, std::shared_ptr<Properties>> TilePropertyMapping;
 typedef std::map<int, std::shared_ptr<Texture>> TextureMapping;
@@ -45,7 +49,7 @@ public:
 
     virtual void init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) {};
     virtual void init_throwing_enemy(std::shared_ptr<Texture> texture, vec2 pos) {};
-
+    
     bool is_level() override {
         return true;
     }
@@ -63,6 +67,7 @@ public:
     }
     void on_mouse(int key, int action, double xpos, double ypos) override;
     bool should_draw_level_intro() override { return true; }
+
 
 protected:
     bool init_level(MapVector map, TexturePathMapping mapping);

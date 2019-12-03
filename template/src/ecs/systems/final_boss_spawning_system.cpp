@@ -9,6 +9,8 @@
 #include <cmath>
 #include <ecs/entities/sibling.hpp>
 
+#define PI 3.14159265359
+
 bool FinalBossSpawningSystem::init(std::list<Entity> *entities, vec2 screen_size) {
     m_entities = entities;
     m_screen_bounds = screen_size;
@@ -66,6 +68,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
     p1.physics->acceleration.y = 0;
     p1.is_boss_proj = true;
     p1.clipped = false;
+    p1.radians = PI;
     if (init_entity(p1))
         m_entities->push_back(p1);
 
@@ -75,6 +78,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
     p2.physics->acceleration.y = 0;
     p2.is_boss_proj = true;
     p2.clipped = false;
+    p2.radians = PI + 0.65138788668;
     if (init_entity(p2))
         m_entities->push_back(p2);
 
@@ -84,6 +88,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
     p3.physics->acceleration.y = 0;
     p3.is_boss_proj = true;
     p3.clipped = false;
+    p3.radians = PI - 0.65138788668;
     if (init_entity(p3))
         m_entities->push_back(p3);
 
@@ -93,6 +98,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
     p4.physics->acceleration.y = 0;
     p4.is_boss_proj = true;
     p4.clipped = false;
+    p4.radians = PI + 0.91940844011;
     if (init_entity(p4))
         m_entities->push_back(p4);
 
@@ -102,6 +108,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
     p5.physics->acceleration.y = 0;
     p5.is_boss_proj = true;
     p5.clipped = false;
+    p5.radians = PI - 0.91940844011;
     if (init_entity(p5))
         m_entities->push_back(p5);
 
@@ -110,6 +117,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
     p6.physics->acceleration.y = 0;
     p6.is_boss_proj = true;
     p6.clipped = false;
+    p6.radians = PI / -2;
     if (init_entity(p6))
         m_entities->push_back(p6);
 
@@ -118,6 +126,7 @@ void FinalBossSpawningSystem::explode_bomb(vec2 position) {
     p7.physics->acceleration.y = 0;
     p7.is_boss_proj = true;
     p7.clipped = false;
+    p7.radians = PI / 2;
     if (init_entity(p7))
         m_entities->push_back(p7);
 }
@@ -135,7 +144,7 @@ void FinalBossSpawningSystem::spawn_wave(vec2 position) {
     float safe_angle = -0.261799 + dist(m_rng) * 2 * 0.261799;
 
     float angle_increment = 0.0872665;
-    for (float i = -1.5708; i < 1.5708; i += angle_increment) {
+    for (float i = -PI/2 + angle_increment / 100; i <= PI/2; i += angle_increment) {
 
         if (abs(i - safe_angle) <= angle_increment)
             continue;
@@ -147,6 +156,7 @@ void FinalBossSpawningSystem::spawn_wave(vec2 position) {
         p.physics->gravity = 0;
         p.physics->acceleration.y = 0;
         p.is_boss_proj = true;
+        p.radians = -i;
         if (init_entity(p))
             m_entities->push_back(p);
     }
@@ -184,7 +194,7 @@ void FinalBossSpawningSystem::spawn_radial(vec2 position, float offset) {
     float x = 1;
 
     float angle_increment = 0.26;
-    for (float i = -1.5708 - offset; i < 1.5708 + offset; i += angle_increment) {
+    for (float i = -PI/2 - offset; i < PI/2+ offset; i += angle_increment) {
 
         y = tan(i) * x;
 
@@ -193,6 +203,9 @@ void FinalBossSpawningSystem::spawn_radial(vec2 position, float offset) {
         p.physics->gravity = 0;
         p.physics->acceleration.y = 0;
         p.is_boss_proj = true;
+        p.radians = -i;
+        if (i < -PI/2 || i > PI/2)
+            p.radians = i;
         if (init_entity(p))
             m_entities->push_back(p);
     }
@@ -225,7 +238,7 @@ float FinalBossSpawningSystem::spawn_maze(vec2 position, float last_safe_y, int 
         }
 
         Projectile p(m_texture_mapping.at(4), {position.x, y},
-                     {-x / 1.25f, 0}, {0.05f, 0.05f}, true);
+                     {-x * 0.95f, 0}, {0.05f, 0.05f}, true);
         p.physics->gravity = 0;
         p.physics->acceleration.y = 0;
         p.is_boss_proj = true;

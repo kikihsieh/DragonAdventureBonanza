@@ -32,6 +32,7 @@ void ShootingSystem::update(float ms) {
             vec2 shoot_direction = { 1.f, 0.f };
             vec2 texture_scale = { 1.0f, 1.0f };
             
+            
             if (!entity.is_facing_forward) {
                 shoot_direction = { -1.f, 0.f };
                 texture_scale = { -1.0f, 1.0f };

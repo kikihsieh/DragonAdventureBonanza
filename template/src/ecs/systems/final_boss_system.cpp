@@ -2,7 +2,9 @@
 #include <sstream>
 #include <vector>
 
-bool FinalBossSystem::init(Entity* player, Entity& final_boss, std::list<Entity> *entities, vec2 screen_size, FinalBossSpawningSystem* final_boss_spawning_system) {
+bool FinalBossSystem::init(Entity* player, Entity& final_boss, std::list<Entity> *entities, vec2 screen_size,
+        FinalBossSpawningSystem* final_boss_spawning_system, std::function<void(void)> scene_change_callback) {
+    m_scene_change_callback = scene_change_callback;
     m_entities = entities;
     m_player = player;
 
@@ -21,7 +23,7 @@ bool FinalBossSystem::init(Entity* player, Entity& final_boss, std::list<Entity>
     m_phase_2a_timer = 0;
     m_phase_2a_frequency = 2000;
     m_phase_2b_timer = 0;
-    m_phase_2b_frequency = 2000;
+    m_phase_2b_frequency = 1500;
     m_phase_2_count = 0;
     m_phase_2_frequency = 5;
     m_phase_2a = true;
@@ -52,18 +54,23 @@ bool FinalBossSystem::init(Entity* player, Entity& final_boss, std::list<Entity>
 
 void FinalBossSystem::update(Entity& final_boss, float ms) {
 
-    if (final_boss.health->health > m_final_boss_max_health * 0.80)
+    if (final_boss.health->health > m_final_boss_max_health * 0.85)
         phase_1(final_boss, ms);
     else if (final_boss.health->health > m_final_boss_max_health * 0.55) {
         if (len(sub(final_boss.position, m_start_pos)) > 10)
             move_to_start_pos(final_boss);
         else
             phase_2(final_boss, ms);
-    } else if (final_boss.health->health > m_final_boss_max_health * 0.3) {
+    } else if (final_boss.health->health > m_final_boss_max_health * 0.45) {
         if (len(sub(final_boss.position, m_start_pos)) > 10)
             move_to_start_pos(final_boss);
         else
             phase_3(final_boss, ms);
+    }else if (final_boss.health->health > m_final_boss_max_health * 0.3) {
+        if (len(sub(final_boss.position, m_start_pos)) > 10)
+            move_to_start_pos(final_boss);
+        else
+            phase_2(final_boss, ms);
     } else if (final_boss.health->health > 0) {
         if (len(sub(final_boss.position, m_start_pos)) > 10)
             move_to_start_pos(final_boss);
@@ -88,8 +95,7 @@ void FinalBossSystem::update(Entity& final_boss, float ms) {
                 if (final_boss.scale.y < 0)
                     final_boss.scale.y = 0;
             } else {
-                // TODO: add level change
-                std::cout << "Boss died. Change level here" << std::endl;
+                m_scene_change_callback();
             }
         }
     }
@@ -110,7 +116,7 @@ void FinalBossSystem::phase_1(Entity& final_boss, float ms) {
         m_phase_1_timer = 0;
 
         float width = final_boss.texture_size.x * final_boss.scale.x + 50;
-        m_final_boss_spawning_system->spawn_bomb(sub(final_boss.position, {width / 2, 0}));
+        m_final_boss_spawning_system->spawn_bomb(sub(final_boss.position, {width / 2 - 100, 0}));
     }
 
     if (!m_spawning_minions)
@@ -161,7 +167,7 @@ void FinalBossSystem::phase_2a(Entity& final_boss, float ms) {
         m_phase_2_count++;
 
         float width = final_boss.texture_size.x * final_boss.scale.x + 50;
-        m_final_boss_spawning_system->spawn_wave(sub(final_boss.position, {width / 2, 0}));
+        m_final_boss_spawning_system->spawn_wave(sub(final_boss.position, {width / 2 - 100, 0}));
     }
 }
 
@@ -174,13 +180,14 @@ void FinalBossSystem::phase_2b(Entity& final_boss, float ms) {
         m_phase_2_count++;
 
         float width = final_boss.texture_size.x * final_boss.scale.x + 50;
-        m_final_boss_spawning_system->spawn_wall(sub(final_boss.position, {width / 2 + 50, 0}));
+        m_final_boss_spawning_system->spawn_wall(sub(final_boss.position, {width / 2 - 100, 0}));
     }
 }
 
 void FinalBossSystem::phase_3(Entity& final_boss, float ms) {
 
     final_boss.physics->velocity = {0, 0};
+    m_phase_2a = true;
 
     m_phase_3_timer += ms;
 
@@ -192,10 +199,10 @@ void FinalBossSystem::phase_3(Entity& final_boss, float ms) {
         if (m_phase_3a)
             offset = 0;
         else
-            offset = 0.261799 / 2;
+            offset = 0.26 / 2;
 
         float width = final_boss.texture_size.x * final_boss.scale.x + 50;
-        m_final_boss_spawning_system->spawn_radial(sub(final_boss.position, {width / 2 + 50, 0}), offset);
+        m_final_boss_spawning_system->spawn_radial(sub(final_boss.position, {width / 2 - 100, 0}), offset);
     }
 }
 
@@ -213,7 +220,7 @@ void FinalBossSystem::phase_4(Entity& final_boss, float ms) {
         if (m_phase_4_count > 4)
             m_phase_4_count = 0;
 
-        m_last_safe_y = m_final_boss_spawning_system->spawn_maze(sub(final_boss.position, {width / 2, 0}), m_last_safe_y, m_phase_4_count);
+        m_last_safe_y = m_final_boss_spawning_system->spawn_maze(sub(final_boss.position, {width / 2 - 100, 0}), m_last_safe_y, m_phase_4_count);
     }
 }
 
