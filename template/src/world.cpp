@@ -270,7 +270,7 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
 void World::on_mouse_click(GLFWwindow* window, int key, int action, int mod) {
 	double xposition, yposition;
     glfwGetCursorPos(window, &xposition, &yposition);
-    if (action ==GLFW_PRESS){
+    if (action == GLFW_PRESS){
         m_sfx = Mix_LoadWAV(audio_path("/sfx/blreep_sound.wav"));
         mouse_sfx();
     }
@@ -296,11 +296,11 @@ void World::mouse_sfx(){
         return;
     }
     // Playing background music indefinitely
-    Mix_PlayChannel(-1,m_sfx, 0);
+    Mix_PlayChannel(-1, m_sfx, 0);
     
     fprintf(stderr, "Loaded sfx\n");
-    
 }
+
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
 	

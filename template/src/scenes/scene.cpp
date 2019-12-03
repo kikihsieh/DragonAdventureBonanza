@@ -1,7 +1,7 @@
 #include <ecs/entities/background.hpp>
 #include "scene.hpp"
 
-Scene::Scene() : m_rendersystem(nullptr), m_inputsystem(nullptr) {
+Scene::Scene() : m_rendersystem(nullptr), m_inputsystem(nullptr), m_background_music(nullptr) {
 }
 
 
@@ -119,7 +119,6 @@ void Scene::background_music(){
     Mix_PlayMusic(m_background_music, -1);
 
     fprintf(stderr, "Loaded music\n");
-
 }
 
 
