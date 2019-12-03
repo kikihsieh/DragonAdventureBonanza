@@ -32,5 +32,9 @@ bool SnowMountainLeve::init_player() {
 bool SnowMountainLeve::init() {
     m_airdash_system = new AirDashSystem();
     m_physics_system = new DefaultPhysicsSystem(true);
+    m_background_music = Mix_LoadMUS(audio_path("snow.wav"));
+
     return Level::init();
 }
+
+

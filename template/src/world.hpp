@@ -33,6 +33,13 @@ public:
 
 	// Should the game be over ?
 	bool is_over()const;
+    
+    void mouse_sfx();
+    
+protected:
+    
+    Mix_Chunk* m_sfx;
+
 	
 private:
     bool load_scene(Scene_name scene);

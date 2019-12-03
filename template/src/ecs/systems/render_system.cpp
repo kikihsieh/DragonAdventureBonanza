@@ -560,7 +560,7 @@ void RenderSystem::update(float ms) {
             if (entity.animatable->frame_index.x == 6) {
                 entity.animatable->frame_index.x = 0;
             }
-        } else if (entity.physics->velocity.x == 0) {
+        } else if (entity.physics->velocity.x == 0 && entity.health->is_player) {
             if (entity.is_facing_forward) {
                 entity.animatable->frame_index = {0, 1};
             } else {
@@ -578,7 +578,7 @@ void RenderSystem::update(float ms) {
                 entity.animatable->frame_index.y = 0;
             }
             entity.animatable->frame_index.x++;
-            if (entity.animatable->frame_index.x == 4)
+            if (entity.animatable->frame_index.x == entity.animatable->num_columns)
                 entity.animatable->frame_index.x = 0;
         }
     }

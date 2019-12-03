@@ -177,7 +177,7 @@ bool CollisionSystem::collide_with_entities(Entity &e) {
                 ++entity_it;
                 continue;
             }
-            if (side == CollisionSystem::TOP) {
+            if (side == CollisionSystem::TOP && !entity_it->is_boss_proj && !entity_it->is_minion) {
                 e.physics->velocity.y = -200.f;
                 land(e);
 
