@@ -58,4 +58,5 @@ private:
     std::map<const char*, Drawable::Effect> m_effects;
     std::map<GLchar, Character> characters;
     glm::mat4 out;
+    vec2 player_pos;
 };

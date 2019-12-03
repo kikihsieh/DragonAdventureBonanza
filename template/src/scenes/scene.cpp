@@ -112,7 +112,7 @@ void Scene::background_music(){
     }
     if (m_background_music == nullptr)
     {
-        fprintf(stderr, "Failed to load sounds make sure the data directory is present\n");
+        fprintf(stderr, "Failed to load background make sure the data directory is present\n");
         return;
     }
     // Playing background music indefinitely

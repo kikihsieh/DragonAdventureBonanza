@@ -275,7 +275,7 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
     GLint frames_uloc = glGetUniformLocation(drawable->effect.program, "frames");
     GLint invinc_uloc = glGetUniformLocation(drawable->effect.program, "invicibility");
     GLint depth_uloc = glGetUniformLocation(drawable->effect.program, "level");
-  
+    GLint player_uloc = glGetUniformLocation(drawable->effect.program, "player");
     GLint lights_uloc = glGetUniformLocation(drawable->effect.program, "lights");
     GLint nlights_uloc = glGetUniformLocation(drawable->effect.program, "numLights");
 
@@ -302,6 +302,7 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
     glUniform3fv(color_uloc, 1, color);
     glUniform1f(depth_uloc, entity.level);
     glUniform1i(nlights_uloc, m_light_pos.size());
+    glUniform2fv(player_uloc,1, (GLfloat*)&player_pos);
     glUniform2fv(lights_uloc, m_light_pos.size(), (GLfloat*)&m_light_pos[0]);
 
     if (entity.animatable) {
@@ -551,34 +552,35 @@ void RenderSystem::transform(Entity &entity) {
     entity.drawable->transform = out;
 }
 
-void RenderSystem::rotate(mat3 &out, float radians) {
-    float c = cosf(radians);
-    float s = sinf(radians);
-    mat3 R = {{c,   s,   0.f},
-              {-s,  c,   0.f},
-              {0.f, 0.f, 1.f}};
-//              {0.f, 0.f, 0.f, 1.f}};
-    out = mul(out, R);
-}
-
-void RenderSystem::translate(mat3 &out, vec2 offset, float depth) {
-    mat3 T = {{1.f,      0.f,      0.f},
-              {0.f,      1.f,      0.f},
-//              {0.f,      0.f,      1.f,    0.f},
-              {offset.x, offset.y, 1.f}};
-    out = mul(out, T);
-}
-
-void RenderSystem::scale(mat3 &out, vec2 scale) {
-    mat3 S = {{scale.x, 0.f,     0.f},
-              {0.f,     scale.y, 0.f},
-              {0.f,     0.f,     1.f}};
-//              {0.f,     0.f,     0.f,   1.f}};
-    out = mul(out, S);
-}
+//void RenderSystem::rotate(mat3 &out, float radians) {
+//    float c = cosf(radians);
+//    float s = sinf(radians);
+//    mat3 R = {{c,   s,   0.f},
+//              {-s,  c,   0.f},
+//              {0.f, 0.f, 1.f}};
+////              {0.f, 0.f, 0.f, 1.f}};
+//    out = mul(out, R);
+//}
+//
+//void RenderSystem::translate(mat3 &out, vec2 offset, float depth) {
+//    mat3 T = {{1.f,      0.f,      0.f},
+//              {0.f,      1.f,      0.f},
+////              {0.f,      0.f,      1.f,    0.f},
+//              {offset.x, offset.y, 1.f}};
+//    out = mul(out, T);
+//}
+//
+//void RenderSystem::scale(mat3 &out, vec2 scale) {
+//    mat3 S = {{scale.x, 0.f,     0.f},
+//              {0.f,     scale.y, 0.f},
+//              {0.f,     0.f,     1.f}};
+////              {0.f,     0.f,     0.f,   1.f}};
+//    out = mul(out, S);
+//}
 
 
 void RenderSystem::update(float ms) {
+    m_light_pos.clear();
     for (auto &entity : *m_entities) {
         if (!entity.animatable) {
             continue;
@@ -614,8 +616,11 @@ void RenderSystem::update(float ms) {
             if (entity.animatable->frame_index.x == entity.animatable->num_columns)
                 entity.animatable->frame_index.x = 0;
         }
+        if (entity.player_tag)
+        {
+            player_pos = entity.position;
+        }
     }
-    m_light_pos.clear();
     for (auto &light: *m_lights) {
         if(light->properties->lit)
             m_light_pos.emplace_back(light->position);
