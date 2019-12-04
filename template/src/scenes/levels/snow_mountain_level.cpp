@@ -3,7 +3,6 @@
 
 SnowMountainLevel::SnowMountainLevel() :
         Level() {
-    m_background_music = Mix_LoadMUS(audio_path("snow.wav"));
 }
 
 void SnowMountainLevel::init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) {
@@ -31,6 +30,7 @@ bool SnowMountainLevel::init_player() {
 }
 
 bool SnowMountainLevel::init() {
+    m_background_music = Mix_LoadMUS(audio_path("snow.wav"));
     m_airdash_system = new AirDashSystem();
     m_physics_system = new DefaultPhysicsSystem(true);
 

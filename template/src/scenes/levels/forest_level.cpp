@@ -4,7 +4,6 @@
 
 ForestLevel::ForestLevel() :
     Level() {
-    m_background_music = Mix_LoadMUS(audio_path("forest.wav"));
 }
 
 void ForestLevel::init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) {
@@ -25,6 +24,7 @@ bool ForestLevel::init_player() {
 }
 
 bool ForestLevel::init() {
+    m_background_music = Mix_LoadMUS(audio_path("forest.wav"));
    m_physics_system = new DefaultPhysicsSystem(false);
    m_intro_modal = new Modal(textures_path("modals/forest.png"));
 

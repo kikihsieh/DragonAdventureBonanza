@@ -6,10 +6,10 @@
 
 NightSky::NightSky() :
     Level() {
-    m_background_music = Mix_LoadMUS(audio_path("nightsky.wav"));
 }
 
 bool NightSky::init() {
+    m_background_music = Mix_LoadMUS(audio_path("nightsky.wav"));
     m_screen = {1200, 800};
 
     m_intro_modal = new Modal(textures_path("modals/night-sky.png"));
