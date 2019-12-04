@@ -12,6 +12,18 @@
 #include <scenes/levels/night_sky.hpp>
 #include <iostream>
 
+#include <project_path.hpp>
+
+#ifdef WINDOWS
+    #include <conio.h>
+    #include <dir.h>
+    #include <process.h>
+    #include <stdio.h>
+    #define mkdir _mkdir
+#else
+    #include <sys/stat.h>
+#endif
+
 // Same as static in c, local to compilation unit
 namespace
 {
@@ -247,10 +259,6 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
         load_scene(NIGHT_SKY);
         return;
     }
-    if (key == GLFW_KEY_4 && action == GLFW_RELEASE) {
-        load_scene(NIGHT_SKY);
-        return;
-    }
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
 		load_scene(MAIN_MENU);
 		return;
@@ -281,9 +289,19 @@ void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 
 
 int World::save() {
+
     int count = 0;
 
-    FILE *fp = fopen(m_save_path.c_str(), "w");
+    std::string path;
+    if (PROJECT_SOURCE_DIR[strlen(PROJECT_SOURCE_DIR) - 1] == '/')
+        path = PROJECT_SOURCE_DIR "saves/";
+    else
+        path = PROJECT_SOURCE_DIR "/saves/";
+
+    if (mkdir(path.c_str(), 0777) != -1)
+        std::cout << "Created save directory" << std::endl;
+
+    FILE *fp = fopen((path + m_save_path).c_str(), "w");
     if (!fp)
         return -errno;
 
@@ -300,14 +318,23 @@ int World::save() {
 int World::load() {
     int count = 0;
 
-    FILE *fp = fopen(m_save_path.c_str(), "r");
+    std::string path;
+    if (PROJECT_SOURCE_DIR[strlen(PROJECT_SOURCE_DIR) - 1] == '/')
+        path = PROJECT_SOURCE_DIR "saves/";
+    else
+        path = PROJECT_SOURCE_DIR "/saves/";
+
+    if (mkdir(path.c_str(), 0777) != -1)
+        std::cout << "Created save directory" << std::endl;
+
+    FILE *fp = fopen((path + m_save_path).c_str(), "r");
     if (!fp)
         return -errno;
 
     m_unlocked_levels.clear();
 
     std::ifstream save;
-    save.open(m_save_path);
+    save.open(path + m_save_path);
     std::string s;
     char char_array[20];
     if (save.is_open()) {
