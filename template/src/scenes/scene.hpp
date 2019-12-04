@@ -65,9 +65,7 @@ public:
     bool drawHelp = false;
     bool draw_level_intro = false;
     State state = LOADING;
-    State prev_state = state;
     std::map<Scene_name, bool>* m_unlocked_levels;
-
 
 protected:
     virtual const char * get_bg_texture_path() = 0;
