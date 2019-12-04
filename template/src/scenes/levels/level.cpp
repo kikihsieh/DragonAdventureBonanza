@@ -116,11 +116,15 @@ void Level::update(float elapsed_ms, vec2 screen_size) {
         return;
     }
 
+    if (!m_camera_system || !m_physics_system || !m_collision_system ||
+            !m_enemy_motion_system || !m_shooting_system || !m_health_system)
+        return;
+
     update_clipped(m_camera_system->get_center(), screen_size);
 
-    if (m_airdash_system) {
+    if (m_airdash_system)
         m_airdash_system->update(elapsed_ms);
-    }
+
     m_physics_system->update(elapsed_ms);
     m_collision_system->update(elapsed_ms);
     m_enemy_motion_system->update(elapsed_ms);

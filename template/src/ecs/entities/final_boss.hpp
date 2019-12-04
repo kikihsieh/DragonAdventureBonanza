@@ -9,7 +9,7 @@ struct FinalBoss : public Entity {
 //        texture_size = {(float) texture->width, (float) texture->height};
 
         drawable = new Drawable();
-        drawable->fs_shader = shader_path("animated.fs.glsl");
+        drawable->fs_shader = shader_path("player.fs.glsl");
         drawable->vs_shader = shader_path("animated.vs.glsl");
         drawable->texture = texture;
 
