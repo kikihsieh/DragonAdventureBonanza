@@ -19,7 +19,7 @@ bool Scene::init() {
     return false;
 }
 
-// Releases all graphics resources
+// Releases all resources
 void Scene::destroy() {
     delete m_inputsystem;
     delete m_rendersystem;
