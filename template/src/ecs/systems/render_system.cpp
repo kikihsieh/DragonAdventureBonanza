@@ -38,6 +38,10 @@ RenderSystem::~RenderSystem() {
         glDeleteVertexArrays(1, &button.drawable->vao);
     }
 
+    for (auto &ch : characters) {
+        glDeleteTextures(1, &ch.second.textureID);
+    }
+
     glDeleteBuffers(1, &characters_drawable->vbo);
     glDeleteVertexArrays(1, &characters_drawable->vao);
 
@@ -68,6 +72,7 @@ bool RenderSystem::init(std::list<Entity> *entities, std::map<int, Tile *> *tile
         }
         init_entity(*tile.second);
     }
+
     return setup_freetype();
 }
 
@@ -142,7 +147,7 @@ bool RenderSystem::setup_freetype() {
         m_effects[characters_drawable->vs_shader] = characters_drawable->effect;
     } else {
         characters_drawable->effect = m_effects[characters_drawable->vs_shader];
-    };
+    }
     return true;
 }
 
