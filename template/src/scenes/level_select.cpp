@@ -2,7 +2,7 @@
 
 #include "ecs/entities/button.hpp"
 
-LevelSelect::LevelSelect()  {
+LevelSelect::LevelSelect() {
 }
 
 bool LevelSelect::init() {

@@ -21,6 +21,7 @@ bool NightSky::init() {
     m_physics_system->init(&m_entities, m_screen);
     auto *flying_physics = dynamic_cast<FlyingPhysicsSystem *>(m_physics_system);
     flying_physics->set_spawning_system(&m_final_boss_spawning_system);
+	m_background_music = Mix_LoadMUS(audio_path("nightsky.wav"));
 
     bool init = Level::init();
 
