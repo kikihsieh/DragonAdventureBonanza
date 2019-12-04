@@ -11,9 +11,11 @@ bool Scene::init() {
     Background background(get_bg_texture_path());
     m_entities.insert(m_entities.begin(), background);
     m_rendersystem->init_entity(help);
-    level_intro = get_level_intro();
-    m_rendersystem->init_entity(level_intro);
     draw_level_intro = should_draw_level_intro();
+    if (draw_level_intro) {
+        level_intro = get_level_intro();
+        m_rendersystem->init_entity(level_intro);
+    }
     background_music();
     if (m_rendersystem->init(&m_entities, get_tiles(), &m_buttons) && m_inputsystem->init(&m_entities, &m_buttons)) {
         state = LOADED;
@@ -55,19 +57,14 @@ void Scene::draw(const mat3& projection) {
     m_rendersystem->draw_all(projection);
 
     if (drawHelp) {
-        if (state != PAUSED) {
-            prev_state = state;
-            state = PAUSED;
-        }
+        state = PAUSED;
         m_rendersystem->draw_modal(projection, help);
     }
 
     if (draw_level_intro) {
         m_rendersystem->draw_modal(projection, level_intro);
-        if (state == RUNNING) {
-            prev_state = state;
+        if (state == RUNNING) 
             state = PAUSED;
-        }
     }
 }
 
@@ -81,29 +78,21 @@ void Scene::update(float elapsed_ms, vec2 screen_size) {
 }
 
 void Scene::on_key(int key, int action) {
+    if (state == LOADING) {
+        return;
+    }
     if (key == GLFW_KEY_H && action == GLFW_RELEASE) {
         drawHelp = !drawHelp;
-        if(state != PAUSED) {
-            prev_state = state;
-            state = PAUSED;
-        } else{
-            state = prev_state;
-        }
+        state = (state == RUNNING) ? PAUSED : RUNNING;
         return;
     }
     if (key == GLFW_KEY_P && action == GLFW_RELEASE && !drawHelp) {
-        if(state != PAUSED) {
-            prev_state = state;
-            state = PAUSED;
-        } else {
-            state = prev_state;
-        }
+        state = (state == RUNNING) ? PAUSED : RUNNING;
         return;
     }
     if (key == GLFW_KEY_S && action == GLFW_RELEASE) {
         draw_level_intro = false;
-        if (state == PAUSED)
-            state = prev_state;
+        state = (state == RUNNING) ? PAUSED : RUNNING;
     }
     m_inputsystem->on_key_update(key, action);
 }
