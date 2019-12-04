@@ -90,7 +90,7 @@ void Scene::on_key(int key, int action) {
         state = (state == RUNNING) ? PAUSED : RUNNING;
         return;
     }
-    if (key == GLFW_KEY_S && action == GLFW_RELEASE) {
+    if (key == GLFW_KEY_S && action == GLFW_RELEASE && draw_level_intro) {
         draw_level_intro = false;
         state = (state == RUNNING) ? PAUSED : RUNNING;
     }
