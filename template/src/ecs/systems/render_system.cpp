@@ -585,6 +585,10 @@ void RenderSystem::update(float ms) {
         if (!entity.animatable) {
             continue;
         }
+        if (entity.player_tag)
+        {
+            player_pos = entity.position;
+        }
         if (entity.flyable) {
             entity.animatable->countdown -= ms;
             if (entity.animatable->countdown > 0) {
@@ -615,10 +619,6 @@ void RenderSystem::update(float ms) {
             entity.animatable->frame_index.x++;
             if (entity.animatable->frame_index.x == entity.animatable->num_columns)
                 entity.animatable->frame_index.x = 0;
-        }
-        if (entity.player_tag)
-        {
-            player_pos = entity.position;
         }
     }
     for (auto &light: *m_lights) {
