@@ -195,7 +195,7 @@ private:
         { 1, textures_path("snow_mountain/tiles/mid_tile.png") },
         { 2, textures_path("snow_mountain/tiles/fill_tile.png") },
         { 3, textures_path("heart.png") },
-        { 4, textures_path("snow_mountain/tiles/bouncy_tile.png") },
+        { 4, textures_path("snow_mountain/tiles/spring_out.png") },
         { 5, textures_path("snow_mountain/tiles/top_right.png") },
         { 6, textures_path("snow_mountain/tiles/icy_tile.png") },
         { 7, textures_path("snow_mountain/tiles/top_left.png") },

@@ -82,10 +82,10 @@ bool RenderSystem::setup_freetype() {
     if (FT_Init_FreeType(&library))
         fprintf(stderr, "Failed to init Freetype library");
 
-    if (FT_New_Face(library, PROJECT_SOURCE_DIR "/data/Delugia_Nerd_Font.ttf", 0, &face))
+    if (FT_New_Face(library, PROJECT_SOURCE_DIR "data/Kenney_Pixel.ttf", 0, &face))
         fprintf(stderr, "Font file could not be opened or read, or that it is broken");
 
-    FT_Set_Pixel_Sizes(face, 0, 24);
+    FT_Set_Pixel_Sizes(face, 0, 36);
 
     // Disable byte-alignment restriction
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
