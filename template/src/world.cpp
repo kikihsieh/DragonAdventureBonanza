@@ -12,6 +12,18 @@
 #include <scenes/levels/night_sky.hpp>
 #include <iostream>
 
+#include <project_path.hpp>
+
+#ifdef _WIN32 // defined for both 32 and 64 bit
+	#include <conio.h>
+	#include <direct.h>
+	#include <process.h>
+	#include <stdio.h>
+	#define mkdir _mkdir
+#else
+    #include <sys/stat.h>
+#endif
+
 // Same as static in c, local to compilation unit
 namespace
 {
@@ -128,8 +140,6 @@ void World::destroy() {
         pair.second->destroy();
         delete pair.second;
     }
-    if (m_sfx != nullptr)
-        Mix_FreeChunk(m_sfx);
 }
 
 // Update our game world
@@ -211,7 +221,7 @@ bool World::load_scene(Scene_name scene) {
         return false;
     }
 
-    if (m_current_scene) {
+    if (m_scenes.at(m_current_scene)) {
         m_scenes.at(m_current_scene)->destroy();
     }
 
@@ -241,10 +251,6 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
     }
     if (key == GLFW_KEY_3 && action == GLFW_RELEASE) {
         load_scene(SNOW_MOUNTAIN);
-        return;
-    }
-    if (key == GLFW_KEY_4 && action == GLFW_RELEASE) {
-        load_scene(NIGHT_SKY);
         return;
     }
     if (key == GLFW_KEY_4 && action == GLFW_RELEASE) {
@@ -281,9 +287,24 @@ void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 
 
 int World::save() {
+
     int count = 0;
 
-    FILE *fp = fopen(m_save_path.c_str(), "w");
+    std::string path;
+    if (PROJECT_SOURCE_DIR[strlen(PROJECT_SOURCE_DIR) - 1] == '/')
+        path = PROJECT_SOURCE_DIR "saves/";
+    else
+        path = PROJECT_SOURCE_DIR "/saves/";
+
+#if defined(_WIN32)
+	if (mkdir(path.c_str()) != -1)
+		std::cout << "Created save directory" << std::endl;
+#else
+	if (mkdir(path.c_str(), 0777) != -1)
+		std::cout << "Created save directory" << std::endl;
+#endif
+
+    FILE *fp = fopen((path + m_save_path).c_str(), "w");
     if (!fp)
         return -errno;
 
@@ -300,14 +321,28 @@ int World::save() {
 int World::load() {
     int count = 0;
 
-    FILE *fp = fopen(m_save_path.c_str(), "r");
+    std::string path;
+    if (PROJECT_SOURCE_DIR[strlen(PROJECT_SOURCE_DIR) - 1] == '/')
+        path = PROJECT_SOURCE_DIR "saves/";
+    else
+        path = PROJECT_SOURCE_DIR "/saves/";
+#if defined(_WIN32)
+	if (mkdir(path.c_str()) != -1)
+		std::cout << "Created save directory" << std::endl;
+#else
+	if (mkdir(path.c_str(), 0777) != -1)
+		std::cout << "Created save directory" << std::endl;
+#endif
+
+
+    FILE *fp = fopen((path + m_save_path).c_str(), "r");
     if (!fp)
         return -errno;
 
     m_unlocked_levels.clear();
 
     std::ifstream save;
-    save.open(m_save_path);
+    save.open(path + m_save_path);
     std::string s;
     char char_array[20];
     if (save.is_open()) {

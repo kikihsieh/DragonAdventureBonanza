@@ -11,7 +11,7 @@ RenderSystem::~RenderSystem() {
     for (auto &shader : m_effects) {
         glDeleteShader(shader.second.vertex);
         glDeleteShader(shader.second.fragment);
-        glDeleteShader(shader.second.program);
+        glDeleteProgram(shader.second.program);
     }
     for (Entity &entity: *m_entities) {
         if (!entity.drawable) {
@@ -39,7 +39,9 @@ RenderSystem::~RenderSystem() {
     }
 
     glDeleteBuffers(1, &characters_drawable->vbo);
-    glDeleteBuffers(1, &characters_drawable->vao);
+    glDeleteVertexArrays(1, &characters_drawable->vao);
+
+    delete characters_drawable;
 }
 
 bool RenderSystem::init(std::list<Entity> *entities, std::map<int, Tile *> *tiles, std::list<Button> *buttons) {
@@ -75,8 +77,8 @@ bool RenderSystem::setup_freetype() {
     if (FT_Init_FreeType(&library))
         fprintf(stderr, "Failed to init Freetype library");
 
-    if (FT_New_Face(library, PROJECT_SOURCE_DIR "data/Delugia_Nerd_Font.ttf", 0, &face))
-        fprintf(stderr, "Font file cuold not be opened or read, or that it is broken");
+    if (FT_New_Face(library, PROJECT_SOURCE_DIR "/data/Delugia_Nerd_Font.ttf", 0, &face))
+        fprintf(stderr, "Font file could not be opened or read, or that it is broken");
 
     FT_Set_Pixel_Sizes(face, 0, 24);
 
@@ -147,6 +149,7 @@ bool RenderSystem::setup_freetype() {
 bool RenderSystem::init_entity(Entity &entity) {
     Drawable *drawable = entity.drawable;
     if (!entity.drawable->texture->is_valid()) {
+
         if (!entity.drawable->texture->load_from_file(entity.drawable->texture_path)) {
             fprintf(stderr, "Failed to load %s texture!", entity.drawable->texture_path);
             return false;
@@ -200,7 +203,7 @@ bool RenderSystem::init_entity(Entity &entity) {
         m_effects[drawable->vs_shader] = drawable->effect;
     } else {
         drawable->effect = m_effects[drawable->vs_shader];
-    };
+    }
     return true;
 }
 

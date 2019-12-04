@@ -1,8 +1,3 @@
-//
-// Created by arden on 10/15/2019.
-//
-
-#include <functional>
 #include "start_menu.hpp"
 #include "ecs/entities/button.hpp"
 

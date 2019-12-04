@@ -19,12 +19,13 @@ bool Scene::init() {
     return false;
 }
 
-// Releases all graphics resources
+// Releases all resources
 void Scene::destroy() {
     delete m_inputsystem;
     delete m_rendersystem;
     m_rendersystem = nullptr;
     m_inputsystem = nullptr;
+
     for (auto &entity: m_entities) {
         entity.destroy();
     }
@@ -36,7 +37,7 @@ void Scene::destroy() {
     drawHelp = false;
 
     Mix_CloseAudio();
-    if (m_background_music != nullptr) {
+    if (m_background_music) {
         Mix_FreeMusic(m_background_music);
         m_background_music = nullptr;
     }
@@ -44,7 +45,6 @@ void Scene::destroy() {
 
 void Scene::draw(const mat3& projection) {
     if (state == LOADING) {
-        // TODO: draw loading screen
         return;
     }
     m_rendersystem->draw_all(projection);
@@ -109,7 +109,7 @@ void Scene::background_music(){
         fprintf(stderr, "Failed to open audio device\n");
         return;
     }
-    if (m_background_music == nullptr)
+    if (!m_background_music)
     {
         fprintf(stderr, "Failed to load sounds make sure the data directory is present\n");
         return;
