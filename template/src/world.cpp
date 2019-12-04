@@ -14,12 +14,12 @@
 
 #include <project_path.hpp>
 
-#ifdef WINDOWS
-    #include <conio.h>
-    #include <dir.h>
-    #include <process.h>
-    #include <stdio.h>
-    #define mkdir _mkdir
+#ifdef _WIN32 // defined for both 32 and 64 bit
+	#include <conio.h>
+	#include <direct.h>
+	#include <process.h>
+	#include <stdio.h>
+	#define mkdir _mkdir
 #else
     #include <sys/stat.h>
 #endif
@@ -298,8 +298,13 @@ int World::save() {
     else
         path = PROJECT_SOURCE_DIR "/saves/";
 
-    if (mkdir(path.c_str(), 0777) != -1)
-        std::cout << "Created save directory" << std::endl;
+#if defined(_WIN32)
+	if (mkdir(path.c_str()) != -1)
+		std::cout << "Created save directory" << std::endl;
+#else
+	if (mkdir(path.c_str(), 0777) != -1)
+		std::cout << "Created save directory" << std::endl;
+#endif
 
     FILE *fp = fopen((path + m_save_path).c_str(), "w");
     if (!fp)
@@ -323,9 +328,14 @@ int World::load() {
         path = PROJECT_SOURCE_DIR "saves/";
     else
         path = PROJECT_SOURCE_DIR "/saves/";
+#if defined(_WIN32)
+	if (mkdir(path.c_str()) != -1)
+		std::cout << "Created save directory" << std::endl;
+#else
+	if (mkdir(path.c_str(), 0777) != -1)
+		std::cout << "Created save directory" << std::endl;
+#endif
 
-    if (mkdir(path.c_str(), 0777) != -1)
-        std::cout << "Created save directory" << std::endl;
 
     FILE *fp = fopen((path + m_save_path).c_str(), "r");
     if (!fp)
