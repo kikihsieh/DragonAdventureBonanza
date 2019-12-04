@@ -11,8 +11,8 @@
 class InputSystem {
 public:
     ~InputSystem() {
-        if (m_sfx)
-            Mix_FreeChunk(m_sfx);
+//        if (m_sfx)
+//            Mix_FreeChunk(m_sfx);
     }
 
     bool init(std::list<Entity>* entities, std::list<Button>* buttons);

@@ -104,6 +104,7 @@ void Level::update(float elapsed_ms, vec2 screen_size) {
         m_camera_system->init(m_level_dim, screen_size, use_vertical_camera());
 
         // All the things we need on first paused frame
+        m_screen_size = screen_size;
         update_clipped(m_camera_system->get_center(), screen_size);
         level_intro.position = m_camera_system->get_center();
         Button* home = &m_buttons.front();

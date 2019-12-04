@@ -56,15 +56,15 @@ void Scene::draw(const mat3& projection) {
 
     m_rendersystem->draw_all(projection);
 
+    if (draw_level_intro) {
+        m_rendersystem->draw_modal(projection, level_intro);
+        if (state == RUNNING)
+            state = PAUSED;
+    }
+    
     if (drawHelp) {
         state = PAUSED;
         m_rendersystem->draw_modal(projection, help);
-    }
-
-    if (draw_level_intro) {
-        m_rendersystem->draw_modal(projection, level_intro);
-        if (state == RUNNING) 
-            state = PAUSED;
     }
 }
 
