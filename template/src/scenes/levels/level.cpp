@@ -40,7 +40,10 @@ void Level::destroy() {
     delete m_enemy_motion_system;
     delete m_shooting_system;
     delete m_camera_system;
-    m_intro_modal->destroy();
+
+
+    if (m_intro_modal)
+        m_intro_modal->destroy();
     delete m_intro_modal;
 
     m_physics_system = nullptr;
