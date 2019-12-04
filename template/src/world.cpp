@@ -140,8 +140,6 @@ void World::destroy() {
         pair.second->destroy();
         delete pair.second;
     }
-    if (m_sfx != nullptr)
-        Mix_FreeChunk(m_sfx);
 }
 
 // Update our game world
@@ -223,7 +221,7 @@ bool World::load_scene(Scene_name scene) {
         return false;
     }
 
-    if (m_current_scene) {
+    if (m_scenes.at(m_current_scene)) {
         m_scenes.at(m_current_scene)->destroy();
     }
 

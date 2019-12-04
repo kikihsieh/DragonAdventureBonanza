@@ -106,7 +106,7 @@ void InputSystem::mouse_sfx() {
         fprintf(stderr, "Failed to load sounds make sure the data directory is present");
         return;
     }
-    // Playing background music indefinitely
+
     Mix_PlayChannel(-1, m_sfx, 0);
 
     fprintf(stderr, "Loaded sfx\n");
