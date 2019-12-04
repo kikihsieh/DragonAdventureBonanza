@@ -1,11 +1,11 @@
 #include <ecs/systems/default_physics_system.hpp>
 #include "snow_mountain_level.hpp"
 
-SnowMountainLeve::SnowMountainLeve() :
+SnowMountainLevel::SnowMountainLevel() :
         Level() {
 }
 
-void SnowMountainLeve::init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) {
+void SnowMountainLevel::init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) {
     Spider s(texture, pos);
     s.drawable->texture->height = 50;
     s.physics->walk_speed = 85;
@@ -13,7 +13,7 @@ void SnowMountainLeve::init_walking_enemy(std::shared_ptr<Texture> texture, vec2
     m_entities.emplace_back(s);
 }
 
-void SnowMountainLeve::init_throwing_enemy(std::shared_ptr<Texture> texture, vec2 pos) {
+void SnowMountainLevel::init_throwing_enemy(std::shared_ptr<Texture> texture, vec2 pos) {
     Glob g(texture, pos);
     g.shooting->time = 4000;
     g.drawable->texture->height = 320;
@@ -21,7 +21,7 @@ void SnowMountainLeve::init_throwing_enemy(std::shared_ptr<Texture> texture, vec
     m_entities.emplace_back(g);
 }
 
-bool SnowMountainLeve::init_player() {
+bool SnowMountainLevel::init_player() {
     Player player;
     player.airdash = new AirDash();
     m_entities.emplace_back(player);
@@ -29,7 +29,7 @@ bool SnowMountainLeve::init_player() {
     return true;
 }
 
-bool SnowMountainLeve::init() {
+bool SnowMountainLevel::init() {
     m_airdash_system = new AirDashSystem();
     m_physics_system = new DefaultPhysicsSystem(true);
     m_background_music = Mix_LoadMUS(audio_path("snow.wav"));

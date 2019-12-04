@@ -3,10 +3,10 @@
 
 #include "level.hpp"
 
-class SnowMountainLeve: public Level {
+class SnowMountainLevel: public Level {
 
 public:
-    explicit SnowMountainLeve();
+	explicit SnowMountainLevel();
 
     const char * get_bg_texture_path() override {
         return textures_path("snow_mountain/background.png");
@@ -20,6 +20,10 @@ public:
     bool init_player() override;
     void init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) override;
     void init_throwing_enemy(std::shared_ptr<Texture> texture, vec2 pos) override;
+
+    Modal get_level_intro() override {
+        return Modal(textures_path("modals/snow-mountain.png"));
+    }
 
 private:
     const MapVector get_map() const override {

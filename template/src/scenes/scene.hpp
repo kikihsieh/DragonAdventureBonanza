@@ -63,16 +63,19 @@ public:
     std::list<Entity> m_entities;
     std::list<Button> m_buttons;
     bool drawHelp = false;
+    bool draw_level_intro = false;
     State state = LOADING;
     std::map<Scene_name, bool>* m_unlocked_levels;
 
-
 protected:
     virtual const char * get_bg_texture_path() = 0;
+    virtual Modal get_level_intro(){ return level_intro; }
+    virtual bool should_draw_level_intro() { return false; }
 
 	RenderSystem* m_rendersystem;
     InputSystem *m_inputsystem;
     Modal help = Modal(textures_path("modals/help_menu.png"));
+    Modal level_intro = Modal(textures_path("modals/forest.png"));
 
     std::map<int, Tile*> m_tiles;
 

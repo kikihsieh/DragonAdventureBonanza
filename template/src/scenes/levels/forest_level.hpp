@@ -8,7 +8,7 @@
 
 class ForestLevel: public Level {
 public:
-    explicit ForestLevel();
+	explicit ForestLevel();
 
     const char * get_bg_texture_path() override {
         return textures_path("forest/background.png");
@@ -74,33 +74,33 @@ private:
     };
 
     const TexturePathMapping m_texture_map = {
-            {-7, textures_path("fire.png")},
-            {-6, textures_path("forest/projectiles/ice.png")},
-            {-5, textures_path("bat/bat_spritesheet1.png")},
-            {-4, textures_path("bat/bat_spritesheet1.png")},
-            {-3, textures_path("bat/bat_spritesheet1.png")},
-            {-2, textures_path("forest/enemies/glob.png")},
-            {-1, textures_path("forest/enemies/spider.png")},
-            {1,  textures_path("forest/tiles2/tile_c_m.png")},
-            {5,  textures_path("forest/tiles2/tile.png")},
-            {6,  textures_path("forest/tiles2/tile_t_l.png")},
-            {7,  textures_path("forest/tiles2/tile_t_r.png")},
-            {8,  textures_path("forest/tiles2/tile_t_m.png")},
-            {9,  textures_path("forest/tiles2/tile_e_m.png")},
-            {10, textures_path("forest/tiles2/tile_e_l.png")},
-            {11, textures_path("forest/tiles2/tile_e_r.png")},
-            {12, textures_path("forest/tiles2/tile_s_r.png")},
-            {13, textures_path("forest/tiles2/tile_s_l.png")},
-            {14, textures_path("forest/tiles2/tile_i_r.png")},
-            {15, textures_path("forest/tiles2/tile_i_l.png")},
-            {16, textures_path("forest/tiles2/tile_m_r.png")},
-            {17, textures_path("forest/tiles2/tile_m_l.png")},
-            {18, textures_path("heart.png")}
+        {-7, textures_path("fire.png")},
+        {-6, textures_path("forest/projectiles/ice.png")},
+        {-5, textures_path("bat/bat_spritesheet1.png")},
+        {-4, textures_path("bat/bat_spritesheet1.png")},
+        {-3, textures_path("bat/bat_spritesheet1.png")},
+        {-2, textures_path("forest/enemies/glob.png")},
+        {-1, textures_path("forest/enemies/spider.png")},
+        {1,  textures_path("forest/tiles2/tile_c_m.png")},
+        {5,  textures_path("forest/tiles2/tile.png")},
+        {6,  textures_path("forest/tiles2/tile_t_l.png")},
+        {7,  textures_path("forest/tiles2/tile_t_r.png")},
+        {8,  textures_path("forest/tiles2/tile_t_m.png")},
+        {9,  textures_path("forest/tiles2/tile_e_m.png")},
+        {10, textures_path("forest/tiles2/tile_e_l.png")},
+        {11, textures_path("forest/tiles2/tile_e_r.png")},
+        {12, textures_path("forest/tiles2/tile_s_r.png")},
+        {13, textures_path("forest/tiles2/tile_s_l.png")},
+        {14, textures_path("forest/tiles2/tile_i_r.png")},
+        {15, textures_path("forest/tiles2/tile_i_l.png")},
+        {16, textures_path("forest/tiles2/tile_m_r.png")},
+        {17, textures_path("forest/tiles2/tile_m_l.png")},
+        {18, textures_path("heart.png")}
     };
 
-        const TilePropertyMapping m_property_map = {
-            {18, std::make_shared<Properties>(Properties::Type::HEALTH)}
-        };
+    const TilePropertyMapping m_property_map = {
+        {18, std::make_shared<Properties>(Properties::Type::HEALTH)}
+    };
 };
 
 #endif //DAB_FOREST_LEVEL_HPP

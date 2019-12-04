@@ -7,7 +7,7 @@
 
 class NightSky: public Level {
 public:
-    explicit NightSky();
+	explicit NightSky();
 
     const char * get_bg_texture_path() override {
         return textures_path("night_sky/background.png");
@@ -17,6 +17,10 @@ public:
     bool init_player() override;
 
     virtual void update(float elapsed_ms, vec2 screen_size) override;
+
+    Modal get_level_intro() override {
+        return Modal(textures_path("modals/night-sky.png"));
+    }
 
 private:
 
