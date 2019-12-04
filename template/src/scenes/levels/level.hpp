@@ -45,6 +45,10 @@ public:
         return false;
     }
 
+    Modal get_level_intro() override {
+        return *m_intro_modal;
+    }
+
     virtual std::map<int, Tile*>* get_tiles() override;
 
     virtual void init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) {};
@@ -84,6 +88,7 @@ protected:
     ShootingSystem* m_shooting_system;
     CameraSystem* m_camera_system;
     Entity* m_player;
+    Modal* m_intro_modal;
 
     vec2 m_level_dim;
 

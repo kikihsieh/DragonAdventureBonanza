@@ -3,6 +3,7 @@
 
 CaveLevel::CaveLevel() :
     Level() {
+    m_background_music = Mix_LoadMUS(audio_path("cave.wav"));
 }
 
 void CaveLevel::init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) {
@@ -24,7 +25,7 @@ bool CaveLevel::init_player() {
 
 bool CaveLevel::init() {
     m_physics_system = new DefaultPhysicsSystem(true);
-    m_background_music = Mix_LoadMUS(audio_path("cave.wav"));
+    m_intro_modal = new Modal(textures_path("modals/cave.png"));
 
     return Level::init();
 }

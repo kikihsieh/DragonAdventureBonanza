@@ -1,7 +1,6 @@
 #include <vector>
 #include <map>
 #include "tile_map.hpp"
-#include <iostream>
 
 vec2 TileMap::tile_size = {64, 64};
 vec2 TileMap::tile_scale = {0.75f, 0.75f };

@@ -72,7 +72,6 @@ bool RenderSystem::init(std::list<Entity> *entities, std::map<int, Tile *> *tile
         }
         init_entity(*tile.second);
     }
-
     return setup_freetype();
 }
 

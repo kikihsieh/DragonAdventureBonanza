@@ -1,5 +1,4 @@
 #include <ecs/systems/final_boss_system.hpp>
-#include <sstream>
 #include <vector>
 
 bool FinalBossSystem::init(Entity* player, Entity& final_boss, std::list<Entity> *entities, vec2 screen_size,
@@ -89,10 +88,12 @@ void FinalBossSystem::update(Entity& final_boss, float ms) {
         }
         if (m_death) {
 
-            // TODO make boss flash
+            final_boss.health->invincibility_duration = 10000;
+            final_boss.health->invincible = true;
+
             if (final_boss.scale.x > 0 && final_boss.scale.y > 0) {
                 final_boss.scale.x -= 0.001;
-                final_boss.scale.y -= 0.001;
+                final_boss.scale.y -= 0.005;
 
                 if (final_boss.scale.x < 0)
                     final_boss.scale.x = 0;

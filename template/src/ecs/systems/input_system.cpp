@@ -101,7 +101,7 @@ void InputSystem::mouse_sfx() {
         fprintf(stderr, "Failed to open audio device");
         return;
     }
-    if (m_sfx == nullptr)
+    if (!m_sfx)
     {
         fprintf(stderr, "Failed to load sounds make sure the data directory is present");
         return;

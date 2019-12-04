@@ -18,10 +18,6 @@ public:
 
     virtual void update(float elapsed_ms, vec2 screen_size) override;
 
-    Modal get_level_intro() override {
-        return Modal(textures_path("modals/night-sky.png"));
-    }
-
 private:
 
     void spawn_cloud();

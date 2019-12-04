@@ -6,7 +6,7 @@
 
 class PhysicsSystem {
 public:
-    virtual ~PhysicsSystem() {};
+    virtual ~PhysicsSystem() = default;;
 
     virtual bool init(std::list<Entity> *entities, vec2 level_bounds) = 0;
 
@@ -16,9 +16,6 @@ private:
     virtual void move(float ms, Entity& entity) = 0;
 
     std::list<Entity>* m_entities;
-
-    vec2 m_level_bounds_x;
-    vec2 m_level_bounds_y;
 
 protected:
     bool m_double_jump;

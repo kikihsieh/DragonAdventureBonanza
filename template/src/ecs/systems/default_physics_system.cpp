@@ -96,15 +96,15 @@ void DefaultPhysicsSystem::move(float ms, Entity& entity) {
 
     if (entity.physics->velocity.x < 0 && entity.position.x - width / 2 < m_level_bounds_x.x) {
         x_step = 0;
-        if (!entity.player_tag) entity.clipped = true;
+        if (entity.is_enemy_proj || entity.is_player_proj) entity.clipped = true;
     }
     if (entity.physics->velocity.x > 0 && entity.position.x + width / 2 > m_level_bounds_x.y) {
         x_step = 0;
-        if (!entity.player_tag) entity.clipped = true;
+        if (entity.is_enemy_proj || entity.is_player_proj) entity.clipped = true;
     }
     if (entity.physics->velocity.y < 0 && entity.position.y - height / 2 < m_level_bounds_y.x) {
         y_step = 0;
-        if (!entity.player_tag) entity.clipped = true;
+        if (entity.is_enemy_proj || entity.is_player_proj) entity.clipped = true;
     }
 
     entity.position.x += x_step;

@@ -6,10 +6,13 @@
 
 NightSky::NightSky() :
     Level() {
+    m_background_music = Mix_LoadMUS(audio_path("nightsky.wav"));
 }
 
 bool NightSky::init() {
     m_screen = {1200, 800};
+
+    m_intro_modal = new Modal(textures_path("modals/night-sky.png"));
 
     if(!m_final_boss_spawning_system.init(&m_entities, m_screen))
         return false;
@@ -21,7 +24,6 @@ bool NightSky::init() {
     m_physics_system->init(&m_entities, m_screen);
     auto *flying_physics = dynamic_cast<FlyingPhysicsSystem *>(m_physics_system);
     flying_physics->set_spawning_system(&m_final_boss_spawning_system);
-	m_background_music = Mix_LoadMUS(audio_path("nightsky.wav"));
 
     bool init = Level::init();
 

@@ -1,4 +1,3 @@
-#include <cmath>
 #include <ecs/systems/default_physics_system.hpp>
 #include "flying_physics_system.hpp"
 #include "final_boss_spawning_system.hpp"

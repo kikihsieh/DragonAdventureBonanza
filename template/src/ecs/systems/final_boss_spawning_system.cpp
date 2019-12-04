@@ -2,7 +2,6 @@
 #include <ecs/entities/final_boss.hpp>
 #include <sstream>
 #include <string>
-#include <iostream>
 #include <vector>
 #include <ecs/entities/cloud.hpp>
 #include <ecs/entities/projectile.hpp>
@@ -10,6 +9,14 @@
 #include <ecs/entities/sibling.hpp>
 
 #define PI 3.14159265359
+
+FinalBossSpawningSystem::~FinalBossSpawningSystem() {
+    for (auto &shader : m_effects) {
+        glDeleteShader(shader.second.vertex);
+        glDeleteShader(shader.second.fragment);
+        glDeleteProgram(shader.second.program);
+    }
+}
 
 bool FinalBossSpawningSystem::init(std::list<Entity> *entities, vec2 screen_size) {
     m_entities = entities;
