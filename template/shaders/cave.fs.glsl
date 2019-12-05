@@ -22,26 +22,16 @@ void main()
             lightDist = dist;
         }
         if (radius < 1.0) {
-            color.xyz += (1.0 - radius) * 0.6 * vec3(1.0, 0.7, 0.0);
+            color.xyz += (1.0 - radius) * 0.6 * vec3(3.0, 1.5, 0.0);
             color.a = 0.5 + radius*(0.4);
-//        } else {
-//            float dist = distance((projection * vec3(lights[i], 1.0)).xy, (projection * vec3(player, 1.0)).xy);
-//            if (dist > 1.5) {
-//                float radius = distance((projection * vec3(player, 1.0)).xy * vec2(12.0/8.0, 1.0), vec2(vpos.x*(12.0/8.0), vpos.y));
-//                if(radius < 0.5) {
-//                    color = vec4(0.0, 0.0, 0.0, radius + 0.2);
-//                }
-//            }
-
         }
         if (i == numLights)
             break;
-
     }
-    if (lightDist > 1.5) {
+    if (lightDist > 0.0) {
         float radius = distance((projection * vec3(player, 1.0)).xy * vec2(12.0/8.0, 1.0), vec2(vpos.x*(12.0/8.0), vpos.y));
-        if(radius < 0.5) {
-            color = vec4(0.0, 0.0, 0.0,0.2+radius*(1.4));
+        if(radius < 1.0) {
+            color.a -= ((1.0-radius)*0.9)*min((lightDist/4.0), 1.0);
         }
     }
 }

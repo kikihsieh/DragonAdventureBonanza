@@ -1,4 +1,9 @@
+#include <world.hpp>
 #include "input_system.hpp"
+
+InputSystem::~InputSystem() {
+
+}
 
 bool InputSystem::init(std::list<Entity> *entities, std::list<Button> *buttons) {
     m_entities = entities;
@@ -90,24 +95,24 @@ void InputSystem::on_mouse_update(int key, int action, double xpos, double ypos)
 }
 
 void InputSystem::mouse_sfx() {
-    if (SDL_Init(SDL_INIT_AUDIO) < 0)
-    {
-        fprintf(stderr, "Failed to initialize SDL Audio");
-        return;
-    }
-
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1)
-    {
-        fprintf(stderr, "Failed to open audio device");
-        return;
-    }
-    if (m_sfx == nullptr)
-    {
-        fprintf(stderr, "Failed to load sounds make sure the data directory is present");
-        return;
-    }
+//    if (SDL_Init(SDL_INIT_AUDIO) < 0)
+//    {
+//        fprintf(stderr, "Failed to initialize SDL Audio");
+//        return;
+//    }
+//
+//    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1)
+//    {
+//        fprintf(stderr, "Failed to open audio device");
+//        return;
+//    }
+//    if (m_sfx == nullptr)
+//    {
+//        fprintf(stderr, "Failed to load sounds make sure the data directory is present");
+//        return;
+//    }
     // Playing background music indefinitely
-    Mix_PlayChannel(-1, m_sfx, 0);
+    World::playSFX(m_sfx);
 
     fprintf(stderr, "Loaded sfx\n");
 }

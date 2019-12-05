@@ -254,13 +254,16 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
     // Enabling alpha channel for textures
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//    glBlendEquation()
     glDisable(GL_DEPTH_TEST);
     if (entity.useDepth) {
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
     }
-    else
+    else {
         glDisable(GL_DEPTH_TEST);
+        glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA);
+    }
 //    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
 //    glEnable(GL_DEPTH_TEST);
 
