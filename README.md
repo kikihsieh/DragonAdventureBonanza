@@ -1,5 +1,96 @@
 # Dragon Adventure Bonanza
 
+# Milestone 4: Final Game
+## Features implemented this milestone
+* UI/ UX
+	* Updated help menu and main menu
+	* Added buttons on each level for navigation and help
+	* Added exit button to main menu
+	* Modal descriptions at the start of each level, storyline screens
+	* Added level select screen
+	* Displays for health status
+	* Autosaving progress
+* Gameplay
+	* Level transitioning - level unlocking, ability unlocking
+	* Added a tile properties system - collectibles, tiles with physical properties, torches, and goal tiles
+	* Updated the design of all levels 
+	* Added a final boss level with 4.5 phases
+	* Adjusted player movement
+	* Flashing feedback on damage
+	* Light system for cave level
+	* Music and sound effects
+	* New assets
+	* Parallax scrolling
+
+## Stability
+* Fixes from last milestone
+	* **Runs decently but with significant memory usage increases over time**
+		* Checked and fixed all our memory leaks 
+	* **Frame drops occasionally**
+		* Made efficiency improvements to address this:
+			* reduced the number of times we iterated through our entity list for collisions
+			* fixed an issue with removing projectiles when they move off camera
+			* stopped updating entities that are off screen and not calling render
+		* we stopped at this point because it was good enough other things we considered doing include: 
+			* rendering the tile map to texture once and just draw the texture
+			* instance rendering
+			* adding an entity manager system and storing components contiguously in memory
+## Playability
+* Game includes 3 distinct levels and a boss level 
+* There is clear progression throughout the game
+	* A new ability is unlocked at the end of every level 
+		* Level 1 (forest): Player starts with the ability to shoot
+		* Level 2 (cave): Player gains the ability to double jump
+		* Level 3 (snow mountain): Player is able to air dash
+		* Boss level: Player is able to fly
+	* Each level gets progressively more difficult and has new challenges 
+		* Level 1 (forest): Walking and shooting enemies
+		* Level 2 (cave): This level is more maze-like and requires the user to explore and light torches before being allowed to complete the level. Adds flying enemies.
+		* Level 3 (snow mountain): Faster shooting and walking speeds of enemies. Adds special ice tiles (that are slippery) and bouncy tiles. Requires the player to move upwards to goal.
+		* Boss level: 4.5 different boss phases that the player needs to survive. Each phase has a different pattern of projectiles and flying enemy dragons. 
+## User Experience
+* Tutorial / game mechanics
+	* Added a storyline to the game - at the start of each level, a modal describes the level and new abilities unlocked and how to use them
+	* Help menu and main menu are easily accessible from all screens via buttons at the top right 
+	* There is a button to exit the game from the main menu
+	* Added a level select screen
+* User testing: 
+	* **The map is confusing!**
+		* We addressed this point through our level design. Paths that we do not want the user to take have been blocked by physical barriers so there is no confusion as to which direction to go.
+	*  **Visual feedback on collision would be nice**
+		* Added flickering to the player when hit and audio feedback
+	* **How much health do I have left?**
+		* Added text that displays current health
+	* **Controls are not crisp**
+		*  Updated our friction calculations so that the player is able to make more precise movements 
+	* **Ice physics are weiiiirrdd**
+		* Re-did that with our friction calculations
+	* **I don't like the key combination for controls**
+		* There was not enough of a consensus on which controls are preferred in order to warrant a switch. Some people liked the current key mapping and fewer would like to see them switched so we kept our original key mapping.
+	* **Being unable to see the ground when you're on higher platforms is super annoying**
+		* Addressed this with level design
+	* **The levels are too hard!**
+		* Added collectible hearts throughout the level to regain health
+## External Integration 
+* FreeType Library Integration - used for text rendering of player health (all levels), boss health (boss level) , and number of torches collected (level 2, cave level) 
+
+## Advanced Graphics
+* Parallax scrolling background for all three levels (forest, cave, snow) 
+* Lighting system in level 2 (cave level) - added depth calculations
+	* Darkened cave with a spotlight on the player 
+	* Hit a torch with a fireball to see it light up
+* More animations! - flying player sprite, boss and minions
+## Advanced Gameplay
+* Boss level with 4.5 different attack phases
+	* Coordination between boss projectiles and minions to form different patterns 
+	* New types of projectiles that bounce into different formations
+* Tiles with physical properties - play level 3 (snow level) to see these
+	* Sliding tiles - try walking on one
+	* Bouncy tiles - try jumping on the top of these in the snow level
+## Audio 
+* **Background music:** Each level has a different soundtrack
+* **Feedback:** Button clicks, the player getting hit, jumping, and shooting have sounds associated with each action
+
 ### Milestone 3: Playable Game
 
 #### Rendering: 
