@@ -2,7 +2,8 @@
 #include "input_system.hpp"
 
 InputSystem::~InputSystem() {
-
+//        if (m_sfx)
+//            Mix_FreeChunk(m_sfx);
 }
 
 bool InputSystem::init(std::list<Entity> *entities, std::list<Button> *buttons) {

@@ -10,10 +10,7 @@
 
 class InputSystem {
 public:
-    ~InputSystem() {
-//        if (m_sfx)
-//            Mix_FreeChunk(m_sfx);
-    }
+    ~InputSystem();
 
     bool init(std::list<Entity>* entities, std::list<Button>* buttons);
     void on_key_update(int key, int action);
