@@ -14,7 +14,8 @@ To unlock levels the cheater's way:
 * Re-launch the game
 
 To change the "goal" position that needs to be reached for a level change:
-* Add the letter G to the location you want in the tile map (tile maps can be found in for example scenes/levels/forest_level.hpp)
+* Add the letter "G" to the location you want in the tile map (tile maps can be found in for example scenes/levels/forest_level.hpp)
+* Alternatively, move "P" to whereever you want the player to be initialized to
 
 To change the number of lives you start each level with:
 * In ecs/entities/player.hpp change the line "health->health = 10;" to whatever number you want.
