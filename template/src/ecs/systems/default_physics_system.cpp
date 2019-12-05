@@ -49,6 +49,7 @@ void DefaultPhysicsSystem::update(float ms) {
                     if (entity_it->physics->velocity.x > -entity_it->physics->walk_speed) {
                         entity_it->physics->velocity.x = fmax(-entity_it->physics->walk_speed,
                                                               entity_it->physics->velocity.x - friction - speed_up);
+                        entity_it->physics->velocity.x = fmin(entity_it->physics->velocity.x,0);
                     } else {
                         entity_it->physics->velocity.x = fmin(-entity_it->physics->walk_speed,
                                                               entity_it->physics->velocity.x + friction);
