@@ -567,7 +567,7 @@ void RenderSystem::update(float ms) {
             if (entity.animatable->frame_index.x == 6) {
                 entity.animatable->frame_index.x = 0;
             }
-        } else if (entity.physics->velocity.x == 0 && entity.health->is_player) {
+        } else if (entity.physics->velocity.x == 0 && entity.health->is_player && entity.animatable->num_rows > 1) {
             if (entity.is_facing_forward) {
                 entity.animatable->frame_index = {0, 1};
             } else {
@@ -579,7 +579,7 @@ void RenderSystem::update(float ms) {
                 continue;
             }
             entity.animatable->countdown = entity.animatable->frame_switch_time;
-            if (entity.physics->velocity.x > 0) {
+            if (entity.is_facing_forward && entity.animatable->num_rows > 1) {
                 entity.animatable->frame_index.y = 1;
             } else {
                 entity.animatable->frame_index.y = 0;

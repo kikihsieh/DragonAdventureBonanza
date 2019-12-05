@@ -21,9 +21,6 @@ void FlyingPhysicsSystem::update(float ms) {
             continue;
         }
 
-        float friction = (entity_it->physics->grounded) ? 500 : 300;
-        friction = friction * ms / 1000;
-
         if (entity_it->input) {
             if (entity_it->input->right) {
                 entity_it->is_facing_forward = true;

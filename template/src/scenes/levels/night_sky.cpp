@@ -67,6 +67,14 @@ void NightSky::spawn_cloud() {
 
 bool NightSky::init_player() {
     Player player;
+    player.drawable->texture_path = textures_path("dragon_flying_sprite.png");
+    player.animatable->num_columns = 11;
+    player.animatable->num_rows = 1;
+    player.animatable->frame_index = {0, 0};
+
+    player.scale = {0.3f, 0.3f};
+
+
     m_entities.emplace_back(player);
     m_player = &m_entities.back();
     m_player->physics->gravity = 0;
