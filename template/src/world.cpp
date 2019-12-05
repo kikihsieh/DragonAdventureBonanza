@@ -116,6 +116,11 @@ bool World::init(vec2 screen)
         }
         std::cout << "No existing save file" << std::endl;
     } else {
+        for (auto &scene: m_scenes) {
+            if (scene.second->is_level() && m_unlocked_levels.count(scene.first) == 0) {
+                m_unlocked_levels[scene.first] = scene.first == FOREST;
+            }
+        }
         std::cout << "Loaded save!" << std::endl;
     }
 

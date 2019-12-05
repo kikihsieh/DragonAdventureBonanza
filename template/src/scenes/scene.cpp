@@ -77,7 +77,7 @@ void Scene::update(float elapsed_ms, vec2 screen_size) {
 }
 
 void Scene::on_key(int key, int action) {
-    if (state == LOADING) {
+    if (state == LOADED) {
         return;
     }
     if (key == GLFW_KEY_H && action == GLFW_RELEASE) {
