@@ -92,6 +92,8 @@
 * **Background music:** Each level has a different soundtrack
 * **Feedback:** Button clicks, the player getting hit, jumping, and shooting have sounds associated with each action
 
+
+________________________________________________________________________________________________________________________
 ### Milestone 3: Playable Game
 
 #### Rendering: 
