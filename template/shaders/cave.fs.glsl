@@ -26,7 +26,7 @@ void main()
                 color.xyz += (1.0 - radius) * 0.6 * vec3(2.25, 1.25, 0.0);
                 color.a = 0.5 + radius*(0.4);
             }
-            if (i == numLights)
+            if (i == numLights-1)
             break;
         }
     }
