@@ -18,7 +18,7 @@ struct Player : public Entity {
         drawable = new Drawable();
         drawable->texture_path = textures_path("dragon_sprite.png");
         drawable->fs_shader = shader_path("player.fs.glsl");
-        drawable->vs_shader = shader_path("animated.vs.glsl");
+        drawable->vs_shader = shader_path("player.vs.glsl");
 
         health = new Health();
         health->health = 10;
@@ -39,6 +39,7 @@ struct Player : public Entity {
         animatable = new Animatable();
         animatable->num_rows = 2;
         animatable->num_columns = 4;
+        depth = -0.98f;
         animatable->frame_index = {0, 1};
 
         clipped = false;

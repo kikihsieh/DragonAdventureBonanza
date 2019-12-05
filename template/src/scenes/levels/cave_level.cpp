@@ -26,6 +26,19 @@ bool CaveLevel::init() {
     m_background_music = Mix_LoadMUS(audio_path("cave.wav"));
     m_physics_system = new DefaultPhysicsSystem(true);
     m_intro_modal = new Modal(textures_path("modals/cave.png"));
-
-    return Level::init();
+    Entity dark = Entity();
+    dark.drawable = new Drawable();
+    dark.is_background = true;
+    dark.clipped = false;
+    dark.useDepth = false;
+    dark.depth = -0.8f;
+    dark.drawable->texture_path = textures_path("cave/background.png");
+    dark.drawable->fs_shader = shader_path("cave.fs.glsl");
+    dark.drawable->vs_shader = shader_path("cave.vs.glsl");
+    m_entities.emplace_back(dark);
+    bool result = Level::init();
+    Entity sec = *std::next(m_entities.begin());
+    m_entities.erase(std::next(m_entities.begin()));
+    m_entities.emplace_back(sec);
+    return result;
 }

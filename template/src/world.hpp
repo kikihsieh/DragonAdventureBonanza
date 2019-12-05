@@ -19,6 +19,8 @@ public:
     World();
 	~World();
 
+	enum sounds {click, shoot, damage, jump};
+
 	// Creates a window, sets up events and begins the game
 	bool init(vec2 screen);
 
@@ -33,6 +35,8 @@ public:
 
 	// Should the game be over ?
 	bool is_over()const;
+
+	static void playSFX(Mix_Chunk* sfx);
     
 protected:
     

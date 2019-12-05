@@ -392,3 +392,7 @@ void World::change_scene() {
     }
     load_scene(next);
 }
+
+void World::playSFX(Mix_Chunk* sfx) {
+    Mix_PlayChannel(-1, sfx, 0);
+}

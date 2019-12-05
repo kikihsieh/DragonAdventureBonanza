@@ -9,11 +9,12 @@ struct Properties {
         BOUNCY,         // bounces when colliding from top or bottom
         DAMAGE,         // -1 health when collided with
         GOAL,           // when reached, switches to the next level
+        TORCH,          // when collided with player projectile, lights up
         PROJECTILE      // used specifically for projectiles
     };
 
     // Use this constructor for stationary tile entities
-    Properties(Type type) {
+    Properties(Type type) : lit(false) {
         this->type = type;
 
         if (type == BOUNCY) {
@@ -29,6 +30,8 @@ struct Properties {
     float friction; // percent per second of vx increased per second
 
     int count; // number of times the projectile bounces before disappearing
+    bool lit;
+
     Type type;
 };
 
