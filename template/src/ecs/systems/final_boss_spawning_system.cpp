@@ -42,6 +42,7 @@ bool FinalBossSpawningSystem::spawn_final_boss() {
     FinalBoss b(m_texture_mapping.at(3), {m_screen_bounds.x - 150, m_screen_bounds.y / 2});
     if (!init_entity(b))
         return false;
+    b.texture_size = {b.texture_size.x * 0.7f, b.texture_size.y * 0.95f};
     m_entities->push_back(b);
     return true;
 }
