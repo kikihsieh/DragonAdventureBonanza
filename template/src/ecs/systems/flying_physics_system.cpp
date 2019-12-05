@@ -80,19 +80,15 @@ void FlyingPhysicsSystem::move(float ms, Entity& entity) {
 
         if (entity.physics->velocity.x < 0 && entity.position.x - width / 2 - x_buffer< m_level_bounds_x.x) {
             entity.physics->velocity.x = 0;
-            return;
         }
         if (entity.physics->velocity.x > 0 && entity.position.x + width / 2 + x_buffer> m_level_bounds_x.y) {
             entity.physics->velocity.x = 0;
-            return;
         }
         if (entity.physics->velocity.y < 0 && entity.position.y - height / 2 - y_buffer < m_level_bounds_y.x) {
             entity.physics->velocity.y = 0;
-            return;
         }
         if (entity.physics->velocity.y > 0 && entity.position.y + height / 2 + y_buffer > m_level_bounds_y.y) {
             entity.physics->velocity.y = 0;
-            return;
         }
     }
 
