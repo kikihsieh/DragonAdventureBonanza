@@ -50,7 +50,7 @@ RenderSystem::~RenderSystem() {
 
 bool RenderSystem::init(std::list<Entity> *entities, std::map<int, Tile *> *tiles, std::list<Button> *buttons, std::list<Tile*> *lights) {
     m_effects = {};
-//    entities->sort([](Entity a, Entity b) { return a.depth > b.depth;});
+    entities->sort([](const Entity & a, const Entity & b) { return a.depth > b.depth;});
 //    std::sort(entities->begin(), entities->end(), [](Entity a, Entity b) { return a.depth < b.depth;});
     m_entities = entities;
     m_buttons = buttons;
@@ -629,7 +629,16 @@ void RenderSystem::update(float ms) {
         }
     }
     for (auto &light: *m_lights) {
-        if(light->properties->lit)
+        if(light->properties->lit) {
             m_light_pos.emplace_back(light->position);
+            light->animatable->countdown -= ms;
+            if (light->animatable->countdown > 0) {
+                continue;
+            }
+            light->animatable->countdown = light->animatable->frame_switch_time;
+            light->animatable->frame_index.x++;
+            if (light->animatable->frame_index.x == light->animatable->num_columns)
+                light->animatable->frame_index.x = 0;
+        }
     }
 }

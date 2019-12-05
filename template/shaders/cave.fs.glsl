@@ -23,7 +23,7 @@ void main()
                 lightDist = dist;
             }
             if (radius < 1.0) {
-                color.xyz += (1.0 - radius) * 0.6 * vec3(3.0, 1.5, 0.0);
+                color.xyz += (1.0 - radius) * 0.6 * vec3(2.25, 1.25, 0.0);
                 color.a = 0.5 + radius*(0.4);
             }
             if (i == numLights)
@@ -32,6 +32,6 @@ void main()
     }
     float radius = distance((projection * vec3(player, 1.0)).xy * vec2(12.0/8.0, 1.0), vec2(vpos.x*(12.0/8.0), vpos.y));
     if(radius < 1.0) {
-        color.a -= ((1.0-radius)*0.9)*min(lightDist, 1.0);
+        color.a -= ((1.0-radius)*0.9)*min(lightDist/2, 1.0);
     }
 }

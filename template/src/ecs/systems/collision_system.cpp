@@ -1,5 +1,4 @@
 #include "collision_system.hpp"
-
 #include <cmath>
 #include <utility>
 #include <scenes/levels/tile_map.hpp>
@@ -48,7 +47,6 @@ void CollisionSystem::update(float ms) {
 void CollisionSystem::tile_collisions(Entity& entity, float ms) {
     float e_height = entity.texture_size.y * entity.scale.y;
     float e_width = entity.texture_size.x * entity.scale.x;
-
     float t_width = TileMap::tile_screen_size.x;
     float t_height = TileMap::tile_screen_size.y;
 
@@ -86,6 +84,7 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
             if (entity.is_player_proj) {
                 tile.properties->lit = true;
                 tile.drawable->texture = tile.torchTex;
+                tile.animatable->num_columns = 4;
                 return entity_property_updates(entity, tile, side);
             }
             return false;
