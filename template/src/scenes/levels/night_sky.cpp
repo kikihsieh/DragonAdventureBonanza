@@ -9,7 +9,10 @@ NightSky::NightSky() :
 }
 
 bool NightSky::init() {
+    m_background_music = Mix_LoadMUS(audio_path("nightsky.wav"));
     m_screen = {1200, 800};
+
+    m_intro_modal = new Modal(textures_path("modals/night-sky.png"));
 
     if(!m_final_boss_spawning_system.init(&m_entities, m_screen))
         return false;
@@ -21,7 +24,6 @@ bool NightSky::init() {
     m_physics_system->init(&m_entities, m_screen);
     auto *flying_physics = dynamic_cast<FlyingPhysicsSystem *>(m_physics_system);
     flying_physics->set_spawning_system(&m_final_boss_spawning_system);
-	m_background_music = Mix_LoadMUS(audio_path("nightsky.wav"));
 
     bool init = Level::init();
 
@@ -41,7 +43,10 @@ bool NightSky::init() {
         return false;
     m_final_boss = &m_entities.back();
 
-    return init && m_final_boss_system.init(m_player, *m_final_boss, &m_entities, m_screen, &m_final_boss_spawning_system, m_scene_change_callback);
+    init = init && m_final_boss_system.init(m_player, *m_final_boss, &m_entities, m_screen, &m_final_boss_spawning_system, m_scene_change_callback);
+    m_player->texture_size = {m_player->texture_size.x *0.65f, m_player->texture_size.y * 0.85f};
+
+    return init;
 }
 
 
@@ -65,6 +70,13 @@ void NightSky::spawn_cloud() {
 
 bool NightSky::init_player() {
     Player player;
+    player.drawable->texture_path = textures_path("dragon_flying_sprite.png");
+    player.animatable->num_columns = 11;
+    player.animatable->num_rows = 1;
+    player.animatable->frame_index = {0, 0};
+
+    player.scale = {0.3f, 0.3f};
+
     m_entities.emplace_back(player);
     m_player = &m_entities.back();
     m_player->physics->gravity = 0;

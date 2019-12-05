@@ -2,7 +2,6 @@
 #include <ecs/entities/final_boss.hpp>
 #include <sstream>
 #include <string>
-#include <iostream>
 #include <vector>
 #include <ecs/entities/cloud.hpp>
 #include <ecs/entities/projectile.hpp>
@@ -10,6 +9,14 @@
 #include <ecs/entities/sibling.hpp>
 
 #define PI 3.14159265359
+
+FinalBossSpawningSystem::~FinalBossSpawningSystem() {
+    for (auto &shader : m_effects) {
+        glDeleteShader(shader.second.vertex);
+        glDeleteShader(shader.second.fragment);
+        glDeleteProgram(shader.second.program);
+    }
+}
 
 bool FinalBossSpawningSystem::init(std::list<Entity> *entities, vec2 screen_size) {
     m_entities = entities;
@@ -35,6 +42,7 @@ bool FinalBossSpawningSystem::spawn_final_boss() {
     FinalBoss b(m_texture_mapping.at(3), {m_screen_bounds.x - 150, m_screen_bounds.y / 2});
     if (!init_entity(b))
         return false;
+    b.texture_size = {b.texture_size.x * 0.7f, b.texture_size.y * 0.95f};
     m_entities->push_back(b);
     return true;
 }

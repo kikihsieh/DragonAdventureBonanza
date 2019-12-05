@@ -12,6 +12,8 @@
 class FinalBossSpawningSystem {
 public:
 
+    ~FinalBossSpawningSystem();
+
     bool init(std::list<Entity> *entities, vec2 screen_bounds);
 
     bool spawn_final_boss();

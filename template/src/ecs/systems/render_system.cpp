@@ -17,7 +17,7 @@ RenderSystem::~RenderSystem() {
     for (auto &shader : m_effects) {
         glDeleteShader(shader.second.vertex);
         glDeleteShader(shader.second.fragment);
-        glDeleteShader(shader.second.program);
+        glDeleteProgram(shader.second.program);
     }
     for (Entity &entity: *m_entities) {
         if (!entity.drawable) {
@@ -44,8 +44,14 @@ RenderSystem::~RenderSystem() {
         glDeleteVertexArrays(1, &button.drawable->vao);
     }
 
+    for (auto &ch : characters) {
+        glDeleteTextures(1, &ch.second.textureID);
+    }
+
     glDeleteBuffers(1, &characters_drawable->vbo);
-    glDeleteBuffers(1, &characters_drawable->vao);
+    glDeleteVertexArrays(1, &characters_drawable->vao);
+
+    delete characters_drawable;
 }
 
 bool RenderSystem::init(std::list<Entity> *entities, std::map<int, Tile *> *tiles, std::list<Button> *buttons, std::list<Tile*> *lights) {
@@ -84,10 +90,10 @@ bool RenderSystem::setup_freetype() {
     if (FT_Init_FreeType(&library))
         fprintf(stderr, "Failed to init Freetype library");
 
-    if (FT_New_Face(library, PROJECT_SOURCE_DIR "data/Delugia_Nerd_Font.ttf", 0, &face))
-        fprintf(stderr, "Font file cuold not be opened or read, or that it is broken");
+    if (FT_New_Face(library, PROJECT_SOURCE_DIR "data/Kenney_Pixel.ttf", 0, &face))
+        fprintf(stderr, "Font file could not be opened or read, or that it is broken");
 
-    FT_Set_Pixel_Sizes(face, 0, 24);
+    FT_Set_Pixel_Sizes(face, 0, 36);
 
     // Disable byte-alignment restriction
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -149,13 +155,14 @@ bool RenderSystem::setup_freetype() {
         m_effects[characters_drawable->vs_shader] = characters_drawable->effect;
     } else {
         characters_drawable->effect = m_effects[characters_drawable->vs_shader];
-    };
+    }
     return true;
 }
 
 bool RenderSystem::init_entity(Entity &entity) {
     Drawable *drawable = entity.drawable;
     if (!entity.drawable->texture->is_valid()) {
+
         if (!entity.drawable->texture->load_from_file(entity.drawable->texture_path)) {
             fprintf(stderr, "Failed to load %s texture!", entity.drawable->texture_path);
             return false;
@@ -209,7 +216,7 @@ bool RenderSystem::init_entity(Entity &entity) {
         m_effects[drawable->vs_shader] = drawable->effect;
     } else {
         drawable->effect = m_effects[drawable->vs_shader];
-    };
+    }
     return true;
 }
 
@@ -606,7 +613,7 @@ void RenderSystem::update(float ms) {
             if (entity.animatable->frame_index.x == 6) {
                 entity.animatable->frame_index.x = 0;
             }
-        } else if (entity.physics->velocity.x == 0 && entity.health->is_player) {
+        } else if (entity.physics->velocity.x == 0 && entity.health->is_player && entity.animatable->num_rows > 1) {
             if (entity.is_facing_forward) {
                 entity.animatable->frame_index = {0, 1};
             } else {
@@ -618,7 +625,7 @@ void RenderSystem::update(float ms) {
                 continue;
             }
             entity.animatable->countdown = entity.animatable->frame_switch_time;
-            if (entity.physics->velocity.x > 0) {
+            if (entity.is_facing_forward && entity.animatable->num_rows > 1) {
                 entity.animatable->frame_index.y = 1;
             } else {
                 entity.animatable->frame_index.y = 0;

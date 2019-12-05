@@ -15,7 +15,8 @@ Level::Level() :
         m_enemy_motion_system(nullptr),
         m_health_system(nullptr),
         m_camera_system(nullptr),
-        m_shooting_system(nullptr) {
+        m_shooting_system(nullptr),
+        m_intro_modal(nullptr) {
 }
 
 bool Level::init() {
@@ -40,6 +41,11 @@ void Level::destroy() {
     delete m_shooting_system;
     delete m_camera_system;
 
+
+    if (m_intro_modal)
+        m_intro_modal->destroy();
+    delete m_intro_modal;
+
     m_physics_system = nullptr;
     m_collision_system = nullptr;
     m_airdash_system = nullptr;
@@ -47,6 +53,7 @@ void Level::destroy() {
     m_enemy_motion_system = nullptr;
     m_shooting_system = nullptr;
     m_camera_system = nullptr;
+    m_intro_modal = nullptr;
 }
 
 bool Level::init_level(MapVector map, TexturePathMapping mapping) {
@@ -54,10 +61,12 @@ bool Level::init_level(MapVector map, TexturePathMapping mapping) {
     home.m_button_callback = [this](){load_scene(MAIN_MENU);};
     home.scale = {0.4f, 0.4f};
     m_buttons.emplace_back(home);
+
     Button help_btn(textures_path("buttons/help.png"));
     help_btn.m_button_callback = [this](){drawHelp = !drawHelp; state = (state == RUNNING) ? PAUSED : RUNNING;};
     help_btn.scale = {0.4f, 0.4f};
     m_buttons.emplace_back(help_btn);
+
     m_tile_map = new TileMap(this);
     for (auto &iter : mapping) {
         auto texture = std::make_shared<Texture>();
@@ -69,6 +78,7 @@ bool Level::init_level(MapVector map, TexturePathMapping mapping) {
         }
         m_texture_mapping.insert(TextureMapping::value_type(iter.first, texture));
     }
+
     if (!m_tile_map->init(std::move(map), m_texture_mapping, get_property_map())) {
         fprintf(stderr, "Failed to initialize tile map!");
         return false;
@@ -92,6 +102,15 @@ void Level::update(float elapsed_ms, vec2 screen_size) {
     if (state == LOADED) {
         state = RUNNING;
         m_camera_system->init(m_level_dim, screen_size, use_vertical_camera());
+
+        // All the things we need on first paused frame
+        m_screen_size = screen_size;
+        update_clipped(m_camera_system->get_center(), screen_size);
+        level_intro.position = m_camera_system->get_center();
+        Button* home = &m_buttons.front();
+        home->position = add(m_camera_system->get_center(),{screen_size.x/2 - home->texture_size.x*home->scale.x + 25.f, -(screen_size.y/2 - home->texture_size.x*home->scale.x + 25.f)});
+        Button* help_btn = &m_buttons.back();
+        help_btn->position = add(m_camera_system->get_center(),{screen_size.x/2 - help_btn->texture_size.x*help_btn->scale.x*2, -(screen_size.y/2 - help_btn->texture_size.x*help_btn->scale.x + 25.f)});
         return;
     }
 
@@ -105,17 +124,22 @@ void Level::update(float elapsed_ms, vec2 screen_size) {
         return;
     }
 
+    if (!m_camera_system || !m_physics_system || !m_collision_system ||
+            !m_enemy_motion_system || !m_shooting_system || !m_health_system)
+        return;
+
     update_clipped(m_camera_system->get_center(), screen_size);
 
-    if (m_airdash_system) {
+    if (m_airdash_system)
         m_airdash_system->update(elapsed_ms);
-    }
+
     m_physics_system->update(elapsed_ms);
     m_collision_system->update(elapsed_ms);
     m_enemy_motion_system->update(elapsed_ms);
     m_shooting_system->update(elapsed_ms);
 
     help.position = m_camera_system->get_center();
+    level_intro.position = m_camera_system->get_center();
 
     Scene::update(elapsed_ms, screen_size);
     m_camera_system->update(elapsed_ms, (Player *) m_player, screen_size);

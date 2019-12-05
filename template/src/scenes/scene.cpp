@@ -4,13 +4,17 @@
 Scene::Scene() : m_rendersystem(nullptr), m_inputsystem(nullptr), m_background_music(nullptr) {
 }
 
-
 bool Scene::init() {
     m_inputsystem = new InputSystem();
     m_rendersystem = new RenderSystem();
     Background background(get_bg_texture_path());
     m_entities.insert(m_entities.begin(), background);
     m_rendersystem->init_entity(help);
+    draw_level_intro = should_draw_level_intro();
+    if (draw_level_intro) {
+        level_intro = get_level_intro();
+        m_rendersystem->init_entity(level_intro);
+    }
     background_music();
     if (m_rendersystem->init(&m_entities, get_tiles(), &m_buttons, &m_lights) && m_inputsystem->init(&m_entities, &m_buttons)) {
         state = LOADED;
@@ -19,12 +23,13 @@ bool Scene::init() {
     return false;
 }
 
-// Releases all graphics resources
+// Releases all resources
 void Scene::destroy() {
     delete m_inputsystem;
     delete m_rendersystem;
     m_rendersystem = nullptr;
     m_inputsystem = nullptr;
+
     for (auto &entity: m_entities) {
         entity.destroy();
     }
@@ -35,9 +40,10 @@ void Scene::destroy() {
     m_buttons.clear();
     m_lights.clear();
     drawHelp = false;
+    draw_level_intro = false;
 
-    Mix_CloseAudio();
-    if (m_background_music != nullptr) {
+    if (m_background_music) {
+        Mix_CloseAudio();
         Mix_FreeMusic(m_background_music);
         m_background_music = nullptr;
     }
@@ -45,10 +51,17 @@ void Scene::destroy() {
 
 void Scene::draw(const mat3& projection) {
     if (state == LOADING) {
-        // TODO: draw loading screen
         return;
     }
+
     m_rendersystem->draw_all(projection);
+
+    if (draw_level_intro) {
+        m_rendersystem->draw_modal(projection, level_intro);
+        if (state == RUNNING)
+            state = PAUSED;
+    }
+
     if (drawHelp) {
         state = PAUSED;
         m_rendersystem->draw_modal(projection, help);
@@ -65,15 +78,21 @@ void Scene::update(float elapsed_ms, vec2 screen_size) {
 }
 
 void Scene::on_key(int key, int action) {
+    if (state == LOADED) {
+        return;
+    }
     if (key == GLFW_KEY_H && action == GLFW_RELEASE) {
         drawHelp = !drawHelp;
         state = (state == RUNNING) ? PAUSED : RUNNING;
         return;
     }
-    if (key == GLFW_KEY_P && action == GLFW_RELEASE) {
-        if (!drawHelp)
-            state = (state == RUNNING) ? PAUSED : RUNNING;
+    if (key == GLFW_KEY_P && action == GLFW_RELEASE && !drawHelp) {
+        state = (state == RUNNING) ? PAUSED : RUNNING;
         return;
+    }
+    if (key == GLFW_KEY_S && action == GLFW_RELEASE && draw_level_intro) {
+        draw_level_intro = false;
+        state = (state == RUNNING) ? PAUSED : RUNNING;
     }
     m_inputsystem->on_key_update(key, action);
 }
@@ -110,7 +129,7 @@ void Scene::background_music(){
         fprintf(stderr, "Failed to open audio device\n");
         return;
     }
-    if (m_background_music == nullptr)
+    if (!m_background_music)
     {
         fprintf(stderr, "Failed to load background make sure the data directory is present\n");
         return;

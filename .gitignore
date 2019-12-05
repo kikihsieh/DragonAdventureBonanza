@@ -85,3 +85,5 @@ template/cmake-build-debug/Makefile
 template/.idea/
 
 template/cmake-build-debug/
+
+template/saves/

@@ -27,6 +27,7 @@ public:
             tile.second->destroy();
             delete tile.second;
         }
+        m_tiles.clear();
     }
 
     static vec2 tile_size;

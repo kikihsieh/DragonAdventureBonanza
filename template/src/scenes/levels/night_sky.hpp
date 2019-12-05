@@ -7,7 +7,7 @@
 
 class NightSky: public Level {
 public:
-    explicit NightSky();
+	explicit NightSky();
 
     const char * get_bg_texture_path() override {
         return textures_path("night_sky/background.png");

@@ -24,10 +24,11 @@ bool ForestLevel::init_player() {
 }
 
 bool ForestLevel::init() {
+    m_background_music = Mix_LoadMUS(audio_path("forest.wav"));
    m_physics_system = new DefaultPhysicsSystem(false);
-   m_background_music = Mix_LoadMUS(audio_path("forest.wav"));
+   m_intro_modal = new Modal(textures_path("modals/forest.png"));
 
-    return Level::init();
+   return Level::init();
 }
 
 
