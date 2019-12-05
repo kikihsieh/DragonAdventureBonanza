@@ -10,12 +10,9 @@ bool CollisionSystem::init(std::list<Entity> *entities, std::map<int, Tile*>* ti
     m_entities = entities;
     m_tiles = tiles;
     m_goal_reached = false;
-    m_damage = Mix_LoadWAV(audio_path("/sfx/blreep_sound.wav"));
     return true;
 }
 
-CollisionSystem::~CollisionSystem(){
-}
 
 
 void CollisionSystem::update(float ms) {

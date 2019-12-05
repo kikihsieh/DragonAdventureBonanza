@@ -46,7 +46,7 @@ void Scene::destroy() {
 
 //    Mix_CloseAudio();
     if (m_background_music) {
-        Mix_PauseMusic();
+        //Mix_PauseMusic();
         Mix_FreeMusic(m_background_music);
         m_background_music = nullptr;
     }

@@ -1,22 +1,10 @@
 #include "input_system.hpp"
 #include "world.hpp"
 
-InputSystem::~InputSystem(){
-    
-//    Mix_FreeChunk(m_click);
-//    Mix_FreeChunk(m_shoot);
-//    Mix_FreeChunk(m_jump);
-//    m_click = nullptr;
-//    m_shoot = nullptr;
-//    m_jump = nullptr;
-    
-}
+
 bool InputSystem::init(std::list<Entity> *entities, std::list<Button> *buttons) {
     m_entities = entities;
     m_buttons = buttons;
-    m_click = Mix_LoadWAV(audio_path("/sfx/blreep_sound.wav"));
-    m_shoot = Mix_LoadWAV(audio_path("/sfx/blreep_sound.wav"));
-    m_jump = Mix_LoadWAV(audio_path("/sfx/blreep_sound.wav"));
     return true;
 }
 

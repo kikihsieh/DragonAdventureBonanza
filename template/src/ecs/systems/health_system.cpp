@@ -6,12 +6,6 @@
 #include <utility>
 #include <scenes/levels/tile_map.hpp>
 
-HealthSystem::~HealthSystem(){
-    
-//    Mix_FreeChunk(m_damage);
-//    m_damage = nullptr;
-    
-}
 
 
 void HealthSystem::update(float ms) {
@@ -66,7 +60,6 @@ bool HealthSystem::init(std::list<Entity> *entities, std::map<int, Tile*>* tiles
     m_tiles = tiles;
     m_player_died = false;
     
-    m_damage = Mix_LoadWAV(audio_path("/sfx/blreep_sound.wav"));
     return true;
 }
 

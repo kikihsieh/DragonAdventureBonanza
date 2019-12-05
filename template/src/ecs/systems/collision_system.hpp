@@ -5,13 +5,9 @@
 #include <map>
 #include <list>
 
-#define SDL_MAIN_HANDLED
-#include <SDL.h>
-#include <SDL_mixer.h>
 
 class CollisionSystem {
 public:
-    ~CollisionSystem ();
     enum Side {
         TOP,
         BOTTOM,
@@ -52,7 +48,6 @@ private:
     std::map<int, Tile*>* m_tiles;
     float padding = 0.1;
     
-    Mix_Chunk* m_damage;
 };
 
 #endif //DAB_COLLISION_SYSTEM_HPP
