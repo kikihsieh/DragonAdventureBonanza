@@ -50,7 +50,7 @@ RenderSystem::~RenderSystem() {
 
 bool RenderSystem::init(std::list<Entity> *entities, std::map<int, Tile *> *tiles, std::list<Button> *buttons, std::list<Tile*> *lights) {
     m_effects = {};
-    entities->sort([](Entity a, Entity b) { return a.depth > b.depth;});
+//    entities->sort([](Entity a, Entity b) { return a.depth > b.depth;});
 //    std::sort(entities->begin(), entities->end(), [](Entity a, Entity b) { return a.depth < b.depth;});
     m_entities = entities;
     m_buttons = buttons;
