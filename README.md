@@ -31,7 +31,7 @@
 		* Made efficiency improvements to address this:
 			* reduced the number of times we iterated through our entity list for collisions
 			* fixed an issue with removing projectiles when they move off camera
-			* stopped updating entities that are off screen and not calling render
+			* stopped updating entities that are off screen and stopped calling render on them
 		* we stopped at this point because it was good enough other things we considered doing include: 
 			* rendering the tile map to texture once and just draw the texture
 			* instance rendering
