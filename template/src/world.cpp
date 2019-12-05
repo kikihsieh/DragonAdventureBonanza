@@ -10,6 +10,7 @@
 #include <scenes/start_menu.hpp>
 #include <scenes/level_select.hpp>
 #include <scenes/levels/night_sky.hpp>
+#include <scenes/storyline.hpp>
 #include <iostream>
 
 #include <project_path.hpp>
@@ -43,7 +44,9 @@ World::World() : m_save_path("save_v2.txt") {
             (CAVE, new CaveLevel())
             (NIGHT_SKY, new NightSky())
 			(MAIN_MENU, new StartMenu())
-            (LEVEL_SELECT, new LevelSelect());
+            (LEVEL_SELECT, new LevelSelect())
+            (STORYLINE, new StoryLine())
+            (END, new Scene());
 }
 
 World::~World() {}
@@ -378,13 +381,9 @@ int World::load() {
 
 void World::change_scene() {
     Scene_name next = static_cast<Scene_name>(m_current_scene + 1);
-    if (next == END) {
-        load_scene(MAIN_MENU);
-    } else {
-        if (!m_unlocked_levels[next]) {
-            m_unlocked_levels[next] = true;
-            save();
-        }
-        load_scene(next);
+    if (!m_unlocked_levels[next]) {
+        m_unlocked_levels[next] = true;
+        save();
     }
+    load_scene(next);
 }

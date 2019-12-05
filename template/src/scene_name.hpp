@@ -3,6 +3,7 @@
 
 enum Scene_name {
     MAIN_MENU,
+    STORYLINE,
     LEVEL_SELECT,
     FOREST,
     CAVE,
