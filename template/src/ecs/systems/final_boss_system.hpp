@@ -9,7 +9,8 @@
 class FinalBossSystem {
 public:
     bool init(Entity* player, Entity& final_boss, std::list<Entity> *entities, vec2 screen_bounds,
-            FinalBossSpawningSystem* final_boss_spawning_system, std::function<void(void)> scene_change_callback);
+            FinalBossSpawningSystem* final_boss_spawning_system, std::function<void(void)> scene_change_callback,
+            bool* draw_level_intro);
 
     void update(Entity& final_boss, float ms);
 
@@ -24,6 +25,7 @@ private:
 
     void move_to_start_pos(Entity& final_boss);
 
+    bool* m_draw_level_intro;
 
     int m_final_boss_max_health;
 
