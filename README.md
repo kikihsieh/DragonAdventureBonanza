@@ -1,5 +1,12 @@
 # Dragon Adventure Bonanza
 
+#### Instructions for installing Freetype 
+
+Mac users please run:
+brew install freetype
+brew install glm
+
+#### Instructions for making the game easier for testing purposes
 To unlock levels the cheater's way: 
 * When the game is open, press "o" to manually generate a save file
 * In the main directory, there should be a folder called saves
