@@ -1,5 +1,17 @@
 # Dragon Adventure Bonanza
 
+To unlock levels the cheater's way: 
+* When the game is open, press "o" to manually generate a save file
+* In the main directory, there should be a folder called saves
+* Inside the saves folder, open the save_v3.txt file and change all the 0's to 1's
+* Re-launch the game
+
+To change the "goal" position that needs to be reached for a level change:
+* Add the letter G to the location you want in the tile map (tile maps can be found in for example scenes/levels/forest_level.hpp)
+
+To change the number of lives you start each level with:
+* In ecs/entities/player.hpp change the line "health->health = 10;" to whatever number you want.
+
 ## Milestone 4: Final Game
 ### Features implemented this milestone
 * UI/ UX
