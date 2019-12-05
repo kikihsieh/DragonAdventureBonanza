@@ -7,7 +7,6 @@ class StoryLine : public Scene {
 public:
     StoryLine();
 
-    void draw(const mat3& projection) override;
     void on_key(int key, int action) override;
 
     const char * get_bg_texture_path() override {
