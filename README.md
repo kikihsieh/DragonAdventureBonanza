@@ -1,7 +1,7 @@
 # Dragon Adventure Bonanza
 
-# Milestone 4: Final Game
-## Features implemented this milestone
+## Milestone 4: Final Game
+### Features implemented this milestone
 * UI/ UX
 	* Updated help menu and main menu
 	* Added buttons on each level for navigation and help
@@ -17,12 +17,13 @@
 	* Added a final boss level with 4.5 phases
 	* Adjusted player movement
 	* Flashing feedback on damage
-	* Light system for cave level
+	* Light system for cave level and torch lighting
 	* Music and sound effects
 	* New assets
 	* Parallax scrolling
+	* Removed the white lines around the player
 
-## Stability
+### Stability
 * Fixes from last milestone
 	* **Runs decently but with significant memory usage increases over time**
 		* Checked and fixed all our memory leaks 
@@ -35,7 +36,7 @@
 			* rendering the tile map to texture once and just draw the texture
 			* instance rendering
 			* adding an entity manager system and storing components contiguously in memory
-## Playability
+### Playability
 * Game includes 3 distinct levels and a boss level 
 * There is clear progression throughout the game
 	* A new ability is unlocked at the end of every level 
@@ -48,7 +49,7 @@
 		* Level 2 (cave): This level is more maze-like and requires the user to explore and light torches before being allowed to complete the level. Adds flying enemies.
 		* Level 3 (snow mountain): Faster shooting and walking speeds of enemies. Adds special ice tiles (that are slippery) and bouncy tiles. Requires the player to move upwards to goal.
 		* Boss level: 4.5 different boss phases that the player needs to survive. Each phase has a different pattern of projectiles and flying enemy dragons. 
-## User Experience
+### User Experience
 * Tutorial / game mechanics
 	* Added a storyline to the game - at the start of each level, a modal describes the level and new abilities unlocked and how to use them
 	* Help menu and main menu are easily accessible from all screens via buttons at the top right 
@@ -71,23 +72,23 @@
 		* Addressed this with level design
 	* **The levels are too hard!**
 		* Added collectible hearts throughout the level to regain health
-## External Integration 
+### External Integration 
 * FreeType Library Integration - used for text rendering of player health (all levels), boss health (boss level) , and number of torches collected (level 2, cave level) 
 
-## Advanced Graphics
+### Advanced Graphics
 * Parallax scrolling background for all three levels (forest, cave, snow) 
 * Lighting system in level 2 (cave level) - added depth calculations
 	* Darkened cave with a spotlight on the player 
 	* Hit a torch with a fireball to see it light up
 * More animations! - flying player sprite, boss and minions
-## Advanced Gameplay
+### Advanced Gameplay
 * Boss level with 4.5 different attack phases
 	* Coordination between boss projectiles and minions to form different patterns 
 	* New types of projectiles that bounce into different formations
 * Tiles with physical properties - play level 3 (snow level) to see these
 	* Sliding tiles - try walking on one
 	* Bouncy tiles - try jumping on the top of these in the snow level
-## Audio 
+### Audio 
 * **Background music:** Each level has a different soundtrack
 * **Feedback:** Button clicks, the player getting hit, jumping, and shooting have sounds associated with each action
 
