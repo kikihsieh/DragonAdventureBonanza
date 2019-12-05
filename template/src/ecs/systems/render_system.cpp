@@ -1,3 +1,4 @@
+#define _USE_MATH_DEFINES
 #include "render_system.hpp"
 #include <vector>
 #include <list>
@@ -221,7 +222,7 @@ void RenderSystem::draw_all(mat3 projection) {
 
         draw(*tile.second, projection);
     }
-    float health;
+    float health = 0.f;
     for (auto &entity: *m_entities) {
         if (entity.drawable == nullptr || entity.clipped) {
             continue;
@@ -255,7 +256,7 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 //    glBlendEquation()
-    glDisable(GL_DEPTH_TEST);
+//    glDisable(GL_DEPTH_TEST);
     if (entity.useDepth) {
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
@@ -303,10 +304,14 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
     glUniformMatrix4fv(transform_uloc, 1, GL_FALSE, (float *) &drawable->transform);
     float color[] = {1.f, 1.f, 1.f};
     glUniform3fv(color_uloc, 1, color);
-    glUniform1f(depth_uloc, entity.level);
-    glUniform1i(nlights_uloc, m_light_pos.size());
-    glUniform2fv(player_uloc,1, (GLfloat*)&player_pos);
-    glUniform2fv(lights_uloc, m_light_pos.size(), (GLfloat*)&m_light_pos[0]);
+    if(entity.is_background)
+        glUniform1f(depth_uloc, entity.level);
+    if (!entity.useDepth) {
+        glUniform2fv(player_uloc, 1, (GLfloat *) &player_pos);
+        glUniform1i(nlights_uloc, m_light_pos.size());
+        if (m_light_pos.size() > 0)
+            glUniform2fv(lights_uloc, m_light_pos.size(), (GLfloat *) &m_light_pos[0]);
+    }
 
     if (entity.animatable) {
         int rows = entity.animatable->num_rows;
@@ -317,8 +322,7 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
         glUniform2fv(frames_uloc, 1, frames);
     }
     if (entity.health) {
-        float invin = entity.health->invincible_timer;
-        glUniform1f(invinc_uloc, invin);
+        glUniform1f(invinc_uloc, entity.health->invincible_timer);
     }
     glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *) &projection);
 

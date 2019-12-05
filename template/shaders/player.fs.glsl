@@ -25,7 +25,7 @@ void main()
             temp_color = vec4(fcolor, 1.0) * texture(sampler0, vec2(texcoord.x, texcoord.y));
         }
     }
-    if (temp_color.a < 0.5)
-        discard;
+//    if (temp_color.a < 0.5)
+//        discard;
     color = temp_color;
 }
