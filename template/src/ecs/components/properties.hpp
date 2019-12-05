@@ -19,7 +19,7 @@ struct Properties {
         if (type == BOUNCY) {
             bounce = 1.4f;
         } else if (type == SLIPPERY) {
-            friction = 5.f;
+            friction = 100.f;
         } else if (type == PROJECTILE) {
             count = 4;
         }
