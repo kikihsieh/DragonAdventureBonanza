@@ -4,7 +4,6 @@
 Scene::Scene() : m_rendersystem(nullptr), m_inputsystem(nullptr), m_background_music(nullptr) {
 }
 
-
 bool Scene::init() {
     m_inputsystem = new InputSystem();
     m_rendersystem = new RenderSystem();
@@ -42,8 +41,8 @@ void Scene::destroy() {
     drawHelp = false;
     draw_level_intro = false;
 
-    Mix_CloseAudio();
     if (m_background_music) {
+        Mix_CloseAudio();
         Mix_FreeMusic(m_background_music);
         m_background_music = nullptr;
     }
