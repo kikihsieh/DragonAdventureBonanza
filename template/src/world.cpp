@@ -35,8 +35,9 @@ namespace
 		}
 	}
 }
-
+World* World::w = nullptr;
 World::World() : m_save_path("save_v2.txt") {
+    w = this;
     map_init(m_scenes)
             (FOREST, new ForestLevel())
             (SNOW_MOUNTAIN, new SnowMountainLevel())
@@ -44,6 +45,7 @@ World::World() : m_save_path("save_v2.txt") {
             (NIGHT_SKY, new NightSky())
 			(MAIN_MENU, new StartMenu())
             (LEVEL_SELECT, new LevelSelect());
+  
 }
 
 World::~World() {}
@@ -127,7 +129,17 @@ bool World::init(vec2 screen)
         fprintf(stderr, "Failed to open audio device\n");
         return false;
     }
+    map_init(m_sfx)
+        (CLICK, Mix_LoadWAV(audio_path("/sfx/blreep_sound.wav")))
+        (SHOOT, Mix_LoadWAV(audio_path("/sfx/shoot.wav")))
+        (P_DAMAGE,Mix_LoadWAV(audio_path("/sfx/damage.wav")))
+    (JUMP, Mix_LoadWAV(audio_path("/sfx/jump.wav")));
+    
+    
+    Mix_Music* m_background_music = Mix_LoadMUS(audio_path("mainmenu.wav"));
+    Mix_PlayMusic( m_background_music, -1);
 
+    
 	return load_scene(MAIN_MENU);
 }
 
@@ -140,6 +152,12 @@ void World::destroy() {
         pair.second->destroy();
         delete pair.second;
     }
+    Mix_CloseAudio();
+    for (auto const &pair : m_sfx)
+    {
+        Mix_FreeChunk(pair.second);
+    }
+   
 }
 
 // Update our game world
@@ -376,6 +394,7 @@ int World::load() {
     return count;
 }
 
+
 void World::change_scene() {
     Scene_name next = static_cast<Scene_name>(m_current_scene + 1);
     if (next == END) {
@@ -387,4 +406,11 @@ void World::change_scene() {
         }
         load_scene(next);
     }
+}
+
+void World::playSFX(Sound_sfx sound){
+    // Playing background music indefinitely
+    Mix_PlayChannel(-1, w->m_sfx.at(sound), 0);
+    
+    fprintf(stderr, "Loaded music\n");
 }

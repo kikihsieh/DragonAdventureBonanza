@@ -5,8 +5,14 @@
 #include <list>
 #include <ecs/entities/tile.hpp>
 
+#define SDL_MAIN_HANDLED
+#include <SDL.h>
+#include <SDL_mixer.h>
+
+
 class HealthSystem {
 public:
+    ~HealthSystem();
     bool init(std::list<Entity> *entities, std::map<int, Tile*>* tiles);
 
     void update(float ms);
@@ -22,6 +28,8 @@ private:
 
     std::list<Entity>* m_entities;
     std::map<int, Tile*>* m_tiles;
+    
+    Mix_Chunk* m_damage;
 };
 
 

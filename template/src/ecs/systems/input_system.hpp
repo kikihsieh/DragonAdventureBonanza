@@ -10,10 +10,8 @@
 
 class InputSystem {
 public:
-    ~InputSystem() {
-//        if (m_sfx)
-//            Mix_FreeChunk(m_sfx);
-    }
+    
+    ~InputSystem();
 
     bool init(std::list<Entity>* entities, std::list<Button>* buttons);
     void on_key_update(int key, int action);
@@ -24,5 +22,7 @@ private:
     std::list<Button>* m_buttons;
 
     void mouse_sfx();
-    Mix_Chunk* m_sfx;
+    Mix_Chunk* m_click;
+    Mix_Chunk* m_jump;
+    Mix_Chunk* m_shoot;
 };

@@ -1,9 +1,18 @@
 #include "physics_system.hpp"
 #include "health_system.hpp"
+#include "world.hpp"
 
 #include <cmath>
 #include <utility>
 #include <scenes/levels/tile_map.hpp>
+
+HealthSystem::~HealthSystem(){
+    
+//    Mix_FreeChunk(m_damage);
+//    m_damage = nullptr;
+    
+}
+
 
 void HealthSystem::update(float ms) {
     auto entity_it = m_entities->begin();
@@ -32,6 +41,7 @@ void HealthSystem::update(float ms) {
 
         if (entity_it->physics->off_screen && entity_it->health->is_player) {
             entity_it->health->health -= 1;
+            World::playSFX(World::P_DAMAGE);
         }
 
         if (entity_it->physics->off_screen && entity_it->health->is_player) {
@@ -55,8 +65,12 @@ bool HealthSystem::init(std::list<Entity> *entities, std::map<int, Tile*>* tiles
     m_entities = entities;
     m_tiles = tiles;
     m_player_died = false;
+    
+    m_damage = Mix_LoadWAV(audio_path("/sfx/blreep_sound.wav"));
     return true;
 }
+
+
 
 void HealthSystem::update_last_safe (Entity& entity) {
 

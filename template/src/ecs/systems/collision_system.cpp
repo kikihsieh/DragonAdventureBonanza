@@ -1,4 +1,5 @@
 #include "collision_system.hpp"
+#include "world.hpp"
 
 #include <cmath>
 #include <utility>
@@ -9,9 +10,13 @@ bool CollisionSystem::init(std::list<Entity> *entities, std::map<int, Tile*>* ti
     m_entities = entities;
     m_tiles = tiles;
     m_goal_reached = false;
-
+    m_damage = Mix_LoadWAV(audio_path("/sfx/blreep_sound.wav"));
     return true;
 }
+
+CollisionSystem::~CollisionSystem(){
+}
+
 
 void CollisionSystem::update(float ms) {
     auto entity_it = m_entities->begin();
@@ -182,15 +187,19 @@ bool CollisionSystem::collide_with_entities(Entity &e) {
                 land(e);
 
                 if (entity_it->health) {
+                    World::playSFX(World::P_DAMAGE);
                     entity_it->health->decrease_health();
+                  
                 }
 
             } else if (!e.health->invincible){
                 if (!entity_it->clipped)
+                    World::playSFX(World::P_DAMAGE);
                     e.health->decrease_health();
             }
         } else if (e.is_player_proj) {
             if (entity_it->health) {
+                World::playSFX(World::P_DAMAGE);
                 entity_it->health->decrease_health();
             }
             if (e.properties) {

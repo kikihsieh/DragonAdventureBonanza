@@ -1,9 +1,22 @@
 #include "input_system.hpp"
+#include "world.hpp"
 
+InputSystem::~InputSystem(){
+    
+//    Mix_FreeChunk(m_click);
+//    Mix_FreeChunk(m_shoot);
+//    Mix_FreeChunk(m_jump);
+//    m_click = nullptr;
+//    m_shoot = nullptr;
+//    m_jump = nullptr;
+    
+}
 bool InputSystem::init(std::list<Entity> *entities, std::list<Button> *buttons) {
     m_entities = entities;
     m_buttons = buttons;
-    m_sfx = Mix_LoadWAV(audio_path("/sfx/blreep_sound.wav"));
+    m_click = Mix_LoadWAV(audio_path("/sfx/blreep_sound.wav"));
+    m_shoot = Mix_LoadWAV(audio_path("/sfx/blreep_sound.wav"));
+    m_jump = Mix_LoadWAV(audio_path("/sfx/blreep_sound.wav"));
     return true;
 }
 
@@ -16,6 +29,7 @@ void InputSystem::on_key_update(int key, int action) {
         if (key == GLFW_KEY_UP || key == GLFW_KEY_W) {
             if (action == GLFW_PRESS) {
                 entity.input->up = true;
+                World::playSFX(World::JUMP);
             } else if (action == GLFW_RELEASE) {
                 entity.input->up = false;
             }
@@ -46,6 +60,8 @@ void InputSystem::on_key_update(int key, int action) {
         if (key == GLFW_KEY_SPACE) {
             if (action == GLFW_PRESS) {
                 entity.input->space = true;
+                World::playSFX(World::SHOOT);
+                
             } else if (action == GLFW_RELEASE) {
                 entity.input->space = false;
             }
@@ -60,6 +76,7 @@ void InputSystem::on_key_update(int key, int action) {
         }
     }
 }
+
 
 void InputSystem::on_mouse_update(int key, int action, double xpos, double ypos) {
     for (auto &entity : *m_buttons) {
@@ -80,7 +97,7 @@ void InputSystem::on_mouse_update(int key, int action, double xpos, double ypos)
                 if (xpos > left && xpos < right &&
                     ypos < top && ypos > bottom) {
                     if (entity.active) {
-                        mouse_sfx();
+                        World::playSFX(World::CLICK);
                         return entity.m_button_callback();
                     }
                 }
@@ -89,25 +106,3 @@ void InputSystem::on_mouse_update(int key, int action, double xpos, double ypos)
     }
 }
 
-void InputSystem::mouse_sfx() {
-    if (SDL_Init(SDL_INIT_AUDIO) < 0)
-    {
-        fprintf(stderr, "Failed to initialize SDL Audio");
-        return;
-    }
-
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1)
-    {
-        fprintf(stderr, "Failed to open audio device");
-        return;
-    }
-    if (!m_sfx)
-    {
-        fprintf(stderr, "Failed to load sounds make sure the data directory is present");
-        return;
-    }
-
-    Mix_PlayChannel(-1, m_sfx, 0);
-
-    fprintf(stderr, "Loaded sfx\n");
-}

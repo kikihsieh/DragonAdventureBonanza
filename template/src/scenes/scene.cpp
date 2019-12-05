@@ -26,6 +26,8 @@ bool Scene::init() {
 
 // Releases all resources
 void Scene::destroy() {
+    
+    
     delete m_inputsystem;
     delete m_rendersystem;
     m_rendersystem = nullptr;
@@ -42,8 +44,9 @@ void Scene::destroy() {
     drawHelp = false;
     draw_level_intro = false;
 
-    Mix_CloseAudio();
+//    Mix_CloseAudio();
     if (m_background_music) {
+        Mix_PauseMusic();
         Mix_FreeMusic(m_background_music);
         m_background_music = nullptr;
     }
@@ -118,12 +121,12 @@ void Scene::exitGameHandler(std::function<void(void)> callback) {
 }
 
 void Scene::background_music(){
-    if (SDL_Init(SDL_INIT_AUDIO) < 0)
+    /*if (SDL_Init(SDL_INIT_AUDIO) < 0)
     {
         fprintf(stderr, "Failed to initialize SDL Audio\n");
         return;
     }
-
+    
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1)
     {
         fprintf(stderr, "Failed to open audio device\n");
@@ -133,10 +136,10 @@ void Scene::background_music(){
     {
         fprintf(stderr, "Failed to load sounds make sure the data directory is present\n");
         return;
-    }
+    }*/
     // Playing background music indefinitely
     Mix_PlayMusic(m_background_music, -1);
-
+    
     fprintf(stderr, "Loaded music\n");
 }
 
