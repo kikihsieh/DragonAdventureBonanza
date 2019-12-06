@@ -31,10 +31,7 @@ void DefaultPhysicsSystem::update(float ms) {
             continue;
         }
 
-
-        float friction = 1;
-        if (entity_it->physics->grounded_friction != 0)
-            friction = entity_it->physics->grounded_friction;
+        float friction = entity_it->physics->grounded_friction ? entity_it->physics->grounded_friction : 1;
 
         if (entity_it->input) {
             if (!entity_it->airdash || !entity_it->airdash->airdashing) {
