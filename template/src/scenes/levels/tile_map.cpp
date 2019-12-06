@@ -52,6 +52,8 @@ bool TileMap::init(MapVector map, TextureMapping dict, TilePropertyMapping prope
                     if (property_map.at(*col)->type == Properties::TORCH) {
                         tile->properties = std::make_shared<Properties>(Properties::Type::TORCH);
                         m_level->m_lights.emplace_back(tile);
+                    } else if (property_map.at(*col)->type == Properties::TORCH_LIT) {
+                        m_level->m_lights.emplace_back(tile);
                     }
                 }
                 m_tiles.insert(std::map<int, Tile*>::value_type(

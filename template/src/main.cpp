@@ -19,7 +19,7 @@ const int height = 800;
 // Gravity
 float accGravity = 0.5f;
 float maxGravity = 5.f;
-
+#undef main
 // Entry point
 int main(int argc, char* argv[])
 {

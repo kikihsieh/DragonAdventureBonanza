@@ -1,5 +1,6 @@
 #include <ecs/entities/background.hpp>
 #include "scene.hpp"
+#include "world.hpp"
 
 Scene::Scene() : m_rendersystem(nullptr), m_inputsystem(nullptr), m_background_music(nullptr) {
 }
@@ -25,6 +26,8 @@ bool Scene::init() {
 
 // Releases all resources
 void Scene::destroy() {
+    
+    
     delete m_inputsystem;
     delete m_rendersystem;
     m_rendersystem = nullptr;
@@ -42,8 +45,9 @@ void Scene::destroy() {
     drawHelp = false;
     draw_level_intro = false;
 
+//    Mix_CloseAudio();
     if (m_background_music) {
-        Mix_CloseAudio();
+        //Mix_PauseMusic();
         Mix_FreeMusic(m_background_music);
         m_background_music = nullptr;
     }
@@ -81,11 +85,16 @@ void Scene::on_key(int key, int action) {
     if (state == LOADED) {
         return;
     }
+    if((key == GLFW_KEY_H && action == GLFW_PRESS) || (key == GLFW_KEY_P && action == GLFW_PRESS)){
+        World::playSFX(World::KEY_PRESS);
+    }
+    
     if (key == GLFW_KEY_H && action == GLFW_RELEASE) {
         drawHelp = !drawHelp;
         state = (state == RUNNING) ? PAUSED : RUNNING;
         return;
     }
+    
     if (key == GLFW_KEY_P && action == GLFW_RELEASE && !drawHelp) {
         state = (state == RUNNING) ? PAUSED : RUNNING;
         return;
@@ -118,25 +127,9 @@ void Scene::exitGameHandler(std::function<void(void)> callback) {
 }
 
 void Scene::background_music(){
-    if (SDL_Init(SDL_INIT_AUDIO) < 0)
-    {
-        fprintf(stderr, "Failed to initialize SDL Audio\n");
-        return;
-    }
-
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1)
-    {
-        fprintf(stderr, "Failed to open audio device\n");
-        return;
-    }
-    if (!m_background_music)
-    {
-        fprintf(stderr, "Failed to load background make sure the data directory is present\n");
-        return;
-    }
     // Playing background music indefinitely
     Mix_PlayMusic(m_background_music, -1);
-
+    
     fprintf(stderr, "Loaded music\n");
 }
 

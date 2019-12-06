@@ -5,6 +5,8 @@
 #include <list>
 #include <ecs/entities/tile.hpp>
 
+
+
 class HealthSystem {
 public:
     bool init(std::list<Entity> *entities, std::map<int, Tile*>* tiles);
@@ -22,6 +24,7 @@ private:
 
     std::list<Entity>* m_entities;
     std::map<int, Tile*>* m_tiles;
+    
 };
 
 

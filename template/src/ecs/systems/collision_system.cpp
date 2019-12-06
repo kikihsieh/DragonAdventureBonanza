@@ -2,15 +2,17 @@
 #include <cmath>
 #include <utility>
 #include <scenes/levels/tile_map.hpp>
+#include "world.hpp"
 #define PI 3.141592653589793238463
 
 bool CollisionSystem::init(std::list<Entity> *entities, std::map<int, Tile*>* tiles) {
     m_entities = entities;
     m_tiles = tiles;
     m_goal_reached = false;
-
     return true;
 }
+
+
 
 void CollisionSystem::update(float ms) {
     auto entity_it = m_entities->begin();
@@ -82,6 +84,9 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
     switch (tile.properties->type) {
         case Properties::TORCH:
             if (entity.is_player_proj) {
+                if (!tile.properties->lit && m_torches_to_light > 0) {
+                    m_torches_to_light--;
+                }
                 tile.properties->lit = true;
                 tile.drawable->texture = tile.torchTex;
                 tile.animatable->num_columns = 4;
@@ -111,7 +116,8 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
             }
             return false;
         case Properties::GOAL: {
-            m_goal_reached = true;
+            if (m_torches_to_light <= 0)
+                m_goal_reached = true;
             return false;
         } default:
             break;
@@ -182,15 +188,19 @@ bool CollisionSystem::collide_with_entities(Entity &e) {
                 land(e);
 
                 if (entity_it->health) {
+                    World::playSFX(World::ENEMY_DAMAGE);
                     entity_it->health->decrease_health();
+                  
                 }
 
             } else if (!e.health->invincible){
                 if (!entity_it->clipped)
+                    World::playSFX(World::P_DAMAGE);
                     e.health->decrease_health();
             }
         } else if (e.is_player_proj) {
             if (entity_it->health) {
+                World::playSFX(World::ENEMY_DAMAGE2);
                 entity_it->health->decrease_health();
             }
             if (e.properties) {
@@ -297,9 +307,6 @@ CollisionSystem::Side CollisionSystem::detect_collision(Entity &e1, Entity &e2) 
     float e2_height = e2.texture_size.y * e2.scale.y;
     float e2_width = e2.texture_size.x * e2.scale.x;
 
-    if (e2.health && e2.health->is_boss)
-        e2_height *= 0.75;
-
     // https://stackoverflow.com/questions/29861096/detect-which-side-of-a-rectangle-is-colliding-with-another-rectangle
     float dx = e1.position.x - e2.position.x;
     float dy = e1.position.y - e2.position.y;
@@ -348,4 +355,8 @@ void CollisionSystem::fall(Entity &entity) {
         entity.physics->grounded = false;
         entity.physics->grounded_friction = 0;
     }
+}
+
+void CollisionSystem::set_torches_to_light(int torches_to_light){
+    m_torches_to_light = torches_to_light;
 }
