@@ -84,8 +84,8 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
     switch (tile.properties->type) {
         case Properties::TORCH:
             if (entity.is_player_proj) {
-                if (!tile.properties->lit) {
-                    m_torches_lit++;
+                if (!tile.properties->lit && m_torches_to_light > 0) {
+                    m_torches_to_light--;
                 }
                 tile.properties->lit = true;
                 tile.drawable->texture = tile.torchTex;
@@ -116,7 +116,7 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
             }
             return false;
         case Properties::GOAL: {
-            if (m_torches_lit >= m_torches_to_light)
+            if (m_torches_to_light <= 0)
                 m_goal_reached = true;
             return false;
         } default:
