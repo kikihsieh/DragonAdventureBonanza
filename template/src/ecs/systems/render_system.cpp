@@ -561,7 +561,7 @@ void RenderSystem::release(Drawable::Effect &effect) {
 void RenderSystem::transform(Entity &entity) {
     out = glm::mat4(1.f);
     out = glm::translate(out, glm::vec3(entity.position.x, entity.position.y, entity.depth));
-    out = glm::rotate(out, glm::f32(entity.radians*(180/M_PI)), glm::vec3(0.f, 0.f, 1.f));
+    out = glm::rotate(out, entity.radians, glm::vec3(0.f, 0.f, 1.f));
     out = glm::scale(out, glm::vec3(entity.scale.x, entity.scale.y, 1.f));
     entity.drawable->transform = out;
 }
