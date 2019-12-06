@@ -52,7 +52,6 @@ private:
     std::list<Entity>* m_entities;
     std::map<int, Tile*>* m_tiles;
     float padding = 0.1;
-
     int m_torches_to_light = 0;
 };
 

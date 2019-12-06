@@ -2,15 +2,17 @@
 #include <cmath>
 #include <utility>
 #include <scenes/levels/tile_map.hpp>
+#include "world.hpp"
 #define PI 3.141592653589793238463
 
 bool CollisionSystem::init(std::list<Entity> *entities, std::map<int, Tile*>* tiles) {
     m_entities = entities;
     m_tiles = tiles;
     m_goal_reached = false;
-
     return true;
 }
+
+
 
 void CollisionSystem::update(float ms) {
     auto entity_it = m_entities->begin();
@@ -190,15 +192,19 @@ bool CollisionSystem::collide_with_entities(Entity &e) {
                 land(e);
 
                 if (entity_it->health) {
+                    World::playSFX(World::ENEMY_DAMAGE);
                     entity_it->health->decrease_health();
+                  
                 }
 
             } else if (!e.health->invincible){
                 if (!entity_it->clipped)
+                    World::playSFX(World::P_DAMAGE);
                     e.health->decrease_health();
             }
         } else if (e.is_player_proj) {
             if (entity_it->health) {
+                World::playSFX(World::ENEMY_DAMAGE2);
                 entity_it->health->decrease_health();
             }
             if (e.properties) {

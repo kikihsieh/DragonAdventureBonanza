@@ -18,8 +18,16 @@ class World
 public:
     World();
 	~World();
-
-	enum sounds {click, shoot, damage, jump};
+    
+    enum Sound_sfx{
+        CLICK,
+        SHOOT,
+        JUMP,
+        P_DAMAGE,
+        ENEMY_DAMAGE,
+        ENEMY_DAMAGE2,
+        KEY_PRESS,
+    };
 
 	// Creates a window, sets up events and begins the game
 	bool init(vec2 screen);
@@ -31,17 +39,15 @@ public:
 	bool update(float ms);
 
 	// Renders our scene
-	void draw();
+	void draw();   
 
 	// Should the game be over ?
 	bool is_over()const;
 
 	static void playSFX(Mix_Chunk* sfx);
     
-protected:
+    static void playSFX(Sound_sfx sound);
     
-    Mix_Chunk* m_sfx;
-
 	
 private:
     bool load_scene(Scene_name scene);
@@ -70,6 +76,8 @@ private:
 
     std::map<Scene_name, Scene*> m_scenes;
     std::map<Scene_name, bool> m_unlocked_levels;
-
+    
+    std::map<Sound_sfx, Mix_Chunk*> m_sfx;
     std::string m_save_path;
+    static World* w;
 };
