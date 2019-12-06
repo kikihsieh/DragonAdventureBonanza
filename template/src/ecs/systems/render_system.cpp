@@ -648,18 +648,19 @@ void RenderSystem::update(float ms) {
                 light->animatable->frame_index.x = 0;
         }
     }
-    /*for (auto &tile: *m_tiles) {
-     if(!tile.second->clipped || !tile.second->animatable){
-     continue;
+    for (auto &tile: *m_tiles) {
+        if(tile.second->clipped || !tile.second->animatable){
+            continue;
+            
+        }
+        tile.second->animatable->countdown -= ms;
+        if (tile.second->animatable->countdown > 0) {
+            continue;
      }
-     tile.second->animatable->countdown -= ms;
-     if (tile.second->animatable->countdown > 0) {
-     continue;
+        tile.second->animatable->countdown = tile.second->animatable->frame_switch_time;
+        tile.second->animatable->frame_index.x++;
+        if (tile.second->animatable->frame_index.x == tile.second->animatable->num_columns)
+            tile.second->animatable->frame_index.x = 0;
      }
-     tile.second->animatable->countdown = tile.second->animatable->frame_switch_time;
-     tile.second->animatable->frame_index.x++;
-     if (tile.second->animatable->frame_index.x == tile.second->animatable->num_columns)
-     tile.second->animatable->frame_index.x = 0;
-     }*/
 
 }

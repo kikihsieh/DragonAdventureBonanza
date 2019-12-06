@@ -203,7 +203,7 @@ private:
         { 26, textures_path("cave/tiles/floor_BR.png")},
         { 27, textures_path("cave/tiles/middle_r.png")},
         { 28, textures_path("cave/tiles/rock_right.png")},
-        { 35, textures_path("heart.png")},
+        { 35, textures_path("heart_spritesheet.png")},
         
         { 38, textures_path("cave/static_torch.png")},
         { 39, textures_path("cave/static_torch_R.png")}
