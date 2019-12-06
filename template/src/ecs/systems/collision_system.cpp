@@ -151,13 +151,7 @@ void CollisionSystem::friction_updates(Entity &entity, float friction, Side side
         return;
     }
 
-    if (entity.is_facing_forward) {
-        entity.physics->velocity.x = fmin(max_vel, entity.physics->velocity.x*(1 + friction*ms/1000));
-        entity.physics->velocity.x = fmax(entity.physics->walk_speed, entity.physics->velocity.x);
-    } else {
-        entity.physics->velocity.x = fmax(-max_vel, entity.physics->velocity.x*(1 + friction*ms/1000));
-        entity.physics->velocity.x = fmin(-entity.physics->walk_speed, entity.physics->velocity.x);
-    }
+    entity.physics->grounded_friction = 0.01;
     entity.physics->velocity.y = fmin(-0.1f * entity.physics->velocity.y, entity.physics->velocity.y);
 }
 
@@ -359,6 +353,7 @@ void CollisionSystem::grounded(Entity &entity) {
 void CollisionSystem::fall(Entity &entity) {
     if (entity.physics) {
         entity.physics->grounded = false;
+        entity.physics->grounded_friction = 0;
     }
 }
 
