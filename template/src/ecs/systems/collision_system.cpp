@@ -145,7 +145,7 @@ void CollisionSystem::friction_updates(Entity &entity, float friction, Side side
         return;
     }
 
-    entity.physics->grounded_friction = 0.025;
+    entity.physics->grounded_friction = 0.01;
     entity.physics->velocity.y = fmin(-0.1f * entity.physics->velocity.y, entity.physics->velocity.y);
 }
 
