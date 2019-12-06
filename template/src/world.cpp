@@ -2,8 +2,6 @@
 #include "world.hpp"
 
 // stlib
-#include <sstream>
-
 #include <scenes/levels/forest_level.hpp>
 #include <scenes/levels/cave_level.hpp>
 #include <scenes/levels/snow_mountain_level.hpp>
@@ -37,7 +35,10 @@ namespace
 	}
 }
 
+World* World::w = nullptr;
+
 World::World() : m_save_path("save_v3.txt") {
+    w = this;
     map_init(m_scenes)
             (FOREST, new ForestLevel())
             (SNOW_MOUNTAIN, new SnowMountainLevel())
@@ -135,7 +136,20 @@ bool World::init(vec2 screen)
         fprintf(stderr, "Failed to open audio device\n");
         return false;
     }
+    map_init(m_sfx)
+        (CLICK, Mix_LoadWAV(audio_path("/sfx/blreep_sound.wav")))
+        (SHOOT, Mix_LoadWAV(audio_path("/sfx/shoot2.wav")))
+        (P_DAMAGE,Mix_LoadWAV(audio_path("/sfx/damage.wav")))
+        (ENEMY_DAMAGE, Mix_LoadWAV(audio_path("/sfx/enemy_death.wav")))
+        (ENEMY_DAMAGE2, Mix_LoadWAV(audio_path("/sfx/pew_pew.wav")))
+        (KEY_PRESS, Mix_LoadWAV(audio_path("/sfx/click.wav")))
+        (JUMP, Mix_LoadWAV(audio_path("/sfx/jump.wav")));
+    
+    
+    Mix_Music* m_background_music = Mix_LoadMUS(audio_path("mainmenu.wav"));
+    Mix_PlayMusic( m_background_music, -1);
 
+    
 	return load_scene(MAIN_MENU);
 }
 
@@ -148,6 +162,12 @@ void World::destroy() {
         pair.second->destroy();
         delete pair.second;
     }
+    Mix_CloseAudio();
+    for (auto const &pair : m_sfx)
+    {
+        Mix_FreeChunk(pair.second);
+    }
+   
 }
 
 // Update our game world
@@ -264,6 +284,9 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
     if (key == GLFW_KEY_4 && action == GLFW_RELEASE) {
         load_scene(NIGHT_SKY);
         return;
+    }
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        World::playSFX(World::KEY_PRESS);
     }
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
 		load_scene(MAIN_MENU);
@@ -384,6 +407,7 @@ int World::load() {
     return count;
 }
 
+
 void World::change_scene() {
     Scene_name next = static_cast<Scene_name>(m_current_scene + 1);
     if (!m_unlocked_levels[next]) {
@@ -395,4 +419,11 @@ void World::change_scene() {
 
 void World::playSFX(Mix_Chunk* sfx) {
     Mix_PlayChannel(-1, sfx, 0);
+}
+
+void World::playSFX(Sound_sfx sound){
+    // Playing background music indefinitely
+    Mix_PlayChannel(-1, w->m_sfx.at(sound), 0);
+    
+    fprintf(stderr, "Loaded music\n");
 }

@@ -6,6 +6,8 @@ LevelSelect::LevelSelect() {
 }
 
 bool LevelSelect::init() {
+    m_background_music = Mix_LoadMUS(audio_path("mainmenu.wav"));
+    
     Button forest(textures_path("level-select/button-forest.png"));
     forest.position = {187.5,400.f};
     forest.m_button_callback = [this](){load_scene(FOREST);};
