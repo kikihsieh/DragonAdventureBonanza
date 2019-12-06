@@ -85,6 +85,7 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
                 tile.properties->lit = true;
                 tile.drawable->texture = tile.torchTex;
                 tile.animatable->num_columns = 4;
+                m_torches_lit++;
                 return entity_property_updates(entity, tile, side);
             }
             return false;
@@ -111,7 +112,8 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
             }
             return false;
         case Properties::GOAL: {
-            m_goal_reached = true;
+            if (m_torches_lit >= m_torches_to_light)
+                m_goal_reached = true;
             return false;
         } default:
             break;
@@ -353,4 +355,8 @@ void CollisionSystem::fall(Entity &entity) {
     if (entity.physics) {
         entity.physics->grounded = false;
     }
+}
+
+void CollisionSystem::set_torches_to_light(int torches_to_light){
+    m_torches_to_light = torches_to_light;
 }

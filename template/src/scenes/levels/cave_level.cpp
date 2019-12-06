@@ -40,5 +40,18 @@ bool CaveLevel::init() {
     Entity sec = *std::next(m_entities.begin());
     m_entities.erase(std::next(m_entities.begin()));
     m_entities.emplace_back(sec);
+
+    m_collision_system->set_torches_to_light(5);
+    offset = 60.f;
+
     return result;
+}
+
+void CaveLevel::draw(const mat3& projection) {
+    Scene::draw(projection);
+    
+    vec2 camera_center = m_camera_system->get_center();
+
+    std::string string = "Torches: " + std::to_string(m_collision_system->m_torches_lit) + "/5";
+    m_rendersystem->render_text(string, projection, {camera_center.x-offset, camera_center.y - 375}, {1.0,0.5,0});
 }
