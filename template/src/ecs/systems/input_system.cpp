@@ -17,7 +17,6 @@ void InputSystem::on_key_update(int key, int action) {
         if (key == GLFW_KEY_UP || key == GLFW_KEY_W) {
             if (action == GLFW_PRESS) {
                 entity.input->up = true;
-                World::playSFX(World::JUMP);
             } else if (action == GLFW_RELEASE) {
                 entity.input->up = false;
             }

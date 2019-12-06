@@ -1,5 +1,6 @@
 #include <cmath>
 #include <ecs/systems/default_physics_system.hpp>
+#include "world.hpp"
 
 DefaultPhysicsSystem::DefaultPhysicsSystem(bool double_jump) {
     m_double_jump = double_jump;
@@ -66,6 +67,8 @@ void DefaultPhysicsSystem::update(float ms) {
                     if (entity_it->physics->jump_count < ((m_double_jump)? 2 : 1)) {
                         entity_it->physics->velocity.y = entity_it->physics->jump_speed;
                         entity_it->physics->jump_count++;
+                        
+                        World::playSFX(World::JUMP);
 
                         // Holding down up arrow will cause the player to jump twice in very quick succession
                         // This will appear as a single jump
