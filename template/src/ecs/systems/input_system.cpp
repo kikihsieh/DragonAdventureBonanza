@@ -48,7 +48,6 @@ void InputSystem::on_key_update(int key, int action) {
         if (key == GLFW_KEY_SPACE) {
             if (action == GLFW_PRESS) {
                 entity.input->space = true;
-                World::playSFX(World::SHOOT);
                 
             } else if (action == GLFW_RELEASE) {
                 entity.input->space = false;

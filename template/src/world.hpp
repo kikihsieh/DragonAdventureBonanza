@@ -24,6 +24,8 @@ public:
         SHOOT,
         JUMP,
         P_DAMAGE,
+        ENEMY_DAMAGE,
+        ENEMY_DAMAGE2,
     };
 
     

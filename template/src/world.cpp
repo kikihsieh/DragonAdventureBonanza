@@ -131,8 +131,11 @@ bool World::init(vec2 screen)
     }
     map_init(m_sfx)
         (CLICK, Mix_LoadWAV(audio_path("/sfx/blreep_sound.wav")))
-        (SHOOT, Mix_LoadWAV(audio_path("/sfx/shoot.wav")))
+        (SHOOT, Mix_LoadWAV(audio_path("/sfx/shoot2.wav")))
         (P_DAMAGE,Mix_LoadWAV(audio_path("/sfx/damage.wav")))
+        (ENEMY_DAMAGE, Mix_LoadWAV(audio_path("/sfx/enemy_death.wav")))
+        (ENEMY_DAMAGE2, Mix_LoadWAV(audio_path("/sfx/pew_pew.wav")))
+    
     (JUMP, Mix_LoadWAV(audio_path("/sfx/jump.wav")));
     
     

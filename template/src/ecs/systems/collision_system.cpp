@@ -184,7 +184,7 @@ bool CollisionSystem::collide_with_entities(Entity &e) {
                 land(e);
 
                 if (entity_it->health) {
-                    World::playSFX(World::P_DAMAGE);
+                    World::playSFX(World::ENEMY_DAMAGE);
                     entity_it->health->decrease_health();
                   
                 }
@@ -196,7 +196,7 @@ bool CollisionSystem::collide_with_entities(Entity &e) {
             }
         } else if (e.is_player_proj) {
             if (entity_it->health) {
-                World::playSFX(World::P_DAMAGE);
+                World::playSFX(World::ENEMY_DAMAGE2);
                 entity_it->health->decrease_health();
             }
             if (e.properties) {
