@@ -12,6 +12,11 @@ void CaveLevel::init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) {
 
 void CaveLevel::init_throwing_enemy(std::shared_ptr<Texture> texture, vec2 pos) {
     Glob g(texture, pos);
+    /*g.animatable->num_columns = 3;
+    g.drawable->texture->width *= g.animatable->num_columns ;
+    g.animatable->frame_index = {0,0};
+    g.drawable->vs_shader = shader_path("animated.vs.glsl");
+    g.drawable->fs_shader = shader_path("animated.fs.glsl");*/
     m_entities.emplace_back(g);
 }
 

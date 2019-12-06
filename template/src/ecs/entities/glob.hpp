@@ -8,9 +8,14 @@ struct Glob : public Entity {
         texture_size = {(float) texture->width, (float) texture->height};
         
         drawable = new Drawable();
-        drawable->fs_shader = shader_path("textured.fs.glsl");
-        drawable->vs_shader = shader_path("textured.vs.glsl");
+        drawable->fs_shader = shader_path("animated.fs.glsl");
+        drawable->vs_shader = shader_path("animated.vs.glsl");
         drawable->texture = texture;
+        /*
+        animatable = new Animatable();
+        animatable->num_columns = 1;
+        animatable->num_rows = 1;
+        animatable->frame_index = {0,0};*/
         
         position = pos;
         
