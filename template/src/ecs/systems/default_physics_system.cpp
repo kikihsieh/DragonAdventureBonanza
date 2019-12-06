@@ -49,9 +49,9 @@ void DefaultPhysicsSystem::update(float ms) {
                     if (entity_it->physics->grounded) {
                          entity_it->physics->velocity.x *= 1.012f * pow(1 - friction / max_friction, ms);
                     } else
-                        entity_it->physics->velocity.x *= 0.95;
-                    if (entity_it->physics->velocity.x > -entity_it->physics->walk_speed * 0.05 &&
-                        entity_it->physics->velocity.x < entity_it->physics->walk_speed * 0.05)
+                        entity_it->physics->velocity.x *= ms * 0.0019;
+                    if (entity_it->physics->velocity.x > -entity_it->physics->walk_speed * ms * 0.0001f &&
+                        entity_it->physics->velocity.x < entity_it->physics->walk_speed * ms * 0.0001f)
                         entity_it->physics->velocity.x = 0;
                 }
                 if (entity_it->input->up) {
