@@ -10,6 +10,7 @@ struct Properties {
         DAMAGE,         // -1 health when collided with
         GOAL,           // when reached, switches to the next level
         TORCH,          // when collided with player projectile, lights up
+        TORCH_LIT,
         PROJECTILE      // used specifically for projectiles
     };
 
@@ -23,6 +24,8 @@ struct Properties {
             friction = 5.f;
         } else if (type == PROJECTILE) {
             count = 4;
+        } else if (type == TORCH_LIT) {
+            lit = true;
         }
     }
 
