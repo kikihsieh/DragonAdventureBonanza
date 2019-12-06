@@ -25,7 +25,7 @@ bool ForestLevel::init_player() {
 
 bool ForestLevel::init() {
     m_background_music = Mix_LoadMUS(audio_path("forest.wav"));
-    Mix_VolumeMusic(MIX_MAX_VOLUME/2);
+    Mix_VolumeMusic(MIX_MAX_VOLUME/5);
     m_physics_system = new DefaultPhysicsSystem(false);
     m_intro_modal = new Modal(textures_path("modals/forest.png"));
 

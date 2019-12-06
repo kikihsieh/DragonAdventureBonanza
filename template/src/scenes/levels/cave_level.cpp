@@ -24,7 +24,7 @@ bool CaveLevel::init_player() {
 
 bool CaveLevel::init() {
     m_background_music = Mix_LoadMUS(audio_path("cave.wav"));
-    Mix_VolumeMusic(MIX_MAX_VOLUME/2);
+    Mix_VolumeMusic(MIX_MAX_VOLUME/5);
     m_physics_system = new DefaultPhysicsSystem(true);
     m_intro_modal = new Modal(textures_path("modals/cave.png"));
     Entity dark = Entity();
