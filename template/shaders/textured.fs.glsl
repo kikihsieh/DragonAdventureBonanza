@@ -12,5 +12,8 @@ layout(location = 0) out  vec4 color;
 
 void main()
 {
-	color = vec4(fcolor, 1.0) * texture(sampler0, vec2(texcoord.x, texcoord.y));
+	vec4 temp_color = texture(sampler0, vec2(texcoord.x, texcoord.y));
+	if(temp_color.a < 0.5)
+		discard;
+	color = temp_color;
 }

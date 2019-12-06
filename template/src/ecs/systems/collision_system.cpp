@@ -1,5 +1,4 @@
 #include "collision_system.hpp"
-
 #include <cmath>
 #include <utility>
 #include <scenes/levels/tile_map.hpp>
@@ -48,7 +47,6 @@ void CollisionSystem::update(float ms) {
 void CollisionSystem::tile_collisions(Entity& entity, float ms) {
     float e_height = entity.texture_size.y * entity.scale.y;
     float e_width = entity.texture_size.x * entity.scale.x;
-
     float t_width = TileMap::tile_screen_size.x;
     float t_height = TileMap::tile_screen_size.y;
 
@@ -82,6 +80,14 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
     }
 
     switch (tile.properties->type) {
+        case Properties::TORCH:
+            if (entity.is_player_proj) {
+                tile.properties->lit = true;
+                tile.drawable->texture = tile.torchTex;
+                tile.animatable->num_columns = 4;
+                return entity_property_updates(entity, tile, side);
+            }
+            return false;
         case Properties::DECORATIVE:
             return false;
         case Properties::HEALTH:
@@ -298,6 +304,9 @@ CollisionSystem::Side CollisionSystem::detect_collision(Entity &e1, Entity &e2) 
 
     float e2_height = e2.texture_size.y * e2.scale.y;
     float e2_width = e2.texture_size.x * e2.scale.x;
+
+    if (e2.health && e2.health->is_boss)
+        e2_height *= 0.75;
 
     // https://stackoverflow.com/questions/29861096/detect-which-side-of-a-rectangle-is-colliding-with-another-rectangle
     float dx = e1.position.x - e2.position.x;

@@ -1,7 +1,7 @@
 #version 330
 
 uniform sampler2D screen_texture;
-uniform float dead_timer;
+uniform float isCave;
 
 in vec2 uv;
 

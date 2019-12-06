@@ -62,6 +62,7 @@ public:
 
     std::list<Entity> m_entities;
     std::list<Button> m_buttons;
+    std::list<Tile*> m_lights;
     bool drawHelp = false;
     bool draw_level_intro = false;
     State state = LOADING;

@@ -24,7 +24,7 @@ public:
         GLuint advance;
     };
 
-    bool init(std::list<Entity>* entities, std::map<int, Tile*>* tiles, std::list<Button>* buttons);
+    bool init(std::list<Entity>* entities, std::map<int, Tile*>* tiles, std::list<Button>* buttons, std::list<Tile*>* lights);
     bool init_entity(Entity& entity);
     bool setup_freetype();
 
@@ -40,7 +40,7 @@ private:
 
     void transform(Entity &entity);
     void rotate(mat3 &out, float radians);
-    void translate(mat3 &out, vec2 offset);
+    void translate(mat3 &out, vec2 offset, float level);
     void scale(mat3 &out, vec2 scale);
 
     void release(Drawable::Effect& effect);
@@ -52,8 +52,11 @@ private:
 
     std::list<Entity>* m_entities;
 	std::list<Button>* m_buttons;
+	std::list<Tile*>* m_lights;
+	std::vector<vec2> m_light_pos;
     std::map<int, Tile*>* m_tiles;
     std::map<const char*, Drawable::Effect> m_effects;
     std::map<GLchar, Character> characters;
-    mat3 out;
+    glm::mat4 out;
+    vec2 player_pos;
 };

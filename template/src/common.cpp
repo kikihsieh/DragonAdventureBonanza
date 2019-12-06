@@ -56,6 +56,11 @@ float dot(vec3 l, vec3 r)
 	return l.x * r.x + l.y * r.y + l.z * r.z;
 }
 
+float dot(vec4 l, vec4 r)
+{
+	return l.a * r.a + l.b * r.b + l.c * r.c + l.d * r.d;
+}
+
 vec2 add(vec2 a, vec2 b) { return { a.x+b.x, a.y+b.y }; }
 vec2 sub(vec2 a, vec2 b) { return { a.x-b.x, a.y-b.y }; }
 vec2 mul(vec2 a, float b) { return { a.x*b, a.y*b }; }
@@ -87,6 +92,36 @@ mat3 mul(const mat3 & l, const mat3 & r)
 	ret.c2.x = dot(l_t.c0, r.c2);
 	ret.c2.y = dot(l_t.c1, r.c2);
 	ret.c2.z = dot(l_t.c2, r.c2);
+	return ret;
+}
+
+mat4 mul(const mat4 & l, const mat4 & r)
+{
+	mat4 l_t = { { l.c0.a, l.c1.a, l.c2.a, l.c3.a},
+				 { l.c0.b, l.c1.b, l.c2.b, l.c3.b},
+				 { l.c0.c, l.c1.c, l.c2.c, l.c3.c},
+				 { l.c0.d, l.c1.d, l.c2.d, l.c3.d}};
+
+	mat4 ret;
+	ret.c0.a = dot(l_t.c0, r.c0);
+	ret.c0.b = dot(l_t.c1, r.c0);
+	ret.c0.c = dot(l_t.c2, r.c0);
+	ret.c0.d = dot(l_t.c3, r.c0);
+
+	ret.c1.a = dot(l_t.c0, r.c1);
+	ret.c1.b = dot(l_t.c1, r.c1);
+	ret.c1.c = dot(l_t.c2, r.c1);
+	ret.c1.d = dot(l_t.c3, r.c1);
+
+	ret.c2.a = dot(l_t.c0, r.c2);
+	ret.c2.b = dot(l_t.c1, r.c2);
+	ret.c2.c = dot(l_t.c2, r.c2);
+	ret.c2.d = dot(l_t.c3, r.c2);
+
+	ret.c3.a = dot(l_t.c0, r.c3);
+	ret.c3.b = dot(l_t.c1, r.c3);
+	ret.c3.c = dot(l_t.c2, r.c3);
+	ret.c3.d = dot(l_t.c3, r.c3);
 	return ret;
 }
 

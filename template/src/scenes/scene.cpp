@@ -16,7 +16,7 @@ bool Scene::init() {
         m_rendersystem->init_entity(level_intro);
     }
     background_music();
-    if (m_rendersystem->init(&m_entities, get_tiles(), &m_buttons) && m_inputsystem->init(&m_entities, &m_buttons)) {
+    if (m_rendersystem->init(&m_entities, get_tiles(), &m_buttons, &m_lights) && m_inputsystem->init(&m_entities, &m_buttons)) {
         state = LOADED;
         return true;
     }
@@ -38,6 +38,7 @@ void Scene::destroy() {
     }
     m_entities.clear();
     m_buttons.clear();
+    m_lights.clear();
     drawHelp = false;
     draw_level_intro = false;
 
@@ -130,7 +131,7 @@ void Scene::background_music(){
     }
     if (!m_background_music)
     {
-        fprintf(stderr, "Failed to load sounds make sure the data directory is present\n");
+        fprintf(stderr, "Failed to load background make sure the data directory is present\n");
         return;
     }
     // Playing background music indefinitely

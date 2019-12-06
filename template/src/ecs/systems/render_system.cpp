@@ -1,9 +1,15 @@
+#define _USE_MATH_DEFINES
 #include "render_system.hpp"
 #include <vector>
 #include <list>
 #include <sstream>
 #include <cmath>
 #include <ecs/entities/tile.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/ext.hpp>
+#include <SDL_opengl.h>
+#include <algorithm>
 
 RenderSystem::RenderSystem() {}
 
@@ -48,10 +54,13 @@ RenderSystem::~RenderSystem() {
     delete characters_drawable;
 }
 
-bool RenderSystem::init(std::list<Entity> *entities, std::map<int, Tile *> *tiles, std::list<Button> *buttons) {
+bool RenderSystem::init(std::list<Entity> *entities, std::map<int, Tile *> *tiles, std::list<Button> *buttons, std::list<Tile*> *lights) {
     m_effects = {};
+    entities->sort([](const Entity & a, const Entity & b) { return a.depth > b.depth;});
+//    std::sort(entities->begin(), entities->end(), [](Entity a, Entity b) { return a.depth < b.depth;});
     m_entities = entities;
     m_buttons = buttons;
+    m_lights = lights;
 
     for (auto &entity : *entities) {
         if (entity.drawable == nullptr) {
@@ -213,12 +222,6 @@ bool RenderSystem::init_entity(Entity &entity) {
 
 
 void RenderSystem::draw_all(mat3 projection) {
-    for (auto &entity: *m_entities) {
-        if (entity.drawable == nullptr || entity.clipped) {
-            continue;
-        }
-        draw(entity, projection);
-    }
     for (auto &tile : *m_tiles) {
         if (tile.second->clipped || !tile.second->drawable) {
             continue;
@@ -226,12 +229,17 @@ void RenderSystem::draw_all(mat3 projection) {
 
         draw(*tile.second, projection);
     }
-    // Maybe enable depth so we can avoid using another loop just to find player
+    float health = 0.f;
     for (auto &entity: *m_entities) {
+        if (entity.drawable == nullptr || entity.clipped) {
+            continue;
+        }
+        draw(entity, projection);
         if (!entity.player_tag)
             continue;
-        draw_health(projection, entity.health->health);
+        health = entity.health->health;
     }
+    draw_health(projection, health);
 
     for (auto &button: *m_buttons) {
         if (button.drawable == nullptr || button.clipped) {
@@ -239,6 +247,11 @@ void RenderSystem::draw_all(mat3 projection) {
         }
         draw(button, projection);
     }
+//    for (auto &entity: *m_entities) {
+//        if (entity.drawLast) {
+//            draw(entity, projection);
+//        }
+//    }
 }
 
 void RenderSystem::draw(Entity &entity, mat3 projection) {
@@ -249,7 +262,18 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
     // Enabling alpha channel for textures
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glDisable(GL_DEPTH_TEST);
+//    glBlendEquation()
+//    glDisable(GL_DEPTH_TEST);
+    if (entity.useDepth) {
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
+    }
+    else {
+        glDisable(GL_DEPTH_TEST);
+        glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA);
+    }
+//    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
+//    glEnable(GL_DEPTH_TEST);
 
     // Setting shaders
     glUseProgram(drawable->effect.program);
@@ -262,6 +286,9 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
     GLint frames_uloc = glGetUniformLocation(drawable->effect.program, "frames");
     GLint invinc_uloc = glGetUniformLocation(drawable->effect.program, "invicibility");
     GLint depth_uloc = glGetUniformLocation(drawable->effect.program, "level");
+    GLint player_uloc = glGetUniformLocation(drawable->effect.program, "player");
+    GLint lights_uloc = glGetUniformLocation(drawable->effect.program, "lights");
+    GLint nlights_uloc = glGetUniformLocation(drawable->effect.program, "numLights");
 
     // Setting vertices and indices
     glBindVertexArray(drawable->vao);
@@ -281,10 +308,18 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
     glBindTexture(GL_TEXTURE_2D, drawable->texture->id);
 
     // Setting uniform values to the currently bound program
-    glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float *) &drawable->transform);
+    glUniformMatrix4fv(transform_uloc, 1, GL_FALSE, (float *) &drawable->transform);
     float color[] = {1.f, 1.f, 1.f};
     glUniform3fv(color_uloc, 1, color);
-    glUniform1f(depth_uloc, entity.level);
+    if(entity.is_background)
+        glUniform1f(depth_uloc, entity.level);
+    if (!entity.useDepth) {
+        glUniform2fv(player_uloc, 1, (GLfloat *) &player_pos);
+        glUniform1i(nlights_uloc, m_light_pos.size());
+        if (m_light_pos.size() > 0)
+            glUniform2fv(lights_uloc, m_light_pos.size(), (GLfloat *) &m_light_pos[0]);
+    }
+
     if (entity.animatable) {
         int rows = entity.animatable->num_rows;
         int cols = entity.animatable->num_columns;
@@ -294,8 +329,7 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
         glUniform2fv(frames_uloc, 1, frames);
     }
     if (entity.health) {
-        float invin = entity.health->invincible_timer;
-        glUniform1f(invinc_uloc, invin);
+        glUniform1f(invinc_uloc, entity.health->invincible_timer);
     }
     glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *) &projection);
 
@@ -314,9 +348,12 @@ void RenderSystem::draw_modal(mat3 projection, Modal &entity) {
     transform(entity);
 
     // Enabling alpha channel for textures
+//    glEnable(GL_BLEND);
+//    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDisable(GL_DEPTH_TEST);
+//    glDepthFunc(GL_LEQUAL);
 
     // Setting shaders
     glUseProgram(drawable->effect.program);
@@ -344,7 +381,7 @@ void RenderSystem::draw_modal(mat3 projection, Modal &entity) {
     glBindTexture(GL_TEXTURE_2D, drawable->texture->id);
 
     // Setting uniform values to the currently bound program
-    glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float *) &drawable->transform);
+    glUniformMatrix4fv(transform_uloc, 1, GL_FALSE, (float *) &drawable->transform);
     float color[] = {1.f, 1.f, 1.f};
     glUniform3fv(color_uloc, 1, color);
     glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *) &projection);
@@ -359,6 +396,8 @@ void RenderSystem::draw_modal(mat3 projection, Modal &entity) {
 }
 
 void RenderSystem::draw_health(mat3 projection, int health) {
+    if (!health)
+        return;
     std::string string = "Health: " + std::to_string(health);
 
     float screen_width = 1200.f;
@@ -377,7 +416,8 @@ void RenderSystem::render_text(std::string text, mat3 projection, vec2 position,
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glDisable(GL_DEPTH_TEST);
+//    glEnable(GL_DEPTH_TEST);
+//    glDepthFunc(GL_LEQUAL);
 
     glUseProgram(characters_drawable->effect.program);
 
@@ -519,43 +559,49 @@ void RenderSystem::release(Drawable::Effect &effect) {
 }
 
 void RenderSystem::transform(Entity &entity) {
-    out = {{1.f, 0.f, 0.f},
-           {0.f, 1.f, 0.f},
-           {0.f, 0.f, 1.f}};
-    translate(out, entity.position);
-    rotate(out, entity.radians);
-    scale(out, entity.scale);
+    out = glm::mat4(1.f);
+    out = glm::translate(out, glm::vec3(entity.position.x, entity.position.y, entity.depth));
+    out = glm::rotate(out, entity.radians, glm::vec3(0.f, 0.f, 1.f));
+    out = glm::scale(out, glm::vec3(entity.scale.x, entity.scale.y, 1.f));
     entity.drawable->transform = out;
 }
 
-void RenderSystem::rotate(mat3 &out, float radians) {
-    float c = cosf(radians);
-    float s = sinf(radians);
-    mat3 R = {{c,   s,   0.f},
-              {-s,  c,   0.f},
-              {0.f, 0.f, 1.f}};
-    out = mul(out, R);
-}
-
-void RenderSystem::translate(mat3 &out, vec2 offset) {
-    mat3 T = {{1.f,      0.f,      0.f},
-              {0.f,      1.f,      0.f},
-              {offset.x, offset.y, 1.f}};
-    out = mul(out, T);
-}
-
-void RenderSystem::scale(mat3 &out, vec2 scale) {
-    mat3 S = {{scale.x, 0.f,     0.f},
-              {0.f,     scale.y, 0.f},
-              {0.f,     0.f,     1.f}};
-    out = mul(out, S);
-}
+//void RenderSystem::rotate(mat3 &out, float radians) {
+//    float c = cosf(radians);
+//    float s = sinf(radians);
+//    mat3 R = {{c,   s,   0.f},
+//              {-s,  c,   0.f},
+//              {0.f, 0.f, 1.f}};
+////              {0.f, 0.f, 0.f, 1.f}};
+//    out = mul(out, R);
+//}
+//
+//void RenderSystem::translate(mat3 &out, vec2 offset, float depth) {
+//    mat3 T = {{1.f,      0.f,      0.f},
+//              {0.f,      1.f,      0.f},
+////              {0.f,      0.f,      1.f,    0.f},
+//              {offset.x, offset.y, 1.f}};
+//    out = mul(out, T);
+//}
+//
+//void RenderSystem::scale(mat3 &out, vec2 scale) {
+//    mat3 S = {{scale.x, 0.f,     0.f},
+//              {0.f,     scale.y, 0.f},
+//              {0.f,     0.f,     1.f}};
+////              {0.f,     0.f,     0.f,   1.f}};
+//    out = mul(out, S);
+//}
 
 
 void RenderSystem::update(float ms) {
+    m_light_pos.clear();
     for (auto &entity : *m_entities) {
         if (!entity.animatable) {
             continue;
+        }
+        if (entity.player_tag)
+        {
+            player_pos = entity.position;
         }
         if (entity.flyable) {
             entity.animatable->countdown -= ms;
@@ -587,6 +633,19 @@ void RenderSystem::update(float ms) {
             entity.animatable->frame_index.x++;
             if (entity.animatable->frame_index.x == entity.animatable->num_columns)
                 entity.animatable->frame_index.x = 0;
+        }
+    }
+    for (auto &light: *m_lights) {
+        if(light->properties->lit) {
+            m_light_pos.emplace_back(light->position);
+            light->animatable->countdown -= ms;
+            if (light->animatable->countdown > 0) {
+                continue;
+            }
+            light->animatable->countdown = light->animatable->frame_switch_time;
+            light->animatable->frame_index.x++;
+            if (light->animatable->frame_index.x == light->animatable->num_columns)
+                light->animatable->frame_index.x = 0;
         }
     }
 }
