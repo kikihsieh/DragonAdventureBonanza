@@ -55,20 +55,21 @@ public:
     void loadSceneHandler(std::function<void(Scene_name)> callback);
     void exitGameHandler(std::function<void()> callback);
 
-    void on_key(int key, int action);
+    virtual void on_key(int key, int action);
     virtual void on_mouse(int key, int action, double xpos, double ypos);
 
     void background_music();
 
     std::list<Entity> m_entities;
     std::list<Button> m_buttons;
+    std::list<Tile*> m_lights;
     bool drawHelp = false;
     bool draw_level_intro = false;
     State state = LOADING;
     std::map<Scene_name, bool>* m_unlocked_levels;
 
 protected:
-    virtual const char * get_bg_texture_path() = 0;
+    virtual const char * get_bg_texture_path(){ return textures_path("end.png");}
     virtual Modal get_level_intro(){ return level_intro; }
     virtual bool should_draw_level_intro() { return false; }
 

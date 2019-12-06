@@ -24,12 +24,16 @@
 // If you want to do some overloads..
 struct vec2 { float x, y; };
 struct vec3 { float x, y, z; };
+struct vec4 {float a, b, c, d;};
 struct mat3 { vec3 c0, c1, c2; };
+struct mat4 { vec4 c0, c1, c2, c3; };
 
 // Utility functions
 float dot(vec2 l, vec2 r);
 float dot(vec3 l, vec3 r);
+float dot(vec4 l, vec4 r);
 mat3 mul(const mat3& l, const mat3& r);
+mat4 mul(const mat4& l, const mat4& r);
 vec2 mul(vec2 a, float b);
 vec2 mul(vec2 a, vec2 b);
 vec3 mul(mat3 m, vec3 v);

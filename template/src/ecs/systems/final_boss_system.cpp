@@ -2,7 +2,11 @@
 #include <vector>
 
 bool FinalBossSystem::init(Entity* player, Entity& final_boss, std::list<Entity> *entities, vec2 screen_size,
-        FinalBossSpawningSystem* final_boss_spawning_system, std::function<void(void)> scene_change_callback) {
+        FinalBossSpawningSystem* final_boss_spawning_system, std::function<void(void)> scene_change_callback,
+        bool* draw_level_intro) {
+
+    m_draw_level_intro = draw_level_intro;
+
     m_scene_change_callback = scene_change_callback;
     m_entities = entities;
     m_player = player;
@@ -14,7 +18,7 @@ bool FinalBossSystem::init(Entity* player, Entity& final_boss, std::list<Entity>
     m_phase_1_minion_spawn_timer = 0;
     m_phase_1_minion_spawn_frequency = 5000;
     m_spawning_minions = false;
-    m_minions_to_spawn = 5;
+    m_minions_to_spawn = 3;
     m_minions_spawned = 0;
     m_phase_1_minion_frequency = 500;
     m_phase_1_minion_timer = m_phase_1_minion_frequency;
@@ -53,14 +57,17 @@ bool FinalBossSystem::init(Entity* player, Entity& final_boss, std::list<Entity>
 
 void FinalBossSystem::update(Entity& final_boss, float ms) {
 
-    if (final_boss.health->health > m_final_boss_max_health * 0.85)
+    if (*m_draw_level_intro)
+        return;
+
+    if (final_boss.health->health > m_final_boss_max_health * 0.8)
         phase_1(final_boss, ms);
     else if (final_boss.health->health > m_final_boss_max_health * 0.55) {
         if (len(sub(final_boss.position, m_start_pos)) > 10)
             move_to_start_pos(final_boss);
         else
             phase_2(final_boss, ms);
-    } else if (final_boss.health->health > m_final_boss_max_health * 0.45) {
+    } else if (final_boss.health->health > m_final_boss_max_health * 0.4) {
         if (len(sub(final_boss.position, m_start_pos)) > 10)
             move_to_start_pos(final_boss);
         else
@@ -92,7 +99,7 @@ void FinalBossSystem::update(Entity& final_boss, float ms) {
             final_boss.health->invincible = true;
 
             if (final_boss.scale.x > 0 && final_boss.scale.y > 0) {
-                final_boss.scale.x -= 0.001;
+                final_boss.scale.x -= 0.0005;
                 final_boss.scale.y -= 0.005;
 
                 if (final_boss.scale.x < 0)

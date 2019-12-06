@@ -43,7 +43,13 @@ bool NightSky::init() {
         return false;
     m_final_boss = &m_entities.back();
 
-    return init && m_final_boss_system.init(m_player, *m_final_boss, &m_entities, m_screen, &m_final_boss_spawning_system, m_scene_change_callback);
+    init = init && m_final_boss_system.init(m_player, *m_final_boss, &m_entities,
+            m_screen, &m_final_boss_spawning_system,
+            m_scene_change_callback, &draw_level_intro);
+
+    m_player->texture_size = {m_player->texture_size.x *0.65f, m_player->texture_size.y * 0.85f};
+
+    return init;
 }
 
 
@@ -67,6 +73,13 @@ void NightSky::spawn_cloud() {
 
 bool NightSky::init_player() {
     Player player;
+    player.drawable->texture_path = textures_path("dragon_flying_sprite.png");
+    player.animatable->num_columns = 11;
+    player.animatable->num_rows = 1;
+    player.animatable->frame_index = {0, 0};
+
+    player.scale = {0.3f, 0.3f};
+
     m_entities.emplace_back(player);
     m_player = &m_entities.back();
     m_player->physics->gravity = 0;

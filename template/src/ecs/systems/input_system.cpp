@@ -1,6 +1,6 @@
+#include <world.hpp>
 #include "input_system.hpp"
 #include "world.hpp"
-
 
 bool InputSystem::init(std::list<Entity> *entities, std::list<Button> *buttons) {
     m_entities = entities;

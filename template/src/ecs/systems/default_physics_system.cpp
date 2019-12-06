@@ -33,21 +33,23 @@ void DefaultPhysicsSystem::update(float ms) {
 
         float friction = (entity_it->physics->grounded) ? 1200 : 300;
         friction = friction * ms / 1000;
+        float speed_up = 600 * ms / 1000;
 
         if (entity_it->input) {
             if (!entity_it->airdash || !entity_it->airdash->airdashing) {
                 if (entity_it->input->right) {
                     entity_it->is_facing_forward = true;
                     if (entity_it->physics->velocity.x < entity_it->physics->walk_speed) {
-                        entity_it->physics->velocity.x = fmin(entity_it->physics->walk_speed, entity_it->physics->velocity.x + friction + 40);
+                        entity_it->physics->velocity.x = fmin(entity_it->physics->walk_speed, entity_it->physics->velocity.x + friction + speed_up);
                     } else {
                         entity_it->physics->velocity.x = fmax(entity_it->physics->walk_speed, entity_it->physics->velocity.x - friction);
                     }
                 } else if (entity_it->input->left) {
                     entity_it->is_facing_forward = false;
-                    if (entity_it->physics->velocity.x > entity_it->physics->walk_speed) {
+                    if (entity_it->physics->velocity.x > -entity_it->physics->walk_speed) {
                         entity_it->physics->velocity.x = fmax(-entity_it->physics->walk_speed,
-                                                              entity_it->physics->velocity.x - friction - 40);
+                                                              entity_it->physics->velocity.x - friction - speed_up);
+                        entity_it->physics->velocity.x = fmin(entity_it->physics->velocity.x,0);
                     } else {
                         entity_it->physics->velocity.x = fmin(-entity_it->physics->walk_speed,
                                                               entity_it->physics->velocity.x + friction);

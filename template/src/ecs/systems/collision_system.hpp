@@ -4,7 +4,7 @@
 #include <ecs/entities/tile.hpp>
 #include <map>
 #include <list>
-
+#include <functional>
 
 class CollisionSystem {
 public:
@@ -23,6 +23,9 @@ public:
     bool is_goal_reached() const {
         return m_goal_reached;
     };
+
+    void set_torches_to_light(int torches_to_light);
+    int m_torches_lit = 0;
 
 private:
     void tile_collisions(Entity& entity, float ms); // Returns true if tile should be removed
@@ -44,10 +47,12 @@ private:
     
     bool m_goal_reached;
 
+    std::function<void(void)> m_torch_light_callback;
+
     std::list<Entity>* m_entities;
     std::map<int, Tile*>* m_tiles;
     float padding = 0.1;
-    
+    int m_torches_to_light = 0;
 };
 
 #endif //DAB_COLLISION_SYSTEM_HPP

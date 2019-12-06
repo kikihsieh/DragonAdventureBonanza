@@ -51,9 +51,11 @@ struct Entity {
     bool is_bomb;
 
     int id;
-    int level = 1;
+    float depth = -0.5;
+    float level = 1.f;
 
     static int current_id;
 
     bool clipped;
+    bool useDepth = true;
 };

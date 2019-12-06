@@ -2,14 +2,13 @@
 #include "world.hpp"
 
 // stlib
-#include <sstream>
-
 #include <scenes/levels/forest_level.hpp>
 #include <scenes/levels/cave_level.hpp>
 #include <scenes/levels/snow_mountain_level.hpp>
 #include <scenes/start_menu.hpp>
 #include <scenes/level_select.hpp>
 #include <scenes/levels/night_sky.hpp>
+#include <scenes/storyline.hpp>
 #include <iostream>
 
 #include <project_path.hpp>
@@ -35,8 +34,10 @@ namespace
 		}
 	}
 }
+
 World* World::w = nullptr;
-World::World() : m_save_path("save_v2.txt") {
+
+World::World() : m_save_path("save_v3.txt") {
     w = this;
     map_init(m_scenes)
             (FOREST, new ForestLevel())
@@ -44,8 +45,9 @@ World::World() : m_save_path("save_v2.txt") {
             (CAVE, new CaveLevel())
             (NIGHT_SKY, new NightSky())
 			(MAIN_MENU, new StartMenu())
-            (LEVEL_SELECT, new LevelSelect());
-  
+            (LEVEL_SELECT, new LevelSelect())
+            (STORYLINE, new StoryLine())
+            (END, new Scene());
 }
 
 World::~World() {}
@@ -115,6 +117,11 @@ bool World::init(vec2 screen)
         }
         std::cout << "No existing save file" << std::endl;
     } else {
+        for (auto &scene: m_scenes) {
+            if (scene.second->is_level() && m_unlocked_levels.count(scene.first) == 0) {
+                m_unlocked_levels[scene.first] = scene.first == FOREST;
+            }
+        }
         std::cout << "Loaded save!" << std::endl;
     }
 
@@ -403,15 +410,15 @@ int World::load() {
 
 void World::change_scene() {
     Scene_name next = static_cast<Scene_name>(m_current_scene + 1);
-    if (next == END) {
-        load_scene(MAIN_MENU);
-    } else {
-        if (!m_unlocked_levels[next]) {
-            m_unlocked_levels[next] = true;
-            save();
-        }
-        load_scene(next);
+    if (!m_unlocked_levels[next]) {
+        m_unlocked_levels[next] = true;
+        save();
     }
+    load_scene(next);
+}
+
+void World::playSFX(Mix_Chunk* sfx) {
+    Mix_PlayChannel(-1, sfx, 0);
 }
 
 void World::playSFX(Sound_sfx sound){

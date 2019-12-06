@@ -49,6 +49,10 @@ bool TileMap::init(MapVector map, TextureMapping dict, TilePropertyMapping prope
                     tile = new Tile(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), tile_scale, tile_size);
                 } else {
                     tile = new Tile(dict.at(*col), get_coord_from_tile_pos(col_index, row_index), tile_scale, tile_size, property_map.at(*col));
+                    if (property_map.at(*col)->type == Properties::TORCH) {
+                        tile->properties = std::make_shared<Properties>(Properties::Type::TORCH);
+                        m_level->m_lights.emplace_back(tile);
+                    }
                 }
                 m_tiles.insert(std::map<int, Tile*>::value_type(
                         TileMap::hash(col_index, row_index), tile));

@@ -1,9 +1,8 @@
 #include "collision_system.hpp"
-#include "world.hpp"
-
 #include <cmath>
 #include <utility>
 #include <scenes/levels/tile_map.hpp>
+#include "world.hpp"
 #define PI 3.141592653589793238463
 
 bool CollisionSystem::init(std::list<Entity> *entities, std::map<int, Tile*>* tiles) {
@@ -50,7 +49,6 @@ void CollisionSystem::update(float ms) {
 void CollisionSystem::tile_collisions(Entity& entity, float ms) {
     float e_height = entity.texture_size.y * entity.scale.y;
     float e_width = entity.texture_size.x * entity.scale.x;
-
     float t_width = TileMap::tile_screen_size.x;
     float t_height = TileMap::tile_screen_size.y;
 
@@ -84,6 +82,15 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
     }
 
     switch (tile.properties->type) {
+        case Properties::TORCH:
+            if (entity.is_player_proj) {
+                tile.properties->lit = true;
+                tile.drawable->texture = tile.torchTex;
+                tile.animatable->num_columns = 4;
+                m_torches_lit++;
+                return entity_property_updates(entity, tile, side);
+            }
+            return false;
         case Properties::DECORATIVE:
             return false;
         case Properties::HEALTH:
@@ -107,7 +114,8 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
             }
             return false;
         case Properties::GOAL: {
-            m_goal_reached = true;
+            if (m_torches_lit >= m_torches_to_light)
+                m_goal_reached = true;
             return false;
         } default:
             break;
@@ -142,10 +150,10 @@ void CollisionSystem::friction_updates(Entity &entity, float friction, Side side
     }
 
     if (entity.is_facing_forward) {
-        entity.physics->velocity.x = fmin(max_vel, abs(entity.physics->velocity.x*(1 + friction*ms/1000)));
+        entity.physics->velocity.x = fmin(max_vel, entity.physics->velocity.x*(1 + friction*ms/1000));
         entity.physics->velocity.x = fmax(entity.physics->walk_speed, entity.physics->velocity.x);
     } else {
-        entity.physics->velocity.x = fmax(-max_vel, -abs(entity.physics->velocity.x*(1 + friction*ms/1000)));
+        entity.physics->velocity.x = fmax(-max_vel, entity.physics->velocity.x*(1 + friction*ms/1000));
         entity.physics->velocity.x = fmin(-entity.physics->walk_speed, entity.physics->velocity.x);
     }
     entity.physics->velocity.y = fmin(-0.1f * entity.physics->velocity.y, entity.physics->velocity.y);
@@ -350,4 +358,8 @@ void CollisionSystem::fall(Entity &entity) {
     if (entity.physics) {
         entity.physics->grounded = false;
     }
+}
+
+void CollisionSystem::set_torches_to_light(int torches_to_light){
+    m_torches_to_light = torches_to_light;
 }

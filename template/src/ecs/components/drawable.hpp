@@ -3,6 +3,7 @@
 
 #include <common.hpp>
 #include <memory>
+#include <glm/glm.hpp>
 
 struct Drawable {
 
@@ -25,7 +26,7 @@ struct Drawable {
 
     TexturedVertex vertices[4];
     std::shared_ptr<Texture> texture;
-    mat3 transform;
+    glm::mat4 transform;
 
     // Effect component of Entity for Vertex and Fragment shader, which are then put(linked) together in a
     // single program that is then bound to the pipeline.

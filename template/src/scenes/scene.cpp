@@ -5,7 +5,6 @@
 Scene::Scene() : m_rendersystem(nullptr), m_inputsystem(nullptr), m_background_music(nullptr) {
 }
 
-
 bool Scene::init() {
     m_inputsystem = new InputSystem();
     m_rendersystem = new RenderSystem();
@@ -18,7 +17,7 @@ bool Scene::init() {
         m_rendersystem->init_entity(level_intro);
     }
     background_music();
-    if (m_rendersystem->init(&m_entities, get_tiles(), &m_buttons) && m_inputsystem->init(&m_entities, &m_buttons)) {
+    if (m_rendersystem->init(&m_entities, get_tiles(), &m_buttons, &m_lights) && m_inputsystem->init(&m_entities, &m_buttons)) {
         state = LOADED;
         return true;
     }
@@ -42,6 +41,7 @@ void Scene::destroy() {
     }
     m_entities.clear();
     m_buttons.clear();
+    m_lights.clear();
     drawHelp = false;
     draw_level_intro = false;
 
@@ -82,7 +82,7 @@ void Scene::update(float elapsed_ms, vec2 screen_size) {
 }
 
 void Scene::on_key(int key, int action) {
-    if (state == LOADING) {
+    if (state == LOADED) {
         return;
     }
     if((key == GLFW_KEY_H && action == GLFW_PRESS) || (key == GLFW_KEY_P && action == GLFW_PRESS)){
@@ -127,22 +127,6 @@ void Scene::exitGameHandler(std::function<void(void)> callback) {
 }
 
 void Scene::background_music(){
-    /*if (SDL_Init(SDL_INIT_AUDIO) < 0)
-    {
-        fprintf(stderr, "Failed to initialize SDL Audio\n");
-        return;
-    }
-    
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1)
-    {
-        fprintf(stderr, "Failed to open audio device\n");
-        return;
-    }
-    if (!m_background_music)
-    {
-        fprintf(stderr, "Failed to load sounds make sure the data directory is present\n");
-        return;
-    }*/
     // Playing background music indefinitely
     Mix_PlayMusic(m_background_music, -1);
     
