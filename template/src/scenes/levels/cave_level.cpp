@@ -41,9 +41,7 @@ bool CaveLevel::init() {
     m_entities.erase(std::next(m_entities.begin()));
     m_entities.emplace_back(sec);
 
-    m_num_torches_lit = 0;
-    m_torches_to_light = 5;
-    m_collision_system->torch_light_callback(std::bind(&CaveLevel::set_torch_lit, this));
+    m_collision_system->set_torches_to_light(5);
 
     return result;
 }

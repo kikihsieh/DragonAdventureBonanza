@@ -23,7 +23,7 @@ public:
         return m_goal_reached;
     };
 
-    void torch_light_callback(std::function<void()> callback);
+    void set_torches_to_light(int torches_to_light);
 
 private:
     void tile_collisions(Entity& entity, float ms); // Returns true if tile should be removed
@@ -50,6 +50,9 @@ private:
     std::list<Entity>* m_entities;
     std::map<int, Tile*>* m_tiles;
     float padding = 0.1;
+
+    int m_torches_lit = 0;
+    int m_torches_to_light = 0;
 };
 
 #endif //DAB_COLLISION_SYSTEM_HPP
