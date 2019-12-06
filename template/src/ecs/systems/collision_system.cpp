@@ -84,7 +84,7 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
     switch (tile.properties->type) {
         case Properties::TORCH:
             if (entity.is_player_proj) {
-                if (!tile.properties) {
+                if (!tile.properties->lit) {
                     m_torches_lit++;
                 }
                 tile.properties->lit = true;

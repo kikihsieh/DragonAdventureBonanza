@@ -213,6 +213,7 @@ private:
     
     const TilePropertyMapping m_property_map = {
         {8, std::make_shared<Properties>(Properties::Type::TORCH)},
+        {40, std::make_shared<Properties>(Properties::Type::TORCH)},
         {38, std::make_shared<Properties>(Properties::Type::TORCH_LIT)},
         {39, std::make_shared<Properties>(Properties::Type::TORCH_LIT)},
         {35, std::make_shared<Properties>(Properties::Type::HEALTH)}
