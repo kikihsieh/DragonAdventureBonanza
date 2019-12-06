@@ -15,11 +15,13 @@ public:
     }
 
     bool init() override;
+    void draw(const mat3& projection) override;
     bool init_player() override;
     void init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) override;
     void init_throwing_enemy(std::shared_ptr<Texture> texture, vec2 pos) override;
 
 private:
+
     const MapVector get_map() const override {
         return m_tile_vec;
     }
@@ -136,8 +138,10 @@ private:
     };
     
     const TilePropertyMapping m_property_map = {
-            {20, std::make_shared<Properties>(Properties::Type::TORCH)}
+        {20, std::make_shared<Properties>(Properties::Type::TORCH)}
     };
+
+    float offset;
 };
 
 #endif //DAB_FOREST_LEVEL_HPP
