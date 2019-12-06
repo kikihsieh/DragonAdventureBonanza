@@ -26,6 +26,7 @@ public:
         P_DAMAGE,
         ENEMY_DAMAGE,
         ENEMY_DAMAGE2,
+        KEY_PRESS,
     };
 
     

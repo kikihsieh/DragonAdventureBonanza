@@ -1,5 +1,6 @@
 #include <ecs/entities/background.hpp>
 #include "scene.hpp"
+#include "world.hpp"
 
 Scene::Scene() : m_rendersystem(nullptr), m_inputsystem(nullptr), m_background_music(nullptr) {
 }
@@ -84,11 +85,16 @@ void Scene::on_key(int key, int action) {
     if (state == LOADING) {
         return;
     }
+    if((key == GLFW_KEY_H && action == GLFW_PRESS) || (key == GLFW_KEY_P && action == GLFW_PRESS)){
+        World::playSFX(World::KEY_PRESS);
+    }
+    
     if (key == GLFW_KEY_H && action == GLFW_RELEASE) {
         drawHelp = !drawHelp;
         state = (state == RUNNING) ? PAUSED : RUNNING;
         return;
     }
+    
     if (key == GLFW_KEY_P && action == GLFW_RELEASE && !drawHelp) {
         state = (state == RUNNING) ? PAUSED : RUNNING;
         return;

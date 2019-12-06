@@ -135,8 +135,8 @@ bool World::init(vec2 screen)
         (P_DAMAGE,Mix_LoadWAV(audio_path("/sfx/damage.wav")))
         (ENEMY_DAMAGE, Mix_LoadWAV(audio_path("/sfx/enemy_death.wav")))
         (ENEMY_DAMAGE2, Mix_LoadWAV(audio_path("/sfx/pew_pew.wav")))
-    
-    (JUMP, Mix_LoadWAV(audio_path("/sfx/jump.wav")));
+        (KEY_PRESS, Mix_LoadWAV(audio_path("/sfx/click.wav")))
+        (JUMP, Mix_LoadWAV(audio_path("/sfx/jump.wav")));
     
     
     Mix_Music* m_background_music = Mix_LoadMUS(audio_path("mainmenu.wav"));
@@ -277,6 +277,9 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
     if (key == GLFW_KEY_4 && action == GLFW_RELEASE) {
         load_scene(NIGHT_SKY);
         return;
+    }
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        World::playSFX(World::KEY_PRESS);
     }
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
 		load_scene(MAIN_MENU);
