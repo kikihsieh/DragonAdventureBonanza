@@ -305,9 +305,6 @@ CollisionSystem::Side CollisionSystem::detect_collision(Entity &e1, Entity &e2) 
     float e2_height = e2.texture_size.y * e2.scale.y;
     float e2_width = e2.texture_size.x * e2.scale.x;
 
-    if (e2.health && e2.health->is_boss)
-        e2_height *= 0.75;
-
     // https://stackoverflow.com/questions/29861096/detect-which-side-of-a-rectangle-is-colliding-with-another-rectangle
     float dx = e1.position.x - e2.position.x;
     float dy = e1.position.y - e2.position.y;
