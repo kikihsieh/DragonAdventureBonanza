@@ -10,6 +10,11 @@ bool StartMenu::init() {
     start.m_button_callback = [this](){load_scene(STORYLINE);};
     m_buttons.emplace_back(start);
 
+    Button level_select(textures_path("start.png"));
+    level_select.position = {600.f,600.f};
+    level_select.m_button_callback = [this](){load_scene(LEVEL_SELECT);};
+    m_buttons.emplace_back(level_select);
+
     Button help(textures_path("buttons/help.png"));
     help.position = {1150.f,50.f};
     help.scale = {0.5f, 0.5f};
