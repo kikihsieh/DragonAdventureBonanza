@@ -31,42 +31,41 @@ void DefaultPhysicsSystem::update(float ms) {
             continue;
         }
 
-        float friction = 300;
-        if (entity_it->physics->grounded) {
-            if (entity_it->physics->grounded_friction == 0)
-                friction = 1200;
-            else
-                friction = entity_it->physics->grounded_friction;
-        }
-        friction = friction * ms / 1000;
-        float speed_up = 5;
+
+        float friction = 1;
+        if (entity_it->physics->grounded_friction != 0)
+            friction = entity_it->physics->grounded_friction;
 
         if (entity_it->input) {
-            std::cout << entity_it->physics->velocity.x << std::endl;
-
             if (!entity_it->airdash || !entity_it->airdash->airdashing) {
                 if (entity_it->input->right) {
                     entity_it->is_facing_forward = true;
-                    if (entity_it->physics->velocity.x < entity_it->physics->walk_speed) {
-                        entity_it->physics->velocity.x = fmin(entity_it->physics->walk_speed, entity_it->physics->velocity.x + friction * speed_up);
+
+                    if (entity_it->physics->velocity.x < -entity_it->physics->walk_speed * 0.1) {
+                        entity_it->physics->velocity.x += 2 * entity_it->physics->velocity.x * -friction;
                     } else {
-                        entity_it->physics->velocity.x = fmax(entity_it->physics->walk_speed, entity_it->physics->velocity.x - friction);
+                        entity_it->physics->velocity.x += entity_it->physics->walk_speed * friction * 0.5;
+                        if (entity_it->physics->velocity.x > entity_it->physics->walk_speed)
+                            entity_it->physics->velocity.x = entity_it->physics->walk_speed;
                     }
                 } else if (entity_it->input->left) {
                     entity_it->is_facing_forward = false;
-                    if (entity_it->physics->velocity.x > -entity_it->physics->walk_speed) {
-                        entity_it->physics->velocity.x = fmax(-entity_it->physics->walk_speed,
-                                                              entity_it->physics->velocity.x - friction * speed_up);
-                        // entity_it->physics->velocity.x = fmin(entity_it->physics->velocity.x,0);
+
+                    if (entity_it->physics->velocity.x > entity_it->physics->walk_speed * 0.1) {
+                        entity_it->physics->velocity.x -= 2 * entity_it->physics->velocity.x * friction;
                     } else {
-                        entity_it->physics->velocity.x = fmin(-entity_it->physics->walk_speed,
-                                                              entity_it->physics->velocity.x + friction);
+                        entity_it->physics->velocity.x -= entity_it->physics->walk_speed * friction * 0.5;
+                        if (entity_it->physics->velocity.x < -entity_it->physics->walk_speed)
+                            entity_it->physics->velocity.x = -entity_it->physics->walk_speed;
                     }
                 } else {
-                    if (entity_it->is_facing_forward) {
-                        entity_it->physics->velocity.x = fmax(0, entity_it->physics->velocity.x - friction);
-                    } else {
-                        entity_it->physics->velocity.x = fmin(0, entity_it->physics->velocity.x + friction);
+
+                    if (entity_it->physics->grounded) {
+                        entity_it->physics->velocity.x *= (1 - friction);
+
+                        if (entity_it->physics->velocity.x > -entity_it->physics->walk_speed * 0.05 &&
+                            entity_it->physics->velocity.x < entity_it->physics->walk_speed * 0.05)
+                            entity_it->physics->velocity.x = 0;
                     }
                 }
                 if (entity_it->input->up) {
@@ -82,6 +81,56 @@ void DefaultPhysicsSystem::update(float ms) {
                 }
             }
         }
+
+//        float friction = 300;
+//        if (entity_it->physics->grounded) {
+//            if (entity_it->physics->grounded_friction == 0)
+//                friction = 12000;
+//            else
+//                friction = entity_it->physics->grounded_friction;
+//        }
+//        friction = friction * ms / 1000;
+//        float speed_up = 5;
+
+//        if (entity_it->input) {
+//            if (!entity_it->airdash || !entity_it->airdash->airdashing) {
+//                if (entity_it->input->right) {
+//                    entity_it->is_facing_forward = true;
+//                    if (entity_it->physics->velocity.x < entity_it->physics->walk_speed) {
+//                        entity_it->physics->velocity.x = fmin(entity_it->physics->walk_speed, entity_it->physics->velocity.x + friction * speed_up);
+//                    } else {
+//                        entity_it->physics->velocity.x = fmax(entity_it->physics->walk_speed, entity_it->physics->velocity.x - friction);
+//                    }
+//                } else if (entity_it->input->left) {
+//                    entity_it->is_facing_forward = false;
+//                    if (entity_it->physics->velocity.x > -entity_it->physics->walk_speed) {
+//                        entity_it->physics->velocity.x = fmax(-entity_it->physics->walk_speed,
+//                                                              entity_it->physics->velocity.x - friction * speed_up);
+//                        // entity_it->physics->velocity.x = fmin(entity_it->physics->velocity.x,0);
+//                    } else {
+//                        entity_it->physics->velocity.x = fmin(-entity_it->physics->walk_speed,
+//                                                              entity_it->physics->velocity.x + friction);
+//                    }
+//                } else {
+//                    if (entity_it->is_facing_forward) {
+//                        entity_it->physics->velocity.x = fmax(0, entity_it->physics->velocity.x - friction);
+//                    } else {
+//                        entity_it->physics->velocity.x = fmin(0, entity_it->physics->velocity.x + friction);
+//                    }
+//                }
+//                if (entity_it->input->up) {
+//                    if (entity_it->physics->jump_count < ((m_double_jump)? 2 : 1)) {
+//                        entity_it->physics->velocity.y = entity_it->physics->jump_speed;
+//                        entity_it->physics->jump_count++;
+//
+//                        // Holding down up arrow will cause the player to jump twice in very quick succession
+//                        // This will appear as a single jump
+//                        // Set up to false so this doesnt occur
+//                        entity_it->input->up = false;
+//                    }
+//                }
+//            }
+//        }
 
         move(ms, *entity_it);
 
