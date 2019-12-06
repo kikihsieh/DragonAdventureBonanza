@@ -23,6 +23,8 @@ public:
         return m_goal_reached;
     };
 
+    void torch_light_callback(std::function<void()> callback);
+
 private:
     void tile_collisions(Entity& entity, float ms); // Returns true if tile should be removed
 
@@ -42,6 +44,8 @@ private:
     static void fall(Entity& entity);
     
     bool m_goal_reached;
+
+    std::function<void(void)> m_torch_light_callback;
 
     std::list<Entity>* m_entities;
     std::map<int, Tile*>* m_tiles;

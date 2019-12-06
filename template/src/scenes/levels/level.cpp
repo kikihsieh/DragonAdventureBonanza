@@ -150,7 +150,7 @@ void Level::update(float elapsed_ms, vec2 screen_size) {
 
     m_health_system->update(elapsed_ms);
 
-    if (m_collision_system->is_goal_reached()) {
+    if (m_collision_system->is_goal_reached() && m_num_torches_lit >= m_torches_to_light) {
         m_scene_change_callback();
     }
 
@@ -187,4 +187,8 @@ void Level::on_mouse(int key, int action, double xpos, double ypos) {
     double x = xpos + m_camera_system->get_center().x - m_screen_size.x/2;
     double y = ypos + m_camera_system->get_center().y - m_screen_size.y/2;
     m_inputsystem->on_mouse_update(key, action, x, y);
+}
+
+void Level::set_torch_lit() {
+    m_num_torches_lit++;
 }

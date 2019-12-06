@@ -85,6 +85,8 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
                 tile.properties->lit = true;
                 tile.drawable->texture = tile.torchTex;
                 tile.animatable->num_columns = 4;
+                if (m_torch_light_callback)
+                    m_torch_light_callback();
                 return entity_property_updates(entity, tile, side);
             }
             return false;
@@ -353,4 +355,8 @@ void CollisionSystem::fall(Entity &entity) {
     if (entity.physics) {
         entity.physics->grounded = false;
     }
+}
+
+void CollisionSystem::torch_light_callback(std::function<void(void)> callback) {
+    m_torch_light_callback = callback;
 }

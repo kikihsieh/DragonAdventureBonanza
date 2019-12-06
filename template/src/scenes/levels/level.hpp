@@ -72,6 +72,7 @@ public:
     void on_mouse(int key, int action, double xpos, double ypos) override;
     bool should_draw_level_intro() override { return true; }
 
+    void set_torch_lit();
 
 protected:
     bool init_level(MapVector map, TexturePathMapping mapping);
@@ -91,6 +92,9 @@ protected:
     Modal* m_intro_modal;
 
     vec2 m_level_dim;
+
+    int m_num_torches_lit = 0;
+    int m_torches_to_light = 0;
 
 private:
     virtual const MapVector get_map() const = 0;
