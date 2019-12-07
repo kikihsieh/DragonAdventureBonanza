@@ -14,7 +14,9 @@ layout(location = 0) out vec4 color;
 void main()
 {
     color = vec4(0.0, 0.0, 0.0, 0.9);
+    float minA = 0.9;
     float lightDist = 1000;
+    float minRad = 1000;
     if (numLights > 0 ) {
         for (int i = 0; i < 36; i++) {
             float radius = distance((projection * vec3(lights[i], 1.0)).xy * vec2(12.0/8.0, 1.0), vec2(vpos.x*(12.0/8.0), vpos.y));
@@ -22,16 +24,25 @@ void main()
             if (dist < lightDist){
                 lightDist = dist;
             }
+//            if (radius < minRad)
+//                minRad = radius;
             if (radius < 1.0) {
                 color.xyz += (1.0 - radius) * 0.6 * vec3(2.25, 1.25, 0.0);
-                color.a = 0.5 + radius*(0.4);
+                color.a -= (1-radius)*(0.4);
+//                if (a < minA);
+//                    minA = a;
             }
             if (i == numLights-1)
-            break;
+                break;
         }
     }
+//    if (minRad < 1.0) {
+//        color.xyz += (1.0 - minRad) * 0.6 * vec3(2.25, 1.25, 0.0);
+//        color.a = 0.5 + minRad*(0.4);
+//    }
     float radius = distance((projection * vec3(player, 1.0)).xy * vec2(12.0/8.0, 1.0), vec2(vpos.x*(12.0/8.0), vpos.y));
     if(radius < 1.0) {
         color.a -= ((1.0-radius)*0.9)*min(lightDist/2, 1.0);
     }
+//    color.a = 0.9;
 }
