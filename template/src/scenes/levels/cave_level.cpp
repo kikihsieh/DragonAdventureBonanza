@@ -5,13 +5,16 @@ CaveLevel::CaveLevel() :
     Level() {
 }
 
+
 void CaveLevel::init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) {
     Spider s(texture, pos);
+    s.animatable->num_columns = 3;
     m_entities.emplace_back(s);
 }
 
 void CaveLevel::init_throwing_enemy(std::shared_ptr<Texture> texture, vec2 pos) {
     Glob g(texture, pos);
+    g.animatable->num_columns = 3;
     m_entities.emplace_back(g);
 }
 
