@@ -17,6 +17,7 @@ public:
     bool init_player() override;
 
     virtual void update(float elapsed_ms, vec2 screen_size) override;
+    void draw(const mat3& projection) override;
 
 private:
 
@@ -28,6 +29,7 @@ private:
     float m_spawn_cloud_timer;
 
     Entity* m_final_boss;
+    int full_health;
     FinalBossSystem m_final_boss_system;
     FinalBossSpawningSystem m_final_boss_spawning_system;
 
