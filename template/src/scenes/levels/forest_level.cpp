@@ -13,6 +13,7 @@ void ForestLevel::init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos)
 
 void ForestLevel::init_throwing_enemy(std::shared_ptr<Texture> texture, vec2 pos) {
     Glob g(texture, pos);
+    g.scale.y *= 1.25;
     m_entities.emplace_back(g);
 }
 

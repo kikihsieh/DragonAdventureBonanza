@@ -33,7 +33,6 @@ void ShootingSystem::update(float ms) {
             vec2 shoot_direction = { 1.f, 0.f };
             vec2 texture_scale = { 1.0f, 1.0f };
             
-            
             if (!entity.is_facing_forward) {
                 
                 World::playSFX(World::SHOOT);
@@ -44,6 +43,7 @@ void ShootingSystem::update(float ms) {
             World::playSFX(World::SHOOT);
             Projectile p(m_texture_mapping.at(-7), pos, shoot_direction, texture_scale, false);
             p.properties->count = 1;
+            p.texture_size.y *= 1.3;
             if (initEntity(p)) {
                 m_entities->emplace_back(p);
             }
