@@ -30,6 +30,8 @@ struct Projectile : public Entity {
 
         properties = std::make_shared<Properties>(Properties::PROJECTILE);
 
+        depth = -0.98f;
+
         collider = new Collider();
         is_facing_forward = true;
     }
