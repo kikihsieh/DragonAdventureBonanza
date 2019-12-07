@@ -111,6 +111,8 @@ void FinalBossSystem::update(Entity& final_boss, float ms) {
             }
         }
     }
+
+    m_entities->sort([](const Entity & a, const Entity & b) { return a.depth > b.depth;});
 }
 
 void FinalBossSystem::phase_1(Entity& final_boss, float ms) {

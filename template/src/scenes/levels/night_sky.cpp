@@ -36,7 +36,7 @@ bool NightSky::init() {
     for (float x = 100; x <= m_screen.x; x += 150) {
         m_final_boss_spawning_system.spawn_cloud(x);
     }
-  
+
     // Spawn Final Boss
     //=================================
     if(!m_final_boss_spawning_system.spawn_final_boss())
