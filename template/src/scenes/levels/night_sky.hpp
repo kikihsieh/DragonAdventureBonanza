@@ -29,6 +29,7 @@ private:
     float m_spawn_cloud_timer;
 
     Entity* m_final_boss;
+    int full_health;
     FinalBossSystem m_final_boss_system;
     FinalBossSpawningSystem m_final_boss_spawning_system;
 
