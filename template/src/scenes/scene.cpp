@@ -76,7 +76,7 @@ bool Scene::is_level() {
 
 void Scene::draw_loading(const mat3& projection) {
     if (m_rendersystem) {
-        m_rendersystem->render_text("LOADING...", projection, {480, 400}, {1.0, 1.0, 1.0}, 2.f);
+        m_rendersystem->render_text("LOADING...", projection, {510, 400}, {1.0, 1.0, 1.0}, 2.f);
     }
 }
 
