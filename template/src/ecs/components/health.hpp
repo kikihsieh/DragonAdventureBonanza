@@ -16,6 +16,9 @@ struct Health {
             invincible = true;
             std::cout << "player took damage" << std::endl;
         }
+
+        if (health < 0)
+            health = 0;
     }
 
     void increase_health() {
