@@ -56,6 +56,6 @@ void CaveLevel::draw(const mat3& projection) {
     
     vec2 camera_center = m_camera_system->get_center();
 
-    std::string string = "Torches to light: " + std::to_string((int) fmax(m_collision_system->m_torches_to_light, 0));
+    std::string string = (m_collision_system->m_torches_to_light > 0) ? "Torches to light: " + std::to_string((int) fmax(m_collision_system->m_torches_to_light, 0)) : "Find the exit!";
     m_rendersystem->render_text(string, projection, {camera_center.x-offset, camera_center.y - 375}, {1.0,0.5,0});
 }
