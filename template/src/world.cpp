@@ -149,7 +149,6 @@ bool World::init(vec2 screen)
     Mix_Music* m_background_music = Mix_LoadMUS(audio_path("mainmenu.wav"));
     Mix_PlayMusic( m_background_music, -1);
 
-    
 	return load_scene(MAIN_MENU);
 }
 
@@ -180,62 +179,70 @@ bool World::update(float elapsed_ms)
   	return true;
 }
 
+void World::draw(bool loading) {
+    // Clearing error buffer
+    gl_flush_errors();
+
+    // Getting size of window
+    int w, h;
+    glfwGetFramebufferSize(m_window, &w, &h);
+
+    /////////////////////////////////////
+    // First render to the custom framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, m_frame_buffer);
+
+    // Clearing backbuffer
+    glViewport(0, 0, w, h);
+    glDepthRange(0.00001, 10);
+    const float clear_color[3] = { 0.3f, 0.3f, 0.8f };
+    glClearColor(clear_color[0], clear_color[1], clear_color[2], 1.0);
+    glClearDepth(1.f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Fake projection matrix, scales with respect to window coordinates
+    // PS: 1.f / w in [1][1] is correct.. do you know why ? (:
+    float left = 0.f;// *-0.5;
+    float top = 0.f;// (float)h * -0.5;
+    float right = (float)w / m_screen_scale;// *0.5;
+    float bottom = (float)h / m_screen_scale;// *0.5;
+
+    float sx = 2.f / (right - left);
+    float sy = 2.f / (top - bottom);
+    vec2 screen_size = {(right - left) , (bottom - top)};
+    float tx = m_scenes.at(m_current_scene)->get_translation_x(screen_size);
+    float ty = m_scenes.at(m_current_scene)->get_translation_y(screen_size);
+    mat3 projection_2D{ { sx, 0.f, 0.f },{ 0.f, sy, 0.f },{ tx, ty, 1.f } };
+
+    /////////////////////
+    // Truely render to the screen
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // Clearing backbuffer
+    glViewport(0, 0, w, h);
+    glDepthRange(0, 10);
+    glClearColor(0, 0, 0, 1.0);
+    glClearDepth(1.f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Bind our texture in Texture Unit 0
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, m_screen_tex.id);
+
+    if (loading) {
+        m_scenes.at(m_current_scene)->draw_loading(projection_2D);
+    } else {
+        m_scenes.at(m_current_scene)->draw(projection_2D);
+    }
+
+    //////////////////
+    // Presenting
+    glfwSwapBuffers(m_window);
+}
+
 // Render our game world
 // http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
 void World::draw() {
-	// Clearing error buffer
-	gl_flush_errors();
-
-	// Getting size of window
-	int w, h;
-	glfwGetFramebufferSize(m_window, &w, &h);
-
-	/////////////////////////////////////
-	// First render to the custom framebuffer
-	glBindFramebuffer(GL_FRAMEBUFFER, m_frame_buffer);
-
-	// Clearing backbuffer
-	glViewport(0, 0, w, h);
-	glDepthRange(0.00001, 10);
-	const float clear_color[3] = { 0.3f, 0.3f, 0.8f };
-	glClearColor(clear_color[0], clear_color[1], clear_color[2], 1.0);
-	glClearDepth(1.f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	// Fake projection matrix, scales with respect to window coordinates
-	// PS: 1.f / w in [1][1] is correct.. do you know why ? (:
-	float left = 0.f;// *-0.5;
-	float top = 0.f;// (float)h * -0.5;
-	float right = (float)w / m_screen_scale;// *0.5;
-	float bottom = (float)h / m_screen_scale;// *0.5;
-
-	float sx = 2.f / (right - left);
-	float sy = 2.f / (top - bottom);
-	vec2 screen_size = {(right - left) , (bottom - top)};
-	float tx = m_scenes.at(m_current_scene)->get_translation_x(screen_size);
-	float ty = m_scenes.at(m_current_scene)->get_translation_y(screen_size);
-	mat3 projection_2D{ { sx, 0.f, 0.f },{ 0.f, sy, 0.f },{ tx, ty, 1.f } };
-
-	/////////////////////
-	// Truely render to the screen
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	// Clearing backbuffer
-	glViewport(0, 0, w, h);
-	glDepthRange(0, 10);
-	glClearColor(0, 0, 0, 1.0);
-	glClearDepth(1.f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	// Bind our texture in Texture Unit 0
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_screen_tex.id);
-
-    m_scenes.at(m_current_scene)->draw(projection_2D);
-
-	//////////////////
-	// Presenting
-	glfwSwapBuffers(m_window);
+	draw(false);
 }
 
 // Should the game be over ?
@@ -245,13 +252,15 @@ bool World::is_over() const {
 
 bool World::load_scene(Scene_name scene) {
     using namespace std::placeholders;
+
     if (m_scenes.at(scene)->is_level() && !m_unlocked_levels.at(scene)) {
         return false;
     }
 
-    if (m_scenes.at(m_current_scene)) {
-        m_scenes.at(m_current_scene)->destroy();
+    if (m_scenes.at(scene)->is_level()) {
+        draw(true);
     }
+    m_scenes.at(m_current_scene)->destroy();
 
     m_current_scene = scene;
     m_scenes.at(m_current_scene)->addSceneChangeHandler(std::bind(&World::change_scene, this));

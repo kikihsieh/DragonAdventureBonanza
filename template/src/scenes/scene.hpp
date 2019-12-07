@@ -37,6 +37,7 @@ public:
     virtual std::map<int, Tile*>* get_tiles();
 
     virtual void draw(const mat3& projection);
+    virtual void draw_loading(const mat3& projection);
     virtual bool is_level();
 
     virtual float get_translation_x(vec2 screen_size) {

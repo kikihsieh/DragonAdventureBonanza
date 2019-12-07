@@ -49,6 +49,8 @@ public:
         return *m_intro_modal;
     }
 
+    void draw_loading(const mat3& projection) override;
+
     virtual std::map<int, Tile*>* get_tiles() override;
 
     virtual void init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) {};

@@ -56,6 +56,13 @@ void Level::destroy() {
     m_intro_modal = nullptr;
 }
 
+void Level::draw_loading(const mat3& projection) {
+    if (m_rendersystem) {
+        vec2 camera_center = m_camera_system->get_center();
+        m_rendersystem->render_text("LOADING...", projection, {camera_center.x - 120.f, camera_center.y}, {1.0, 1.0, 1.0}, 2.5);
+    }
+}
+
 bool Level::init_level(MapVector map, TexturePathMapping mapping) {
     Button home(textures_path("buttons/home.png"));
     home.m_button_callback = [this](){load_scene(MAIN_MENU);};

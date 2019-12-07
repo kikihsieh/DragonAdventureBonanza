@@ -33,6 +33,7 @@ public:
 	void draw_modal(mat3 projection, Modal& entity);
     void draw_health(mat3 projection, int health);
     void render_text(std::string text, mat3 projection, vec2 position, glm::vec3 color);
+    void render_text(std::string text, mat3 projection, vec2 position, glm::vec3 color, float scale);
 	void update(float ms);
 
 private:

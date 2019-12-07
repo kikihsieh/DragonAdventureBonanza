@@ -26,8 +26,6 @@ bool Scene::init() {
 
 // Releases all resources
 void Scene::destroy() {
-    
-    
     delete m_inputsystem;
     delete m_rendersystem;
     m_rendersystem = nullptr;
@@ -74,6 +72,12 @@ void Scene::draw(const mat3& projection) {
 
 bool Scene::is_level() {
     return false;
+}
+
+void Scene::draw_loading(const mat3& projection) {
+    if (m_rendersystem) {
+        m_rendersystem->render_text("LOADING...", projection, {480, 400}, {1.0, 1.0, 1.0}, 2.5);
+    }
 }
 
 void Scene::update(float elapsed_ms, vec2 screen_size) {

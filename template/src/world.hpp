@@ -39,7 +39,8 @@ public:
 	bool update(float ms);
 
 	// Renders our scene
-	void draw();   
+	void draw();
+	void draw(bool loading);
 
 	// Should the game be over ?
 	bool is_over()const;
