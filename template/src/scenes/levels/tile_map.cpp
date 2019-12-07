@@ -56,7 +56,7 @@ bool TileMap::init(MapVector map, TextureMapping dict, TilePropertyMapping prope
                         m_level->m_lights.emplace_back(tile);
                     }
                     else if (property_map.at(*col)->type == Properties::HEALTH){
-                        tile->animatable->num_columns = 4;
+                        tile->animatable->num_columns = 5;
                         tile->drawable->texture->width *= tile->animatable->num_columns ; //TODO
                         tile->animatable->frame_index = {0,0};
                         tile->drawable->vs_shader = shader_path("animated.vs.glsl");
