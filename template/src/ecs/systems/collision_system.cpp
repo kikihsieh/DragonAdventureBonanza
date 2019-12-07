@@ -52,6 +52,11 @@ void CollisionSystem::tile_collisions(Entity& entity, float ms) {
     float t_width = TileMap::tile_screen_size.x;
     float t_height = TileMap::tile_screen_size.y;
 
+    if (entity.flyable) {
+        e_height *= 0.5;
+        e_width *= 0.8;
+    }
+
     std::pair<int, int> tile_pos = TileMap::get_left_top_tile_pos_from_coord(entity.position.x, entity.position.y,
                                                                              {e_width, e_height});
 

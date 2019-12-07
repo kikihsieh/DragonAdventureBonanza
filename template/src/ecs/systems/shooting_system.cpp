@@ -43,9 +43,9 @@ void ShootingSystem::update(float ms) {
             World::playSFX(World::SHOOT);
             Projectile p(m_texture_mapping.at(-7), pos, shoot_direction, texture_scale, false);
             p.properties->count = 1;
-            p.texture_size.y *= 1.3;
             if (initEntity(p)) {
                 m_entities->emplace_back(p);
+                p.texture_size.y *= 1.3;
             }
             entity.shooting->m_next_projectile = ((entity.shooting->time) / 2) + m_dist(m_rng) * ((entity.shooting->time) / 2);
         }

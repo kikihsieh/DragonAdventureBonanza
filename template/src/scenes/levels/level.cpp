@@ -59,7 +59,7 @@ void Level::destroy() {
 void Level::draw_loading(const mat3& projection) {
     if (m_rendersystem) {
         vec2 camera_center = m_camera_system->get_center();
-        m_rendersystem->render_text("LOADING...", projection, {camera_center.x - 120.f, camera_center.y}, {1.0, 1.0, 1.0}, 2.5);
+        m_rendersystem->render_text("LOADING...", projection, {camera_center.x - 120.f, camera_center.y}, {1.0, 1.0, 1.0}, 2.f);
     }
 }
 
