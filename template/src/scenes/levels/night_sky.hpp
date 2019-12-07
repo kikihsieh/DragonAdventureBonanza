@@ -19,6 +19,10 @@ public:
     virtual void update(float elapsed_ms, vec2 screen_size) override;
     void draw(const mat3& projection) override;
 
+    Scene_name get_scene() override {
+        return Scene_name::NIGHT_SKY;
+    }
+
 private:
 
     void spawn_cloud();

@@ -21,6 +21,10 @@ public:
     void init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) override;
     void init_throwing_enemy(std::shared_ptr<Texture> texture, vec2 pos) override;
 
+    Scene_name get_scene() override {
+        return Scene_name::SNOW_MOUNTAIN;
+    }
+
 private:
     const MapVector get_map() const override {
         return m_tile_vec;

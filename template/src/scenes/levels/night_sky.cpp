@@ -82,6 +82,7 @@ bool NightSky::init_player() {
     player.animatable->num_columns = 11;
     player.animatable->num_rows = 1;
     player.animatable->frame_index = {0, 0};
+    player.health->health = 10;
 
     player.scale = {0.3f, 0.3f};
 

@@ -14,6 +14,10 @@ public:
         return true;
     }
 
+    Scene_name get_scene() override {
+        return Scene_name::CAVE;
+    }
+
     bool init() override;
     void draw(const mat3& projection) override;
     bool init_player() override;

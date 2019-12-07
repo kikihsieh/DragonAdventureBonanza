@@ -5,7 +5,10 @@
 struct Projectile : public Entity {
     Projectile(std::shared_ptr<Texture> texture, vec2 pos, vec2 dir, vec2 texture_scale, bool isEnemy) {
         scale = texture_scale;
-        
+        if (!isEnemy) {
+            scale = mul(scale, 1.3f);
+        }
+
         drawable = new Drawable();
         drawable->fs_shader = shader_path("projectile.fs.glsl");
         drawable->vs_shader = shader_path("projectile.vs.glsl");

@@ -55,6 +55,7 @@ public:
 
     virtual void init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) {};
     virtual void init_throwing_enemy(std::shared_ptr<Texture> texture, vec2 pos) {};
+    virtual Scene_name get_scene() = 0;
     
     bool is_level() override {
         return true;

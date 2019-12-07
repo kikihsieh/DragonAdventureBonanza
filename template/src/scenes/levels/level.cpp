@@ -162,8 +162,7 @@ void Level::update(float elapsed_ms, vec2 screen_size) {
     }
 
     if (m_health_system->player_died()) {
-        destroy();
-        init();
+        load_scene(get_scene());
     }
 }
 
