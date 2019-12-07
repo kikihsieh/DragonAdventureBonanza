@@ -1,5 +1,6 @@
 #include <cmath>
 #include <ecs/systems/default_physics_system.hpp>
+#include "world.hpp"
 
 DefaultPhysicsSystem::DefaultPhysicsSystem(bool double_jump) {
     m_double_jump = double_jump;
@@ -31,41 +32,36 @@ void DefaultPhysicsSystem::update(float ms) {
             continue;
         }
 
-        float friction = (entity_it->physics->grounded) ? 1200 : 300;
-        friction = friction * ms / 1000;
-        float speed_up = 600 * ms / 1000;
+        float max_friction = 5;
+        float friction = entity_it->physics->grounded_friction ? entity_it->physics->grounded_friction : max_friction;
 
         if (entity_it->input) {
             if (!entity_it->airdash || !entity_it->airdash->airdashing) {
                 if (entity_it->input->right) {
                     entity_it->is_facing_forward = true;
-                    if (entity_it->physics->velocity.x < entity_it->physics->walk_speed) {
-                        entity_it->physics->velocity.x = fmin(entity_it->physics->walk_speed, entity_it->physics->velocity.x + friction + speed_up);
-                    } else {
-                        entity_it->physics->velocity.x = fmax(entity_it->physics->walk_speed, entity_it->physics->velocity.x - friction);
-                    }
+                    entity_it->physics->velocity.x += 20 * friction * ms;
+
                 } else if (entity_it->input->left) {
                     entity_it->is_facing_forward = false;
-                    if (entity_it->physics->velocity.x > -entity_it->physics->walk_speed) {
-                        entity_it->physics->velocity.x = fmax(-entity_it->physics->walk_speed,
-                                                              entity_it->physics->velocity.x - friction - speed_up);
-                        entity_it->physics->velocity.x = fmin(entity_it->physics->velocity.x,0);
-                    } else {
-                        entity_it->physics->velocity.x = fmin(-entity_it->physics->walk_speed,
-                                                              entity_it->physics->velocity.x + friction);
-
-                    }
+                    entity_it->physics->velocity.x -= 20 * friction * ms;
                 } else {
-                    if (entity_it->is_facing_forward) {
-                        entity_it->physics->velocity.x = fmax(0, entity_it->physics->velocity.x - friction);
+
+                    if (entity_it->physics->grounded) {
+                         entity_it->physics->velocity.x *= 1.012f * pow(1 - friction / max_friction, ms);
                     } else {
-                        entity_it->physics->velocity.x = fmin(0, entity_it->physics->velocity.x + friction);
+                         entity_it->physics->velocity.x *= (1 - (ms * 0.005));
                     }
+
+                    if (entity_it->physics->velocity.x > -entity_it->physics->walk_speed * 0.05 &&
+                        entity_it->physics->velocity.x < entity_it->physics->walk_speed * 0.05)
+                        entity_it->physics->velocity.x = 0;
                 }
                 if (entity_it->input->up) {
                     if (entity_it->physics->jump_count < ((m_double_jump)? 2 : 1)) {
                         entity_it->physics->velocity.y = entity_it->physics->jump_speed;
                         entity_it->physics->jump_count++;
+                        
+                        World::playSFX(World::JUMP);
 
                         // Holding down up arrow will cause the player to jump twice in very quick succession
                         // This will appear as a single jump
@@ -73,6 +69,11 @@ void DefaultPhysicsSystem::update(float ms) {
                         entity_it->input->up = false;
                     }
                 }
+
+                if (entity_it->physics->velocity.x > entity_it->physics->walk_speed)
+                    entity_it->physics->velocity.x = entity_it->physics->walk_speed;
+                if (entity_it->physics->velocity.x < -entity_it->physics->walk_speed)
+                    entity_it->physics->velocity.x = -entity_it->physics->walk_speed;
             }
         }
 

@@ -24,7 +24,7 @@ bool CaveLevel::init_player() {
 
 bool CaveLevel::init() {
     m_background_music = Mix_LoadMUS(audio_path("cave.wav"));
-    Mix_VolumeMusic(MIX_MAX_VOLUME/2);
+    Mix_VolumeMusic(MIX_MAX_VOLUME/5);
     m_physics_system = new DefaultPhysicsSystem(true);
     m_intro_modal = new Modal(textures_path("modals/cave.png"));
     Entity dark = Entity();
@@ -42,7 +42,7 @@ bool CaveLevel::init() {
     m_entities.erase(std::next(m_entities.begin()));
     m_entities.emplace_back(sec);
 
-    m_collision_system->set_torches_to_light(9);
+    m_collision_system->set_torches_to_light(5);
     offset = 60.f;
 
     return result;
@@ -53,6 +53,6 @@ void CaveLevel::draw(const mat3& projection) {
     
     vec2 camera_center = m_camera_system->get_center();
 
-    std::string string = "Torches: " + std::to_string(m_collision_system->m_torches_lit) + "/9";
+    std::string string = "Torches to light: " + std::to_string((int) fmax(m_collision_system->m_torches_to_light, 0));
     m_rendersystem->render_text(string, projection, {camera_center.x-offset, camera_center.y - 375}, {1.0,0.5,0});
 }
