@@ -6,7 +6,8 @@ struct Projectile : public Entity {
     Projectile(std::shared_ptr<Texture> texture, vec2 pos, vec2 dir, vec2 texture_scale, bool isEnemy) {
         scale = texture_scale;
         if (!isEnemy) {
-            scale = mul(scale, 1.3f);
+            scale.x *=1.3;
+            scale.y *= 1.5;
         }
 
         drawable = new Drawable();
