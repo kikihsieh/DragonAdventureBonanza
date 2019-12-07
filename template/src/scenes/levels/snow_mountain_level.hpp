@@ -179,8 +179,8 @@ private:
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 1, 1, 5},
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {5, 0, 0, 0, P, 0, 0, 0, 0, 0, 0, 0, 7, 11, 12, 5, 0, -1, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 5, 0, 0, 0, -1, 0, 0, 0, -1, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {5, 0, 0, 0, P, 0, 0, 0, 15, 0, 0, 0, 7, 11, 12, 5, 0, -1, 0, 0, -1, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 5, 0, 0, 0, -1, 0, 0, 0, -1, 0, 0, 0, 0, 0},
         {12, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 7, 11, 2, 2, 12, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 12, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         {2, 2, 2, 2, 2, 2, 2, 2, 14, 0, 0, 13, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
         {2, 2, 2, 2, 2, 2, 2, 2, 14, 0, 0, 13, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, -2, 0, 0, 0, -1, 3, 0, 0, 0, 0, 0, 0, 13, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
@@ -188,30 +188,32 @@ private:
     };
 
     const TexturePathMapping m_texture_map = {
-        { 1, textures_path("snow_mountain/tiles/mid_tile.png") },
-        { 2, textures_path("snow_mountain/tiles/fill_tile.png") },
-        { 3, textures_path("heart_spritesheet.png") },
-        { 4, textures_path("snow_mountain/tiles/spring_out.png") },
-        { 5, textures_path("snow_mountain/tiles/top_right.png") },
-        { 6, textures_path("snow_mountain/tiles/icy_tile.png") },
-        { 7, textures_path("snow_mountain/tiles/top_left.png") },
-        { 8, textures_path("snow_mountain/tiles/bot_left.png") },
-        { 9, textures_path("snow_mountain/tiles/bot_right.png") },
-        { 10, textures_path("snow_mountain/tiles/bottom_mid.png") },
-        { 11, textures_path("snow_mountain/tiles/inner_top_left.png") },
-        { 12, textures_path("snow_mountain/tiles/inner_top_right.png") },
-        { 13, textures_path("snow_mountain/tiles/left_mid.png") },
-        { 14, textures_path("snow_mountain/tiles/right_mid.png") },
-        { -1, textures_path("snow_mountain/enemies/penguin.png") },
-        { -2, textures_path("snow_mountain/enemies/monkey.png") },
-        { -6, textures_path("snow_mountain/projectiles/ice.png") },
-        { -7, textures_path("fire.png") },
+        { 1, textures_path("snow_mountain/tiles/mid_tile.png")},
+        { 2, textures_path("snow_mountain/tiles/fill_tile.png")},
+        { 3, textures_path("heart.png")},
+        { 4, textures_path("snow_mountain/tiles/spring_out.png")},
+        { 5, textures_path("snow_mountain/tiles/top_right.png")},
+        { 6, textures_path("snow_mountain/tiles/icy_tile.png")},
+        { 7, textures_path("snow_mountain/tiles/top_left.png")},
+        { 8, textures_path("snow_mountain/tiles/bot_left.png")},
+        { 9, textures_path("snow_mountain/tiles/bot_right.png")},
+        { 10, textures_path("snow_mountain/tiles/bottom_mid.png")},
+        { 11, textures_path("snow_mountain/tiles/inner_top_left.png")},
+        { 12, textures_path("snow_mountain/tiles/inner_top_right.png")},
+        { 13, textures_path("snow_mountain/tiles/left_mid.png")},
+        { 14, textures_path("snow_mountain/tiles/right_mid.png")},
+        { -1, textures_path("snow_mountain/enemies/penguin.png")},
+        { -2, textures_path("snow_mountain/enemies/monkey.png")},
+        { -6, textures_path("snow_mountain/projectiles/ice.png")},
+        { -7, textures_path("fire.png")},
+        {15, textures_path("cliff_sign.png")}
     };
 
     const TilePropertyMapping m_property_map = {
         {3, std::make_shared<Properties>(Properties::Type::HEALTH)},
         {4, std::make_shared<Properties>(Properties::Type::BOUNCY)},
-        {6, std::make_shared<Properties>(Properties::Type::SLIPPERY)}
+        {6, std::make_shared<Properties>(Properties::Type::SLIPPERY)},
+        {15, std::make_shared<Properties>(Properties::Type::DECORATIVE)}
     };
 
 };
