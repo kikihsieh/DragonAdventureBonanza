@@ -397,7 +397,7 @@ void RenderSystem::draw_modal(mat3 projection, Modal &entity) {
 void RenderSystem::draw_health(mat3 projection, int health) {
     if (!health)
         return;
-    std::string string = "Health: " + std::to_string(health);
+    std::string string = "HEALTH: " + std::to_string(health);
 
     float screen_width = 1200.f;
     float screen_height = 800.f;

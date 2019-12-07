@@ -53,7 +53,6 @@ bool LevelSelect::init() {
     help_btn.position = {1070.f, 50.f};
     m_buttons.emplace_back(help_btn);
     
-    m_background_music = Mix_LoadMUS(audio_path("mainmenu.wav"));
     Scene::init();
     return true;
 }

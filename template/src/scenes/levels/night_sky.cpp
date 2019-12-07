@@ -69,7 +69,7 @@ void NightSky::update(float elapsed_ms, vec2 screen_size) {
 
 void NightSky::draw(const mat3& projection) {
     Scene::draw(projection);
-    m_rendersystem->render_text("Boss Health: " + std::to_string(m_final_boss->health->health * 100 / full_health) + "%", projection, {525,40},{1.0,0.0,0.0});
+    m_rendersystem->render_text("BOSS HEALTH: " + std::to_string(m_final_boss->health->health * 100 / full_health) + "%", projection, {525,40},{1.0,0.5,0.5});
 }
 
 void NightSky::spawn_cloud() {

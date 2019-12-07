@@ -70,7 +70,7 @@ public:
     std::map<Scene_name, bool>* m_unlocked_levels;
 
 protected:
-    virtual const char * get_bg_texture_path(){ return textures_path("end.png");}
+    virtual const char * get_bg_texture_path()=0;
     virtual Modal get_level_intro(){ return level_intro; }
     virtual bool should_draw_level_intro() { return false; }
 

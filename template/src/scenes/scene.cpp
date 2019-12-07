@@ -130,7 +130,10 @@ void Scene::exitGameHandler(std::function<void(void)> callback) {
     exit_game = callback;
 }
 
-void Scene::background_music(){
+void Scene::background_music() {
+
+    if(!m_background_music)
+        printf("Mix_OpenMUS: %s\n", Mix_GetError());
     // Playing background music indefinitely
     Mix_PlayMusic(m_background_music, -1);
     

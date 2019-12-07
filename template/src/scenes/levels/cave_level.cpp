@@ -5,7 +5,6 @@ CaveLevel::CaveLevel() :
     Level() {
 }
 
-
 void CaveLevel::init_walking_enemy(std::shared_ptr<Texture> texture, vec2 pos) {
     Spider s(texture, pos);
     s.animatable->num_columns = 10;
@@ -56,6 +55,6 @@ void CaveLevel::draw(const mat3& projection) {
     
     vec2 camera_center = m_camera_system->get_center();
 
-    std::string string = (m_collision_system->m_torches_to_light > 0) ? "Torches to light: " + std::to_string((int) fmax(m_collision_system->m_torches_to_light, 0)) : "Find the exit!";
-    m_rendersystem->render_text(string, projection, {camera_center.x-offset, camera_center.y - 375}, {1.0,0.5,0});
+    std::string string = (m_collision_system->m_torches_to_light > 0) ? "TORCHES TO LIGHT: " + std::to_string((int) fmax(m_collision_system->m_torches_to_light, 0)) : "FIND THE EXIT!";
+    m_rendersystem->render_text(string, projection, {camera_center.x-offset, camera_center.y - 375}, {1.0,0.8,0});
 }

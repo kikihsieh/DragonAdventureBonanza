@@ -9,6 +9,7 @@
 #include <scenes/level_select.hpp>
 #include <scenes/levels/night_sky.hpp>
 #include <scenes/storyline.hpp>
+#include <scenes/victory.hpp>
 #include <iostream>
 
 #include <project_path.hpp>
@@ -47,7 +48,7 @@ World::World() : m_save_path("save_v3.txt") {
 			(MAIN_MENU, new StartMenu())
             (LEVEL_SELECT, new LevelSelect())
             (STORYLINE, new StoryLine())
-            (END, new Scene());
+            (END, new Victory());
 }
 
 World::~World() {}
