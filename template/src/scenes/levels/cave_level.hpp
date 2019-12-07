@@ -179,7 +179,7 @@ private:
         { -4, textures_path("bat/bat_spritesheet1.png")},
         { -3, textures_path("bat/bat_spritesheet1.png")},
         
-        { -2, textures_path("cave/enemies/littleppl/single_blue.png")},
+        { -2, textures_path("cave/enemies/littleppl/blue_spritesheet.png")},
         { -1, textures_path("cave/enemies/littleppl/littleppl.png")},
         
         { 1, textures_path("cave/tiles/right_side.png")},
@@ -203,7 +203,7 @@ private:
         { 26, textures_path("cave/tiles/floor_BR.png")},
         { 27, textures_path("cave/tiles/middle_r.png")},
         { 28, textures_path("cave/tiles/rock_right.png")},
-        { 35, textures_path("heart.png")},
+        { 35, textures_path("heart_spritesheet.png")},
         
         { 38, textures_path("cave/static_torch.png")},
         { 39, textures_path("cave/static_torch_R.png")}

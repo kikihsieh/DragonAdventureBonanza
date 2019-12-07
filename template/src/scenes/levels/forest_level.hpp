@@ -95,7 +95,7 @@ private:
         {15, textures_path("forest/tiles2/tile_i_l.png")},
         {16, textures_path("forest/tiles2/tile_m_r.png")},
         {17, textures_path("forest/tiles2/tile_m_l.png")},
-        {18, textures_path("heart.png")}
+        {18, textures_path("heart_spritesheet.png")}
     };
 
     const TilePropertyMapping m_property_map = {
