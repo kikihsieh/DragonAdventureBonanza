@@ -16,7 +16,7 @@ public:
     bool init() override;
 
     const char * get_bg_texture_path() override {
-        return textures_path("title.png");
+        return textures_path("main-menu/title.png");
     }
 };
 
