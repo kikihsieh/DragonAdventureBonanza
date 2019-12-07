@@ -59,12 +59,12 @@ void Level::destroy() {
 bool Level::init_level(MapVector map, TexturePathMapping mapping) {
     Button home(textures_path("buttons/home.png"));
     home.m_button_callback = [this](){load_scene(MAIN_MENU);};
-    home.scale = {0.4f, 0.4f};
+    home.scale = {0.5f, 0.5f};
     m_buttons.emplace_back(home);
 
     Button help_btn(textures_path("buttons/help.png"));
     help_btn.m_button_callback = [this](){drawHelp = !drawHelp; state = (state == RUNNING) ? PAUSED : RUNNING;};
-    help_btn.scale = {0.4f, 0.4f};
+    help_btn.scale = {0.5f, 0.5f};
     m_buttons.emplace_back(help_btn);
 
     m_tile_map = new TileMap(this);

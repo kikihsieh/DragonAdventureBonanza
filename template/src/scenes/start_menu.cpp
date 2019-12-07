@@ -5,15 +5,15 @@ StartMenu::StartMenu() {
 }
 
 bool StartMenu::init() {
-    Button start(textures_path("start.png"));
-    start.position = {600.f,400.f};
-    start.scale = {0.75f, 0.75f};
+    Button start(textures_path("main-menu/start.png"));
+    start.position = {600.f,450.f};
+    start.scale = {0.5f, 0.5f};
     start.m_button_callback = [this](){load_scene(STORYLINE);};
     m_buttons.emplace_back(start);
 
-    Button level_select(textures_path("levels.png"));
+    Button level_select(textures_path("main-menu/levels.png"));
     level_select.position = {600.f,550.f};
-    level_select.scale = {0.75f, 0.75f};
+    level_select.scale = {0.5f, 0.5f};
     level_select.m_button_callback = [this](){load_scene(LEVEL_SELECT);};
     m_buttons.emplace_back(level_select);
 
@@ -23,8 +23,8 @@ bool StartMenu::init() {
     help.m_button_callback = [this]() {drawHelp = !drawHelp;};
     m_buttons.emplace_back(help);
 
-    Button exit(textures_path("buttons/exit.png"));
-    exit.position = {50.f,750.f};
+    Button exit(textures_path("main-menu/exit.png"));
+    exit.position = {600.f,650.f};
     exit.scale = {0.5f, 0.5f};
     exit.m_button_callback = [this](){exit_game();};
     m_buttons.emplace_back(exit);
