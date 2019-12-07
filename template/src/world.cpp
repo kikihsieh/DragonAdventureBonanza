@@ -424,6 +424,4 @@ void World::playSFX(Mix_Chunk* sfx) {
 void World::playSFX(Sound_sfx sound){
     // Playing background music indefinitely
     Mix_PlayChannel(-1, w->m_sfx.at(sound), 0);
-    
-    fprintf(stderr, "Loaded music\n");
 }
