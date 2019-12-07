@@ -136,8 +136,6 @@ void Scene::background_music() {
         printf("Mix_OpenMUS: %s\n", Mix_GetError());
     // Playing background music indefinitely
     Mix_PlayMusic(m_background_music, -1);
-    
-    fprintf(stderr, "Loaded music\n");
 }
 
 
