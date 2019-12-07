@@ -27,6 +27,8 @@ public:
         ENEMY_DAMAGE,
         ENEMY_DAMAGE2,
         KEY_PRESS,
+        TORCH,
+        HEART,
     };
 
 	// Creates a window, sets up events and begins the game
@@ -45,8 +47,6 @@ public:
 	// Should the game be over ?
 	bool is_over()const;
 
-	static void playSFX(Mix_Chunk* sfx);
-    
     static void playSFX(Sound_sfx sound);
     
 	

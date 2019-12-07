@@ -87,6 +87,7 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
                 if (!tile.properties->lit && m_torches_to_light > 0) {
                     m_torches_to_light--;
                 }
+                World::playSFX(World::TORCH);
                 tile.properties->lit = true;
                 tile.drawable->texture = tile.torchTex;
                 tile.animatable->num_columns = 4;
@@ -97,6 +98,7 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
             return false;
         case Properties::HEALTH:
             if (entity.player_tag) {
+                World::playSFX(World::HEART);
                 entity.health->increase_health();
                 return true;
             }
