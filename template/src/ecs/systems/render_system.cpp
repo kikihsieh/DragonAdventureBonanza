@@ -220,7 +220,6 @@ bool RenderSystem::init_entity(Entity &entity) {
     return true;
 }
 
-
 void RenderSystem::draw_all(mat3 projection) {
     for (auto &tile : *m_tiles) {
         if (tile.second->clipped || !tile.second->drawable) {

@@ -4,8 +4,7 @@
 #include <ecs/entities/final_boss.hpp>
 #include "night_sky.hpp"
 
-NightSky::NightSky() :
-    Level() {
+NightSky::NightSky() : Level() {
 }
 
 bool NightSky::init() {
@@ -66,6 +65,10 @@ void NightSky::update(float elapsed_ms, vec2 screen_size) {
     }
 }
 
+void NightSky::draw(const mat3& projection) {
+    Scene::draw(projection);
+    m_rendersystem->render_text("Boss Health: " + std::to_string(m_final_boss->health->health), projection, {525,40},{1.0,0.0,0.0});
+}
 
 void NightSky::spawn_cloud() {
     m_final_boss_spawning_system.spawn_cloud(0);

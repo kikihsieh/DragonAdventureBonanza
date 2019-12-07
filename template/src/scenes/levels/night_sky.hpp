@@ -17,6 +17,7 @@ public:
     bool init_player() override;
 
     virtual void update(float elapsed_ms, vec2 screen_size) override;
+    void draw(const mat3& projection) override;
 
 private:
 
