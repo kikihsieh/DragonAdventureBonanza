@@ -21,7 +21,7 @@ struct Player : public Entity {
         drawable->vs_shader = shader_path("player.vs.glsl");
 
         health = new Health();
-        health->health = 10000;
+        health->health = 10;
         health->is_player = true;
 
         collider = new Collider();
