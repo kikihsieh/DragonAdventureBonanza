@@ -19,6 +19,7 @@ To change the "goal" position that needs to be reached for a level change:
 
 To change the number of lives you start each level with:
 * In ecs/entities/player.hpp change the line "health->health = 10;" to whatever number you want.
+* To change the number of lives in the boss level, look in night_sky.cpp
 
 ## Milestone 4: Final Game
 ### Features implemented this milestone
@@ -47,7 +48,7 @@ To change the number of lives you start each level with:
 ### Stability
 * Fixes from last milestone
     * **Runs decently but with significant memory usage increases over time**
-        * Checked and fixed all our memory leaks 
+        * Checked and fixed our memory leaks 
     * **Frame drops occasionally**
         * Made efficiency improvements to address this:
             * reduced the number of times we iterated through our entity list for collisions
@@ -57,6 +58,9 @@ To change the number of lives you start each level with:
             * rendering the tile map to texture once and just draw the texture
             * instance rendering
             * adding an entity manager system and storing components contiguously in memory
+    * **White lines around the player** 
+        *  Used clamping to fix this issue    
+            
 ### Playability
 * Game includes 3 distinct levels and a boss level 
 * There is clear progression throughout the game
@@ -94,9 +98,9 @@ To change the number of lives you start each level with:
     * **The levels are too hard!**
         * Added collectible hearts throughout the level to regain health
     * **It's hard to hit stuff when I shoot**
-       * Made the player projectiles bigger and its collision boxes bigger 
+       * Made the player projectiles bigger and its collision box bigger 
 ### External Integration 
-* FreeType Library Integration - used for text rendering of player health (all levels), boss health (boss level) , and number of torches collected (level 2, cave level) 
+* FreeType Library Integration - used for text rendering of player health (all levels), boss health (boss level) , and number of torches collected (level 2, cave level), Loading screen
 
 ### Advanced Graphics
 * Parallax scrolling background for all three levels (forest, cave, snow) 
@@ -112,8 +116,20 @@ To change the number of lives you start each level with:
     * Sliding tiles - try walking on one
     * Bouncy tiles - try jumping on the top of these in the snow level
 ### Audio 
-* **Background music:** Each level has a different soundtrack
+* **Background music:** Each level has a different soundtrack, victory soundtrack on game completion
 * **Feedback:** We have sounds effects associated with the following actions; button clicks, the player getting hit, jumping, shooting, collecting a heart, lighting a torch, etc.
+
+### Proposal Targets
+* Optional advanced technical elements from the original pitch that were implemented
+    *  Boss phases - varying attack patterns based on boss health
+    *  Cutscenes - A storyline sequence using scenes and modals
+* Changed targets from original pitch
+    *  Moving platforms, disappearing platforms
+        *   this just doesn't work well with our tile system so we opted to have tiles that are special in other ways such as slippery and bouncy ones
+    *   Volcano level
+        *   Decided that the player should be able to breath fire from the start and that it is unnecessary to have a separate level to unlock this ability. This was a decision made to save time and resources.
+    *   Boss levels at the end of each level
+        *   Changed to have one final boss level that is longer and more complex. This was a decision made to save time and resources. 
 
 ________________________________________________________________________________________________________________________
 ### Milestone 3: Playable Game
