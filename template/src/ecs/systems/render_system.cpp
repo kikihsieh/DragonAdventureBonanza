@@ -600,7 +600,7 @@ void RenderSystem::transform(Entity &entity) {
 void RenderSystem::update(float ms) {
     m_light_pos.clear();
     for (auto &entity : *m_entities) {
-        if (!entity.animatable) {
+        if (!entity.animatable || entity.is_boss_proj || entity.is_bomb) {
             continue;
         }
         if (entity.player_tag)

@@ -53,11 +53,17 @@ bool TileMap::init(MapVector map, TextureMapping dict, TilePropertyMapping prope
                         tile->properties = std::make_shared<Properties>(Properties::Type::TORCH);
                         m_level->m_lights.emplace_back(tile);
                     } else if (property_map.at(*col)->type == Properties::TORCH_LIT) {
+                        tile->animatable->num_columns = 4;
+                        tile->drawable->texture->width *= tile->animatable->num_columns ;
+                        tile->animatable->frame_index = {0,0};
+                        tile->drawable->vs_shader = shader_path("animated.vs.glsl");
+                        tile->drawable->fs_shader = shader_path("animated.fs.glsl");
+                        
                         m_level->m_lights.emplace_back(tile);
                     }
                     else if (property_map.at(*col)->type == Properties::HEALTH){
                         tile->animatable->num_columns = 5;
-                        tile->drawable->texture->width *= tile->animatable->num_columns ; //TODO
+                        tile->drawable->texture->width *= tile->animatable->num_columns ;
                         tile->animatable->frame_index = {0,0};
                         tile->drawable->vs_shader = shader_path("animated.vs.glsl");
                         tile->drawable->fs_shader = shader_path("animated.fs.glsl");

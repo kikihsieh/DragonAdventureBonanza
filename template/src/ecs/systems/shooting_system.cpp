@@ -42,10 +42,12 @@ void ShootingSystem::update(float ms) {
             
             World::playSFX(World::SHOOT);
             Projectile p(m_texture_mapping.at(-7), pos, shoot_direction, texture_scale, false);
+            p.animatable->num_columns = 7;
+           
             p.properties->count = 1;
             if (initEntity(p)) {
+                
                 m_entities->emplace_back(p);
-                p.texture_size.y *= 1.3;
             }
             entity.shooting->m_next_projectile = ((entity.shooting->time) / 2) + m_dist(m_rng) * ((entity.shooting->time) / 2);
         }
@@ -89,9 +91,13 @@ bool ShootingSystem::initEntity(Entity& entity) {
         }
     }
     entity.texture_size = {drawable->texture->width * 1.f, drawable->texture->height * 1.f};
+    if (entity.animatable) {
+        entity.texture_size = mul(entity.texture_size,
+                                  {1.f / entity.animatable->num_columns, 1.f / entity.animatable->num_rows});
+    }
     // The position corresponds to the center of the texture
-    float wr = drawable->texture->width * 0.5f;
-    float hr = drawable->texture->height * 0.5f;
+    float wr = entity.texture_size.x * 0.5f;
+    float hr = entity.texture_size.y * 0.5f;
     
     drawable->vertices[0].position = { -wr, +hr, -0.02f };
     drawable->vertices[0].texcoord = { 0.f, 1.f };
