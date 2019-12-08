@@ -52,11 +52,6 @@ void CollisionSystem::tile_collisions(Entity& entity, float ms) {
     float t_width = TileMap::tile_screen_size.x;
     float t_height = TileMap::tile_screen_size.y;
 
-    if (entity.flyable) {
-        e_height *= 0.5;
-        e_width *= 0.8;
-    }
-
     std::pair<int, int> tile_pos = TileMap::get_left_top_tile_pos_from_coord(entity.position.x, entity.position.y,
                                                                              {e_width, e_height});
 
@@ -149,8 +144,6 @@ void CollisionSystem::bounce_updates(Entity &entity, float bounce, Side side) {
 }
 
 void CollisionSystem::friction_updates(Entity &entity, float friction, Side side, float ms) {
-    float max_vel = 800;
-
     if (side == Side::BOTTOM) {
         entity.physics->velocity.y = fmax(-0.1f * entity.physics->velocity.y, entity.physics->velocity.y);
         return;
@@ -314,6 +307,15 @@ CollisionSystem::Side CollisionSystem::detect_collision(Entity &e1, Entity &e2) 
     float e2_height = e2.texture_size.y * e2.scale.y;
     float e2_width = e2.texture_size.x * e2.scale.x;
 
+    if (e1.flyable) {
+        e1_height *= 0.75;
+        e1_width *= 0.9;
+    }
+
+    if (e2.flyable) {
+        e2_height *= 0.75;
+        e2_width *= 0.9;
+    }
     // https://stackoverflow.com/questions/29861096/detect-which-side-of-a-rectangle-is-colliding-with-another-rectangle
     float dx = e1.position.x - e2.position.x;
     float dy = e1.position.y - e2.position.y;
