@@ -11,10 +11,16 @@ struct Projectile : public Entity {
         }
 
         drawable = new Drawable();
-        drawable->fs_shader = shader_path("projectile.fs.glsl");
-        drawable->vs_shader = shader_path("projectile.vs.glsl");
+        drawable->fs_shader = shader_path("animated.fs.glsl");
+        drawable->vs_shader = shader_path("animated.vs.glsl");
         drawable->texture = texture;
         
+        animatable = new Animatable();
+        animatable->num_columns = 1;
+        animatable->num_rows = 1;
+        animatable->frame_index = {0,0};
+        
+    
         position = pos;
         
         is_player_proj = !isEnemy;

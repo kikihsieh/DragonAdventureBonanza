@@ -42,8 +42,11 @@ void ShootingSystem::update(float ms) {
             
             World::playSFX(World::SHOOT);
             Projectile p(m_texture_mapping.at(-7), pos, shoot_direction, texture_scale, false);
+            p.animatable->num_columns = 7;
+           
             p.properties->count = 1;
             if (initEntity(p)) {
+                
                 m_entities->emplace_back(p);
                 p.texture_size.y *= 1.3;
             }
