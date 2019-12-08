@@ -5,9 +5,11 @@ squirrel: ckroomy: https://ckroomy.itch.io/oh-nuts
 
 Cave assets:
 background: adman32: https://pixelation.org/index.php?PHPSESSID=8qukdpngdru8ch4tirjr5a7n85&topic=15211.msg139572#msg139572
-torch:
-bat:
-tiles:
+torch: unknown
+bat: unknown: https://imgur.com/rn1zR0w
+tiles: ACASAS: https://gameartpartners.com/vendor-all-products/?ID=1956
+spirits: Kiki Hsieh
+shooting fire: snapbackscz: https://giphy.com/stickers/lp8JndnFvTMndTWYWs
 
 snow mountain assets:
 background: vnitti: https://vnitti.itch.io/glacial-mountains-parallax-background
@@ -27,5 +29,13 @@ Projectiles:
 player fireball: http://pixelartmaker.com/art/f59eaa826d4e49f
 boss fireball: http://pixelartmaker.com/art/058ce513d186466
 
-Font:
+Signs:
+signs: non157 pixel art  https://www.shutterstock.com/g/non157?studio=1
+
+Music/SFX: 
+Chipoogy: https://m.soundcloud.com/chipoogy
+
+Fonts:
 Kenney https://kenney.nl/assets/kenney-fonts
+Our Quinny
+Pixelated
