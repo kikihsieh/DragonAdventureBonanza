@@ -47,8 +47,8 @@ void CollisionSystem::update(float ms) {
 }
 
 void CollisionSystem::tile_collisions(Entity& entity, float ms) {
-    float e_height = entity.texture_size.y * entity.scale.y;
-    float e_width = entity.texture_size.x * entity.scale.x;
+    float e_height = abs(entity.texture_size.y * entity.scale.y);
+    float e_width = abs(entity.texture_size.x * entity.scale.x);
     float t_width = TileMap::tile_screen_size.x;
     float t_height = TileMap::tile_screen_size.y;
 
@@ -308,11 +308,11 @@ bool CollisionSystem::entity_property_updates(Entity &entity, Tile &tile, Collis
 }
 
 CollisionSystem::Side CollisionSystem::detect_collision(Entity &e1, Entity &e2) {
-    float e1_height = e1.texture_size.y * e1.scale.y;
-    float e1_width = e1.texture_size.x * e1.scale.x;
+    float e1_height = abs(e1.texture_size.y * e1.scale.y);
+    float e1_width = abs(e1.texture_size.x * e1.scale.x);
 
-    float e2_height = e2.texture_size.y * e2.scale.y;
-    float e2_width = e2.texture_size.x * e2.scale.x;
+    float e2_height = abs(e2.texture_size.y * e2.scale.y);
+    float e2_width = abs(e2.texture_size.x * e2.scale.x);
 
     // https://stackoverflow.com/questions/29861096/detect-which-side-of-a-rectangle-is-colliding-with-another-rectangle
     float dx = e1.position.x - e2.position.x;
