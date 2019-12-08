@@ -3,6 +3,7 @@
 #include <utility>
 #include <ecs/entities/player.hpp>
 #include <iostream>
+#include <world.hpp>
 #include "common.hpp"
 #include "ecs/systems/default_physics_system.hpp"
 
@@ -193,4 +194,21 @@ void Level::on_mouse(int key, int action, double xpos, double ypos) {
     double x = xpos + m_camera_system->get_center().x - m_screen_size.x/2;
     double y = ypos + m_camera_system->get_center().y - m_screen_size.y/2;
     m_inputsystem->on_mouse_update(key, action, x, y);
+}
+
+void Level::on_key(int key, int action) {
+    if (state == LOADED) {
+        return;
+    }
+
+    if ((key == GLFW_KEY_R && action == GLFW_PRESS)) {
+        World::playSFX(World::KEY_PRESS);
+    }
+
+    if (key == GLFW_KEY_R && action == GLFW_RELEASE) {
+        load_scene(get_scene());
+        return;
+    }
+
+    Scene::on_key(key, action);
 }

@@ -89,6 +89,7 @@ void Scene::on_key(int key, int action) {
     if (state == LOADED) {
         return;
     }
+
     if((key == GLFW_KEY_H && action == GLFW_PRESS) || (key == GLFW_KEY_P && action == GLFW_PRESS)){
         World::playSFX(World::KEY_PRESS);
     }
