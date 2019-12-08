@@ -213,6 +213,9 @@ bool CollisionSystem::collide_with_entities(Entity &e) {
             if (e.properties) {
                 e.properties->count--;
             }
+            if (entity_it->is_enemy_proj) {
+                entity_it->properties->count = 0;
+            }
             return true;
         }
         collided = true;
