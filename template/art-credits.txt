@@ -1,22 +1,27 @@
 forest assets:
-edermunizz: https://edermunizz.itch.io/free-pixel-art-forest
-aamatniekss: https://aamatniekss.itch.io/fantasy-jungle-pixel-art-tileset
+background: edermunizz: https://edermunizz.itch.io/free-pixel-art-forest
+tiles: aamatniekss: https://aamatniekss.itch.io/fantasy-jungle-pixel-art-tileset
+squirrel: ckroomy: https://ckroomy.itch.io/oh-nuts
 
 Cave assets:
-adman32: https://pixelation.org/index.php?PHPSESSID=8qukdpngdru8ch4tirjr5a7n85&topic=15211.msg139572#msg139572
+background: adman32: https://pixelation.org/index.php?PHPSESSID=8qukdpngdru8ch4tirjr5a7n85&topic=15211.msg139572#msg139572
+torch:
+bat:
+tiles:
 
 snow mountain assets:
-vnitti: https://vnitti.itch.io/glacial-mountains-parallax-background
-NotPhoenix: https://notphoenix.itch.io/snowyfrosty-tileset
-Grumble: http://supertux.lethargik.org/wiki/File:Supertux-slopes.png
-GameArtForge: https://opengameart.org/content/blocks-set-01
-Kenney: https://kenney.nl/assets/jumper-pack
+background: vnitti: https://vnitti.itch.io/glacial-mountains-parallax-background
+tiles: NotPhoenix: https://notphoenix.itch.io/snowyfrosty-tileset
+tiles: Grumble: http://supertux.lethargik.org/wiki/File:Supertux-slopes.png
+tiles: GameArtForge: https://opengameart.org/content/blocks-set-01
+tiles: Kenney: https://kenney.nl/assets/jumper-pack
 
 Dragon:
-https://aminoapps.com/c/pixel-art/page/blog/dragon-gif/PJ3Z_X81FmubXBa7KqMj6lxzj8M2axP4pb
+Dawsonator: https://aminoapps.com/c/pixel-art/page/blog/dragon-gif/PJ3Z_X81FmubXBa7KqMj6lxzj8M2axP4pb
 
 Night sky assets:
-zedotagger: https://www.deviantart.com/zedotagger/art/Monster-Hunter-Rathian-592854097
+boss dragon: zedotagger: https://www.deviantart.com/zedotagger/art/Monster-Hunter-Rathian-592854097
+sibling dragon: unknown
 
 Projectiles:
 player fireball: http://pixelartmaker.com/art/f59eaa826d4e49f
