@@ -598,7 +598,7 @@ void RenderSystem::transform(Entity &entity) {
 void RenderSystem::update(float ms) {
     m_light_pos.clear();
     for (auto &entity : *m_entities) {
-        if (!entity.animatable) {
+        if (!entity.animatable || entity.is_boss_proj || entity.is_bomb) {
             continue;
         }
         if (entity.player_tag)
@@ -615,7 +615,7 @@ void RenderSystem::update(float ms) {
             if (entity.animatable->frame_index.x == 6) {
                 entity.animatable->frame_index.x = 0;
             }
-        } else if (entity.physics->velocity.x == 0 && entity.health->is_player && entity.animatable && entity.animatable->num_rows > 1) {
+        } else if (entity.physics->velocity.x == 0 && entity.health->is_player && entity.animatable->num_rows > 1) {
             if (entity.is_facing_forward) {
                 entity.animatable->frame_index = {0, 1};
             } else {
