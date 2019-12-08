@@ -230,6 +230,14 @@ void RenderSystem::draw_all(mat3 projection) {
         draw(*tile.second, projection);
     }
     float health = 0.f;
+
+    for (auto &button: *m_buttons) {
+        if (button.drawable == nullptr || button.clipped) {
+            continue;
+        }
+        draw(button, projection);
+    }
+
     for (auto &entity: *m_entities) {
         if (entity.drawable == nullptr || entity.clipped) {
             continue;
@@ -241,12 +249,6 @@ void RenderSystem::draw_all(mat3 projection) {
     }
     draw_health(projection, health);
 
-    for (auto &button: *m_buttons) {
-        if (button.drawable == nullptr || button.clipped) {
-            continue;
-        }
-        draw(button, projection);
-    }
 //    for (auto &entity: *m_entities) {
 //        if (entity.drawLast) {
 //            draw(entity, projection);
