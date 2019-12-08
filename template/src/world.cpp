@@ -278,6 +278,9 @@ void World::on_key(GLFWwindow* window, int key, int, int action, int mod) {
     if (m_scenes.at(m_current_scene)->state == Scene::LOADING) {
         return;
     }
+    if ((key == GLFW_KEY_1 && action == GLFW_PRESS) ||(key == GLFW_KEY_2&& action == GLFW_PRESS) || (key == GLFW_KEY_3&& action == GLFW_PRESS)|| (key == GLFW_KEY_4 && action == GLFW_PRESS)) {
+        World::playSFX(World::KEY_PRESS);
+    }
 
     if (key == GLFW_KEY_1 && action == GLFW_RELEASE) {
         load_scene(FOREST);

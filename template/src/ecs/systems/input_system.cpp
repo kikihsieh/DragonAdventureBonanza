@@ -23,6 +23,7 @@ void InputSystem::on_key_update(int key, int action) {
         }
         if (key == GLFW_KEY_DOWN || key == GLFW_KEY_S) {
             if (action == GLFW_PRESS) {
+                World::playSFX(World::KEY_PRESS);
                 entity.input->down = true;
             } else if (action == GLFW_RELEASE) {
                 entity.input->down = false;
