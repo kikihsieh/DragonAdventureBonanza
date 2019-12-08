@@ -16,6 +16,7 @@ struct Button : public Entity {
 		input = new Input();
 
 		clipped = false;
+		depth = -0.51;
     }
 
 public:
