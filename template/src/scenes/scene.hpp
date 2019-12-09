@@ -77,7 +77,7 @@ protected:
 	RenderSystem* m_rendersystem;
     InputSystem *m_inputsystem;
     Modal help = Modal(textures_path("modals/help.png"));
-    Modal credits = Modal(textures_path("modals/credits.png"));
+    Modal credits = Modal(textures_path("modals/credit.png"));
     Modal level_intro = Modal(textures_path("modals/forest.png"));
 
     std::map<int, Tile*> m_tiles;

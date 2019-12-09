@@ -16,5 +16,6 @@ struct Physics {
     int jump_count;
     bool grounded = false;
     float grounded_friction = 0;
+    bool leaving_ice = false;
     bool off_screen = false;
 };
