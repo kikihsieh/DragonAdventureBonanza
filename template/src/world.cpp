@@ -148,10 +148,6 @@ bool World::init(vec2 screen)
         (HEART, Mix_LoadWAV(audio_path("/sfx/jibberish.wav")))
         (WOW, Mix_LoadWAV(audio_path("/sfx/wow.wav")))
         (JUMP, Mix_LoadWAV(audio_path("/sfx/jump.wav")));
-    
-    Mix_Music* m_background_music = Mix_LoadMUS(audio_path("mainmenu.wav"));
-    Mix_PlayMusic( m_background_music, -1);
-
 	return load_scene(MAIN_MENU);
 }
 
@@ -169,7 +165,6 @@ void World::destroy() {
     {
         Mix_FreeChunk(pair.second);
     }
-   
 }
 
 // Update our game world
@@ -432,7 +427,5 @@ void World::change_scene() {
     load_scene(next);
 }
 void World::playSFX(Sound_sfx sound){
-    // Playing background music indefinitely
-    //Mix_Volume(1,MIX_MAX_VOLUME);
     Mix_PlayChannel(-1, w->m_sfx.at(sound), 0);
 }

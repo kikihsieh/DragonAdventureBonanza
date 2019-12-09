@@ -222,7 +222,10 @@ bool RenderSystem::init_entity(Entity &entity) {
 }
 
 void RenderSystem::draw_all(mat3 projection) {
+    // HACK: rendering background first for alpha in tiles to display properly. This is only working because
+    //       we always put the background in the beginning of the list. I know it's not great...
     draw(m_entities->front(), projection);
+
     for (auto &tile : *m_tiles) {
         if (tile.second->clipped || !tile.second->drawable) {
             continue;
@@ -247,12 +250,6 @@ void RenderSystem::draw_all(mat3 projection) {
         draw(button, projection);
     }
     draw_health(projection, health);
-
-//    for (auto &entity: *m_entities) {
-//        if (entity.drawLast) {
-//            draw(entity, projection);
-//        }
-//    }
 }
 
 void RenderSystem::draw(Entity &entity, mat3 projection) {
@@ -263,8 +260,6 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
     // Enabling alpha channel for textures
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-//    glBlendEquation()
-//    glDisable(GL_DEPTH_TEST);
     if (entity.useDepth) {
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
@@ -273,8 +268,6 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
         glDisable(GL_DEPTH_TEST);
         glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA);
     }
-//    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
-//    glEnable(GL_DEPTH_TEST);
 
     // Setting shaders
     glUseProgram(drawable->effect.program);

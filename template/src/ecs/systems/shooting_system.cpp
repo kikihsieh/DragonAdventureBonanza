@@ -34,13 +34,12 @@ void ShootingSystem::update(float ms) {
             vec2 texture_scale = { 1.0f, 1.0f };
             
             if (!entity.is_facing_forward) {
-                
-                World::playSFX(World::SHOOT);
                 shoot_direction = { -1.f, 0.f };
                 texture_scale = { -1.0f, 1.0f };
             }
-            
-            World::playSFX(World::SHOOT);
+            if (entity.shooting->sound) {
+                World::playSFX(World::SHOOT);
+            }
             Projectile p(m_texture_mapping.at(-7), pos, shoot_direction, texture_scale, false);
             p.animatable->num_columns = 7;
            

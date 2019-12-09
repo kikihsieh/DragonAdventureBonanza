@@ -7,5 +7,6 @@ struct Shooting
     }
     float m_next_projectile = 0.f;
     int time;
+    bool sound = true;
 };
 

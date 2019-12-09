@@ -93,5 +93,6 @@ bool NightSky::init_player() {
     m_player->physics->acceleration = {0, 0};
     m_player->position = {100, 400};
     m_player->shooting->time = 500;
+    m_player->shooting->sound = false;
     return true;
 }
