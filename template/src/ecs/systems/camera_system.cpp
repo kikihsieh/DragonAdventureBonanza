@@ -37,7 +37,7 @@ void CameraSystem::update_x(float ms, Player *player, vec2 screen_size) {
     m_offset_x = screen_size.x / 8.f;
     m_horizontal_snap_dist = screen_size.x / 4.f;
 
-    if (player->is_facing_forward) {
+    if (player->physics->velocity.x > 0) {
         m_snap_threshold_b = false;
         if (m_snap_threshold_f) {
             m_center.x = fmin(m_center.x + m_horizontal_snap_speed * (ms / 1000), player->position.x + m_offset_x);

@@ -155,7 +155,7 @@ void CollisionSystem::friction_updates(Entity &entity, float friction, Side side
     } else if (side != TOP) {
         return;
     }
-
+    entity.physics->leaving_ice = true;
     entity.physics->grounded_friction = 0.01;
     entity.physics->velocity.y = fmin(-0.1f * entity.physics->velocity.y, entity.physics->velocity.y);
 }
@@ -195,7 +195,6 @@ bool CollisionSystem::collide_with_entities(Entity &e) {
                 if (entity_it->health) {
                     World::playSFX(World::ENEMY_DAMAGE);
                     entity_it->health->decrease_health();
-                  
                 }
 
             } else if (!e.health->invincible){
@@ -351,6 +350,7 @@ CollisionSystem::Side CollisionSystem::detect_collision(Entity &e1, Entity &e2) 
 }
 
 void CollisionSystem::land(Entity &entity) {
+    entity.physics->leaving_ice = false;
     if (entity.airdash)
         entity.airdash->can_airdash = true;
 
