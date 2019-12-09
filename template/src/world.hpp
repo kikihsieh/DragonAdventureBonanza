@@ -29,6 +29,7 @@ public:
         KEY_PRESS,
         TORCH,
         HEART,
+        WOW,
     };
 
 	// Creates a window, sets up events and begins the game

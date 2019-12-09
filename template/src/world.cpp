@@ -146,6 +146,7 @@ bool World::init(vec2 screen)
         (KEY_PRESS, Mix_LoadWAV(audio_path("/sfx/click.wav")))
         (TORCH, Mix_LoadWAV(audio_path("/sfx/lit_torch.wav")))
         (HEART, Mix_LoadWAV(audio_path("/sfx/jibberish.wav")))
+        (WOW, Mix_LoadWAV(audio_path("/sfx/wow.wav")))
         (JUMP, Mix_LoadWAV(audio_path("/sfx/jump.wav")));
     
     Mix_Music* m_background_music = Mix_LoadMUS(audio_path("mainmenu.wav"));
