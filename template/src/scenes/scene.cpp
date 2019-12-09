@@ -11,6 +11,7 @@ bool Scene::init() {
     Background background(get_bg_texture_path());
     m_entities.insert(m_entities.begin(), background);
     m_rendersystem->init_entity(help);
+    m_rendersystem->init_entity(credits);
     draw_level_intro = should_draw_level_intro();
     if (draw_level_intro) {
         level_intro = get_level_intro();
@@ -41,6 +42,7 @@ void Scene::destroy() {
     m_buttons.clear();
     m_lights.clear();
     drawHelp = false;
+    drawCredits = false;
     draw_level_intro = false;
 
 //    Mix_CloseAudio();
@@ -67,6 +69,11 @@ void Scene::draw(const mat3& projection) {
     if (drawHelp) {
         state = PAUSED;
         m_rendersystem->draw_modal(projection, help);
+    }
+
+    if (drawCredits) {
+        state = PAUSED;
+        m_rendersystem->draw_modal(projection, credits);
     }
 }
 

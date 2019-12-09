@@ -28,6 +28,12 @@ bool StartMenu::init() {
     exit.scale = {0.5f, 0.5f};
     exit.m_button_callback = [this](){exit_game();};
     m_buttons.emplace_back(exit);
+
+    Button credit(textures_path("buttons/credits.png"));
+    credit.position = {50.f,750.f};
+    credit.scale = {0.5f, 0.5f};
+    credit.m_button_callback = [this](){drawCredits = !drawCredits;};
+    m_buttons.emplace_back(credit);
     
     m_background_music = Mix_LoadMUS(audio_path("mainmenu.wav"));
     Scene::init();

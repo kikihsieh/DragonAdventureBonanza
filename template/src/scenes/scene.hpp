@@ -77,6 +77,7 @@ protected:
 	RenderSystem* m_rendersystem;
     InputSystem *m_inputsystem;
     Modal help = Modal(textures_path("modals/help.png"));
+    Modal credits = Modal(textures_path("modals/credits.png"));
     Modal level_intro = Modal(textures_path("modals/forest.png"));
 
     std::map<int, Tile*> m_tiles;
@@ -86,6 +87,8 @@ protected:
     std::function<void(void)> exit_game;
     Mix_Music* m_background_music;
     vec2 m_screen_size;
+
+    bool drawCredits = false;
 
 };
 #endif
