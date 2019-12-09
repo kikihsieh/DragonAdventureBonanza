@@ -222,6 +222,14 @@ bool RenderSystem::init_entity(Entity &entity) {
 }
 
 void RenderSystem::draw_all(mat3 projection) {
+    draw(m_entities->front(), projection);
+    for (auto &tile : *m_tiles) {
+        if (tile.second->clipped || !tile.second->drawable) {
+            continue;
+        }
+
+        draw(*tile.second, projection);
+    }
     float health = 0.f;
     for (auto &entity: *m_entities) {
         if (entity.drawable == nullptr || entity.clipped) {
@@ -232,15 +240,6 @@ void RenderSystem::draw_all(mat3 projection) {
             continue;
         health = entity.health->health;
     }
-
-    for (auto &tile : *m_tiles) {
-        if (tile.second->clipped || !tile.second->drawable) {
-            continue;
-        }
-
-        draw(*tile.second, projection);
-    }
-    
     for (auto &button: *m_buttons) {
         if (button.drawable == nullptr || button.clipped) {
             continue;
