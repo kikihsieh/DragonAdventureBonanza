@@ -32,7 +32,7 @@ void DefaultPhysicsSystem::update(float ms) {
             continue;
         }
 
-        float max_friction = 5;
+        float max_friction = 4;
         float friction = (entity_it->physics->grounded_friction || entity_it->physics->leaving_ice) ? entity_it->physics->grounded_friction : max_friction;
 
         if (entity_it->input) {
@@ -45,7 +45,7 @@ void DefaultPhysicsSystem::update(float ms) {
                     entity_it->physics->velocity.x -= 20 * friction * ms;
                 } else {
                     if (entity_it->physics->leaving_ice) {
-                        entity_it->physics->velocity.x *= (1.f - (ms * 0.0001f));
+                        entity_it->physics->velocity.x *= (1.f - (ms * 0.001f));
                     } else if (entity_it->physics->grounded) {
                         entity_it->physics->velocity.x *= 1.012f * pow(1 - friction / max_friction, ms);
                     } else {
