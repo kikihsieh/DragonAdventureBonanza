@@ -175,7 +175,8 @@ void Level::update_clipped(vec2 camera_center, vec2 screen_size) {
         entity.clipped = entity.position.x > camera_center.x + screen_size.x * 0.55f ||
                          entity.position.x < camera_center.x - screen_size.x * 0.55f ||
                          entity.position.y > camera_center.y + screen_size.y * 0.55f ||
-                         entity.position.y < camera_center.y - screen_size.y * 0.55f;
+                         entity.position.y < camera_center.y - screen_size.y * 0.55f ||
+                ((entity.clipped && (entity.is_enemy_proj || entity.is_player_proj)));
     }
 
     for (auto &tile: *m_tile_map->get_tiles()) {

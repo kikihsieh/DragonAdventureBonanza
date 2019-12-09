@@ -110,6 +110,10 @@ void DefaultPhysicsSystem::move(float ms, Entity& entity) {
         if (entity.is_enemy_proj || entity.is_player_proj) entity.clipped = true;
     }
 
+    if (entity.position.y - height / 2 > m_level_bounds_y.y) {
+        if (entity.is_enemy_proj || entity.is_player_proj) entity.clipped = true;
+    }
+
     entity.position.x += x_step;
     entity.position.y += y_step;
 }
