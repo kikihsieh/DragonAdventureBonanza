@@ -85,7 +85,7 @@ bool CollisionSystem::tile_property_updates(Entity& entity, Tile& tile, Side sid
         case Properties::TORCH_LIT:
             if (entity.is_player_proj)
                 World::playSFX(World::TORCH);
-            return entity_property_updates(entity, tile, side);
+            return false;
         case Properties::TORCH:
             if (entity.is_player_proj) {
                 if (!tile.properties->lit) {
