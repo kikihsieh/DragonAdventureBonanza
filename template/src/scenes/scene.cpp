@@ -90,7 +90,7 @@ void Scene::on_key(int key, int action) {
         return;
     }
 
-    if((key == GLFW_KEY_H && action == GLFW_PRESS) || (key == GLFW_KEY_P && action == GLFW_PRESS)){
+    if ((key == GLFW_KEY_H && action == GLFW_PRESS) || (key == GLFW_KEY_P && action == GLFW_PRESS)){
         World::playSFX(World::KEY_PRESS);
     }
     
@@ -104,6 +104,11 @@ void Scene::on_key(int key, int action) {
         state = (state == RUNNING) ? PAUSED : RUNNING;
         return;
     }
+
+    if (key == GLFW_KEY_S && action == GLFW_PRESS && draw_level_intro) {
+        World::playSFX(World::KEY_PRESS);
+    }
+
     if (key == GLFW_KEY_S && action == GLFW_RELEASE && draw_level_intro) {
         draw_level_intro = false;
         state = (state == RUNNING) ? PAUSED : RUNNING;
