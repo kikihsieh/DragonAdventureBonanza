@@ -22,11 +22,11 @@ To change the number of lives you start each level with:
 * To change the number of lives in the boss level, look in night_sky.cpp
 
 #### Info
-The name of your game: Dragon Adventure Bonanza
-The names of your team members: Arden Allen, Dian (Desta) Chi, Karen Hong, Kiki Hsieh, Mayesha Kabir, Austin Kobayashi
-A short description of the game: TODO
-A still image of the game: TODO
-A short video of your gameplay: TODO
+* The name of your game: Dragon Adventure Bonanza
+* The names of your team members: Arden Allen, Dian (Desta) Chi, Karen Hong, Kiki Hsieh, Mayesha Kabir, Austin Kobayashi
+* A short description of the game: TODO
+* A still image of the game: TODO
+* A short video of your gameplay: TODO
 
 ## Milestone 4: Final Game
 ### Features implemented this milestone
