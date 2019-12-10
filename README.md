@@ -41,6 +41,7 @@ To change the number of lives you start each level with:
     * Displays for health status
     * Autosaving progress
     * Added a loading screen
+    * Refresh/ restart a level when R is pressed 
 * Gameplay
     * Level transitioning - level unlocking, ability unlocking
     * Added a tile properties system - collectibles, tiles with physical properties, torches, and goal tiles
@@ -69,7 +70,7 @@ To change the number of lives you start each level with:
             * instance rendering
             * adding an entity manager system and storing components contiguously in memory
     * **White lines around the player** 
-        *  Used clamping to fix this issue    
+        *  Extra pixel in the spritesheet + changed some OpenGL flags
             
 ### Playability
 * Game includes 3 distinct levels and a boss level 
@@ -119,17 +120,19 @@ To change the number of lives you start each level with:
     * Hit a torch with a fireball to see it light up
     * Allowed the torch to flicker to replicate real lit torches
     * Smooth blending light of adjacent torches
-* More animations! - flying player sprite, boss, boss minions, hearts, cave spirits, etc.
+* More animations! - flying player sprite, boss, boss minions, hearts, cave spirits, torches, player projectiles etc.
 ### Advanced Gameplay
 * Boss level with 4.5 different attack phases
     * Coordination between boss projectiles and minions to form different patterns 
     * New types of projectiles that bounce into different formations
+    * Phases are boss health based 
+    * Randomized safe spaces based on player position, player is able to reach a safe spot during each attack wave
 * Tiles with physical properties - play level 3 (snow level) to see these
     * Sliding tiles - try walking on one
     * Bouncy tiles - try jumping on the top of these in the snow level
 ### Audio 
 * **Background music:** Each level has a different soundtrack, victory soundtrack on game completion
-* **Feedback:** We have sounds effects associated with the following actions; button clicks, the player getting hit, jumping, shooting, collecting a heart, lighting a torch, etc.
+* **Feedback:** We have sounds effects associated with the following actions; button clicks, the player getting hit, jumping, shooting, collecting a heart, lighting a torch, jumping on an enemy, shooting an enemy etc.
 
 ### Proposal Targets
 * Optional advanced technical elements from the original pitch that were implemented
