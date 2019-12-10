@@ -32,6 +32,7 @@ To change the number of lives you start each level with:
 ### Features implemented this milestone
 * UI/ UX
     * Updated help menu and main menu
+    * Added credit modal
     * Added buttons on each level for navigation and help
     * Added exit button to main menu
     * Modal descriptions at the start of each level, storyline screens
@@ -47,10 +48,11 @@ To change the number of lives you start each level with:
     * Adjusted player movement
     * Flashing feedback on damage
     * Light system for cave level and torch lighting
-    * Music and sound effects
+    * Created music and sound effects (total of 21 wav files)
     * New assets
     * Parallax scrolling
     * Removed the white lines around the player
+    * Animated and created sprite sheets for the characters, torches, and hearts
 
 ### Stability
 * Fixes from last milestone
