@@ -37,7 +37,6 @@ To change the number of lives you start each level with:
     * Added exit button to main menu
     * Modal descriptions at the start of each level, storyline screen, victory scene
     * Added level select screen
-    * Integrated Freetype library for text rendering and glm library
     * Displays for # of torches to light in cave level
     * Displays for health status
     * Autosaving progress
