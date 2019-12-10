@@ -117,7 +117,9 @@ To change the number of lives you start each level with:
 * Lighting system in level 2 (cave level) - added depth calculations
     * Darkened cave with a spotlight on the player 
     * Hit a torch with a fireball to see it light up
-* More animations! - flying player sprite, boss, boss minions, hearts, cave mummies, etc.
+    * Allowed the torch to flicker to replicate real lit torches
+    * Smooth blending light of adjacent torches
+* More animations! - flying player sprite, boss, boss minions, hearts, cave spirits, etc.
 ### Advanced Gameplay
 * Boss level with 4.5 different attack phases
     * Coordination between boss projectiles and minions to form different patterns 
