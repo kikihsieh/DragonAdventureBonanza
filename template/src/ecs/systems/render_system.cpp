@@ -313,7 +313,6 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
         glUniform1i(nlights_uloc, m_light_pos.size());
         if (m_light_pos.size() > 0) {
             glUniform2fv(lights_uloc, m_light_pos.size(), (GLfloat *) &m_light_pos[0]);
-            std::cout << m_flicker[0] << std::endl;
             glUniform1fv(flicker_uloc, m_flicker.size(), &m_flicker[0]);
         }
     }
