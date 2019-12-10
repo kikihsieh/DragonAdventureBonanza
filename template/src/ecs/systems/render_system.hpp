@@ -55,6 +55,7 @@ private:
 	std::list<Button>* m_buttons;
 	std::list<Tile*>* m_lights;
 	std::vector<vec2> m_light_pos;
+	std::vector<float> m_flicker;
     std::map<int, Tile*>* m_tiles;
     std::map<const char*, Drawable::Effect> m_effects;
     std::map<GLchar, Character> characters;

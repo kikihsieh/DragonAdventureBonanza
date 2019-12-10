@@ -283,6 +283,7 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
     GLint player_uloc = glGetUniformLocation(drawable->effect.program, "player");
     GLint lights_uloc = glGetUniformLocation(drawable->effect.program, "lights");
     GLint nlights_uloc = glGetUniformLocation(drawable->effect.program, "numLights");
+    GLint flicker_uloc = glGetUniformLocation(drawable->effect.program, "flicker");
 
     // Setting vertices and indices
     glBindVertexArray(drawable->vao);
@@ -310,8 +311,11 @@ void RenderSystem::draw(Entity &entity, mat3 projection) {
     if (!entity.useDepth) {
         glUniform2fv(player_uloc, 1, (GLfloat *) &player_pos);
         glUniform1i(nlights_uloc, m_light_pos.size());
-        if (m_light_pos.size() > 0)
+        if (m_light_pos.size() > 0) {
             glUniform2fv(lights_uloc, m_light_pos.size(), (GLfloat *) &m_light_pos[0]);
+            std::cout << m_flicker[0] << std::endl;
+            glUniform1fv(flicker_uloc, m_flicker.size(), &m_flicker[0]);
+        }
     }
 
     if (entity.animatable) {
@@ -591,6 +595,7 @@ void RenderSystem::transform(Entity &entity) {
 
 void RenderSystem::update(float ms) {
     m_light_pos.clear();
+    m_flicker.clear();
     for (auto &entity : *m_entities) {
         if (!entity.animatable || entity.is_boss_proj || entity.is_bomb) {
             continue;
@@ -635,6 +640,10 @@ void RenderSystem::update(float ms) {
         if(light->properties->lit) {
             m_light_pos.emplace_back(light->position);
             light->animatable->countdown -= ms;
+            light->properties->countdown += ms;
+            if (light->properties->countdown > 10000000000.f)
+                light->properties->countdown = 0.f;
+            m_flicker.emplace_back(light->properties->countdown);
             if (light->animatable->countdown > 0) {
                 continue;
             }
@@ -647,7 +656,6 @@ void RenderSystem::update(float ms) {
     for (auto &tile: *m_tiles) {
         if(tile.second->clipped || !tile.second->animatable){
             continue;
-            
         }
         tile.second->animatable->countdown -= ms;
         if (tile.second->animatable->countdown > 0) {

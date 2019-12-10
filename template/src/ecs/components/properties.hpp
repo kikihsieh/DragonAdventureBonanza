@@ -34,7 +34,8 @@ struct Properties {
 
     int count; // number of times the projectile bounces before disappearing
     bool lit;
-
+//    float flicker_time = 1000.f; // time in ms before frame should be switched
+    float countdown = 0;
     Type type;
 };
 
