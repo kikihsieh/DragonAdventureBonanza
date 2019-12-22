@@ -55,6 +55,8 @@ bool NightSky::init() {
 
 
 void NightSky::update(float elapsed_ms, vec2 screen_size) {
+    if (state == PAUSED || state == LOADING) { return; }
+
     m_player->input->space = true;
 
     m_final_boss_system.update(*m_final_boss, elapsed_ms);
