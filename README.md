@@ -24,8 +24,8 @@ To change the number of lives you start each level with:
 #### Info
 * The name of your game: Dragon Adventure Bonanza
 * The names of your team members: Arden Allen, Dian (Desta) Chi, Karen Hong, Kiki Hsieh, Mayesha Kabir, Austin Kobayashi
-* A short description of the game: TODO
-* A still image of the game: TODO
+* A short description of the game: A 2D platformer taking place in a fantasy world, you play as a baby dragon on a quest to find your long lost mother. Complete all three levels each with it's own unique player abilities, enemies and terrains and lastly, a final boss round!
+* A still image of the game: still-image.png
 * A short video of your gameplay: TODO
 
 ## Milestone 4: Final Game
