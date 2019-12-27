@@ -26,7 +26,7 @@ To change the number of lives you start each level with:
 * The names of your team members: Arden Allen, Dian (Desta) Chi, Karen Hong, Kiki Hsieh, Mayesha Kabir, Austin Kobayashi
 * A short description of the game: A 2D platformer taking place in a fantasy world, you play as a baby dragon on a quest to find your long lost mother. Complete all three levels each with it's own unique player abilities, enemies and terrains and lastly, a final boss round!
 * A still image of the game: still-image.png
-* A short video of your gameplay: TODO
+* A link to trailer video: https://drive.google.com/file/d/1mxFRmPi0u8z7qFi3e3pXldAsHuBOCUR3/view?usp=sharing 
 
 ## Milestone 4: Final Game
 ### Features implemented this milestone
